@@ -1,21 +1,21 @@
-# Ddonirang (또니랑)
+# Ddonilang (또니랑)
 
 > A Korean‑native programming language and tools for the era of games and AI  
 > Determinism (reproducibility) is built into the grammar, not an option.
 
-![Ddonirang logo](assets/ddonirang_wordmark.png)
+![Ddonilang logo](assets/ddonirang_wordmark.png)
 
 ---
 
 ## Overview
 
-Ddonirang is a Korean‑first language/tooling project aiming for “a language where thoughts become games.”
+Ddonilang is a Korean‑first language/tooling project aiming for “a language where thoughts become games.”
 
 - **Korean‑native**: Write code in Korean word order/expressions; ambiguity is reduced through canonicalization.
 - **Determinism**: Same input yields the same output anywhere. Repro is the default for debugging, experiments, and RL.
 - **AI‑oriented + AI‑aware**: We design for trustworthy AI‑written code with pack tests, canonicalization, replay/trace.
 - **Education/creation‑friendly**: Extends from games to math/physics/economics as experiments.
-- **Malhimnuri (Ddonirang World)**: A demo/tutorial world where spells (words) change the world.
+- **Spellworld (Ddonilang World)**: A demo/tutorial world where spells (words) change the world.
 
 ---
 
@@ -34,15 +34,15 @@ Now I’m building **Semgrim (moving math drawings)** with my older sister to va
 
 ## Determinism is grammar, not an engine option
 
-Ddonirang reduces ambiguity at the grammar level so that “human‑written” and “AI‑written” intent converge to the same form.
+Ddonilang reduces ambiguity at the grammar level so that “human‑written” and “AI‑written” intent converge to the same form.
 
 Key design choices:
 
-- **Particle boundary `~` (canonical)**: Make Korean particles explicit in code.  
-  Example: `문~을`, `주문~으로`, `나~는`
+- **Role‑marker boundary `~` (canonical)**: Make case/role markers explicit in code.  
+  Example: `door~obj`, `spell~with`, `I~topic`
 - **Single assignment `<-`**: One unified state‑update form.
-- **Definition vs execution**: Define with `:움직씨 = { ... }`, execute with `~기 / ~하기`.
-- **Single chaining `해서`**: One canonical way to link actions.
+- **Definition vs execution**: Define with `:move = { ... }`, execute in **imperative form** (e.g., `show`, `open`).
+- **Single chaining `then`**: One canonical way to link actions.
 - **Contracts/guards**: Violations are diagnosed and recorded instead of ignored.
 
 ---
@@ -53,40 +53,40 @@ A tiny example made to feel like magic.
 (particle‑based binding + execution tail + state assignment)
 
 ```ddn
-바탕.문_상태 <- "닫힘".
+base.door_state <- "closed".
 
-(주문:말 ~로) 문~을_열기:움직씨 = {
-  { 바탕.문_상태 == "닫힘" }인것 일때 {
-    바탕.문_상태 <- "열림".
-    (주문) 보여주기.
-  } 아니면 {
-    "이미 열려있어요." 보여주기.
+(spell:word ~with) door_obj_opening:move = {
+  { base.door_state == "closed" } as_thing if {
+    base.door_state <- "open".
+    show spell.
+  } else {
+    show "It's already open.".
   }.
 }.
 
-("열려라!")~로 문~을_열기 하기.
+"Open up!" with door_obj_opening.
 ```
 
 ---
 
-## The 6 elements of Ddonirang
+## The 6 elements of Ddonilang
 
-Ddonirang models the “world” with six layers.
+Ddonilang models the “world” with six layers.
 
 | Name | Role | One line |
 |---|---|---|
-| Sam(샘) | Input snapshot | Everything starts from input |
-| Nuri(누리) | World state | The state of a game/simulation |
-| Iyagi(이야기) | Rules/progression | The layer that explains why things change |
-| Bogae(보개) | Visuals/sound | The visible realm — 2D/3D/sound |
-| Geoul(거울) | Record/replay | Rewind, audit, reproduce |
-| Seulgi(슬기) | AI helper/guard | AI helps and sometimes guards |
+| Source (샘) | Input snapshot | Everything starts from input |
+| World (누리) | World state | The state of a game/simulation |
+| Story (이야기) | Rules/progression | The layer that explains why things change |
+| Visible Realm (보개) | Visuals/sound | The visible realm — 2D/3D/sound |
+| Mirror (거울) | Record/replay | Rewind, audit, reproduce |
+| Wisdom (슬기) | AI helper/guard | AI helps and sometimes guards |
 
 ---
 
 ## How we collaborate with AI
 
-Ddonirang assumes AI can write code, but keeps the core deterministic with verifiable flow.
+Ddonilang assumes AI can write code, but keeps the core deterministic with verifiable flow.
 
 - Human: sets intent, explanation, and criteria
 - AI: code generation, idea proposals, improvements
@@ -98,7 +98,7 @@ Ddonirang assumes AI can write code, but keeps the core deterministic with verif
 
 ## aiGYM — deterministic AI training/experiment environment
 
-aiGYM is Ddonirang’s **determinism‑first training/experiment environment**.  
+aiGYM is Ddonilang’s **determinism‑first training/experiment environment**.  
 Same input and seed always produce the same result, making learning/comparison/debugging easier.
 
 - Bundle input/log/replay into **reproducible experiments**.
@@ -107,9 +107,9 @@ Same input and seed always produce the same result, making learning/comparison/d
 
 ---
 
-## Malhimnuri (또니랑누리/또니랑세상) — a world opened by spells
+## Spellworld (Ddonilang World) — a world opened by spells
 
-Malhimnuri (Ddonirang Nuri/World) is a demo/tutorial universe where words (spells) change the world.
+Spellworld (Ddonilang World) is a demo/tutorial universe where words (spells) change the world.
 
 - Write spells in **natural‑language‑like code**
 - Show a **deterministic world‑state transition** flow
@@ -119,7 +119,7 @@ Malhimnuri (Ddonirang Nuri/World) is a demo/tutorial universe where words (spell
 
 ## Learning labs (planned)
 
-Ddonirang aims to turn study into experiments, not just games.
+Ddonilang aims to turn study into experiments, not just games.
 
 ### 1) Semgrim (moving math drawings)
 - Animate formulas/geometry/physics with a **madi timeline**
@@ -163,7 +163,7 @@ Ddonirang aims to turn study into experiments, not just games.
 Contributions are welcome.
 
 - Easy‑to‑read sentences and example ideas
-- Malhimnuri (Ddonirang Nuri) quest/spell ideas
+- Spellworld (Ddonilang World) quest/spell ideas
 - Semgrim (math/physics animation) scene ideas
 - Physics Studio experiments (free‑fall, parabolas, collisions)
 - Economics Lab experiments (inflation, wealth concentration)

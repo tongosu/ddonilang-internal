@@ -1,15 +1,15 @@
-# Ddonirang (또니랑)
+# Ddonilang (또니랑)
 
 > Oyun ve AI çağının **Korece yerel** programlama dili ve aracı  
 > **Determinism (yeniden üretilebilirlik)** bir seçenek değil, **dil bilgisinin** parçasıdır.
 
-![Ddonirang logo](assets/ddonirang_wordmark.png)
+![Ddonilang logo](assets/ddonirang_wordmark.png)
 
 ---
 
 ## Proje özeti
 
-Ddonirang, “düşüncenin doğrudan oyuna dönüştüğü bir dil” hedefiyle ilerleyen **Korece merkezli** bir dil/araç projesidir.
+Ddonilang, “düşüncenin doğrudan oyuna dönüştüğü bir dil” hedefiyle ilerleyen **Korece merkezli** bir dil/araç projesidir.
 
 - **Korece yerel**: Korece sözdizimi/ifade biçimleri doğrudan koda yazılır, belirsizlikler kanonlama ile azaltılır.
 - **Determinism**: Aynı giriş her yerde aynı sonucu üretir.  
@@ -17,7 +17,7 @@ Ddonirang, “düşüncenin doğrudan oyuna dönüştüğü bir dil” hedefiyle
 - **AI odaklı + AI‑aware**: AI kod yazsa bile güvenilirlik için  
   **pack testleri + kanonlama golden karşılaştırması + replay/trace** birlikte tasarlanır.
 - **Eğitim/üretim dostu**: Oyunun yanında matematik/fizik/ekonomi deneylerine doğru genişler.
-- **Malhimnuri (Ddonirang dünyası)**: Sözlerin (büyülerin) dünyayı değiştirdiği demo/öğretici evreni geliştiriyoruz.
+- **Büyü Dünyası (Ddonilang Dünyası)**: Sözlerin (büyülerin) dünyayı değiştirdiği demo/öğretici evreni geliştiriyoruz.
 
 ---
 
@@ -37,16 +37,16 @@ Bu projeye, **ilkokuldan önce akılda kalacak bir eser bırakmak istediğim iç
 
 ## Determinizm bir motor seçeneği değil, dil bilgisidir
 
-Ddonirang belirsiz yorum ihtimalini dil bilgisinde azaltır.  
+Ddonilang belirsiz yorum ihtimalini dil bilgisinde azaltır.  
 Böylece “insan yazsa da AI yazsa da” niyet aynı biçime yakınsar.
 
 Örnek tasarım tercihleri:
 
-- **Edat sınırı `~` (kanonik)**: Korece edat sınırını koda açıkça taşır.  
-  Örnek: `문~을`, `주문~으로`, `나~는`
+- **Ek sınırı `~` (kanonik)**: Durum/rol eklerini koda açıkça taşır.  
+  Örnek: `kapı~yı`, `büyü~yle`, `ben~i`
 - **Tek atama `<-`**: Durum güncellemesini tek biçimde birleştirir.
-- **Tanım vs çalıştırma ayrımı**: Tanım `:움직씨 = { ... }`, çalıştırma `~기 / ~하기`.
-- **Tek bağlama `해서`**: Eylemleri bağlama biçimi tekleşir.
+- **Tanım vs çalıştırma ayrımı**: Tanım `:hareket = { ... }`, çalıştırma **emir kipi** (ör. `göster`, `aç`).
+- **Tek bağlama `sonra`**: Eylemleri bağlama biçimi tekleşir.
 - **Sözleşme/guard**: İhlaller “sessizce geçme” yerine teşhis/kayıt ile kalır.
 
 ---
@@ -57,40 +57,40 @@ Büyü gibi görünen küçük bir örnek.
 (edat temelli bağlama + çalıştırma kuyruğu + durum ataması)
 
 ```ddn
-바탕.문_상태 <- "닫힘".
+taban.kapi_durumu <- "kapalı".
 
-(주문:말 ~로) 문~을_열기:움직씨 = {
-  { 바탕.문_상태 == "닫힘" }인것 일때 {
-    바탕.문_상태 <- "열림".
-    (주문) 보여주기.
-  } 아니면 {
-    "이미 열려있어요." 보여주기.
+(büyü:söz ~ile) kapıyı_aç:hareket = {
+  { taban.kapi_durumu == "kapalı" } olan ise {
+    taban.kapi_durumu <- "açık".
+    büyüyü göster.
+  } değilse {
+    "Zaten açık."ı göster.
   }.
 }.
 
-("열려라!")~로 문~을_열기 하기.
+"Açıl!" ile kapıyı_aç.
 ```
 
 ---
 
-## Ddonirang’ın 6 öğe sözleşmesi
+## Ddonilang’ın 6 öğe sözleşmesi
 
-Ddonirang “dünya”yı 6 katmanla ele alır.
+Ddonilang “dünya”yı 6 katmanla ele alır.
 
 | Ad | Rol | Kısa açıklama |
 |---|---|---|
-| Sam(샘) | Girdi anlık görüntüsü | Tüm davranışlar girdiden başlar |
-| Nuri(누리) | Dünya durumu | Oyun/simülasyonun durumu |
-| Iyagi(이야기) | Kurallar/ilerleme | Neden değiştiğini açıklayan katman |
-| Bogae(보개) | Görsel/ses | Görünen âlem — 2D/3D/ses |
-| Geoul(거울) | Kayıt/tekrar | Geri sarma/denetim/yeniden üretim |
-| Seulgi(슬기) | AI yardımcı/koruyucu | AI yardım eder, bazen korur |
+| Kaynak (샘) | Girdi anlık görüntüsü | Tüm davranışlar girdiden başlar |
+| Dünya (누리) | Dünya durumu | Oyun/simülasyonun durumu |
+| Hikâye (이야기) | Kurallar/ilerleme | Neden değiştiğini açıklayan katman |
+| Görünür Âlem (보개) | Görsel/ses | Görünen âlem — 2D/3D/ses |
+| Ayna (거울) | Kayıt/tekrar | Geri sarma/denetim/yeniden üretim |
+| Bilgelik (슬기) | AI yardımcı/koruyucu | AI yardım eder, bazen korur |
 
 ---
 
 ## AI ile iş birliği
 
-Ddonirang, AI’ın kod yazabileceğini varsayar.  
+Ddonilang, AI’ın kod yazabileceğini varsayar.  
 Ama çekirdeği deterministik tutup **doğrulanabilir bir akış** kurar.
 
 - İnsan: niyet/açıklama/ölçütleri belirler
@@ -103,7 +103,7 @@ Ama çekirdeği deterministik tutup **doğrulanabilir bir akış** kurar.
 
 ## aiGYM — deterministik AI eğitim/deney ortamı
 
-aiGYM, Ddonirang’ın **determinism temelli eğitim/deney ortamıdır**.  
+aiGYM, Ddonilang’ın **determinism temelli eğitim/deney ortamıdır**.  
 Aynı giriş ve tohumla **her zaman aynı sonuç** elde edilir; öğrenme/karşılaştırma/hata ayıklama kolaylaşır.
 
 - Girdi/log/replay’i birleştirip **yeniden üretilebilir deneyler** kurar.
@@ -112,9 +112,9 @@ Aynı giriş ve tohumla **her zaman aynı sonuç** elde edilir; öğrenme/karş�
 
 ---
 
-## Malhimnuri (또니랑누리/또니랑세상) — sözle açılan dünya
+## Büyü Dünyası (Ddonilang Dünyası) — sözle açılan dünya
 
-Malhimnuri (Ddonirang Nuri), “sözlerle dünyayı değiştirme” konseptli demo/öğretici evrendir.
+Büyü Dünyası (Ddonilang Dünyası), “sözlerle dünyayı değiştirme” konseptli demo/öğretici evrendir.
 
 - Büyüler (sözler) **doğal dile yakın kod** ile yazılır
 - Dünya (Nuri) durumu **deterministik olarak değişir**
@@ -124,7 +124,7 @@ Malhimnuri (Ddonirang Nuri), “sözlerle dünyayı değiştirme” konseptli de
 
 ## Öğrenmeye yardımcı laboratuvarlar (plan)
 
-Ddonirang, oyunun yanında **öğrenmeyi deneye dönüştüren** araçlar da hedefler.  
+Ddonilang, oyunun yanında **öğrenmeyi deneye dönüştüren** araçlar da hedefler.  
 Bu kısım belki “birileriyle” birlikte yapılacaktır.
 
 ### 1) Semgrim (hareketli matematik çizimleri)
@@ -169,7 +169,7 @@ Bu kısım belki “birileriyle” birlikte yapılacaktır.
 Katkıları memnuniyetle karşılarız.
 
 - Başlangıç seviyesine uygun cümle/örnek fikirleri
-- Malhimnuri (Ddonirang Nuri) görev/büyü fikirleri
+- Büyü Dünyası (Ddonilang Dünyası) görev/büyü fikirleri
 - Semgrim (matematik/fizik animasyonu) sahne fikirleri
 - Fizik stüdyosu deney fikirleri
 - Ekonomi laboratuvarı deney fikirleri
