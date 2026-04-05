@@ -1,0 +1,10 @@
+{
+  "lesson_id": "physics_motion_header_sample",
+  "title": "lesson_physics_motion",
+  "required_views": ["graph", "table"],
+  "ddn_meta": {
+    "name": "lesson_physics_motion",
+    "desc": "등가속도 y = 0.5 t^2 + 2 t + 1"
+  }
+}
+
