@@ -125,19 +125,18 @@ async function main() {
       }
     });
 
-    await page.goto(`${baseUrl}/solutions/seamgrim_ui_mvp/ui/index.html`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/solutions/seamgrim_ui_mvp/ui/index.html?advancedExports=1`, { waitUntil: "domcontentloaded" });
     await waitVisible(page, "#screen-browse");
-    await page.waitForSelector(".lesson-card[data-lesson-id^='rep_'] .card-launch-btn[data-launch-profile='student']");
-    await page.click(".lesson-card[data-lesson-id^='rep_'] .card-launch-btn[data-launch-profile='student']");
+    await page.waitForSelector(".lesson-card[data-lesson-id^='rep_'] .card-launch-btn[data-launch-profile='teacher']");
+    await page.click(".lesson-card[data-lesson-id^='rep_'] .card-launch-btn[data-launch-profile='teacher']");
     await waitVisible(page, "#screen-run");
-    await page.waitForFunction(() => window.__SEAMGRIM_RUN_PRESET_RAIL__?.onboarding_profile === "student");
-    await page.click("[data-classroom-mode='teacher']");
-    await page.waitForFunction(() => window.__STUDIO_CLASSROOM_MODE_SWITCH__?.mode === "teacher");
+    await page.waitForFunction(() => window.__SEAMGRIM_RUN_PRESET_RAIL__?.onboarding_profile === "teacher");
     await page.click("#run-tab-btn-mirror");
     await page.evaluate(() => {
       const tools = document.querySelector("#run-inspector-tools");
       if (tools) tools.open = true;
     });
+    await waitVisible(page, "[data-run-registry-seed-export]");
     await page.click("#btn-run-registry-seed-copy");
     await page.waitForFunction(() => window.__STUDIO_REGISTRY_SHARE_SEED_EXPORT_ACTION__?.copied === true);
 

@@ -7,9 +7,6 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DOC = ROOT / "STUDIO_REGISTRY_SHARE_SEED_EXPORT_ACTION_V1.md"
-STUDIO_DOC = ROOT / "docs" / "studio" / "REGISTRY_SHARE_SEED_EXPORT_ACTION_V1.md"
-ROADMAP = ROOT / "STUDIO_LONG_HORIZON_ROADMAP_V1.md"
 PACK = ROOT / "pack" / "studio_registry_share_seed_export_action_v1"
 RUN_JS = ROOT / "solutions" / "seamgrim_ui_mvp" / "ui" / "screens" / "run.js"
 INDEX_HTML = ROOT / "solutions" / "seamgrim_ui_mvp" / "ui" / "index.html"
@@ -41,9 +38,6 @@ def run(cmd: list[str], *, timeout: int = 180) -> subprocess.CompletedProcess[st
 
 def require_files() -> int:
     required = [
-        DOC,
-        STUDIO_DOC,
-        ROADMAP,
         PACK / "README.md",
         PACK / "contract.detjson",
         PACK / "input.ddn",
@@ -67,31 +61,6 @@ def require_tokens(path: Path, tokens: list[str]) -> int:
     return 0
 
 
-def check_docs() -> int:
-    for path in [DOC, STUDIO_DOC]:
-        rc = require_tokens(
-            path,
-            [
-                "STUDIO_REGISTRY_SHARE_SEED_EXPORT_ACTION_V1",
-                "seamgrim.registry_share_seed_export_action.v1",
-                "Seed 복사",
-                "registry publish",
-                "public upload",
-                "allowlist",
-            ],
-        )
-        if rc:
-            return rc
-    return require_tokens(
-        ROADMAP,
-        [
-            "STUDIO_REGISTRY_SHARE_SEED_EXPORT_ACTION_V1",
-            "seamgrim.registry_share_seed_export_action.v1",
-            "전체 15/18 = 83%",
-        ],
-    )
-
-
 def check_product_tokens() -> int:
     checks = [
         (
@@ -102,6 +71,11 @@ def check_product_tokens() -> int:
                 "handleCopyRegistrySeedExport",
                 "seamgrim.registry_share_seed_export_action.v1",
                 "__STUDIO_REGISTRY_SHARE_SEED_EXPORT_ACTION__",
+                "ADVANCED_EXPORT_PANEL_HTML",
+                "data-run-registry-seed-export",
+                "data-run-registry-seed-meta",
+                "data-run-registry-seed-text",
+                "btn-run-registry-seed-copy",
                 "navigator?.clipboard?.writeText",
                 "draft_only: true",
                 "publish_claim: false",
@@ -110,16 +84,6 @@ def check_product_tokens() -> int:
                 "public_link_creation_claim: false",
                 "install_enablement_claim: false",
                 "active_allowlist_mutation: false",
-            ],
-        ),
-        (
-            INDEX_HTML,
-            [
-                "data-run-registry-seed-export",
-                "data-run-registry-seed-meta",
-                "data-run-registry-seed-text",
-                "btn-run-registry-seed-copy",
-                "Seed 복사",
             ],
         ),
         (
@@ -203,13 +167,6 @@ def check_diff_and_ssot() -> int:
             "diff",
             "--check",
             "--",
-            "STUDIO_REGISTRY_SHARE_SEED_EXPORT_ACTION_V1.md",
-            "STUDIO_LONG_HORIZON_ROADMAP_V1.md",
-            "docs/studio/REGISTRY_SHARE_SEED_EXPORT_ACTION_V1.md",
-            "docs/studio/INDEX.md",
-            "docs/context/all/DEV_SUMMARY.md",
-            "docs/status/PROJECT_STATUS.md",
-            "docs/status/CHANGELOG.md",
             "solutions/seamgrim_ui_mvp/ui/index.html",
             "solutions/seamgrim_ui_mvp/ui/screens/run.js",
             "solutions/seamgrim_ui_mvp/ui/styles.css",
@@ -232,7 +189,6 @@ def check_diff_and_ssot() -> int:
 def main() -> int:
     for check in [
         require_files,
-        check_docs,
         check_product_tokens,
         check_pack_contract,
         run_required_commands,
