@@ -1,2 +1,2 @@
-python tests/run_pack_golden.py --update gogae9_w90_meta_universe
+python tests/run_pack_golden.py --update gogae9_w90_meta_universe gogae9_w91_malmoi_docset
 pack golden updated
