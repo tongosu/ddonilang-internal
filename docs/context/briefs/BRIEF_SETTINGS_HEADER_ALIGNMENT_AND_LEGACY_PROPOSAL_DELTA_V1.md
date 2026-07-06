@@ -163,3 +163,22 @@
   - drift 0건 또는 잔여 목록 + 원인: 잔여 1건 기록
   - `designed/STUB_ONLY` 항목 implemented 과잉 표기 0건: 제품 코드 검색 기준 충족
   - 공통 불변 경계: 코드/팩/SSOT/state_hash/runtime canonical name 변경 없음
+
+### Q36-2 / 지시문 2 — flat `설정` 키 drift 해소 PROPOSAL
+
+- 커밋: 예정 `[Q36-2]`
+- 산출물: `docs/context/proposals/PROPOSAL_SETTINGS_FLAT_KEY_DRIFT_RESOLUTION_V1_20260706.md`
+- 수행: `마디수/제목/설명` flat key의 canonical 소속 권고안, 처리 옵션, 결과영향 키 분류, 영향 파일 목록을 제안서로 작성했다.
+- 결과:
+  - `마디수` 권고 소속: `설정.실행.마디수`
+  - `제목/설명` 권고 소속: `설정.문서`
+  - flat key 처리 권고: compat input + lint warning `SETTINGS_FLAT_KEY_COMPAT`
+  - 직접 영향 집계: 51개 파일 / 133행(`제목=47`, `설명=49`, `마디수=37`)
+- 검증:
+  - 영향 범위 검색 완료
+  - `python tests/run_lang_settings_header_closure_pack_check.py` PASS(Q36-1에서 같은 워킹트리 기준 확인)
+- DoD:
+  - PROPOSAL 문서 작성: 완료
+  - 영향 파일 목록: 완료
+  - `lang_settings_header_closure_v1` 회귀 PASS 유지 확인: 전용 checker PASS 기준 충족
+  - SSOT 직접 수정/parser-runtime hard-cut/pack 변경: 없음
