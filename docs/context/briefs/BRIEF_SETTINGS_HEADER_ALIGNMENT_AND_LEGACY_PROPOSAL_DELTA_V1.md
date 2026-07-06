@@ -198,3 +198,21 @@
   - 델타 노트 1건: 완료
   - SSOT 병합 큐 등록: 완료
   - SSOT 직접 수정/parser-runtime hard-cut/pack 변경: 없음
+
+### Q36-3 / 지시문 3 — `설정.누리 / 설정.이야기` key set v1 OI 등록
+
+- 커밋: 예정 `[Q36-3]`
+- 산출물: `docs/context/proposals/OI_SETTINGS_NURI_IYAGI_KEYSET_V1_20260706.md`
+- 수행: `설정.누리`와 `설정.이야기`의 candidate key 표와 열린 질문을 OI 초안으로 작성했다.
+- 결과:
+  - 후보 key: `누리.시앗`, `누리.누리갈래`, `이야기.들머리`
+  - 질문: `시앗/씨앗` 철자, `InputSnapshot.rng_seed` 관계, `누리갈래`와 차림새 preset 중복, NuriGym `env_id/seed` 소유권
+  - 용어 혼동 방지 문구: "누리 설정"은 전체 설정이 아니라 `설정.누리` 하위 절만 가리킨다.
+- 검증:
+  - OI 문서 내 DoD 표 작성
+  - `git diff --check` PASS 예정
+- DoD:
+  - OI 항목: 완료
+  - candidate key 표: 완료
+  - 질문 목록: 완료
+  - parser/runtime 변경: 0건
