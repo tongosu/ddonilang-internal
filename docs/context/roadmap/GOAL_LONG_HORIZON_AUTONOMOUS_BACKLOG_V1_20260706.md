@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 13/47
+- 트랙 A: 14/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -102,3 +102,4 @@
 - [LH-A-11] `~에 따라` branch binding/scope 규칙을 A09 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A11_match_branch_binding_scope_V1.md`. 관련 pack: `pack/must_gap_a09_match_branch_e_ttara_red_v1`.
 - [LH-A-12] `~에 따라` 타입 규칙을 A09 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A12_match_branch_type_rules_V1.md`. 관련 pack: `pack/must_gap_a09_match_branch_e_ttara_red_v1`.
 - [LH-A-13] `~에 따라` 완전성/중복 규칙을 A09 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A13_match_branch_completeness_overlap_V1.md`. 관련 pack: `pack/must_gap_a09_match_branch_e_ttara_red_v1`.
+- [LH-A-14] `~에 따라` 반환 타입 규칙을 A09 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A14_match_branch_return_type_V1.md`. 관련 pack: `pack/must_gap_a09_match_branch_e_ttara_red_v1`.
