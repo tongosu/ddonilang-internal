@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 17/47
+- 트랙 A: 18/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -106,3 +106,4 @@
 - [LH-A-15] `없으면` sugar 규칙을 A09 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A15_match_branch_none_sugar_V1.md`. 관련 pack: `pack/must_gap_a09_match_branch_e_ttara_red_v1`.
 - [LH-A-16] MathIR v1/De Bruijn/DetBin 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A16_mathir_v1_debruijn_detbin_V1.md`, `pack/must_gap_a16_mathir_v1_debruijn_detbin_red_v1/`.
 - [LH-A-17] 누리 query `임자들` 표면 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A17_nuri_query_imjadeul_surface_V1.md`, `pack/must_gap_a17_nuri_query_imjadeul_surface_red_v1/`.
+- [LH-A-18] 누리 query `모두` 군집 실행 블록을 A17 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A18_nuri_query_modu_block_V1.md`. 관련 pack: `pack/must_gap_a17_nuri_query_imjadeul_surface_red_v1`.
