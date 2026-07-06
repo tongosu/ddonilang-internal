@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 20/47
+- 트랙 A: 21/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -110,3 +110,4 @@
 - [LH-A-19] `늘지켜보고` invariant hook 문법 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A19_neul_jikyeobogo_invariant_hook_V1.md`, `pack/must_gap_a19_neul_jikyeobogo_invariant_hook_red_v1/`.
 - [LH-A-20] 말결 `$...` token 결합 규칙 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A20_nuance_token_combination_V1.md`, `pack/must_gap_a20_nuance_token_combination_red_v1/`.
 - [VERIFY-A-20] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
+- [LH-A-21] 말결 5.4 기본/중복/부정 결합 규칙을 A20 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A21_nuance_54_rules_V1.md`. 관련 pack: `pack/must_gap_a20_nuance_token_combination_red_v1`.
