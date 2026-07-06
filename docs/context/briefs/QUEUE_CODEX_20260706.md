@@ -246,6 +246,10 @@
 
 `docs/context/briefs/GOAL_SSOT_MUST_RULE_AUDIT_V1.md` 그대로 실행. Tier1~4(각 ~45개 섹션)로 나눠 SSOT_LANG의 MUST 태그 179개 전부를 실제 제품 코드와 대조. GOAL-B와 같은 엄격함(file:line 근거, 추측 금지). 코드/pack/golden/SSOT 수정 전혀 없음 — 순수 조사.
 
+## Q36(신) — 설정헤더 정합 + 구제안 이행 델타 [지시문 1·2·3·4·5·6, 전부 문서/보고서 산출]
+
+`docs/context/briefs/BRIEF_SETTINGS_HEADER_ALIGNMENT_AND_LEGACY_PROPOSAL_DELTA_V1.md` 그대로 실행. 문서 자체의 우선순위(1→2→5→3·4→6) 그대로 따를 것. 지시문 1(T0 정렬 리포트)/5(구제안 델타 아카이브)/6(누리짐 consumer closure 증빙)은 순수 리포트. 지시문 2(flat 설정 키 PROPOSAL)/3(설정.누리·이야기 OI 등록)/4(설정.슬기 예시 통일 PROPOSAL)는 제안/OI 문서만 작성 — SSOT 직접 수정 금지, 결정은 사용자 몫. parser/runtime hard-cut 승격 전부 금지. 문서 상단 "공통 불변 경계" 엄수.
+
 ---
 
 ## 큐 완료 보고
