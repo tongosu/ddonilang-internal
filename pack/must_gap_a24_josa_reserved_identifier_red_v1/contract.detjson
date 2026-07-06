@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a24_josa_reserved_identifier_red_v1",
+  "track": "A",
+  "item": "A24",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:6976",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER4_V1.md:55",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A24_josa_reserved_identifier_V1.md",
+  "cases": [
+    {
+      "id": "c01_bare_josa_identifier",
+      "input": "cases/c01_bare_josa_identifier/input.ddn",
+      "expected_red": "cases/c01_bare_josa_identifier/expected_red.detjson"
+    }
+  ]
+}
