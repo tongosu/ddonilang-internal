@@ -82,7 +82,7 @@
 ## 진행률 요약 (계속 갱신)
 
 - 트랙 A: 47/47
-- 트랙 B: 50/360
+- 트랙 B: 100/360
 - 트랙 C: 0/3
 
 ## 실행 로그
@@ -142,3 +142,5 @@
 - [VERIFY-A-47] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
 - [LH-B-01] Q19 통합/보류/Q27 보존 후보 1-50행 재검증 표 작성. 산출물: `docs/context/reports/CONSOLIDATION_CANDIDATE_REVERIFY_V1.md` (rows 1-50).
 - [VERIFY-B-50] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
+- [LH-B-02] Q19 통합/보류/Q27 보존 후보 51-100행 재검증 표 확장. 산출물: `docs/context/reports/CONSOLIDATION_CANDIDATE_REVERIFY_V1.md` (rows 1-100).
+- [VERIFY-B-100] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
