@@ -340,3 +340,9 @@ Q36 특기:
 - Q36-4는 `설정.슬기` 예시 key drift를 수집하고 통일 표면/OI를 작성했다. SSOT/pack 예시는 수정하지 않았다.
 - Q36-5는 구제안 델타 아카이브와 SSOT 병합 큐 항목을 작성했다.
 - Q36-6은 누리짐 consumer closure가 아직 완전 `golden_closed`가 아님을 확인했다. action 4상태와 bounded web parity는 PASS 증빙이 있으나, 요청 이름의 reset/equivalence pack, `terminated/truncated/info`, `wasmtime-py`, PyO3 실행 증빙은 없다.
+
+---
+
+## GOAL-LONGHORIZON(신) — 초장기 자율 백로그 V1 [사용자 부재 기간용, 대규모, 실질 구현 없음]
+
+`docs/context/roadmap/GOAL_LONG_HORIZON_AUTONOMOUS_BACKLOG_V1_20260706.md` 그대로 실행. 트랙A(GOAL-MUSTAUDIT 미구현 47건 레드팩 심화조사, 최우선) → 트랙B(Q19 통합/보류 298건 재검증) → 트랙C(가지 메타데이터 누락 3건 PROPOSAL). 절대 경계: SSOT 직접수정 금지, 커널 실제 구현 금지(레드팩까지만), main 직접커밋 금지, 파일 삭제 금지, golden 정정 금지(이번 배치는). 사용자 복귀 전까지 계속 자율 진행.
