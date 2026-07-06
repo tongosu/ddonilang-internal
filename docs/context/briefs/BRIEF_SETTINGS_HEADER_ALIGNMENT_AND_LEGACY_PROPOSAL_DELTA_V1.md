@@ -182,3 +182,19 @@
   - 영향 파일 목록: 완료
   - `lang_settings_header_closure_v1` 회귀 PASS 유지 확인: 전용 checker PASS 기준 충족
   - SSOT 직접 수정/parser-runtime hard-cut/pack 변경: 없음
+
+### Q36-5 / 지시문 5 — 구제안 이행 델타 노트 아카이브
+
+- 커밋: 예정 `[Q36-5]`
+- 산출물: `docs/context/notes/LEGACY_PROPOSAL_DELTA_ARCHIVE_20260706.md`
+- 수행: 2026-03~04 구제안 묶음을 현행 정본 기준으로 `채택 완료 / 시효 만료 / 여전히 OPEN`으로 재분류했다.
+- 결과:
+  - 운영 규칙 "구버전 외부 검토 문서는 델타 노트 경유로만 인용한다"를 노트 상단에 명시했다.
+  - SSOT 병합 큐 항목 `SSOT-MERGE-LEGACY-PROPOSAL-DELTA-20260706`을 노트 안에 등록했다.
+- 검증:
+  - 델타 노트 존재 및 DoD 표 확인
+  - `git diff --check` PASS 예정
+- DoD:
+  - 델타 노트 1건: 완료
+  - SSOT 병합 큐 등록: 완료
+  - SSOT 직접 수정/parser-runtime hard-cut/pack 변경: 없음
