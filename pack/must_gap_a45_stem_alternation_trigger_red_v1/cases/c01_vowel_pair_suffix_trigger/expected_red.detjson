@@ -1,0 +1,11 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "STEM_ALTERNATION_TRIGGER",
+  "expected_future_diag": "E_STEM_ALTERNATION_TRIGGER_NOT_IMPLEMENTED",
+  "notes": [
+    "SSOT class: 돕~도우 + 니/으니 계열 trigger must resolve by canonical suffix class, not by ad-hoc suffix string stripping.",
+    "현재 제품 경로는 ~별명을 추가 seed 이름으로 확장하고 CALL_TAILS 문자열만 strip한다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}
