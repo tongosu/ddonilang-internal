@@ -83,7 +83,7 @@
 
 - 트랙 A: 47/47
 - 트랙 B: 360/360
-- 트랙 C: 0/3
+- 트랙 C: 3/3
 
 ## 실행 로그
 
@@ -156,3 +156,4 @@
 - [VERIFY-B-350] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
 - [LH-B-08] Q19 통합/보류/Q27 보존 후보 351-360행 재검증 표 확장 및 트랙B 360행 완료. 산출물: `docs/context/reports/CONSOLIDATION_CANDIDATE_REVERIFY_V1.md` (rows 1-360).
 - [VERIFY-B-360] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
+- [LH-C-01] 가지 metadata 누락 후보 `std_grid`, `std_input_map`, `std_physics_1d` 3건의 `gaji.toml` 초안을 proposal로 작성. 실제 `gaji.toml` 생성 없음. 산출물: `docs/context/proposals/PROPOSAL_GAJI_MISSING_METADATA_V1_20260706.md`.
