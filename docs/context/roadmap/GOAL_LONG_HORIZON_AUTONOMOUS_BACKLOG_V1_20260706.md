@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 30/47
+- 트랙 A: 31/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -121,3 +121,4 @@
 - [LH-A-29] 버전 표기 PATCH/MINOR/MAJOR 정책과 `r1/r2` 금지 검사 부재를 red pack skeleton으로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A29_version_notation_policy_V1.md`, `pack/must_gap_a29_version_notation_policy_red_v1/`.
 - [LH-A-30] `~해보고:` + `그것`은 root lang/legacy tool 구현 흔적이 있으나 `teul-cli` frontdoor parity red로 재분류 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A30_haebogo_geugeot_frontdoor_parity_V1.md`, `pack/must_gap_a30_haebogo_geugeot_frontdoor_red_v1/`.
 - [VERIFY-A-30] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
+- [LH-A-31] 시스템 예약 자음 식별자 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A31_jamo_reserved_identifier_V1.md`, `pack/must_gap_a31_jamo_reserved_identifier_red_v1/`.
