@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 43/47
+- 트랙 A: 44/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -135,3 +135,4 @@
 - [LH-A-41] 흐름씨-훅 위상 분리는 감사 이후 제품 구현/pack checker 근거가 확인되어 신규 red pack 없이 재분류 필요로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A41_flow_hook_phase_reverify_V1.md`. 관련 pack: `pack/lang_flow_hook_interaction_v1`.
 - [LH-A-42] 숫자 리터럴 뒤 단위/조사 접미 분리 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A42_numeric_literal_suffix_split_V1.md`, `pack/must_gap_a42_numeric_literal_suffix_split_red_v1/`.
 - [LH-A-43] 바인딩 모호성 진단 + LSP QuickFix는 골격/stub만 확인되어 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A43_binding_ambiguity_lsp_quickfix_V1.md`, `pack/must_gap_a43_binding_ambiguity_lsp_quickfix_red_v1/`.
+- [LH-A-44] 11.3.1 추측 금지 원칙은 call-tail ambiguity 일부 착지로 감사 stale이나 A01/A02 잔여 red에 연결해 부분 해소/잔여 red로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A44_stem_ambiguity_no_guess_principle_V1.md`. 관련 pack: `pack/must_gap_a01_x_xha_collision_red_v1`, `pack/must_gap_a02_call_tail_resolve_unresolved_red_v1`.
