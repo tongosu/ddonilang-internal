@@ -234,3 +234,26 @@
   - 통일안 제안: 완료
   - 소유권 질문 OI 등재: 완료
   - parser/candidate key hard-cut: 없음
+
+### Q36-6 / 지시문 6 — 누리짐 consumer closure 증빙 현황
+
+- 커밋: 예정 `[Q36-6]`
+- 산출물: `docs/context/reports/NURIGYM_CONSUMER_CLOSURE_EVIDENCE_STATUS_V1.md`
+- 수행: reset/step pack 이름, `step` wire schema, action 4상태, Web/Python consumer 증빙을 제품 pack/checker/code 기준으로 분류했다.
+- 결과:
+  - `gym_reset_seed_implies_complete_episode_reset_v1`, `resident_reset_episode_equiv_v1` pack/runner는 현재 `pack/`에 없음
+  - 현재 제품 step wire는 `observation/action/reward/next_observation/done` 기반이며, `terminated/truncated/info` 5튜플 표면은 미착륙
+  - action 4상태는 runtime pack/checker PASS이나 해당 pack README가 `closure_claim: no`라 consumer closure 주장은 보류
+  - Web parity는 JS evaluator와 CLI dataset projection 비교 범위에서 PASS, `ddonirang_tool.wasm` 직접 consumer는 아님
+  - `wasmtime-py` / PyO3 consumer 경로는 제품 실행 증빙 없음
+- 검증:
+  - `python tests/run_nurigym_shared_sync_action_pipeline_pack_check.py` PASS
+  - `python tests/run_nuri_gym_contract_check.py` PASS
+  - `python tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py` FAIL(matrix count expectation drift: `rows=90 behavior=90 docs=0`)
+  - `python tests/run_pack_golden.py nurigym_python_web_parity_v1 nuri_gym_gridmaze_v1 nuri_gym_bandit_v1` PASS
+  - `node tests/nurigym_python_web_parity_runner.mjs` PASS
+- DoD:
+  - 증빙 현황표 1건: 완료
+  - `golden_closed / runner_fill / docs_first` 분류: 완료
+  - closure 주장 없음: 준수
+  - parser/runtime/pack/golden/state_hash/runtime canonical name 변경: 없음

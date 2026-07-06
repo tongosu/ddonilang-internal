@@ -285,6 +285,7 @@
 | Q33 | 이번 Q33 커밋 | `docs/context/reports/GANADA_REMAINING_TRACKS_REAL_FEATURE_AUDIT_V1.md`, `docs/context/briefs/BRIEF_GANADA_REMAINING_REAL_FEATURE_AUDIT_V1.md` 실행 보고 | 48칸/111개 후보 pack golden 실측, primary pack 48/48 PASS, 코드/golden/pack 변경 없음 |
 | Q34 | 이번 Q34 커밋 | `solutions/seamgrim_ui_mvp/ui/OBSERVER_REGISTRY.{json,md}`, `tests/run_wasm_state_observer_client_capability_check.py`, `docs/context/briefs/BRIEF_D40_OBSERVER_REGISTRY_ENFORCEMENT_V1.md` 실행 보고 | observer registry 6개 전수 검사 PASS, `core_lang --only-step wasm_state_observer_client_capability_check` PASS, `core_lang` PASS |
 | Q35 | 이번 Q35 커밋 | `docs/context/proposals/PROPOSAL_SSOT_V24_0_9_POST_CLARIFICATION_EXECUTION_SYNC_20260412.md`, `docs/context/briefs/BRIEF_FLOW_HOOK_PACK_WORDING_FIX_V1.md` 실행 보고 | 흐름씨-훅 pack 문구 1건 정정, 유사 과장 문구 검색, pack README/코드/checker/golden 변경 없음, `core_lang` PASS |
+| Q36 | Q36-1~Q36-6 커밋 | `SETTINGS_HEADER_T0_ALIGNMENT_AUDIT_V1`, flat 설정키 proposal, 구제안 델타 archive, `설정.누리/이야기` OI, `설정.슬기` proposal, 누리짐 consumer closure 증빙 보고 | 전부 문서/보고서 산출. Q36-1 drift 1건 기록, Q36-6 consumer closure 미완 기록. 코드/parser/runtime/golden/state_hash/SSOT 수정 없음 |
 
 Q-CONFORMANCE 특기:
 - 기본 12개 케이스에 브리프가 별도 요구한 `value_ref_tail_undefined` 레드 케이스를 더해 총 13개를 캡처했다.
@@ -330,3 +331,12 @@ Q35 특기:
 - `PROPOSAL_SSOT_V24_0_9_POST_CLARIFICATION_EXECUTION_SYNC_20260412.md:53`의 "evidence 로 잠그는 작업" 문구를 GOAL-B 실측에 맞춰 docs-first contract/expected 구조 고정으로 정정했다.
 - 대상 문서 내부와 관련 광역 패턴 검색에서 추가 정정 대상은 없었다.
 - `pack/lang_flow_hook_interaction_v1/README.md`는 수정하지 않았다.
+
+Q36 특기:
+- 지시문 1/5/6은 순수 report/archive, 지시문 2/3/4는 proposal/OI만 작성했다.
+- Q36-1에서 `lang_settings_header_closure_v1` golden c02 drift를 기록했다. 현재 `legacy_boim.ddn` canon은 성공하며, 수정은 하지 않았다.
+- Q36-2는 flat `설정` key 영향 51개 파일/133행을 수집하고 `마디수 -> 설정.실행`, `제목/설명 -> 설정.문서` 권고안을 만들었다.
+- Q36-3은 `설정.누리/설정.이야기` candidate key와 OI 질문을 등록했다.
+- Q36-4는 `설정.슬기` 예시 key drift를 수집하고 통일 표면/OI를 작성했다. SSOT/pack 예시는 수정하지 않았다.
+- Q36-5는 구제안 델타 아카이브와 SSOT 병합 큐 항목을 작성했다.
+- Q36-6은 누리짐 consumer closure가 아직 완전 `golden_closed`가 아님을 확인했다. action 4상태와 bounded web parity는 PASS 증빙이 있으나, 요청 이름의 reset/equivalence pack, `terminated/truncated/info`, `wasmtime-py`, PyO3 실행 증빙은 없다.
