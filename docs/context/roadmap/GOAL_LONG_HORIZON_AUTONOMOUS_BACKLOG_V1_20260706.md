@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 46/47
+- 트랙 A: 47/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -138,3 +138,5 @@
 - [LH-A-44] 11.3.1 추측 금지 원칙은 call-tail ambiguity 일부 착지로 감사 stale이나 A01/A02 잔여 red에 연결해 부분 해소/잔여 red로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A44_stem_ambiguity_no_guess_principle_V1.md`. 관련 pack: `pack/must_gap_a01_x_xha_collision_red_v1`, `pack/must_gap_a02_call_tail_resolve_unresolved_red_v1`.
 - [LH-A-45] 11.3.3 어간 교대 trigger table/정본 분류 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A45_stem_alternation_trigger_V1.md`, `pack/must_gap_a45_stem_alternation_trigger_red_v1/`.
 - [LH-A-46] 11.3.4 어간 교대/어미 결정/축약 3-step 정본 처리 파이프라인 부재를 A45 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A46_stem_canon_pipeline_V1.md`. 관련 pack: `pack/must_gap_a45_stem_alternation_trigger_red_v1`.
+- [LH-A-47] 다중 디스덧댐 overload 후보/구체성 비교/동률 오류 부재 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A47_multi_dispatch_specificity_V1.md`, `pack/must_gap_a47_multi_dispatch_specificity_red_v1/`.
+- [VERIFY-A-47] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
