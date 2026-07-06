@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 9/47
+- 트랙 A: 10/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -97,3 +97,5 @@
 - [LH-A-07] §P1.6 block-tail pipe 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A07_p1_block_tail_pipe_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
 - [LH-A-08] §P1.7 흐름값 주입 알고리즘을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A08_p1_pipe_inject_algorithm_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
 - [LH-A-09] `~에 따라` 갈래 match 대표 표면 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A09_match_branch_e_ttara_V1.md`, `pack/must_gap_a09_match_branch_e_ttara_red_v1/`.
+- [LH-A-10] `E에 따라 {}` 문법 행을 A09 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A10_match_branch_syntax_V1.md`. 관련 pack: `pack/must_gap_a09_match_branch_e_ttara_red_v1`.
+- [VERIFY-A-10] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
