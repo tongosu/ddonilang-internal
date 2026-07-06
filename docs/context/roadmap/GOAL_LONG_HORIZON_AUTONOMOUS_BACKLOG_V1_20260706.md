@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 26/47
+- 트랙 A: 27/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -116,3 +116,4 @@
 - [LH-A-24] 조사 단독 식별자 예약/금지 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A24_josa_reserved_identifier_V1.md`, `pack/must_gap_a24_josa_reserved_identifier_red_v1/`.
 - [LH-A-25] 조사 접미사 자동 분리 후 canon `~` 삽입 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A25_josa_canon_tilde_insertion_V1.md`, `pack/must_gap_a25_josa_canon_tilde_insertion_red_v1/`.
 - [LH-A-26] SEMSI-RESULT-01 셈씨 결과칸 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A26_semsi_result_slot_V1.md`, `pack/must_gap_a26_semsi_result_slot_red_v1/`.
+- [LH-A-27] TERM-MAP 단일 소스/FATAL term lint 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A27_term_map_single_source_V1.md`, `pack/must_gap_a27_term_map_single_source_red_v1/`.
