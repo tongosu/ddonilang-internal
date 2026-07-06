@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 38/47
+- 트랙 A: 39/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -129,3 +129,4 @@
 - [LH-A-36] `고름씨` 정의 문법/variant ABI 규칙을 A35 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A36_goreumssi_definition_syntax_V1.md`. 관련 pack: `pack/must_gap_a35_goreumssi_tag_union_red_v1`.
 - [LH-A-37] 말 이음씨 사용자 정의 중위연산 미착지 재확인 및 대표 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A37_word_ieumssi_operator_V1.md`, `pack/must_gap_a37_ieumssi_operator_red_v1/`.
 - [LH-A-38] 기호 이음씨/말별칭 정의 헤더 규칙을 A37 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A38_symbol_ieumssi_operator_V1.md`. 관련 pack: `pack/must_gap_a37_ieumssi_operator_red_v1`.
+- [LH-A-39] 확장 이음기호 EXT_OPCHAR/최장 일치 lexer 규칙을 A37 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A39_extended_operator_symbols_V1.md`. 관련 pack: `pack/must_gap_a37_ieumssi_operator_red_v1`.
