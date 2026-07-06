@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 1/47
+- 트랙 A: 2/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -89,3 +89,4 @@
 
 (항목 완료마다 여기 추가)
 - [LH-A-01] `X`/`X하` 이름 충돌 금지 심화조사. call-tail ambiguity 구현은 감사 이후 일부 착지했으나 정의시 충돌 금지는 red로 유지. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A01_x_xha_collision_V1.md`, `pack/must_gap_a01_x_xha_collision_red_v1/`.
+- [LH-A-02] CALL-TAIL-RESOLVE-01 재검증. ambiguous 구현은 착지했지만 unresolved 전용 진단은 red로 분리. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A02_call_tail_resolve_unresolved_V1.md`, `pack/must_gap_a02_call_tail_resolve_unresolved_red_v1/`.
