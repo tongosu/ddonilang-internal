@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 40/47
+- 트랙 A: 41/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -132,3 +132,4 @@
 - [LH-A-39] 확장 이음기호 EXT_OPCHAR/최장 일치 lexer 규칙을 A37 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A39_extended_operator_symbols_V1.md`. 관련 pack: `pack/must_gap_a37_ieumssi_operator_red_v1`.
 - [LH-A-40] 사용자 정의 이음씨 우선순위 registry/범위 검증 부재를 A37 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A40_user_operator_precedence_V1.md`. 관련 pack: `pack/must_gap_a37_ieumssi_operator_red_v1`.
 - [VERIFY-A-40] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
+- [LH-A-41] 흐름씨-훅 위상 분리는 감사 이후 제품 구현/pack checker 근거가 확인되어 신규 red pack 없이 재분류 필요로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A41_flow_hook_phase_reverify_V1.md`. 관련 pack: `pack/lang_flow_hook_interaction_v1`.
