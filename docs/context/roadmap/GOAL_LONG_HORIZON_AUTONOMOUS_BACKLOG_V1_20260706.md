@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 7/47
+- 트랙 A: 8/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -95,3 +95,4 @@
 - [LH-A-05] §P1.2 호출식-only 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A05_p1_pipe_call_only_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
 - [LH-A-06] §P1.3 암묵 주입 금지 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A06_p1_pipe_no_implicit_inject_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
 - [LH-A-07] §P1.6 block-tail pipe 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A07_p1_block_tail_pipe_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
+- [LH-A-08] §P1.7 흐름값 주입 알고리즘을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A08_p1_pipe_inject_algorithm_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
