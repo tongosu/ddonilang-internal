@@ -216,3 +216,21 @@
   - candidate key 표: 완료
   - 질문 목록: 완료
   - parser/runtime 변경: 0건
+
+### Q36-4 / 지시문 4 — `설정.슬기` docs 예시 키 통일 PROPOSAL/OI
+
+- 커밋: 예정 `[Q36-4]`
+- 산출물: `docs/context/proposals/PROPOSAL_SETTINGS_SEULGI_EXAMPLE_KEY_UNIFICATION_V1_20260706.md`
+- 수행: `설정.슬기` 예시의 `두뇌종류/두뇌/끼우개/정책/지연마디` drift를 수집하고, 통일 표면과 OI 질문을 작성했다.
+- 결과:
+  - 권고 표면: `슬기 { 두뇌 { 갈래: #규칙형. 끼우개: "...". 정책: @"...". }. 지연마디: 3. }.`
+  - 대안: 단일 key `두뇌`, 기존 `두뇌종류` 유지
+  - 소유권 질문: `지연마디`를 `설정.샘` 주입 지연으로 볼지, `설정.슬기` 응답 지연으로 볼지, 또는 `응답지연마디`로 분리할지
+- 검증:
+  - `rg`로 현재 drift 수집 완료
+  - 사용자 지시상 실제 SSOT/pack 예시 수정은 하지 않음
+- DoD:
+  - 예시 key 표기 drift 수집: 완료
+  - 통일안 제안: 완료
+  - 소유권 질문 OI 등재: 완료
+  - parser/candidate key hard-cut: 없음
