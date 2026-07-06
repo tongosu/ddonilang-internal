@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 27/47
+- 트랙 A: 28/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -117,3 +117,4 @@
 - [LH-A-25] 조사 접미사 자동 분리 후 canon `~` 삽입 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A25_josa_canon_tilde_insertion_V1.md`, `pack/must_gap_a25_josa_canon_tilde_insertion_red_v1/`.
 - [LH-A-26] SEMSI-RESULT-01 셈씨 결과칸 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A26_semsi_result_slot_V1.md`, `pack/must_gap_a26_semsi_result_slot_red_v1/`.
 - [LH-A-27] TERM-MAP 단일 소스/FATAL term lint 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A27_term_map_single_source_V1.md`, `pack/must_gap_a27_term_map_single_source_red_v1/`.
+- [LH-A-28] 기계 판독용 TERM-MAP 블록/해시 근거 추출 부재를 A27 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A28_term_map_machine_block_V1.md`. 관련 pack: `pack/must_gap_a27_term_map_single_source_red_v1`.
