@@ -143,3 +143,23 @@
 - `SSOT_LANG_v24.12.9.md:8102` — v23.2.6 부록 C-5 배움틀 docs-first representative note
 
 전부 정확히 일치. 다만 `보람주인갈래/보람때갈래/판끝갈래` 등 이 표의 실제 코드 구현은 0건으로 확인됨(`rg -rln "보람주인갈래|보람때갈래|판끝갈래|없음보람" tools/teul-cli/src core/src` → 결과 없음) — SSOT 설계는 상세하나 코드는 아직 없다는 이번 세션 전체의 반복 패턴과 일치한다.
+
+---
+
+## 실행 보고
+
+### Q36-1 / 지시문 1 — T0 `설정.거울 / 설정.실행` AGE gate 정렬
+
+- 커밋: 예정 `[Q36-1]`
+- 산출물: `docs/context/reports/SETTINGS_HEADER_T0_ALIGNMENT_AUDIT_V1.md`
+- 수행: 상태표, frontdoor 제품 canon, `lang_settings_header_closure_v1` pack/golden, 제품 코드 검색을 대조했다.
+- 결과: `설정.거울` 하위 후보와 `설정.실행` 축은 SSOT 기준 `designed/STUB_ONLY`로 남아 있으며, 제품 코드에서 implemented로 과잉 소비하는 경로는 발견하지 못했다.
+- 잔여 drift: `pack/lang_settings_header_closure_v1/golden.jsonl` c02는 legacy `보임` 금지 오류를 기대하지만 현재 `teul-cli canon pack/lang_settings_header_closure_v1/legacy_boim.ddn`은 성공한다.
+- 검증:
+  - `python tests/run_lang_settings_header_closure_pack_check.py` PASS
+  - `python tests/run_pack_golden.py lang_settings_header_closure_v1` FAIL 1건(c02 expected `E_CANON_LEGACY_BOIM_FORBIDDEN`, got exit 0) — 지시문 1의 drift 목록에 기록, 수정 없음
+- DoD:
+  - 상태표-frontdoor-pack 3자 대조: 완료
+  - drift 0건 또는 잔여 목록 + 원인: 잔여 1건 기록
+  - `designed/STUB_ONLY` 항목 implemented 과잉 표기 0건: 제품 코드 검색 기준 충족
+  - 공통 불변 경계: 코드/팩/SSOT/state_hash/runtime canonical name 변경 없음
