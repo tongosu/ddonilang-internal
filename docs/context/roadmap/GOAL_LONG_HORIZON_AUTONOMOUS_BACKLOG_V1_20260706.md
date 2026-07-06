@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 33/47
+- 트랙 A: 34/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -124,3 +124,4 @@
 - [LH-A-31] 시스템 예약 자음 식별자 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A31_jamo_reserved_identifier_V1.md`, `pack/must_gap_a31_jamo_reserved_identifier_red_v1/`.
 - [LH-A-32] `->` 우향 대입 sugar/canon 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A32_assign_arrow_right_V1.md`, `pack/must_gap_a32_assign_arrow_right_red_v1/`.
 - [LH-A-33] `이름씨` 본문 초기화/constructor init 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A33_imeumssi_body_init_V1.md`, `pack/must_gap_a33_imeumssi_body_init_red_v1/`.
+- [LH-A-34] `이름씨` 자기참조 `나` 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A34_self_na_identifier_V1.md`, `pack/must_gap_a34_self_na_identifier_red_v1/`.
