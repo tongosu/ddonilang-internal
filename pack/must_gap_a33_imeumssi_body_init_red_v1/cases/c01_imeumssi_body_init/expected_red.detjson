@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "IMEUMSSI_BODY_INIT",
+  "expected_future_diag": "E_IMEUMSSI_BODY_INIT_NOT_IMPLEMENTED",
+  "notes": [
+    "진단 이름은 아직 확정하지 않는다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}
