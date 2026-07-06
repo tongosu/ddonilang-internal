@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 6/47
+- 트랙 A: 7/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -94,3 +94,4 @@
 - [LH-A-04] `해서` 파이프 §P1 대표 표면 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A04_p1_pipe_surface_V1.md`, `pack/must_gap_a04_p1_pipe_surface_red_v1/`.
 - [LH-A-05] §P1.2 호출식-only 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A05_p1_pipe_call_only_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
 - [LH-A-06] §P1.3 암묵 주입 금지 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A06_p1_pipe_no_implicit_inject_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
+- [LH-A-07] §P1.6 block-tail pipe 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A07_p1_block_tail_pipe_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
