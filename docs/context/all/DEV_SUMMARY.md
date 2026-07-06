@@ -12,6 +12,21 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [PROCESS][AI-COLLAB] AI 협업 운영 체계 부트스트랩 (2026-07-06)
+
+- 변경:
+  - `AGENT_WORKFLOW.md`, `SSOT_POLICY.md`, `AI_COLLABORATION_PLAYBOOK.md`, `ARTIFACT_POLICY.md`, `GEMINI.md`를 추가했다.
+  - `AGENTS.md`와 `CLAUDE.md`에 공통 AI 협업 진입점만 보강했다.
+  - `work/_session_deltas/`, `work/erq/`, `work/_templates/`를 추가해 session_delta, ERQ, web-only AI handoff 템플릿을 분리했다.
+  - `_inbox/`, `inputs/`, `_archive/` README를 추가해 원본/작업 사본/보관 경계를 명시했다.
+  - 기존 SSOT 정본 위치(`docs/ssot/**`)는 유지하고 새 루트 `ssot/`는 만들지 않았다.
+- 검증:
+  - `docs/ssot/**` 직접 수정 없음.
+  - 제품 코드/런타임 동작 변경 없음.
+- 진행률:
+  - 작업 단위: 1/1 = 100% (`닫힘-문서`)
+  - `닫힘-동작` 주장 없음.
+
 ### [Q27][CLEANUP] 죽은 체크 스크립트 삭제 실행 (2026-07-06)
 
 - 근거:

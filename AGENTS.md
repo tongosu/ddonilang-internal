@@ -3,6 +3,14 @@
 ## 목적
 이 문서는 Codex(또는 다른 에이전트)가 프로젝트에서 일할 때 따라야 할 규칙과 기대치를 정의한다.
 
+## AI 협업 진입점
+- 여러 AI가 같은 작업을 이어받을 때는 이 파일과 `AGENT_WORKFLOW.md`를 함께 읽는다.
+- SSOT 변경 경계와 닫힘 주장 등급은 `SSOT_POLICY.md`를 따른다.
+- 세션 중 결정/미완료/검증 결과는 `work/_session_deltas/YYYYMMDD_agent_session-name.md`에 남긴다.
+- 근거 없는 주장, 외부 AI 제안, 완료 주장 후보는 `work/erq/ERQ_QUEUE.md`에 보류한다.
+- 폴더 접근 없는 웹 AI에는 `work/_templates/WEB_AI_CONTEXT_BUNDLE.template.md`를 사용하고, 답변은 Proposal로만 취급한다.
+- 산출물 위치와 승격 규칙은 `ARTIFACT_POLICY.md`를 따른다.
+
 ## 작업 범위
 - 이 저장소는 또니랑(DDN) 관문 0 구현과 관련된 코드를 포함한다.
 - 주요 레이어: core(엔진), lang(문법/정본화), tool(실행 도구/런타임).
