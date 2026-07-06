@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 4/47
+- 트랙 A: 5/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -92,3 +92,4 @@
 - [LH-A-02] CALL-TAIL-RESOLVE-01 재검증. ambiguous 구현은 착지했지만 unresolved 전용 진단은 red로 분리. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A02_call_tail_resolve_unresolved_V1.md`, `pack/must_gap_a02_call_tail_resolve_unresolved_red_v1/`.
 - [LH-A-03] `이전값보기` 표면 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A03_previous_value_view_V1.md`, `pack/must_gap_a03_previous_value_view_red_v1/`.
 - [LH-A-04] `해서` 파이프 §P1 대표 표면 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A04_p1_pipe_surface_V1.md`, `pack/must_gap_a04_p1_pipe_surface_red_v1/`.
+- [LH-A-05] §P1.2 호출식-only 규칙을 A04 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A05_p1_pipe_call_only_V1.md`. 관련 pack: `pack/must_gap_a04_p1_pipe_surface_red_v1`.
