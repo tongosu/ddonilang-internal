@@ -81,7 +81,7 @@
 
 ## 진행률 요약 (계속 갱신)
 
-- 트랙 A: 29/47
+- 트랙 A: 30/47
 - 트랙 B: 0/360
 - 트랙 C: 0/3
 
@@ -119,3 +119,5 @@
 - [LH-A-27] TERM-MAP 단일 소스/FATAL term lint 미착지 재확인 및 red pack skeleton 작성. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A27_term_map_single_source_V1.md`, `pack/must_gap_a27_term_map_single_source_red_v1/`.
 - [LH-A-28] 기계 판독용 TERM-MAP 블록/해시 근거 추출 부재를 A27 대표 pack에 연결해 red 상태로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A28_term_map_machine_block_V1.md`. 관련 pack: `pack/must_gap_a27_term_map_single_source_red_v1`.
 - [LH-A-29] 버전 표기 PATCH/MINOR/MAJOR 정책과 `r1/r2` 금지 검사 부재를 red pack skeleton으로 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A29_version_notation_policy_V1.md`, `pack/must_gap_a29_version_notation_policy_red_v1/`.
+- [LH-A-30] `~해보고:` + `그것`은 root lang/legacy tool 구현 흔적이 있으나 `teul-cli` frontdoor parity red로 재분류 기록. 산출물: `docs/context/reports/MUST_GAP_DEEPDIVE_A30_haebogo_geugeot_frontdoor_parity_V1.md`, `pack/must_gap_a30_haebogo_geugeot_frontdoor_red_v1/`.
+- [VERIFY-A-30] `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).

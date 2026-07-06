@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a30_haebogo_geugeot_frontdoor_red_v1",
+  "track": "A",
+  "item": "A30",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:1435",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER1_V1.md:30",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A30_haebogo_geugeot_frontdoor_parity_V1.md",
+  "cases": [
+    {
+      "id": "c01_haebogo_geugeot_frontdoor",
+      "input": "cases/c01_haebogo_geugeot_frontdoor/input.ddn",
+      "expected_red": "cases/c01_haebogo_geugeot_frontdoor/expected_red.detjson"
+    }
+  ]
+}
