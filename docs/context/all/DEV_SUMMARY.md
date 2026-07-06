@@ -12,6 +12,25 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [Q37][LANG] 설정 헤더 pack `보임 {}` drift 정합 수리 (2026-07-06)
+
+- 변경:
+  - `lang_settings_header_closure_v1`의 c02를 `c02_boim_surface_accepted`로 정정했다.
+  - `보임 {}`는 SSOT의 structured view sugar 정식 입력 surface로 유지하고, 과거 `E_CANON_LEGACY_BOIM_FORBIDDEN` 기대를 stale로 정리했다.
+  - `legacy_boim.ddn` 파일명은 historical filename으로 유지하되 README에 현재 의미를 명시했다.
+  - 전용 checker가 c02 golden/contract 의미를 정적으로 확인하도록 보강했다.
+- 검증:
+  - `cargo run --quiet --manifest-path tools/teul-cli/Cargo.toml -- canon pack/lang_settings_header_closure_v1/legacy_boim.ddn` PASS
+  - `python tests/run_lang_settings_header_closure_pack_check.py` PASS
+  - `python tests/run_pack_golden.py lang_settings_header_closure_v1` PASS
+  - `cargo test -p ddonirang-lang validate_no_legacy_boim_surface_accepts_boim_block -- --nocapture` PASS
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml canon_accepts_boim_surface_on_frontdoor -- --nocapture` PASS
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS
+- 진행률:
+  - 작업 단위: 1/1 = 100% (`닫힘-문서`)
+  - 제품 runtime/parser 동작 변경 없음.
+  - `docs/ssot/**` 직접 수정 없음.
+
 ### [PROCESS][AI-COLLAB] AI 협업 운영 체계 부트스트랩 (2026-07-06)
 
 - 변경:

@@ -43,6 +43,27 @@ def main() -> int:
     contract = json.loads((PACK / "contract.detjson").read_text(encoding="utf-8"))
     if contract.get("schema") != "ddn.lang_settings_header_closure.pack.contract.v1":
         return fail("schema")
+    cases = contract.get("cases")
+    if not isinstance(cases, list):
+        return fail("contract_cases_type")
+    if "c02_boim_surface_accepted" not in cases or "c02_legacy_boim_forbidden" in cases:
+        return fail("contract_cases")
+
+    golden_rows = [
+        json.loads(line)
+        for line in (PACK / "golden.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    by_id = {row.get("id"): row for row in golden_rows}
+    boim_row = by_id.get("c02_boim_surface_accepted")
+    if not boim_row:
+        return fail("golden_c02_missing")
+    if boim_row.get("expected_error_code"):
+        return fail("golden_c02_must_not_expect_error")
+    if boim_row.get("exit_code") != 0:
+        return fail("golden_c02_exit_code")
+    if boim_row.get("stdout") != ["보임 {", "  x: 1.", "}."]:
+        return fail("golden_c02_stdout")
 
     commands = [
         ["cargo", "test", "-p", "ddonirang-lang", "validate_no_legacy_header_accepts_canonical_surface", "--", "--nocapture"],

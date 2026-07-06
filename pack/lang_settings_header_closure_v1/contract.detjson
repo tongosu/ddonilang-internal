@@ -5,7 +5,7 @@
   "closure_claim": "no",
   "cases": [
     "c01_settings_header_stripped",
-    "c02_legacy_boim_forbidden"
+    "c02_boim_surface_accepted"
   ]
 }
 
