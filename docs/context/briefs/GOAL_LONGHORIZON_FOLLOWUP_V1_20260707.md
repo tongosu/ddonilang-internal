@@ -87,10 +87,11 @@
 ## 진행률 요약 (자기 갱신)
 
 - 트랙 D: 47/47 항목 통합
-- 트랙 E: 0/3 파일 생성
+- 트랙 E: 3/3 파일 생성
 - 트랙 F: 0/34 행 심사표
 
 ## 실행 로그
 
 (각 트랙 완료 시 `[LHF-D]`/`[LHF-E]`/`[LHF-F]` 태그로 기록)
 - [LHF-D] Track A 결정 대기 항목 47개를 `docs/context/reports/MUST_GAP_DECISION_QUEUE_V1.md`로 통합. 검증: `rg -c "^- 원본:" docs/context/reports/MUST_GAP_DECISION_QUEUE_V1.md` = 47, 원본 결정 불릿 합계 81 / 신규 문서 원문 불릿 81 일치.
+- [LHF-E] proposal의 TOML 블록 그대로 `gaji/std_grid/gaji.toml`, `gaji/std_input_map/gaji.toml`, `gaji/std_physics_1d/gaji.toml` 3개 생성. 검증: proposal block exact_match=true 3건, `python -c "import tomllib,sys; ..."` PASS, `cargo run --manifest-path tools/teul-cli/Cargo.toml -- gaji lock --root . --out build/gaji_metadata_followup/ddn.lock` 결과 package_count=16 및 새 3개 id present, `cargo test --manifest-path tools/teul-cli/Cargo.toml` PASS (1109 passed).

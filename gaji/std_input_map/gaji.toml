@@ -1,0 +1,9 @@
+id = "gaji/std_input_map"
+name = "표준 입력사상 가지"
+version = "0.1.0"
+ssot_requires = ">=20.1.22"
+
+det_tier = "D-STRICT"
+openness = "closed"
+
+description = "InputSnapshot 기반 입력 해석 helper"
