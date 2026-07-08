@@ -1,0 +1,20 @@
+{
+  "schema": "ddn.std_bogae_core.contract.v1",
+  "pack_id": "std_bogae_core_v1",
+  "evidence_tier": "pack_skeleton",
+  "closure_grade": "닫힘-문서",
+  "behavior_closure_claim": false,
+  "rendering_smoke_claim": false,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "world_state_mutation": false,
+  "hash_truth": {
+    "bogae_hash_source": "payload_or_DrawList_bytes",
+    "pixel_hash_truth": false,
+    "algorithm": "blake3"
+  },
+  "standard_profiles_seeded": [
+    "std_bogae_grid2d_v1",
+    "std_bogae_graph2d_v1"
+  ]
+}
