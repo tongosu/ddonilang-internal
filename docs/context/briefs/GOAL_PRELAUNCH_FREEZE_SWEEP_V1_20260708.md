@@ -68,7 +68,7 @@
 ## 진행률 요약 (자기 갱신)
 
 - 트랙 G1: 완료
-- 트랙 G2: 미착수
+- 트랙 G2: 완료
 - 트랙 G3: 미착수
 
 ## 실행 로그
@@ -76,3 +76,4 @@
 (각 트랙 완료 시 `[PLFS-G1]`/`[PLFS-G2]`/`[PLFS-G3]` 태그로 기록)
 
 - `[PLFS-G1]` `docs/context/reports/PRELAUNCH_RESERVED_WORD_AUDIT_V1.md` 작성. SSOT 추출 112건, lexer 추출 33건, 합집합 표 113행. 분류 합계: SSOT-only 80 + lexer-only 1 + 양쪽 일치 32 = 113, 행 수 검증 PASS.
+- `[PLFS-G2]` `docs/context/reports/PRELAUNCH_GRAMMAR_SPACE_AUDIT_V1.md` 작성. `#`/`@`/`~` lexer 분기 6종을 근거 라인으로 정리했고, 임시 케이스 16건을 `cargo run --manifest-path tools/teul-cli/Cargo.toml -- run ... --summary-json ...`로 실측. 각 표 행에 `work/prelaunch_freeze_sweep/g2/` 입력/로그 경로를 인용. pack 추가 없음.
