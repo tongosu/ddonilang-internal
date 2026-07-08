@@ -32,6 +32,8 @@ Status: Pending
 - 시뮬레이션 보개 기본 제공 항목(좌표계, 축, 격자, 카메라, 확대/축소, 궤적, 벡터, 충돌 영역, 시간 조절, 상태표, 마디/재연 타임라인, state diff)을 추가했다.
 - `docs/context/proposals/PROPOSAL_NURI_MADI_TASK_SCHEDULING_AND_CONFLICT_CONTRACT_V1_20260706.md`를 추가했다. 큰마디/속마디, completion, action_status, filter-before-merge, deterministic merge, 슬기 지연마디, `(agent_id, recv_seq)` 실행 정렬을 하나의 실행 계약으로 정리한다.
 - 핸드오프 문서에는 기존 지시문 9가 있었으므로, 누리 시간/마디/태스크 경합 계약은 지시문 10으로 추가했다.
+- 누리 시간/마디/태스크 경합 제안서에 기본값 평가를 보강했다. 설정을 거의 건드리지 않으면 "동기식 큰마디 commit 기반 결정적 turn/tick engine"에 가깝다고 평가하고, 일반 preset과 고급 preset, 고급 옵션 위험표를 추가했다.
+- 핸드오프 지시문 10에도 기본 운용형 평가, 일반 preset/고급 preset 분리, 고급 옵션 위험표를 추가했다.
 
 ## 검증
 
@@ -41,6 +43,7 @@ Status: Pending
 - 보개 표준팩 제안서는 `docs/context/proposals/`에만 추가했고, `docs/ssot/**`와 parser/runtime은 수정하지 않았다.
 - 추가 보강도 문서 제안 범위에만 머물렀고, `docs/ssot/**`와 parser/runtime은 수정하지 않았다.
 - 누리 시간/마디/태스크 경합 제안도 `docs/context/proposals/`에만 추가했고, `docs/ssot/**`와 parser/runtime은 수정하지 않았다.
+- 기본값/고급 옵션 보강도 문서 제안 범위에만 머물렀고, `docs/ssot/**`와 parser/runtime은 수정하지 않았다.
 
 ## 미해결
 

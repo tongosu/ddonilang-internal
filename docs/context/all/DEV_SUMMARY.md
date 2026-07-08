@@ -1,6 +1,6 @@
 # 또니랑 Codex 개발 요약 (Development Summary)
 > 이전 기록은 DEV_SUMMARY_ARCHIVE_20260706.md 참고
-Last Updated: 2026-07-06
+Last Updated: 2026-07-08
 Workspace: `i:\dev\ddonilang\codex`
 
 ---
@@ -11,6 +11,358 @@ Workspace: `i:\dev\ddonilang\codex`
 - 최신 의사결정/검증 결과를 빠르게 확인하는 용도로 유지한다.
 
 ## 최근 핵심 변경 (요약)
+
+### [SSOT-ADDENDUM][G7] AI-friendly corpus / Seulgi gate fixture (2026-07-08)
+
+- 변경:
+  - `tools/extract_llm_corpus_v1.py`를 보강해 기존 grammar card와 pack 예제 외에 `ssot_term`, `diagnostic_card`, `pack_summary`, `example` row를 분리 생성한다.
+  - `pack/llm_corpus_extract_deterministic_v1` contract/README에 classified corpus kinds를 반영했다.
+  - `pack/seulgi_ai_gate_no_authority_g7_v1`을 추가해 AI proposal, gate accept/reject, sealed artifact 전 no-authority fixture를 고정했다.
+  - `tests/run_ai_friendly_corpus_and_seulgi_gate_g7_check.py`를 추가해 deterministic corpus 2회 byte 동일성, 필수 corpus kind, 기존 `seulgi_gatekeeper_v1`, no-authority fixture를 검증한다.
+- 검증:
+  - `python -m json.tool pack/llm_corpus_extract_deterministic_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/seulgi_ai_gate_no_authority_g7_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/seulgi_ai_gate_no_authority_g7_v1/gate_fixture.detjson` PASS.
+  - `python -m py_compile tools/extract_llm_corpus_v1.py tests/run_ai_friendly_corpus_and_seulgi_gate_g7_check.py` PASS.
+  - `python tests/run_llm_corpus_extract_deterministic_check.py` PASS.
+  - `python tests/run_llm_corpus_v1_dayrun_check.py` PASS, rows=256, sha256=`sha256:103ca605782f91b9e3eb07d2d3090e82126690a898787bc58b800975f64bb46d`.
+  - `python tests/run_seulgi_gatekeeper_pack_check.py` PASS.
+  - `python tests/run_ai_friendly_corpus_and_seulgi_gate_g7_check.py` PASS (`I:/home/urihanl/ddn/codex/build/ai_friendly_corpus_and_seulgi_gate_g7/ai_friendly_corpus_and_seulgi_gate_g7_check_report.detjson`).
+- 진행률:
+  - SSOT addendum G7: 완료 (`닫힘-문서`).
+  - corpus kind count: grammar_card 6, ssot_term 5, diagnostic_card 5, pack_summary 120, example 120.
+  - 자연어 직접 실행, parser/frontdoor grammar, runtime/state_hash 변경 없음.
+
+### [SSOT-ADDENDUM][G6] NuriGym step_record v0.2 consumer prototype (2026-07-08)
+
+- 변경:
+  - `pack/nurigym_step_record_v02_consumer_g6_v1`을 추가해 `nurigym.step.v1` 위에 `step_record.v0.2` 후보 필드를 add-only fixture로 얹었다.
+  - fixture는 `raw_action`, `normalized_action`, `action_status`, `merge_candidates`, `merged_action`, `applied_action`, `run_config_hash`, `settings_hash` 후보를 포함한다.
+  - `tests/run_nurigym_step_record_v02_consumer_g6_check.py`를 추가해 기존 shared-sync action pipeline checker, v0.1 legacy reader unknown-field ignore roundtrip, vectorized consumer prototype, `perf_baseline_v1` 연결을 검증한다.
+- 검증:
+  - `python -m json.tool pack/nurigym_step_record_v02_consumer_g6_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/nurigym_step_record_v02_consumer_g6_v1/step_record_v02_fixture.detjson` PASS.
+  - `python -m json.tool pack/nurigym_step_record_v02_consumer_g6_v1/vectorized_rollout_fixture.detjson` PASS.
+  - `python -m py_compile tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS.
+  - `python tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS (`I:/home/urihanl/ddn/codex/build/nurigym_step_record_v02_consumer_g6/nurigym_step_record_v02_consumer_g6_check_report.detjson`).
+  - 생성 산출물: `step_record_v02_materialized.jsonl`, `legacy_v01_roundtrip.detjson`, `vectorized_consumer_summary.detjson`.
+- 진행률:
+  - SSOT addendum G6: 완료 (`닫힘-문서`).
+  - Gymnasium-compatible consumer, public required schema field 확정, runtime/parser/state_hash 변경 없음.
+  - perf 연결: `gym_rollout_step_per_sec` / `nurigym_rollout_short_proxy_v1`, 2회 결과 byte 동일.
+
+### [SSOT-ADDENDUM][G5] 교육+물리 vertical slice evidence pack (2026-07-08)
+
+- 변경:
+  - `pack/education_physics_vertical_slice_g5_v1`을 추가해 WASM/browser delivery smoke, 기존 물리 적분기 pack, 3층 진단 fixture, graph2d payload bridge를 하나의 evidence pack으로 묶었다.
+  - `diag_three_layer_fixture.detjson`에 `무엇이/어디서/어떻게` 3층 진단 예시 5건을 고정했다.
+  - `physics_graph2d_fixture.detjson`은 `적분.오일러`와 `적분.반암시적오일러` 결과를 `std_bogae_graph2d_v1` payload로 낮추는 입력 fixture다.
+  - `tests/run_education_physics_vertical_slice_g5_check.py`를 추가해 WASM/browser smoke 시도, CLI fallback 적분기 golden, graph2d payload byte 동일성, 제품 경로 clean을 검증한다.
+- 검증:
+  - `python tests/run_seamgrim_wasm_web_smoke_contract_pack_check.py` PASS.
+  - `python -m json.tool pack/education_physics_vertical_slice_g5_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/education_physics_vertical_slice_g5_v1/diag_three_layer_fixture.detjson` PASS.
+  - `python -m json.tool pack/education_physics_vertical_slice_g5_v1/physics_graph2d_fixture.detjson` PASS.
+  - `python -m py_compile tests/run_education_physics_vertical_slice_g5_check.py` PASS.
+  - `python tests/run_education_physics_vertical_slice_g5_check.py` PASS (`I:/home/urihanl/ddn/codex/build/education_physics_vertical_slice_g5/education_physics_vertical_slice_g5_check_report.detjson`).
+  - graph2d generated payload: `I:/home/urihanl/ddn/codex/build/education_physics_vertical_slice_g5/physics_graph2d_payload.detjson`.
+- 진행률:
+  - SSOT addendum G5: 완료.
+  - browser delivery smoke 범위만 `닫힘-동작`; education/physics payload bridge와 overall vertical slice는 `닫힘-문서`.
+  - 제품 physics browser rendering, parser/frontdoor grammar, runtime/state_hash 변경 없음.
+
+### [SSOT-ADDENDUM][G8] 7목적 excellence progress dashboard (2026-07-08)
+
+- 변경:
+  - `docs/reports/audit/SEVEN_PURPOSE_EXCELLENCE_PROGRESS_V1.md`를 추가해 교육/물리, AI Gym, 보개/Manim, 게임, 경제/수학, 교착어권, AI-friendly 7개 목적의 현재 판정/이번 세션 증빙/남은 gap/"훌륭" 전환 조건/다음 산출물을 한 표로 정리했다.
+  - `docs-first`, `pack-skeleton`, `tooling`, `behavior` tier를 분리해 과잉 완료 주장을 막았다.
+  - `docs/reports/audit/INDEX.md`에 dashboard를 등재했다.
+  - `tests/run_seven_purpose_excellence_progress_check.py`를 추가해 필수 목적/열/tier/index 등재를 검증한다.
+- 검증:
+  - `python -m py_compile tests/run_seven_purpose_excellence_progress_check.py` PASS.
+  - `python tests/run_seven_purpose_excellence_progress_check.py` PASS.
+  - `git diff --check -- docs/reports/audit/SEVEN_PURPOSE_EXCELLENCE_PROGRESS_V1.md docs/reports/audit/INDEX.md tests/run_seven_purpose_excellence_progress_check.py` PASS.
+- 진행률:
+  - SSOT addendum G8: 완료 (`닫힘-문서`).
+  - G5/G6/G7은 후속으로 남김.
+  - 신규 `닫힘-동작` 주장 없음.
+
+### [SSOT-ADDENDUM][G4] 보개 표준팩 최소 skeleton (2026-07-08)
+
+- 변경:
+  - `pack/std_bogae_core_v1`, `pack/std_bogae_grid2d_v1`, `pack/std_bogae_graph2d_v1`을 추가해 표준 보개팩 최소 3종을 pack skeleton으로 고정했다.
+  - `std_bogae_graph2d_v1/graph2d_lowering_fixture.detjson`에 series order, domain/tick, label collision 후보를 기록했다.
+  - `tests/run_std_bogae_standard_packs_g1_check.py`를 추가해 graph2d lowering을 두 번 수행하고 payload byte 동일성과 `bogae_hash=blake3(payload bytes)` 경계를 검증한다.
+- 검증:
+  - `python -m json.tool pack/std_bogae_core_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/std_bogae_grid2d_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/std_bogae_graph2d_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/std_bogae_graph2d_v1/graph2d_lowering_fixture.detjson` PASS.
+  - `python -m py_compile tests/run_std_bogae_standard_packs_g1_check.py` PASS.
+  - `python tests/run_std_bogae_standard_packs_g1_check.py` PASS (`I:/home/urihanl/ddn/codex/build/std_bogae_standard_packs_g1/std_bogae_standard_packs_g1_check_report.detjson`).
+  - graph2d generated payload: `I:/home/urihanl/ddn/codex/build/std_bogae_standard_packs_g1/graph2d_payload.detjson`.
+  - 제품 경로 상태: `git status --short -- lang core tool tools/teul-cli/src` clean.
+- 진행률:
+  - SSOT addendum G4: 완료 (`닫힘-문서`, pack skeleton).
+  - rendering/browser/UI smoke 없음.
+  - pixel hash를 truth로 삼지 않음. `닫힘-동작` 주장 없음.
+
+### [SSOT-ADDENDUM][G3] 누리 마디 phase/action fixture pack (2026-07-08)
+
+- 변경:
+  - `pack/nuri_madi_phase_trace_g1_v1`을 추가해 P0~P7 phase trace, raw/merged/applied action record, `action_status` 4종, `E_MADI_WRITE_CONFLICT` fatal 후보 fixture를 pack skeleton으로 고정했다.
+  - 기존 action_status 제품 증빙은 `pack/nurigym_shared_sync_action_pipeline_v1`와 `tools/teul-cli/src/cli/nurigym.rs`를 연결 근거로만 사용했다.
+  - `tests/run_nuri_madi_phase_trace_g1_check.py`를 추가해 skeleton pack 구조와 금지 claim을 검증한다.
+- 검증:
+  - `python -m json.tool pack/nuri_madi_phase_trace_g1_v1/contract.detjson` PASS.
+  - `python -m json.tool pack/nuri_madi_phase_trace_g1_v1/phase_trace.detjson` PASS.
+  - `python -m json.tool pack/nuri_madi_phase_trace_g1_v1/action_record.detjson` PASS.
+  - `python -m json.tool pack/nuri_madi_phase_trace_g1_v1/write_conflict_fatal.detjson` PASS.
+  - `python -m py_compile tests/run_nuri_madi_phase_trace_g1_check.py` PASS.
+  - `python tests/run_nuri_madi_phase_trace_g1_check.py` PASS (`I:/home/urihanl/ddn/codex/build/nuri_madi_phase_trace_g1/nuri_madi_phase_trace_g1_check_report.detjson`).
+  - 제품 경로 상태: `git status --short -- lang core tool tools/teul-cli/src` clean.
+- 진행률:
+  - SSOT addendum G3: 완료 (`닫힘-문서`, pack skeleton).
+  - P0~P7/write-conflict 제품 runtime 동작 완료 주장 없음.
+  - `닫힘-동작` 주장 없음.
+
+### [SSOT-ADDENDUM][G2] 설정 digest / 시앗묶음 prototype (2026-07-08)
+
+- 변경:
+  - `tests/tools/config_digest_proto.py`를 확장해 설정 canonical payload에서 `run_config_hash`, `view_config_hash`, `doc_config_hash`, `settings_hash`를 분리 산출한다.
+  - result-affecting key classifier 초안을 `draft-20260708-ssot-addendum-tooling-only`로 report에 포함한다.
+  - `시앗묶음` named stream derivation fixture를 추가하고 derived seed가 InputSnapshot에 들어가기 전 단계임을 명시한다.
+  - `tests/run_ssot_addendum_g2_config_digest_check.py`를 추가해 G2 성공 기준을 반복 검증한다.
+  - 기존 `tests/run_dayrun_g6_tools_check.py`는 seed의 canonical 위치를 `누리.시앗`으로 맞춰 보정했다.
+- 검증:
+  - `python -m py_compile tests/tools/config_digest_proto.py tests/run_ssot_addendum_g2_config_digest_check.py tests/run_dayrun_g6_tools_check.py` PASS.
+  - `python tests/tools/config_digest_proto.py --selftest` PASS.
+  - `python tests/run_ssot_addendum_g2_config_digest_check.py` PASS (`I:/home/urihanl/ddn/codex/build/ssot_addendum_g2_config_digest/ssot_addendum_g2_config_digest_report.detjson`).
+  - `python tests/run_dayrun_g6_tools_check.py` PASS.
+  - 제품 경로 상태: `git status --short -- lang core tool tools/teul-cli/src` clean.
+- 진행률:
+  - SSOT addendum G2: 완료 (`닫힘-문서`).
+  - runtime record schema, `state_hash`, parser 변경 없음.
+  - `닫힘-동작` 주장 없음.
+
+### [SSOT-ADDENDUM][G1] 발표 전 동결 반복 검증 도구 (2026-07-08)
+
+- 변경:
+  - `tests/run_pre_release_freeze_tools_check.py`를 추가해 reserved surface, syntax-space probe, `E_*` namespace, `schema_version`, pack ID 충돌을 한 번의 명령으로 재현한다.
+  - 생성 report는 `I:/home/urihanl/ddn/codex/build/pre_release_freeze_tools/pre_release_freeze_tools_report.detjson`, summary는 `I:/home/urihanl/ddn/codex/build/pre_release_freeze_tools/pre_release_freeze_tools_summary.md`에 남긴다.
+  - 기존 `docs/reports/audit/PRE_RELEASE_FREEZE_SWEEP_V1.md` 주요 수치와 현재 scan scope 수치를 비교 가능하게 분리했다.
+- 검증:
+  - `python -m py_compile tests/run_pre_release_freeze_tools_check.py` PASS.
+  - `python tests/run_pre_release_freeze_tools_check.py` PASS.
+  - report 수치: reserved 후보 26건, syntax probe 6건, 현재 scan scope `E_*` 3,973건, `schema_version` 222줄, pack 후보/충돌 53/4.
+  - 제품 경로 상태: `git status --short -- lang core tool tools/teul-cli/src` clean.
+- 진행률:
+  - SSOT addendum G1: 완료 (`닫힘-문서`).
+  - 제품 runtime/parser/state_hash 동작 변경 없음.
+  - `닫힘-동작` 주장 없음.
+
+### [STRATEGY][GOVERNANCE] North Star / 공개 쐐기 / WIP 한도 반영 (2026-07-08)
+
+- 변경:
+  - `AI_COLLABORATION_PLAYBOOK.md`에 North Star 후보, 셈그림 물리 차시 wedge, WIP 한도, 공개 안정성 라벨을 추가했다.
+  - `AGENT_WORKFLOW.md`에 세션 시작 전 North Star/wedge 체크와 WIP 한도 확인 규칙을 추가했다.
+  - `또니랑/CODEX_DEVGOALS_20260708_SSOT_ADDENDUM_FULL_BUILD.md`에 상위 성공 기준과 G9/G10을 추가했다.
+  - `또니랑/CODEX_DEVGOALS_20260708_PUBLIC_WEDGE_AND_GOVERNANCE.md`를 추가했다.
+- 운영 기준:
+  - North Star 후보: 2026년 안에 우리가 모르는 사람 10명이 설치 없이 또는 최소 설치로 셈그림 물리 시뮬레이션을 만들고 공유한다.
+  - 첫 wedge: 셈그림 물리 차시.
+  - 첫 페르소나 후보: 과학/정보 교사 1명.
+  - 외부 라벨: 안정/실험.
+- 진행률:
+  - 전략 운영 반영: 완료 (`닫힘-문서`).
+  - 제품 runtime/parser 동작 변경 없음.
+
+### [SSOT][DIRECT] 설정/누리/보개/7목적/동결 부록 직접 반영 (2026-07-08)
+
+- 변경:
+  - 사용자 승인에 따라 `docs/ssot/ssot/*_v24.12.9.md` source family에 2026-07-08 addendum을 직접 반영했다.
+  - 반영 범위는 설정 8 section, settings hash V2 split, `시앗묶음`, 누리 큰마디/속마디/P0~P7/write-conflict, 보개 표준팩/lowering, 7목적 excellence roadmap, 발표 전 freeze sweep, AI 닫힌 베타 protocol이다.
+  - `SSOT_OPEN_ISSUES_v24.12.9.md`에는 settings/nuri/bogae/freeze/seven-purpose OI cluster를 등록했다.
+  - `SSOT_PENDING_v24.12.9.md`에는 settings hash, seed stream, nuri phase/conflict, Bogae standard packs, seven-purpose G1 evidence, beta/freeze pending cluster를 등록했다.
+  - `SSOT_ALL_MANIFEST_v24.12.9.md`에는 version bump 없이 v24.12.9-candidate 2026-07-08 manifest addendum으로 남겼다.
+- 검증:
+  - `Select-String` 기반으로 `run_config_hash`, `std_bogae_graph2d`, `OI-SEVEN-AIGYM-VECTORIZED-CONSUMER-01`, `E_MADI_WRITE_CONFLICT` 반영 위치를 확인했다.
+  - `git diff --check -- docs/context/all/DEV_SUMMARY.md docs/status/PROJECT_STATUS.md docs/status/CHANGELOG.md` PASS.
+  - `docs/ssot/**`는 `.gitignore`의 `docs/` 규칙 아래 있어 일반 git diff/status에는 나타나지 않음을 확인했다. 로컬 SSOT 파일 자체는 수정됨.
+- 진행률:
+  - SSOT 직접 반영: 완료 (`닫힘-문서`).
+  - 제품 runtime/parser/state_hash 동작 변경 없음.
+  - SSOT 버전 번호는 올리지 않음. 현재 기준은 계속 `v24.12.9-candidate`.
+
+### [DAYRUN][G1] SSOT 병합 준비 / 발표 전 동결 스윕 (2026-07-08)
+
+- 변경:
+  - `docs/context/proposals/SSOT_PATCH_DRAFT_20260706_BUNDLE.md`를 추가해 2026-07-06 논의 산출물 8건의 SSOT 반영 후보를 대상 파일/절/문장 단위로 정리했다.
+  - `docs/context/proposals/OI_CANDIDATE_BUNDLE_20260706.md`를 추가해 설정.누리 key set, 지연마디 소유권, OQ 1~4, OQ-R1, 합치기갈래↔행동모음갈래, 결과영향 키, 보개 이중 경로 등 OI 후보를 묶었다.
+  - `docs/context/proposals/OI_CANDIDATES_20260706_BUNDLE.md`를 추가해 schema version, E-code namespace, reserved syntax, 7목적 evidence OI까지 보강했다.
+  - `docs/reports/audit/PRE_RELEASE_FREEZE_SWEEP_V1.md`를 추가해 예약어 누락 후보, 문법 공간, E_* 코드 이름공간, schema version, pack 후보 ID 충돌을 실측했다.
+  - pack 후보 ID는 초기 부분 스윕 39건 중 기존 존재 2건, SSOT patch bundle 최종 표 기준 53건 중 기존 존재 4건으로 분리했다.
+  - `docs/reports/audit/INDEX.md`에 동결 스윕 보고서를 등재했다.
+- 검증:
+  - 예약어 후보 26개 정적 스윕: SSOT/비SSOT 발견 줄 수 기록.
+  - 문법 공간 스윕: `~분포` 0회, `~이름` 1회, `#모두필요` 120회, `#빈칸채움` 94회.
+  - 제품/pack/test 경로 `E_*` unique token 3,805개, DAYRUN 재현 스윕 3,749개, 테스트/러너성 접두 제외 2,782개.
+  - `schema_version` 발견 줄 200개.
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g1.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g1.log`).
+  - `docs/ssot/**` 변경 없음.
+- 진행률:
+  - DAYRUN G1: 완료 (`닫힘-문서`).
+  - 제품 runtime/parser 동작 변경 없음.
+  - `닫힘-동작` 주장 없음.
+
+### [DAYRUN][G2] perf_baseline_v1 실측 기준선 생성 (2026-07-08)
+
+- 변경:
+  - `tests/run_perf_baseline_check.py`를 추가해 DAYRUN 요구 명령명 1회 실행으로 3축 측정, local baseline detjson 생성, 2회 실행 결과 해시 일치, regression gate report 생성을 확인한다.
+  - `tools/scripts/run_perf_baseline_v1.py`에 raw stdout/stderr 기반 `result_sha256`과 `--baseline-out` 생성을 추가했다.
+  - WASM first-frame 실측은 이 로컬 dayrun 경로에서 불가하므로 `wasm_load_first_frame` 축은 CLI startup fallback으로 기록하고 사유를 report/baseline에 남긴다.
+  - `pack/perf_baseline_v1`의 pending baseline case와 README를 fallback 및 새 검증 명령에 맞춰 보강했다.
+- 검증:
+  - `python tests/run_perf_baseline_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/perf_baseline_check_g2.log`).
+  - 생성 report: `I:/home/urihanl/ddn/codex/build/perf_baseline_v1/perf_baseline_report.detjson`.
+  - 생성 baseline: `I:/home/urihanl/ddn/codex/build/perf_baseline_v1/perf_baseline_generated_baseline.detjson`.
+  - 생성 gate report: `I:/home/urihanl/ddn/codex/build/perf_baseline_v1/perf_baseline_gate_report.detjson`.
+  - `python tests/run_perf_baseline_v1_pack_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/perf_baseline_v1_pack_check_g2.log`).
+  - `python tests/run_pack_golden.py perf_baseline_v1` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/perf_baseline_v1_pack_golden_g2.log`).
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g2.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g2.log`).
+- 진행률:
+  - DAYRUN G2: 완료 (`닫힘-문서`, local measurement baseline).
+  - 제품 runtime/parser 동작 변경 없음.
+  - 실제 public performance 충분 주장 없음.
+
+### [DAYRUN][G3] AI 베타 Round 0 사용자 번들 준비 (2026-07-08)
+
+- 변경:
+  - `work/beta/round0/BETA_USER_BUNDLE/`를 추가해 시작 가이드, CLI 1쪽, 과제표, friction log 템플릿, 샘플 4개, T4 오류 fixture 3개, 페르소나 프롬프트 3개를 준비했다.
+  - 베타 프롬프트에는 "제공된 번들 밖 지식으로 우회하지 않는다"는 지식 격리 문구를 포함했다.
+  - T4 fixture는 문법(`E_LEX_UNEXPECTED_CHAR`), 타입(`E_RUNTIME_TYPE_MISMATCH`), 계약 표면(`E_PARSE_UNEXPECTED_TOKEN` with 계약 mode alternatives) 3종으로 구성했다.
+  - `tests/run_beta_round0_bundle_check.py`를 추가해 번들 파일 존재, 내부 자료 참조 부재, 샘플 실행, fixture 기대 진단을 재현한다.
+- 검증:
+  - `python tests/run_beta_round0_bundle_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/beta_round0_bundle_check_g3.log`).
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g3.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g3.log`).
+  - 베타 세션 실행은 하지 않음(저장소 지식 보유 세션이므로 격리 위반 방지).
+- 진행률:
+  - DAYRUN G3: 완료 (`닫힘-문서`, 준비물 only).
+  - 제품 runtime/parser 동작 변경 없음.
+  - 실제 베타 사용자 세션 결과 주장 없음.
+
+### [DAYRUN][G4] 물리 적분기 / 경제 model-first G1 pack (2026-07-08)
+
+- 변경:
+  - `pack/stdlib_l1_integrators_g1_v1`을 추가해 기존 제품 경로의 `적분.오일러`, `적분.반암시적오일러`, `보간.선형`을 진자 1-step golden으로 묶었다. 새 `적분.선형보간` 표면은 만들지 않았다.
+  - 경제 model-first skeleton 3종을 추가했다: `econ_model_supply_demand_equilibrium_v1`, `econ_model_money_supply_v1`, `econ_model_tax_welfare_v1`.
+  - 각 경제 pack은 `contract.detjson`에 `evidence_tier=skeleton/docs_first`, `model_first=true`, agent-first 5-slot symmetry를 명시했다.
+  - `tests/run_stdlib_l1_integrators_g1_check.py`, `tests/run_econ_model_first_g1_check.py`를 추가해 pack 구조와 golden 인식을 검증한다.
+- 검증:
+  - `python tests/run_stdlib_l1_integrators_g1_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/stdlib_l1_integrators_g1_check_g4.log`).
+  - `python tests/run_econ_model_first_g1_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/econ_model_first_g1_check_g4.log`).
+  - `python tests/run_pack_golden.py stdlib_l1_integrators_g1_v1 econ_model_supply_demand_equilibrium_v1 econ_model_money_supply_v1 econ_model_tax_welfare_v1` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/g4_pack_golden.log`).
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g4.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g4.log`).
+- 진행률:
+  - DAYRUN G4: 완료 (`닫힘-문서`, executable pack/golden).
+  - 제품 runtime/parser 동작 변경 없음.
+  - 실세계 물리/경제 정확성 또는 정책 조언 주장 없음.
+
+### [DAYRUN][G5] LLM 코퍼스 100행 이상 deterministic 생성 (2026-07-08)
+
+- 변경:
+  - `tests/tools/extract_llm_corpus_v1.py` wrapper를 추가해 extractor 진입점을 `tests/tools/` 아래에 마련했다.
+  - `tools/extract_llm_corpus_v1.py`가 grammar manifest 기반 card 행을 생성하도록 보강하고 기본 pack row limit을 120으로 올렸다.
+  - `pack/llm_corpus_extract_deterministic_v1` contract/golden/README를 새 extractor 경로와 `grammar_manifest_cards` 규칙에 맞춰 갱신했다.
+  - `tests/run_llm_corpus_v1_dayrun_check.py`를 추가해 2회 JSONL 바이트 동일성, 100행 이상, grammar manifest card 포함, 실제 `out/llm_corpus_v1.jsonl` 생성을 검증한다.
+- 검증:
+  - `python tests/run_llm_corpus_extract_deterministic_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/llm_corpus_extract_deterministic_check_g5.log`).
+  - `python tests/run_llm_corpus_v1_dayrun_check.py` PASS, rows=126, sha256=`sha256:d39ac5947f663ea3d21d9e35e0e758da764495f258e6416f354fe72ed838c7ed` (`I:/home/urihanl/ddn/codex/build/dayrun_logs/llm_corpus_v1_dayrun_check_g5.log`).
+  - `python tests/run_pack_golden.py llm_corpus_extract_deterministic_v1` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/llm_corpus_pack_golden_g5.log`).
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g5.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g5.log`).
+- 진행률:
+  - DAYRUN G5: 완료 (`닫힘-문서`, deterministic corpus artifact).
+  - 생성형 요약 없음. 기존 pack/grammar manifest 근거만 추출.
+
+### [DAYRUN][G6] 동결 검증 도구 2종 (2026-07-08)
+
+- 변경:
+  - `tests/tools/config_digest_proto.py`를 추가해 정본화된 `설정 {}` 블록을 canonical JSON으로 만들고 BLAKE3 다이제스트를 계산한다. Python `blake3` 모듈이 없어 저장소의 Rust `blake3` rlib로 stdin helper를 빌드하는 독립 도구 방식으로 구현했다.
+  - `tests/tools/config_digest_proto.py --selftest`는 별칭/공백이 다른 같은 의미 입력 3쌍이 같은 canonical/digest로 수렴하는지 검증한다.
+  - `tests/tools/reserved_sweep_lint.py`를 추가해 G1 동결 스윕의 reserved/josa/lexer/dialect/E-code/pack-collision 수치를 재현한다.
+  - `tests/run_dayrun_g6_tools_check.py`를 추가해 두 도구와 G1 수치 일치를 한 번에 검증한다.
+- 검증:
+  - `python tests/run_dayrun_g6_tools_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/dayrun_g6_tools_check.log`).
+  - config digest report: `I:/home/urihanl/ddn/codex/build/dayrun_g6/config_digest_proto_report.detjson`.
+  - reserved sweep report: `I:/home/urihanl/ddn/codex/build/dayrun_g6/reserved_sweep_lint_report.detjson`.
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g6.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g6.log`).
+- 진행률:
+  - DAYRUN G6: 완료 (`닫힘-문서`, checker/tool only).
+  - runtime/record schema/state_hash 산식 변경 없음.
+
+### [DAYRUN][G7] 상태 정합 리포트 2건 (2026-07-08)
+
+- 변경:
+  - `docs/reports/audit/SETTINGS_GEOUL_RUN_AGE_GATE_RECHECK_V1.md`를 추가해 `설정.거울/설정.실행` AGE gate 3자 대조를 현재 probe와 함께 재기록했다.
+  - `docs/reports/audit/NURIGYM_CONSUMER_EVIDENCE_STATUS_V1.md`를 추가해 누리짐 consumer 증빙을 export/shared-sync/bounded parity와 wasmtime/PyO3 보류로 분리했다.
+  - `docs/reports/audit/INDEX.md`에 G7 보고서 2건을 등재했다.
+  - `tests/run_dayrun_g7_reports_check.py`를 추가해 보고서 존재, 인덱스 등재, file:line 근거, drift/handoff 로그를 검증한다.
+- 검증:
+  - `python tests/run_dayrun_g7_reports_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/dayrun_g7_reports_check.log`).
+  - `python tests/run_pack_golden.py lang_settings_header_closure_v1` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/lang_settings_header_closure_g7_probe.log`).
+  - `python tests/run_nuri_gym_contract_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/nuri_gym_contract_g7_probe.log`).
+  - `node tests/nurigym_python_web_parity_runner.mjs` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/nurigym_python_web_parity_node_g7_probe.log`).
+  - `python tests/run_pack_golden.py nurigym_python_web_parity_v1 nuri_gym_gridmaze_v1 nuri_gym_bandit_v1` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/nurigym_python_web_parity_pack_golden_g7_probe.log`).
+  - `python tests/run_nurigym_shared_sync_action_pipeline_pack_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/nurigym_action_pipeline_g7_probe.log`).
+  - `python tests/run_nurigym_shared_sync_priority_tiebreak_pack_check.py` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/nurigym_priority_tiebreak_g7_probe.log`).
+  - `python tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py` FAIL 확인, roadmap matrix 집계 drift로 보고서에 기록 (`I:/home/urihanl/ddn/codex/build/dayrun_logs/nurigym_python_web_parity_g7_probe.log`).
+  - `cargo check` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/cargo_check_g7.log`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`I:/home/urihanl/ddn/codex/build/dayrun_logs/core_lang_sanity_g7.log`).
+- 진행률:
+  - DAYRUN G7: 완료 (`닫힘-문서`, report only).
+  - 누리짐 consumer 전체 완료 주장 없음. wasmtime-py/PyO3는 보류로 기록.
+
+### [SEVEN_PURPOSE][G1] perf baseline + LLM corpus 실행 묶음 (2026-07-07)
+
+- 변경:
+  - `perf_baseline_v1` pack을 추가해 7목적 G1의 F0-2 결정적 벤치 계약을 상위 회귀 계약으로 고정했다.
+  - `tools/scripts/run_perf_baseline_v1.py`를 추가했다. 현재는 dry-run/self-check 가능한 runner skeleton이며, 최초 측정값 고정 전까지 성능 충분 주장은 하지 않는다.
+  - `llm_corpus_extract_deterministic_v1` pack과 `tools/extract_llm_corpus_v1.py`를 추가했다.
+  - LLM 코퍼스 추출기는 pack README/input/golden/contract를 정렬된 경로 순서로 읽고, 생성형 요약 없이 `ddn.llm_corpus.row.v1` JSONL을 만든다.
+  - 실제 산출물 `I:/home/urihanl/ddn/codex/out/llm_corpus_v1.jsonl`과 manifest를 생성했다.
+- 검증:
+  - `python tests/run_perf_baseline_v1_pack_check.py` PASS
+  - `python tests/run_llm_corpus_extract_deterministic_check.py` PASS
+  - `python tests/run_pack_golden.py perf_baseline_v1 llm_corpus_extract_deterministic_v1` PASS
+  - LLM corpus 생성 PASS (`sha256:2b58affcceace7f164ff99a11b2b43c86e1d79f7aa05d3f8ec58b1df3e048f30`)
+- 진행률:
+  - 작업 단위: F0-2/P7-G1 도구·pack 묶음 2/2 = 100% (`닫힘-문서`)
+  - 실제 성능 기준선 수치 고정은 아직 아님.
+  - 제품 runtime/parser 동작 변경 없음.
+  - `닫힘-동작` 주장 없음.
+
+### [SEVEN_PURPOSE][G1] 저위험 실행 묶음 1차 문서화 (2026-07-07)
+
+- 변경:
+  - `PROPOSAL_SEVEN_PURPOSE_ADVANCEMENT_DESIGN_V1_20260706`의 즉시 실행 항목 중 저위험 묶음(P1-G1/P4-G1/P6-G1)을 먼저 처리했다.
+  - `nurigym.step_record.v0.2` add-only wire schema와 v0.1 호환 규칙 proposal을 추가했다.
+  - 교육 G1 진단 3층 감사 보고서와 대표 E-code 20종 초심자 문구 사전 초안을 추가했다.
+  - ko-common T1 승격 4조건(core keyword matrix / josa role matrix / roundtrip golden / native 확인) 실측 감사 보고서를 추가했다.
+  - `docs/reports/audit/INDEX.md`에 새 감사 보고서 2건을 등재했다.
+- 검증:
+  - `python -m json.tool docs/reports/audit/DIAG_THREE_LAYER_BEGINNER_DICTIONARY_DRAFT_V1_20260707.detjson` PASS
+  - 새 proposal/report 주요 토큰 검색 PASS
+  - `docs/ssot/**` 변경 없음
+- 진행률:
+  - 작업 단위: 저위험 docs/audit 묶음 3/3 = 100% (`닫힘-문서`)
+  - 제품 runtime/parser 동작 변경 없음.
+  - `닫힘-동작` 주장 없음.
 
 ### [Q37][LANG] 설정 헤더 pack `보임 {}` drift 정합 수리 (2026-07-06)
 
