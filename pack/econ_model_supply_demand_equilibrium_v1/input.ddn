@@ -1,0 +1,12 @@
+demand_intercept <- 100.
+demand_slope <- 2.
+supply_intercept <- 20.
+supply_slope <- 2.
+
+equilibrium_price <- (demand_intercept - supply_intercept) / (demand_slope + supply_slope).
+equilibrium_quantity <- demand_intercept - demand_slope * equilibrium_price.
+
+"econ_model_first" 보여주기.
+"supply_demand_equilibrium" 보여주기.
+equilibrium_price 보여주기.
+equilibrium_quantity 보여주기.
