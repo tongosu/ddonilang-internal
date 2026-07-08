@@ -50,3 +50,56 @@
 ## 실행 로그
 
 (트랙 완료 시 `[CAE-H1]`/`[CAE-H2]` 태그로 기록, 삭제/제외 목록과 검증 결과 포함)
+
+### [CAE-H1] 파일 삭제 실행 로그 — 2026-07-09 KST
+
+- 실행 브랜치: `codex/queue-20260706`.
+- 삭제 직전 재검증:
+  - 전체 대상: 32개, 모두 `tests/*.mjs` 확인.
+  - 재검증 산출물:
+    - `I:/home/urihanl/ddn/codex/build/consolidation_action_execute_v1/h1_predelete_reverify.detjson`
+    - `I:/home/urihanl/ddn/codex/build/consolidation_action_execute_v1/h1_predelete_reverify.tsv`
+  - 기준: 파일 존재 확인 + `docs/context/reports/**`, `target/**`, `build/**`, `out/**`, `.git/**`, 자기 자신 제외 후 파일명 정적 검색.
+- `git rm` 삭제 18개:
+  - `tests/seamgrim_editor_selection_runner.mjs`
+  - `tests/seamgrim_formula_sugar_runner.mjs`
+  - `tests/seamgrim_input_registry_runner.mjs`
+  - `tests/seamgrim_inspector_contract_runner.mjs`
+  - `tests/seamgrim_legacy_warning_guide_runner.mjs`
+  - `tests/seamgrim_play_output_contract_runner.mjs`
+  - `tests/seamgrim_play_source_contract_runner.mjs`
+  - `tests/seamgrim_preview_component_runner.mjs`
+  - `tests/seamgrim_preview_payload_loader_runner.mjs`
+  - `tests/seamgrim_preview_result_contract_runner.mjs`
+  - `tests/seamgrim_preview_session_runner.mjs`
+  - `tests/seamgrim_preview_view_model_runner.mjs`
+  - `tests/seamgrim_range_split_runner.mjs`
+  - `tests/seamgrim_runtime_view_stack_runner.mjs`
+  - `tests/seamgrim_scene_summary_runner.mjs`
+  - `tests/seamgrim_update_tick_runner.mjs`
+  - `tests/seamgrim_view_dock_time_runner.mjs`
+  - `tests/seamgrim_wasm_loader_diag_runner.mjs`
+- 제외 14개:
+  - `tests/education_assessment_pack_runner.mjs` — `pack/education_curriculum_2_v1/contract.detjson` 참조 발견.
+  - `tests/education_classroom_ui_pack_runner.mjs` — `pack/education_curriculum_3_v1/contract.detjson` 참조 발견.
+  - `tests/education_operations_lts_runner.mjs` — `pack/education_curriculum_5_v1/README.md`, `pack/education_curriculum_5_v1/contract.detjson` 참조 발견.
+  - `tests/education_publication_pack_runner.mjs` — `pack/education_curriculum_4_v1/contract.detjson` 참조 발견.
+  - `tests/rpg_box_authoring_ui_runner.mjs` — `pack/malhim_rpg_3_v1/README.md`, `pack/malhim_rpg_3_v1/contract.detjson` 참조 발견.
+  - `tests/rpg_engine_adapter_lts_runner.mjs` — `pack/malhim_rpg_5_v1/README.md`, `pack/malhim_rpg_5_v1/contract.detjson` 참조 발견.
+  - `tests/rpg_story_package_runner.mjs` — `pack/malhim_rpg_4_v1/README.md`, `pack/malhim_rpg_4_v1/contract.detjson` 참조 발견.
+  - `tests/studio_classroom_mode_switch_runner.mjs` — `pack/studio_classroom_mode_switch_v1/contract.detjson` 참조 발견.
+  - `tests/studio_classroom_report_export_action_runner.mjs` — `pack/studio_classroom_report_export_action_v1/contract.detjson` 참조 발견.
+  - `tests/studio_diagnostic_fixit_editor_apply_runner.mjs` — `pack/studio_diagnostic_fixit_editor_apply_v1/contract.detjson` 참조 발견.
+  - `tests/ttonimaru_platform_hardening_runner.mjs` — `pack/ttonimaru_registry_5_v1/README.md`, `pack/ttonimaru_registry_5_v1/contract.detjson` 참조 발견.
+  - `tests/ttonimaru_project_share_ui_runner.mjs` — `pack/ttonimaru_registry_3_v1/README.md`, `pack/ttonimaru_registry_3_v1/contract.detjson` 참조 발견.
+  - `tests/ttonimaru_public_registry_seed_runner.mjs` — `pack/ttonimaru_registry_4_v1/README.md`, `pack/ttonimaru_registry_4_v1/contract.detjson` 참조 발견.
+  - `tests/ttonimaru_publication_read_api_runner.mjs` — `pack/ttonimaru_registry_2_v1/README.md`, `pack/ttonimaru_registry_2_v1/contract.detjson` 참조 발견.
+- 삭제 후 상태:
+  - `git diff --name-only --cached --diff-filter=D -- tests/*.mjs` = 18개.
+  - 관련 상위 러너: 삭제 18개는 재검증 검색에서 참조 0건이라 상위 러너 없음, 고아 파일 확인됨.
+- 검증:
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml` PASS (`1109 passed; 0 failed`).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS (`ci_sanity_status=pass code=OK step=all profile=core_lang`).
+  - `git status --short -- docs/ssot` 출력 없음.
+  - `git status --short -- lang core tool tools/teul-cli/src` 출력 없음.
+  - sanity 실행 중 `pack/open_bundle_artifact/run_bundle/geoul.diag.jsonl`, `pack/open_end_to_end/open.log.jsonl`가 일시 갱신됐으나 이번 산출물이 아니므로 diff가 없도록 복구.
