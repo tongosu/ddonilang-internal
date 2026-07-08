@@ -1,0 +1,40 @@
+{
+  "schema": "ddn.education_physics_vertical_slice_g5.diag_three_layer_fixture.v1",
+  "required_layers": [
+    "무엇이",
+    "어디서",
+    "어떻게"
+  ],
+  "entries": [
+    {
+      "id": "diag_g5_integrator_unknown",
+      "무엇이": "물리 수업 pack에서 지원하지 않는 적분기 이름을 참조했다.",
+      "어디서": "pack/education_physics_vertical_slice_g5_v1/physics_graph2d_fixture.detjson:integrators",
+      "어떻게": "명시적 오일러 또는 반암시적 오일러 중 하나로 고르고, 새 적분기 후보는 질문 큐에 남긴다."
+    },
+    {
+      "id": "diag_g5_time_step_non_positive",
+      "무엇이": "물리 시뮬레이션 시간 간격이 0 이하로 설정됐다.",
+      "어디서": "physics_graph2d_fixture.detjson:parameters.dt",
+      "어떻게": "dt를 양수로 바꾸고 동일 입력 2회 payload byte 동일성 검사를 다시 실행한다."
+    },
+    {
+      "id": "diag_g5_graph_label_collision",
+      "무엇이": "graph2d series label이 서로 충돌한다.",
+      "어디서": "physics_graph2d_fixture.detjson:graph2d.series",
+      "어떻게": "현재 checker 후보 정책은 series_id 정렬 뒤 같은 label에 #2, #3 suffix를 붙인다."
+    },
+    {
+      "id": "diag_g5_wasm_delivery_blocked",
+      "무엇이": "WASM/browser delivery smoke가 실패했다.",
+      "어디서": "tests/run_seamgrim_wasm_web_smoke_contract_pack_check.py",
+      "어떻게": "blocker report를 확인하고 CLI fallback인 stdlib_l1_integrators_g1_v1 golden 검증으로 교육 흐름을 계속 확인한다."
+    },
+    {
+      "id": "diag_g5_payload_not_deterministic",
+      "무엇이": "같은 물리 결과를 graph2d payload로 낮춘 바이트가 2회 실행에서 달라졌다.",
+      "어디서": "tests/run_education_physics_vertical_slice_g5_check.py:lower_graph2d",
+      "어떻게": "series 정렬, tick 순서, JSON key 정렬, 부동소수점 반올림 규칙을 고정한다."
+    }
+  ]
+}
