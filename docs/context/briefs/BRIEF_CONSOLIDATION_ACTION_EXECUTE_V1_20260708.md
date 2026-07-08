@@ -103,3 +103,22 @@
   - `git status --short -- docs/ssot` 출력 없음.
   - `git status --short -- lang core tool tools/teul-cli/src` 출력 없음.
   - sanity 실행 중 `pack/open_bundle_artifact/run_bundle/geoul.diag.jsonl`, `pack/open_end_to_end/open.log.jsonl`가 일시 갱신됐으나 이번 산출물이 아니므로 diff가 없도록 복구.
+
+### [CAE-H2] 보류 해제 반영 로그 — 2026-07-09 KST
+
+- 실행 브랜치: `codex/queue-20260706`.
+- 대상:
+  - `pack/lang_settings_header_closure_v1`
+  - `pack/seamgrim_curriculum_batch_smoke_v1`
+- 재검증:
+  - `python tests/run_pack_golden.py lang_settings_header_closure_v1` PASS. 로그: `I:/home/urihanl/ddn/codex/build/consolidation_action_execute_v1/h2_lang_settings_header_closure_v1.log`.
+  - `python tests/run_pack_golden.py seamgrim_curriculum_batch_smoke_v1` PASS. 로그: `I:/home/urihanl/ddn/codex/build/consolidation_action_execute_v1/h2_seamgrim_curriculum_batch_smoke_v1.log`.
+  - `tests/_run_pack_golden_impl.py`의 `seamgrim_curriculum_batch_smoke_v1` 언급은 특수러너 pack 목록 등록이며 skip 로직이 아님.
+  - `lang_settings_header_closure_v1`은 `tests/run_lang_settings_header_closure_pack_check.py` 참조만 확인됨.
+- 문서 반영:
+  - `docs/context/reports/CONSOLIDATION_ACTION_REVIEW_V1.md` #33/#34의 제안 액션을 `보류 해제 반영 완료(2026-07-08)`로 갱신.
+  - `docs/context/reports/CONSOLIDATION_CANDIDATE_DRAFT_V1.md`는 원본 표 행/값을 유지하고 해당 두 행 바로 아래에 각주 2줄만 추가.
+- 검증:
+  - `Select-String ... '각주: 2026-07-08 재검증 결과 PASS로 보류 해제됨'` = 2.
+  - `git diff -- docs/context/reports/CONSOLIDATION_ACTION_REVIEW_V1.md docs/context/reports/CONSOLIDATION_CANDIDATE_DRAFT_V1.md` 확인: review #33/#34 액션 값 변경 2건 + draft 각주 추가 2건만 포함.
+  - `golden.jsonl`/`contract.detjson` 변경 없음.

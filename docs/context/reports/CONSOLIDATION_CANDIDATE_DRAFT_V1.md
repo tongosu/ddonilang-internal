@@ -250,6 +250,7 @@
 | `pack/lang_dialect_smoke_v1` | 1 (Q8) | Q8: 입력 오류; 수리 후보; [FAIL] pack=pack\lang_dialect_smoke_v1 case=1; expected: exit_code=0; got: exit_code=1; stderr: E_PARSE_UNEXPECTED_TOKEN pack/lang_dialect_smoke_v1/input.ddn:2:10 예상: '일때' or … | 보류 |
 | `pack/lang_regex_literal_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\lang_regex_literal_v1 case=1; expected: exit_code=0; got: exit_code=2; stderr: E_CLI_COMPAT_RELEASE_BLOCKED --compat-matic-entry는 출시 경로에서 완전 비활성화됩니다.; expe… | 보류 |
 | `pack/lang_settings_header_closure_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\lang_settings_header_closure_v1 case=2; expected: exit_code=1; got: exit_code=0 | 보류 |
+> 각주: 2026-07-08 재검증 결과 PASS로 보류 해제됨 — 상세: `CONSOLIDATION_ACTION_REVIEW_V1.md` #33.
 | `pack/nuri_gym_cartpole_shared_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\nuri_gym_cartpole_shared_v1 case=1; expected: dataset_hash=sha256:c6e9c2f6b2ff6e85fe43fb00a6fc8d6feee866e07a22f0a0280b876a7b2f97a7; got: dataset_hash=sha25… | 보류 |
 | `pack/nuri_gym_gridmaze_easy_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\nuri_gym_gridmaze_easy_v1 case=1; expected: dataset_hash=sha256:53aacc45620d94f1d047a78b1bfa47fc3001c771015b0f4dac446b7105d099c7; got: dataset_hash=sha256:… | 보류 |
 | `pack/nuri_gym_gridmaze_hard_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\nuri_gym_gridmaze_hard_v1 case=1; expected: dataset_hash=sha256:3bbd2e463efced906ae4ca48937fbf09b32962d9b9ee0e2f58da9ce4819fee3b; got: dataset_hash=sha256:… | 보류 |
@@ -281,6 +282,7 @@
 | `pack/sam_inputsnapshot_contract_v1` | 1 (Q8) | Q8: 스키마 오류; 수리 후보; ValueError: I:\dev\ddonilang\codex_q7_worktree_20260704_154134\pack\sam_inputsnapshot_contract_v1\golden.jsonl line 1: missing stdout/stdout_path, bogae_hash, expected_error_… | 보류 |
 | `pack/seamgrim_bridge_surface_v0_basics` | 1 (Q8) | Q8: 스키마 오류; 수리 후보; ValueError: I:\dev\ddonilang\codex_q7_worktree_20260704_154134\pack\seamgrim_bridge_surface_v0_basics\golden.jsonl line 1: missing stdout/stdout_path, bogae_hash, expected_er… | 보류 |
 | `pack/seamgrim_curriculum_batch_smoke_v1` | 1 (Q8) | Q8: 타임아웃; 특수러너 확인; timeout while reproducing pack golden | 보류 |
+> 각주: 2026-07-08 재검증 결과 PASS로 보류 해제됨 — 상세: `CONSOLIDATION_ACTION_REVIEW_V1.md` #34.
 | `pack/seamgrim_curriculum_rewrite_core_smoke_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\seamgrim_curriculum_rewrite_core_smoke_v1 case=5; expected: tick=6 state_hash=blake3:f918f780559fe68c83422803a73cf0a78849c53710825a8adbb4fcfaaf927edc; got:… | 보류 |
 | `pack/seamgrim_curriculum_rewrite_sample_smoke_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\seamgrim_curriculum_rewrite_sample_smoke_v1 case=2; expected: tick=12 state_hash=blake3:cb4414b05afe11295745458ddfcca61ca012c22feea80442cecc5b470852bc75; g… | 보류 |
 | `pack/seamgrim_curriculum_seed_smoke_v1` | 1 (Q8) | Q8: 골든 stale; 갱신 후보; [FAIL] pack=pack\seamgrim_curriculum_seed_smoke_v1 case=1; expected: tick=0 exit_code=0; got: tick=0 exit_code=1; stderr: E_LEGACY_RANGE_SYNTAX line=7 fix=`(값) 매김 { 범위: a..… | 보류 |
