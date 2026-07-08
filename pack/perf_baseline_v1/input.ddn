@@ -1,0 +1,6 @@
+"PERF_BASELINE_V1" 보여주기.
+"deterministic performance baseline contract sealed" 보여주기.
+"axes: tick_throughput / wasm_load_first_frame / gym_rollout_step_per_sec" 보여주기.
+"source pack: benchmark_baseline_v1" 보여주기.
+"closure_claim: no" 보여주기.
+"next: first measurement values and regression gate calibration" 보여주기.
