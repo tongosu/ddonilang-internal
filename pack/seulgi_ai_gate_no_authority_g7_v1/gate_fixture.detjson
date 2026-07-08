@@ -1,0 +1,63 @@
+{
+  "schema": "ddn.seulgi_ai_gate_no_authority_g7.fixture.v1",
+  "cases": [
+    {
+      "id": "ai_proposal_reject_no_commit",
+      "ai_proposal": {
+        "kind": "natural_language_proposal",
+        "text": "다음 마디에 오른쪽으로 움직이는 행동을 추가하자.",
+        "authority": "none"
+      },
+      "gate_decision": {
+        "decision": "reject",
+        "reason": "proposal_not_sealed"
+      },
+      "sealed_artifact": null,
+      "expected_commit": false,
+      "authority_before_seal": "none",
+      "natural_language_direct_execution": false
+    },
+    {
+      "id": "ai_proposal_accept_still_no_authority_before_seal",
+      "ai_proposal": {
+        "kind": "structured_ai_proposal",
+        "text": "candidate action record with normalized fields",
+        "authority": "none"
+      },
+      "gate_decision": {
+        "decision": "accept",
+        "reason": "schema_valid"
+      },
+      "sealed_artifact": {
+        "artifact_id": "sealed.seulgi.g7.accepted_action.v1",
+        "artifact_schema": "ddn.seulgi.sealed_artifact.v1",
+        "sealed": true
+      },
+      "expected_commit": false,
+      "authority_before_seal": "none",
+      "authority_after_seal": "sealed_artifact_only",
+      "natural_language_direct_execution": false
+    },
+    {
+      "id": "sealed_artifact_replay_candidate",
+      "ai_proposal": {
+        "kind": "structured_ai_proposal",
+        "text": "replay the sealed action artifact",
+        "authority": "none"
+      },
+      "gate_decision": {
+        "decision": "accept",
+        "reason": "sealed_artifact_present"
+      },
+      "sealed_artifact": {
+        "artifact_id": "sealed.seulgi.g7.replay.v1",
+        "artifact_schema": "ddn.seulgi.sealed_artifact.v1",
+        "sealed": true
+      },
+      "expected_commit": true,
+      "authority_before_seal": "none",
+      "authority_after_seal": "sealed_artifact_only",
+      "natural_language_direct_execution": false
+    }
+  ]
+}
