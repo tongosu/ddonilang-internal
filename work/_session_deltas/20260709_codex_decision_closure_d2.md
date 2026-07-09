@@ -4,8 +4,8 @@
 
 - D0: 완료. `codex/queue-20260706`에서 시작 상태와 경계를 기록했다.
 - D1 Settings keyset: 완료. `settings_keyset_policy_v1` pack/checker로 `설정.누리`/`설정.이야기` keyset과 hash 정책을 고정했다.
-- D2 NuriGym step_record v0.2 public schema: 진행 중. opt-in `step_record_version="v0.2"` product wire와 public schema pack/checker를 추가했다.
-- D3 Report: 미착수.
+- D2 NuriGym step_record v0.2 public schema: 완료. opt-in `step_record_version="v0.2"` product wire와 public schema pack/checker를 추가했다.
+- D3 Report: 완료. DEV_SUMMARY와 NuriGym v0.2 public schema status report를 갱신했다.
 
 ## 경계
 
@@ -52,4 +52,26 @@
   - `cargo check` PASS (기존 `ddonirang-tool` unused 경고만 출력).
   - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
   - `git status --short -- docs/ssot` PASS.
-  - `python tests/run_nurigym_step_record_v02_roundtrip_check.py` / `python tests/run_nurigym_step_record_v02_consumer_g6_check.py`는 product path dirty boundary에서 중단되어 커밋 후 재실행 예정.
+  - 커밋 전 `python tests/run_nurigym_step_record_v02_roundtrip_check.py` / `python tests/run_nurigym_step_record_v02_consumer_g6_check.py`는 product path dirty boundary에서 중단됐다.
+  - 커밋 후 `python tests/run_nurigym_step_record_v02_roundtrip_check.py` PASS.
+  - 커밋 후 `python tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS.
+  - 커밋 후 `python tests/run_nurigym_step_record_v02_public_schema_check.py` PASS.
+  - 커밋 후 `python tests/run_settings_keyset_policy_check.py` PASS.
+  - 커밋 후 `python tests/run_dayrun_g6_tools_check.py` PASS.
+  - 커밋 후 `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+- D3 report:
+  - `docs/context/all/DEV_SUMMARY.md` 갱신.
+  - `docs/context/reports/NURIGYM_STEP_RECORD_V02_PUBLIC_SCHEMA_STATUS_V1_20260709.md` 추가.
+  - `docs/context/reports/INDEX.md` 갱신.
+  - `git status --short -- docs/ssot` PASS.
+
+## 커밋
+
+- `fbf8ab2 [DC-D2-G0] start decision closure batch d2`
+- `bc3b1b2 [DC-D2-SETTINGS-KEYSET] add settings keyset policy pack`
+- `380c51b [DC-D2-NURIGYM-V02] add opt-in step record public schema`
+- `[DC-D2-REPORT]` 예정.
+
+## 질문 큐
+
+- 없음.

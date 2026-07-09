@@ -12,6 +12,32 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [DECISION-CLOSURE][D2] Settings keyset + NuriGym step_record v0.2 public schema (2026-07-09)
+
+- 변경:
+  - D0: `codex/queue-20260706`에서 시작 상태와 경계를 기록했다.
+  - D1: `settings_keyset_policy_v1` pack/checker로 `설정.누리` key set을 `시앗`, `시앗묶음`, `설정.이야기` key set을 `들머리`로 고정했다. `문서.*`는 run hash 제외, `이야기.들머리`/`누리.시앗`/`누리.시앗묶음`은 run hash 포함을 검증한다.
+  - D2: `nurigym run` input JSON에 optional `step_record_version`을 추가했다. 기본값은 `v0.1`이고 기존 출력은 유지한다. `v0.2` opt-in에서만 `terminated`, `truncated`, `info`, action pipeline add-only fields, 배열형 `missing_input`을 제품 wire로 방출한다.
+  - D3: `docs/context/reports/NURIGYM_STEP_RECORD_V02_PUBLIC_SCHEMA_STATUS_V1_20260709.md`를 추가해 D1 roundtrip pack과 D2 public schema opt-in의 관계를 기록했다.
+- 검증:
+  - `python tests/run_settings_keyset_policy_check.py` PASS.
+  - `python tests/run_pack_golden.py settings_keyset_policy_v1` PASS.
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml nurigym_build_step_record -- --nocapture` PASS.
+  - `python tests/run_pack_golden.py nurigym_step_record_v02_public_schema_v1` PASS.
+  - `python tests/run_nurigym_step_record_v02_public_schema_check.py` PASS.
+  - `python tests/run_nurigym_step_record_v02_roundtrip_check.py` PASS.
+  - `python tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS.
+  - `python tests/run_nurigym_shared_sync_action_pipeline_pack_check.py` PASS.
+  - `python tests/run_nuri_gym_contract_check.py` PASS.
+  - `python tests/run_dayrun_g6_tools_check.py` PASS.
+  - `cargo check` PASS, `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `git status --short -- docs/ssot` PASS.
+- 진행률:
+  - Decision Closure Batch D2: 완료.
+  - `docs/ssot/**`, parser 문법, runtime `state_hash` 산식 변경 없음.
+  - 기존 untracked 참고 파일은 커밋하지 않았다.
+
 ### [DECISION-CLOSURE][D1] Settings digest / NuriGym step_record / gaji metadata status (2026-07-09)
 
 - 변경:
