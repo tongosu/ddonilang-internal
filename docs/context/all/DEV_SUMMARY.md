@@ -12,6 +12,36 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [GANADA][PRODUCT-W1] 마줄기/자줄기 제품 실행 전진 (2026-07-10)
+
+- 변경:
+  - `ganada_ma_branch_execution_reaudit_v1`로 `마-0`~`마-5`를 실제 명령 기반으로 재감사했다. legacy status/token 의존 실패는 repair queue에 남기고 상태 승격은 하지 않았다.
+  - `ganada_ma_representative_lessons_v1`로 math/physics/econ/science 대표 lesson 4종의 제품 smoke/golden을 고정했다.
+  - Seamgrim lesson catalog/run UI에 `lesson-catalog`, `lesson-run-preset`, `lesson-run-button`, `lesson-run-result`, `lesson-error-panel` 안정 selector를 추가하고 browser runner가 제품 실행 결과와 state hash를 검증하게 했다.
+  - 슬기 proposal/replay UI에 `seulgi-proposal-panel`, `seulgi-approve`, `seulgi-reject`, `seulgi-boundary-warning`, `seulgi-replay-log` 안정 selector를 추가했다. 실제 모델 호출, auto-apply, file write, runtime/state_hash claim은 false로 유지한다.
+  - `ganada_execution_evidence_registry_v1`로 Week1 touched cell 8개(`마-0`~`마-5`, `자-3`, `자-5`)의 실행 명령, runner, PASS marker, file:line 근거를 추적하고 docs-only behavior closure negative control을 reject로 고정했다.
+- 검증:
+  - `python tests/run_ganada_ma_branch_execution_reaudit_check.py` PASS.
+  - `python tests/run_ganada_ma_representative_lessons_check.py` PASS.
+  - `python tests/run_ganada_execution_evidence_registry_check.py` PASS.
+  - `python tests/run_pack_golden.py ganada_ma_branch_execution_reaudit_v1 ganada_ma_representative_lessons_v1 ganada_maru_verification_contract_v1 ganada_execution_evidence_registry_v1` PASS.
+  - `python tests/run_roadmap_v2_ja_seulgi_boundary_reconciliation_check.py` PASS.
+  - `python tests/run_roadmap_v2_ja3_seulgi_proposal_ui_check.py` PASS.
+  - `python tests/run_roadmap_v2_ja5_replay_safe_ai_workflow_check.py` PASS.
+  - `node tests/seamgrim_lesson_run_preset_rail_runner.mjs` PASS.
+  - `node tests/seamgrim_lesson_authoring_flow_browser_runner.mjs` PASS.
+  - `node tests/studio_lesson_authoring_run_integration_runner.mjs` PASS.
+  - `node tests/seulgi_proposal_ui_runner.mjs` PASS.
+  - `node tests/seulgi_replay_safe_workflow_runner.mjs` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `cargo check` PASS.
+  - `git diff --check` PASS.
+  - `git status --short -- docs/ssot` clean.
+- 진행률:
+  - Ganada Product Advancement Week1: 5/5 = 100%.
+  - 닫힘-동작 신규 장기 주장 없음. 제품 실행 PASS 증거 축적 및 gate hardening 완료.
+  - `docs/ssot/**`, parser/runtime 문법, runtime `state_hash` 산식 변경 없음.
+
 ### [GANADA][GVC] 15줄기 x 6마루 검증 계약 선행 (2026-07-10)
 
 - 변경:
