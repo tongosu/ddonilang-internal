@@ -1,1 +1,1 @@
-{"cmd":["run","pack/lang_seum_algebraic_v1/input.ddn"],"exit_code":0,"stdout":["lang_seum_algebraic_v1 red fixture sealed","SolvePlan S0 artifact shape only; runtime claim: no"]}
+{"cmd":["run","pack/lang_seum_algebraic_v1/source_s0.ddn","--solveplan-out","build/declarative_closure_g1/lang_seum_algebraic_v1_solveplan.detjson"],"exit_code":0,"stdout":[]}

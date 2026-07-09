@@ -1,10 +1,10 @@
 {
   "schema": "ddn.pack.contract.v1",
   "pack": "lang_seum_linear_v1",
-  "kind": "declarative_closure_solveplan_s1_red",
+  "kind": "declarative_closure_solveplan_s1_product",
   "goal": "G1",
   "runtime_claim": false,
-  "product_code_change": false,
+  "product_code_change": true,
   "ssot_edit_claim": false,
   "artifact_schema": "ddn.solveplan.v1",
   "required_fields": [
@@ -36,5 +36,6 @@
     "expected_solveplan_s1_n9_reject.detjson",
     "expected_solveplan_s1_tiebreak.detjson"
   ],
-  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation"
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation",
+  "product_entrypoint": "teul-cli run --solveplan-out"
 }

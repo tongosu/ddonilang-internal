@@ -1,15 +1,16 @@
 {
   "schema": "ddn.solveplan.v1",
-  "source_hash": "sha256:red-s1-tiebreak-source-fixture",
+  "source_hash": "sha256:50e7dcac85c314cdf5f59f76001cd8039056c9b981d7e5fe93000929d2ccb1ac",
   "stage": "S1",
   "method": "linear_system_bounded_exact_v1",
   "relations": [
-    {"id": "r1", "source_order": 0, "text": "b =:= 2", "kind": "linear", "defines": "b", "depends_on": []},
-    {"id": "r2", "source_order": 1, "text": "a =:= 1", "kind": "linear", "defines": "a", "depends_on": []},
-    {"id": "r3", "source_order": 2, "text": "c =:= a + b", "kind": "linear", "defines": "c", "depends_on": ["a", "b"]}
+    {"id": "r1", "source_order": 0, "text": "b + a =:= 3", "kind": "linear", "depends_on": []},
+    {"id": "r2", "source_order": 1, "text": "a + c =:= 4", "kind": "linear", "depends_on": []},
+    {"id": "r3", "source_order": 2, "text": "c + b =:= 5", "kind": "linear", "depends_on": []}
   ],
   "unknowns": ["b", "a", "c"],
   "lowering": {
+    "bound": {"unknown_count_max": 8, "unknown_count": 3},
     "causalization": "linear_system_source_order_tiebreak",
     "causal_order": ["r1", "r2", "r3"]
   },

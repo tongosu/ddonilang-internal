@@ -1,6 +1,6 @@
 {
   "schema": "ddn.solveplan.v1",
-  "source_hash": "sha256:red-s1-n9-source-fixture",
+  "source_hash": "sha256:58681089c99522059033b7226936acedc7a552254fa01102c951b849830c6d34",
   "stage": "S3",
   "method": "unsupported_deferred_v1",
   "relations": [],
@@ -16,7 +16,7 @@
     }
   ],
   "state_hash_inputs": {
-    "include": ["schema", "source_hash", "stage", "method", "unknowns", "lowering"],
+    "include": ["schema", "source_hash", "stage", "method", "relations", "unknowns", "lowering"],
     "exclude": ["diagnostics", "execution_results"]
   }
 }

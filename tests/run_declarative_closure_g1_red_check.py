@@ -71,9 +71,11 @@ def check_contract(pack: Path) -> dict:
         fail(f"{pack.name} contract pack mismatch")
     if contract.get("goal") != "G1":
         fail(f"{pack.name} goal must be G1")
-    for flag in ["runtime_claim", "product_code_change", "ssot_edit_claim"]:
+    for flag in ["runtime_claim", "ssot_edit_claim"]:
         if contract.get(flag) is not False:
             fail(f"{pack.name} {flag} must be false in red pack")
+    if not isinstance(contract.get("product_code_change"), bool):
+        fail(f"{pack.name} product_code_change must be boolean")
     if contract.get("artifact_schema") != "ddn.solveplan.v1":
         fail(f"{pack.name} artifact schema mismatch")
     if contract.get("required_fields") != REQUIRED_FIELDS:

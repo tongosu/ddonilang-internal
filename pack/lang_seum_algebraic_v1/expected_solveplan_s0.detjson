@@ -1,6 +1,6 @@
 {
   "schema": "ddn.solveplan.v1",
-  "source_hash": "sha256:red-s0-source-fixture",
+  "source_hash": "sha256:c53a111de7dbb6c545c433eb99df6f607421ee1c927dd070091ac2c305e5e5ec",
   "stage": "S0",
   "method": "explicit_algebra_causalized_v1",
   "relations": [

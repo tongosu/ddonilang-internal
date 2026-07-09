@@ -1,5 +1,5 @@
 # lang_seum_algebraic_v1
 
-G1 red pack for declarative closure SolvePlan S0.
+G1 product pack for declarative closure SolvePlan S0.
 
-This pack fixes the expected artifact shape for `세움{}` S0 explicit algebra plus deterministic causalization. It is a red/spec pack only; product SolvePlan execution is not claimed until the later `[DC-G1-CORE]` commit wires this shape to the runtime/CLI path.
+This pack verifies `teul-cli run --solveplan-out` for `세움{}` S0 explicit algebra plus deterministic causalization. The product path writes a `ddn.solveplan.v1` artifact, while `state_hash_inputs` remains a manifest field only and does not change the state hash formula.

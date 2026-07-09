@@ -57,6 +57,7 @@ pub mod sam_snapshot;
 pub mod scan;
 pub mod seulgi_bundle;
 pub mod social;
+pub mod solveplan;
 pub mod story;
 pub mod swarm;
 pub mod symbolic;

@@ -98,6 +98,8 @@ pub(crate) enum Commands {
         run_manifest: Option<PathBuf>,
         #[arg(long = "summary-json")]
         summary_json: Option<PathBuf>,
+        #[arg(long = "solveplan-out")]
+        solveplan_out: Option<PathBuf>,
         #[arg(long = "artifact")]
         artifact: Vec<String>,
         #[arg(long = "trace-json")]
@@ -1410,6 +1412,7 @@ pub(crate) struct RunCommandArgs {
     pub(crate) repro_json: Option<PathBuf>,
     pub(crate) run_manifest: Option<PathBuf>,
     pub(crate) summary_json: Option<PathBuf>,
+    pub(crate) solveplan_out: Option<PathBuf>,
     pub(crate) artifact: Vec<String>,
     pub(crate) trace_json: Option<PathBuf>,
     pub(crate) proof_out: Option<PathBuf>,
@@ -1464,6 +1467,7 @@ pub(crate) fn execute_run_command(
         repro_json,
         run_manifest,
         summary_json,
+        solveplan_out,
         artifact,
         trace_json,
         proof_out,
@@ -1614,6 +1618,7 @@ pub(crate) fn execute_run_command(
         unsafe_open,
         run_manifest,
         summary_json,
+        solveplan_out,
         artifact_pins,
         run_command,
         init_state: state,
@@ -1652,6 +1657,7 @@ fn main() {
             repro_json,
             run_manifest,
             summary_json,
+            solveplan_out,
             artifact,
             trace_json,
             proof_out,
@@ -1701,6 +1707,7 @@ fn main() {
                 repro_json,
                 run_manifest,
                 summary_json,
+                solveplan_out,
                 artifact,
                 trace_json,
                 proof_out,
@@ -1810,6 +1817,7 @@ fn main() {
                 repro_json: None,
                 run_manifest: None,
                 summary_json,
+                solveplan_out: None,
                 artifact: Vec::new(),
                 trace_json: None,
                 proof_out: None,

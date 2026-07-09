@@ -1,10 +1,10 @@
 {
   "schema": "ddn.pack.contract.v1",
   "pack": "lang_seum_algebraic_v1",
-  "kind": "declarative_closure_solveplan_s0_red",
+  "kind": "declarative_closure_solveplan_s0_product",
   "goal": "G1",
   "runtime_claim": false,
-  "product_code_change": false,
+  "product_code_change": true,
   "ssot_edit_claim": false,
   "artifact_schema": "ddn.solveplan.v1",
   "required_fields": [
@@ -22,5 +22,6 @@
   "method": "explicit_algebra_causalized_v1",
   "source_fixture": "source_s0.ddn",
   "expected_artifact": "expected_solveplan_s0.detjson",
-  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation"
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation",
+  "product_entrypoint": "teul-cli run --solveplan-out"
 }

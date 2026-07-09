@@ -270,6 +270,7 @@ pub struct RunOptions {
     pub unsafe_open: bool,
     pub run_manifest: Option<PathBuf>,
     pub summary_json: Option<PathBuf>,
+    pub solveplan_out: Option<PathBuf>,
     pub artifact_pins: Vec<ArtifactPin>,
 }
 
@@ -3853,6 +3854,9 @@ pub fn run_file_with_emitter(
     if let Some(trace_path) = options.trace_json.as_ref() {
         write_trace_json(trace_path, &output.trace, &state_hash, &trace_hash)?;
     }
+    if let Some(solveplan_path) = options.solveplan_out.as_ref() {
+        crate::cli::solveplan::write_solveplan_out(solveplan_path, &program_for_gate)?;
+    }
 
     if let Some(mode) = options.bogae_mode {
         if matches!(mode, BogaeMode::Console) && !options.bogae_live {
@@ -7402,6 +7406,7 @@ mod tests {
             unsafe_open: false,
             run_manifest: None,
             summary_json: None,
+            solveplan_out: None,
             artifact_pins: Vec::new(),
         }
     }
