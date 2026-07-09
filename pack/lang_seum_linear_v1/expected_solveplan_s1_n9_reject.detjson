@@ -6,7 +6,12 @@
   "relations": [],
   "unknowns": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9"],
   "lowering": {
-    "bound": {"unknown_count_max": 8, "unknown_count": 9}
+    "bound": {"unknown_count_max": 8, "unknown_count": 9},
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": ["state_read", "seum_solve", "state_write", "hook_next_segment"],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
   },
   "diagnostics": [
     {

@@ -12,7 +12,12 @@
   "lowering": {
     "bound": {"unknown_count_max": 8, "unknown_count": 3},
     "causalization": "linear_system_source_order_tiebreak",
-    "causal_order": ["r1", "r2", "r3"]
+    "causal_order": ["r1", "r2", "r3"],
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": ["state_read", "seum_solve", "state_write", "hook_next_segment"],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
   },
   "diagnostics": [],
   "state_hash_inputs": {

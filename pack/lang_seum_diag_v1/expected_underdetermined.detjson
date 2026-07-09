@@ -1,0 +1,55 @@
+{
+  "diagnostics": [
+    {
+      "code": "E_SEUM_UNDERDETERMINED",
+      "message": "S1 linear SolvePlan has fewer relations than unknowns",
+      "severity": "error"
+    }
+  ],
+  "lowering": {
+    "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "method": "unsupported_deferred_v1",
+  "relations": [
+    {
+      "defines": null,
+      "depends_on": [],
+      "id": "r1",
+      "kind": "linear",
+      "source_order": 0,
+      "text": "x + y =:= 3"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:ab41e6929505899dfe6986b380592031f6fdc4c56086b01d02e381756afb2c24",
+  "stage": "S3",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "x",
+    "y"
+  ]
+}

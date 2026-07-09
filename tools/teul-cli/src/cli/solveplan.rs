@@ -221,6 +221,28 @@ fn build_solveplan_for_assertion(body_source: &str) -> JsonValue {
             }
         }
     }
+    if rows.len() < unknowns.len() {
+        return diagnostic_plan(
+            body_source,
+            "S3",
+            "unsupported_deferred_v1",
+            &rows,
+            unknowns,
+            "E_SEUM_UNDERDETERMINED",
+            "S1 linear SolvePlan has fewer relations than unknowns",
+        );
+    }
+    if rows.len() > unknowns.len() {
+        return diagnostic_plan(
+            body_source,
+            "S3",
+            "unsupported_deferred_v1",
+            &rows,
+            unknowns,
+            "E_SEUM_OVERDETERMINED",
+            "S1 linear SolvePlan has more relations than unknowns",
+        );
+    }
     s1_plan(body_source, &rows, unknowns)
 }
 
@@ -380,6 +402,7 @@ fn s0_plan(
             "causalization": "bipartite_matching_toposort_source_order_tiebreak",
             "causal_order": causal_order,
             "materialized_values": rows.iter().filter_map(|row| row.defines.clone()).collect::<Vec<_>>(),
+            "phase": seum_phase_json(),
         },
         "diagnostics": [],
         "state_hash_inputs": default_state_hash_inputs(),
@@ -401,6 +424,7 @@ fn s1_plan(body_source: &str, rows: &[RelationRow], unknowns: Vec<String>) -> Js
             },
             "causalization": "linear_system_source_order_tiebreak",
             "causal_order": rows.iter().map(|row| row.id.clone()).collect::<Vec<_>>(),
+            "phase": seum_phase_json(),
         },
         "diagnostics": [],
         "state_hash_inputs": default_state_hash_inputs(),
@@ -424,7 +448,8 @@ fn unsupported_plan(
             "bound": {
                 "unknown_count_max": MAX_S1_UNKNOWNS,
                 "unknown_count": unknowns.len(),
-            }
+            },
+            "phase": seum_phase_json(),
         },
         "diagnostics": [{
             "code": code,
@@ -453,6 +478,7 @@ fn diagnostic_plan(
         "unknowns": unknowns,
         "lowering": {
             "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+            "phase": seum_phase_json(),
         },
         "diagnostics": [{
             "code": code,
@@ -506,6 +532,19 @@ fn default_state_hash_inputs() -> JsonValue {
     })
 }
 
+fn seum_phase_json() -> JsonValue {
+    json!({
+        "name": "seum_solve",
+        "tick_order": [
+            "state_read",
+            "seum_solve",
+            "state_write",
+            "hook_next_segment"
+        ],
+        "writes_apply": "same_tick_before_hook_next_segment"
+    })
+}
+
 fn sha256_prefixed(text: &str) -> String {
     let digest = Sha256::digest(text.as_bytes());
     format!("sha256:{}", hex::encode(digest))
@@ -541,6 +580,28 @@ mod tests {
         );
         assert_eq!(plan["stage"], "S3");
         assert_eq!(plan["diagnostics"][0]["code"], "E_SEUM_UNSUPPORTED");
+    }
+
+    #[test]
+    fn s1_reports_under_and_over_determined_diagnostics() {
+        let under = build_solveplan_for_assertion("x + y =:= 3.");
+        assert_eq!(under["stage"], "S3");
+        assert_eq!(under["diagnostics"][0]["code"], "E_SEUM_UNDERDETERMINED");
+
+        let over = build_solveplan_for_assertion("x + y =:= 3.\nx - y =:= 1.\nx + 2*y =:= 4.");
+        assert_eq!(over["stage"], "S3");
+        assert_eq!(over["diagnostics"][0]["code"], "E_SEUM_OVERDETERMINED");
+    }
+
+    #[test]
+    fn s0_reports_cycle_and_assign_conflict_diagnostics() {
+        let cycle = build_solveplan_for_assertion("x =:= y.\ny =:= x.");
+        assert_eq!(cycle["stage"], "S3");
+        assert_eq!(cycle["diagnostics"][0]["code"], "E_SEUM_CYCLE");
+
+        let conflict = build_solveplan_for_assertion("x =:= 1.\nx =:= 2.");
+        assert_eq!(conflict["stage"], "S3");
+        assert_eq!(conflict["diagnostics"][0]["code"], "E_SEUM_ASSIGN_CONFLICT");
     }
 
     #[test]

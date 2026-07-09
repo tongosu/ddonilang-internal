@@ -36,7 +36,17 @@
     "materialized_values": [
       "x",
       "y"
-    ]
+    ],
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
   },
   "diagnostics": [],
   "state_hash_inputs": {
