@@ -84,6 +84,7 @@ function buildAssessmentText(rows, artifacts) {
   return [
     "education_assessment_pack:education_curriculum_2_v1",
     "coordinate:하-2",
+    "lesson_run_result_source:seamgrim_lesson_run_preset_rail_v1",
     "gradebook_write:false",
     "student_personal_data_collection:false",
     "remote_classroom_sync:false",
@@ -143,6 +144,8 @@ export function buildEducationAssessmentPack({
     rows: assessmentRows,
     artifacts: assessmentArtifacts,
     active_row_id: active,
+    lesson_run_result_source: "seamgrim_lesson_run_preset_rail_v1",
+    assessment_feedback_policy: "local_fixture_only",
     assessment_text: buildAssessmentText(assessmentRows, assessmentArtifacts),
     artifact_size_bytes: assessmentArtifacts.reduce((sum, artifact) => sum + artifact.bytes, 0),
     progress: {
@@ -213,6 +216,8 @@ export function renderEducationAssessmentPack(root, assessment = {}) {
   const activeId = asText(payload.active_row_id, rows[0]?.id ?? "");
   const active = rows.find((row) => row.id === activeId) || rows[0] || {};
   root.dataset.educationAssessmentPackStatus = asText(payload.status, "education_assessment_pack_incomplete");
+  root.setAttribute("data-testid", "assessment-panel");
+  root.dataset.assessmentLessonRunSource = asText(payload.lesson_run_result_source, "seamgrim_lesson_run_preset_rail_v1");
   root.innerHTML = `
     <div class="education-assessment-head">
       <div>
@@ -225,7 +230,7 @@ export function renderEducationAssessmentPack(root, assessment = {}) {
         <span>${escapeHtml(String(progress.current_stage_percent ?? 0))}%</span>
       </div>
     </div>
-    <div class="education-assessment-summary" data-education-assessment-summary>
+    <div class="education-assessment-summary" data-education-assessment-summary data-testid="assessment-feedback">
       teacher notes, student sheet, rubric mapping, sample submission, pack handoff를 로컬 pack으로 고정하고 gradebook write, student personal data collection, remote classroom sync는 후속으로 둡니다.
     </div>
     <div class="education-assessment-body">
@@ -250,7 +255,8 @@ export function renderEducationAssessmentPack(root, assessment = {}) {
             <span data-education-assessment-artifact="${escapeHtml(artifact.name)}">${escapeHtml(artifact.name)} · ${escapeHtml(artifact.kind)} · ${escapeHtml(String(artifact.bytes))}b</span>
           `).join("")}
         </div>
-        <pre class="education-assessment-preview" data-education-assessment-preview>${escapeHtml(payload.assessment_text ?? "")}</pre>
+        <pre class="education-assessment-preview" data-education-assessment-preview data-testid="assessment-result">${escapeHtml(payload.assessment_text ?? "")}</pre>
+        <button type="button" class="ghost" data-assessment-workflow-run data-testid="assessment-run">Assessment workflow 확인</button>
         <button type="button" class="ghost" data-education-assessment-copy>Assessment pack 텍스트 복사</button>
       </div>
     </div>
@@ -258,6 +264,9 @@ export function renderEducationAssessmentPack(root, assessment = {}) {
   const rerender = (rowId) => renderEducationAssessmentPack(root, { ...payload, active_row_id: rowId });
   root.querySelectorAll("[data-education-assessment-row]").forEach((button) => {
     button.addEventListener("click", () => rerender(button.getAttribute("data-education-assessment-row") || ""));
+  });
+  root.querySelector("[data-assessment-workflow-run]")?.addEventListener("click", () => {
+    root.dataset.assessmentWorkflowRan = "true";
   });
   root.querySelector("[data-education-assessment-copy]")?.addEventListener("click", async () => {
     root.dataset.educationAssessmentPackCopied = "true";
