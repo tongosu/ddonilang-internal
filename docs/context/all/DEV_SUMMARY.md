@@ -1,6 +1,6 @@
 # 또니랑 Codex 개발 요약 (Development Summary)
 > 이전 기록은 DEV_SUMMARY_ARCHIVE_20260706.md 참고
-Last Updated: 2026-07-08
+Last Updated: 2026-07-09
 Workspace: `i:\dev\ddonilang\codex`
 
 ---
@@ -11,6 +11,22 @@ Workspace: `i:\dev\ddonilang\codex`
 - 최신 의사결정/검증 결과를 빠르게 확인하는 용도로 유지한다.
 
 ## 최근 핵심 변경 (요약)
+
+### [DECLARATIVE-CLOSURE][11AXIS] SSOT 패치 후보 + G1~G3 런타임 갭 정리 (2026-07-09)
+
+- 변경:
+  - `docs/context/proposals/PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V1_20260709.md`를 추가해 선언형 closure 11축(A1~A11)을 `v24.13.0-candidate` SSOT 적용 후보로 정리했다.
+  - `docs/reports/impl/DECLARATIVE_CLOSURE_G1_G3_IMPLEMENTATION_GAP_V1_20260709.md`를 추가해 SolvePlan S0/S1, 세움 tick phase, prime derivative S2 lowering의 기존 근거와 미구현 갭을 분리했다.
+  - `work/_session_deltas/20260709_codex_declarative_closure_11axis.md`에 질문 큐, 부분 구현, 검증 로그를 누적했다.
+- 검증:
+  - `cargo check` PASS (기존 dead code warning만 발생).
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `git status --short -- docs/ssot lang core tool tools/teul-cli/src` PASS(변경 없음).
+- 진행률:
+  - G0: 완료.
+  - Part A: 완료(`닫힘-문서`, SSOT 직접 편집 대신 proposal-ready).
+  - G1~G3: 부분. 제품 runtime/parser/state_hash 변경 없음, behavior-closed 주장 없음.
+  - `docs/ssot/**` 변경 없음.
 
 ### [SSOT-ADDENDUM][G7] AI-friendly corpus / Seulgi gate fixture (2026-07-08)
 
