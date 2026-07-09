@@ -1,0 +1,1 @@
+{"cmd":["run","pack/sim_standard_parts_catalog_v1/input.ddn"],"stdout":["SIM_STANDARD_PARTS_CATALOG_V1","families=mechanical,circuit,econ,queue","new_language_block=false"],"exit_code":0}

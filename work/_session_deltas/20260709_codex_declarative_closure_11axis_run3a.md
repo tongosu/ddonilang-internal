@@ -5,7 +5,7 @@
 - G0: 완료. Run3A 범위는 G7~G11 red/contract pack과 보고서로 제한한다.
 - G7: 완료(`닫힘-문서`). `막음`/`막기` constraint reaction red pack과 umbrella/subpack/checker를 추가했다. parser/runtime landed claim은 `false`로 고정했다.
 - G8: 완료(`닫힘-문서`). `sim_experiment_manifest_v1` candidate manifest와 checker를 추가했다. `state_hash_policy.formula_change=false`, `plan_hash_status=pending_canonical_bytes_decision`로 고정했다.
-- G9: 미착수.
+- G9: 완료(`닫힘-문서`). `sim_standard_parts_catalog_v1` catalog와 checker를 추가했다. 기존 증빙이 약한 part는 `candidate_only`로 유지했다.
 - G10: 미착수.
 - G11: 미착수.
 
@@ -50,4 +50,10 @@
   - `python -m py_compile tests/run_declarative_closure_g8_experiment_manifest_check.py` PASS.
   - `python tests/run_pack_golden.py sim_experiment_manifest_v1` PASS.
   - `python tests/run_declarative_closure_g8_experiment_manifest_check.py` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
+- G9:
+  - `python -m json.tool pack/sim_standard_parts_catalog_v1/*.detjson` PASS(실행은 개별 detjson 전체).
+  - `python -m py_compile tests/run_declarative_closure_g9_standard_parts_catalog_check.py` PASS.
+  - `python tests/run_pack_golden.py sim_standard_parts_catalog_v1` PASS.
+  - `python tests/run_declarative_closure_g9_standard_parts_catalog_check.py` PASS.
   - `git status --short -- docs/ssot` PASS(변경 없음).

@@ -1,0 +1,110 @@
+{
+  "schema": "ddn.sim.standard_parts_catalog.v1",
+  "catalog_id": "sim_standard_parts_catalog_v1",
+  "closure_grade": "닫힘-문서",
+  "runtime_claim": false,
+  "parser_landed_claim": false,
+  "new_language_block": false,
+  "state_hash_formula_change": false,
+  "families": [
+    {
+      "family": "mechanical",
+      "parts": [
+        {
+          "part_id": "mass",
+          "status": "candidate_only",
+          "evidence": []
+        },
+        {
+          "part_id": "spring",
+          "status": "candidate_only",
+          "evidence": []
+        },
+        {
+          "part_id": "damper",
+          "status": "candidate_only",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "family": "circuit",
+      "parts": [
+        {
+          "part_id": "resistor",
+          "status": "candidate_only",
+          "evidence": []
+        },
+        {
+          "part_id": "capacitor",
+          "status": "candidate_only",
+          "evidence": []
+        },
+        {
+          "part_id": "source",
+          "status": "evidence_linked",
+          "evidence": [
+            {
+              "pack": "sim_circuit_series_v1",
+              "path": "pack/sim_circuit_series_v1/contract.detjson",
+              "reason": "series-circuit endpoint demo contains a source endpoint named 전지"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "family": "econ",
+      "parts": [
+        {
+          "part_id": "supply-demand",
+          "status": "evidence_linked",
+          "evidence": [
+            {
+              "pack": "econ_model_supply_demand_equilibrium_v1",
+              "path": "pack/econ_model_supply_demand_equilibrium_v1/contract.detjson",
+              "reason": "model-first skeleton uses supply_demand_equilibrium domain"
+            },
+            {
+              "pack": "sim_econ_market_v1",
+              "path": "pack/sim_econ_market_v1/contract.detjson",
+              "reason": "relation demo lowers household-market endpoint rows"
+            }
+          ]
+        },
+        {
+          "part_id": "tax",
+          "status": "evidence_linked",
+          "evidence": [
+            {
+              "pack": "econ_model_tax_welfare_v1",
+              "path": "pack/econ_model_tax_welfare_v1/contract.detjson",
+              "reason": "model-first skeleton uses tax_welfare domain"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "family": "queue",
+      "parts": [
+        {
+          "part_id": "queue",
+          "status": "candidate_only",
+          "evidence": []
+        },
+        {
+          "part_id": "server",
+          "status": "candidate_only",
+          "evidence": []
+        }
+      ]
+    }
+  ],
+  "blocked_claims": [
+    "runtime component model",
+    "new language block",
+    "solver behavior",
+    "state_hash formula integration"
+  ]
+}
