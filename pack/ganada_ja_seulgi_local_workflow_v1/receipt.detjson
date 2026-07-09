@@ -1,0 +1,63 @@
+{
+  "schema": "ddn.ganada.ja.seulgi_local_workflow.v1",
+  "pack": "ganada_ja_seulgi_local_workflow_v1",
+  "cells": ["자-3", "자-5"],
+  "status": "product_pass_gate",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "fixture_proposal_import": true,
+  "receipt_policy": "approve_reject_local",
+  "receipt_replay_policy": "local_append_only",
+  "ai_call_claim": false,
+  "auto_apply_claim": false,
+  "file_write_claim": false,
+  "runtime_ast_persistence_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "provenance": {
+    "lesson_context": "seamgrim_lesson_run_preset_rail_v1",
+    "editor_context": "seamgrim_lesson_authoring_flow_v1",
+    "proposal_pack": "seulgi_proposal_ui_v1",
+    "replay_pack": "seulgi_replay_safe_workflow_v1",
+    "product_runner": "tests/ganada_ja_seulgi_local_workflow_runner.mjs"
+  },
+  "receipts": [
+    {
+      "id": "approve_receipt",
+      "selector": "seulgi-approve",
+      "uri": "seulgi://proposal/approval-receipt",
+      "recorded_state": "data-seulgi-approval-receipt=local"
+    },
+    {
+      "id": "reject_receipt",
+      "selector": "seulgi-reject",
+      "uri": "seulgi://proposal/rejection-receipt",
+      "recorded_state": "data-seulgi-rejection-receipt=local"
+    },
+    {
+      "id": "replay_log",
+      "selector": "seulgi-replay-log",
+      "uri": "seulgi://replay/approval",
+      "recorded_state": "proposal_receipt_source:seulgi_proposal_ui_v1"
+    }
+  ],
+  "required_commands": [
+    {
+      "kind": "pack_golden_pass",
+      "command": ["python", "tests/run_pack_golden.py", "ganada_ja_seulgi_local_workflow_v1"],
+      "expect_stdout_contains": "pack golden ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/ganada_ja_seulgi_local_workflow_runner.mjs"],
+      "expect_stdout_contains": "ganada_ja_seulgi_local_workflow: ok"
+    },
+    {
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_ja_seulgi_context_check.py"],
+      "expect_stdout_contains": "ganada_ja_seulgi_context_check: PASS"
+    }
+  ]
+}
