@@ -35,6 +35,8 @@ pub struct CartPoleStep {
     pub reward: Fixed64,
     pub next_observation: [Fixed64; 4],
     pub done: bool,
+    pub terminated: bool,
+    pub truncated: bool,
 }
 
 impl CartPoleConfig {
@@ -102,6 +104,8 @@ impl CartPoleEnv {
             reward,
             next_observation: next_obs,
             done: done_after,
+            terminated: done_after,
+            truncated: false,
         })
     }
 }
@@ -133,6 +137,7 @@ pub fn run_episode(
         let last_step = (idx as u64 + 1) >= config.max_steps;
         if last_step && !step.done {
             step.done = true;
+            step.truncated = true;
             step.reward = Fixed64::ZERO;
         }
         steps.push(step);

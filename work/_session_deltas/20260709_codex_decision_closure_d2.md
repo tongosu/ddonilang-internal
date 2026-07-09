@@ -4,7 +4,7 @@
 
 - D0: 완료. `codex/queue-20260706`에서 시작 상태와 경계를 기록했다.
 - D1 Settings keyset: 완료. `settings_keyset_policy_v1` pack/checker로 `설정.누리`/`설정.이야기` keyset과 hash 정책을 고정했다.
-- D2 NuriGym step_record v0.2 public schema: 미착수.
+- D2 NuriGym step_record v0.2 public schema: 진행 중. opt-in `step_record_version="v0.2"` product wire와 public schema pack/checker를 추가했다.
 - D3 Report: 미착수.
 
 ## 경계
@@ -41,3 +41,15 @@
   - `python tests/run_pack_golden.py settings_keyset_policy_v1` PASS.
   - `python tests/run_settings_keyset_policy_check.py` PASS.
   - `git status --short -- docs/ssot` PASS.
+- D2 NuriGym v0.2 public schema:
+  - `python -m json.tool pack/nurigym_step_record_v02_public_schema_v1/contract.detjson` PASS.
+  - `python -m py_compile tests/run_nurigym_step_record_v02_public_schema_check.py` PASS.
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml nurigym_build_step_record -- --nocapture` PASS.
+  - `python tests/run_pack_golden.py nurigym_step_record_v02_public_schema_v1` PASS.
+  - `python tests/run_nurigym_step_record_v02_public_schema_check.py` PASS.
+  - `python tests/run_nurigym_shared_sync_action_pipeline_pack_check.py` PASS.
+  - `python tests/run_nuri_gym_contract_check.py` PASS.
+  - `cargo check` PASS (기존 `ddonirang-tool` unused 경고만 출력).
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `git status --short -- docs/ssot` PASS.
+  - `python tests/run_nurigym_step_record_v02_roundtrip_check.py` / `python tests/run_nurigym_step_record_v02_consumer_g6_check.py`는 product path dirty boundary에서 중단되어 커밋 후 재실행 예정.
