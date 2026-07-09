@@ -20,6 +20,7 @@ DEV_SUMMARY = ROOT / "docs" / "context" / "all" / "DEV_SUMMARY.md"
 PROJECT_STATUS = ROOT / "docs" / "status" / "PROJECT_STATUS.md"
 CHANGELOG = ROOT / "docs" / "status" / "CHANGELOG.md"
 LESSON_CATALOG = ROOT / "solutions" / "seamgrim_ui_mvp" / "lessons" / "index.json"
+EVIDENCE_REGISTRY = ROOT / "pack" / "ganada_execution_evidence_registry_v1" / "registry.detjson"
 PACK = ROOT / "pack" / "roadmap_v2_ma0_curriculum_catalog_v1"
 CONTRACT = PACK / "contract.detjson"
 RECONCILIATION = PACK / "reconciliation.detjson"
@@ -107,6 +108,32 @@ def count_matrix_statuses() -> tuple[int, int, int]:
     )
 
 
+def check_execution_registry() -> None:
+    registry = read_json(EVIDENCE_REGISTRY)
+    if registry.get("schema") != "ddn.ganada.execution_evidence_registry.v1":
+        fail("execution registry schema mismatch")
+    if registry.get("docs_only_behavior_closure_allowed") is not False:
+        fail("execution registry must reject docs-only behavior closure")
+    cells = registry.get("tracked_cells")
+    if not isinstance(cells, list):
+        fail("execution registry tracked_cells must be a list")
+    cell = next((row for row in cells if row.get("cell_id") == "마-0"), None)
+    if not isinstance(cell, dict):
+        fail("execution registry missing 마-0")
+    if cell.get("behavior_evidence_status") != "product_pass_recorded":
+        fail(f"마-0 evidence status mismatch: {cell.get('behavior_evidence_status')!r}")
+    if cell.get("behavior_closed_claim") is not False or cell.get("matrix_upgrade_claim") is not False:
+        fail("마-0 registry must record evidence without claiming matrix upgrade")
+    commands = cell.get("commands")
+    if not isinstance(commands, list) or not commands:
+        fail("마-0 registry must contain execution commands")
+    if not any(row.get("kind") == "tooling_runner_or_ci_pass" for row in commands if isinstance(row, dict)):
+        fail("마-0 registry must contain tooling runner evidence")
+    refs = cell.get("file_line_refs")
+    if not isinstance(refs, list) or not refs:
+        fail("마-0 registry must contain file:line refs")
+
+
 def check_catalog() -> None:
     payload = read_json(LESSON_CATALOG)
     lessons = payload.get("lessons")
@@ -131,6 +158,7 @@ def check_docs() -> None:
         PROJECT_STATUS,
         CHANGELOG,
         LESSON_CATALOG,
+        EVIDENCE_REGISTRY,
         PACK / "README.md",
         PACK / "input.ddn",
         PACK / "golden.jsonl",
@@ -161,9 +189,10 @@ def check_docs() -> None:
     for path in [REPORT, DEV_SUMMARY, PROJECT_STATUS]:
         require_tokens(path, shared)
     require_tokens(CHANGELOG, ["ROADMAP_V2 MA0 curriculum catalog reconciliation", "83/90 = 92%", "85/90 = 94%"])
-    total, behavior, docs = count_matrix_statuses()
-    if total != 90 or behavior < 83 or docs != 5:
-        fail(f"matrix counts mismatch: rows={total} behavior={behavior} docs={docs}")
+    total, _behavior, _docs = count_matrix_statuses()
+    if total != 90:
+        fail(f"matrix row count mismatch: rows={total}")
+    check_execution_registry()
 
 
 def check_payload(path: Path) -> None:

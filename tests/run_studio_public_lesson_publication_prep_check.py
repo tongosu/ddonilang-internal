@@ -16,6 +16,7 @@ CHECKER = ROOT / "tests" / "run_studio_public_lesson_publication_prep_check.py"
 ALLOWLIST = ROOT / "solutions" / "seamgrim_ui_mvp" / "lessons" / "active_allowlist.detjson"
 LESSON_INDEX = ROOT / "solutions" / "seamgrim_ui_mvp" / "lessons" / "index.json"
 LOCAL_PACKAGING_CHECKER = ROOT / "tests" / "run_studio_local_packaging_consolidation_check.py"
+EVIDENCE_REGISTRY = ROOT / "pack" / "ganada_execution_evidence_registry_v1" / "registry.detjson"
 NEXT = "STUDIO_REGISTRY_SHARE_SEED_V1"
 
 
@@ -83,10 +84,34 @@ def check_required_files() -> None:
         ALLOWLIST,
         LESSON_INDEX,
         LOCAL_PACKAGING_CHECKER,
+        EVIDENCE_REGISTRY,
         ROOT / "docs" / "context" / "queue" / "STUDIO_LOCAL_PACKAGING_CONSOLIDATION_V1.md",
         ROOT / "pack" / "studio_local_packaging_consolidation_v1" / "local_package_manifest.detjson",
     ]:
         require(path)
+
+
+def check_execution_registry() -> None:
+    registry = json.loads(read(EVIDENCE_REGISTRY))
+    if registry.get("schema") != "ddn.ganada.execution_evidence_registry.v1":
+        fail("execution registry schema mismatch")
+    if registry.get("docs_only_behavior_closure_allowed") is not False:
+        fail("execution registry must reject docs-only behavior closure")
+    cells = registry.get("tracked_cells")
+    if not isinstance(cells, list):
+        fail("execution registry tracked_cells must be a list")
+    cell = next((row for row in cells if row.get("cell_id") == "마-4"), None)
+    if not isinstance(cell, dict):
+        fail("execution registry missing 마-4")
+    if cell.get("behavior_evidence_status") != "product_pass_recorded":
+        fail(f"마-4 evidence status mismatch: {cell.get('behavior_evidence_status')!r}")
+    if cell.get("behavior_closed_claim") is not False or cell.get("matrix_upgrade_claim") is not False:
+        fail("마-4 registry must record evidence without claiming matrix upgrade")
+    commands = cell.get("commands")
+    if not isinstance(commands, list) or not commands:
+        fail("마-4 registry must contain execution commands")
+    if not any(row.get("kind") == "tooling_runner_or_ci_pass" for row in commands if isinstance(row, dict)):
+        fail("마-4 registry must contain tooling runner evidence")
 
 
 def check_docs() -> None:
@@ -127,17 +152,7 @@ def check_docs() -> None:
             "마줄기 2/6 = 33%",
         ],
     )
-    require_contains(
-        ROOT / "docs" / "context" / "all" / "DEV_SUMMARY.md",
-        [
-            "STUDIO_PUBLIC_LESSON_PUBLICATION_PREP_V1",
-            "studio_public_lesson_publication_prep_v1",
-            "ddn.studio.public_lesson_publication_prep.v1",
-            "전체 14/18 = 78%",
-            "ROADMAP_V2 전체: queue-expanded 30/90 = 33%",
-            "docs/ssot/** 변경 없음",
-        ],
-    )
+    check_execution_registry()
 
 
 def check_contract_and_manifest() -> None:
@@ -281,7 +296,9 @@ def check_golden() -> None:
 def run_required_gates() -> None:
     for cmd in [
         ["python", "tests/run_pack_golden.py", "studio_public_lesson_publication_prep_v1"],
-        ["python", "tests/run_studio_local_packaging_consolidation_check.py"],
+        ["python", "tests/run_pack_golden.py", "studio_local_packaging_consolidation_v1"],
+        ["python", "tests/run_pack_golden.py", "studio_local_share_and_packaging_v1"],
+        ["node", "tests/studio_local_share_and_packaging_browser_runner.mjs"],
     ]:
         proc = run(cmd, timeout=1500)
         if proc.returncode != 0:

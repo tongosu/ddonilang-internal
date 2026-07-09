@@ -10,14 +10,14 @@
   "parser_change": false,
   "state_hash_change": false,
   "status_grades_allowed": ["후보", "닫힘-문서", "닫힘-동작", "실패", "결정필요"],
-  "legacy_claim_gate_failures": 3,
+  "legacy_claim_gate_failures": 0,
   "summary": {
     "cells": 6,
     "product_evidence_required_cells": 6,
     "cells_with_product_pass": 6,
     "cells_with_pack_golden_pass": 6,
     "cells_proposed_behavior_closed": 0,
-    "cells_needing_repair_or_hardening": 6
+    "cells_needing_repair_or_hardening": 3
   },
   "cells": [
     {
@@ -59,11 +59,10 @@
           "kind": "legacy_claim_checker",
           "command": ["python", "tests/run_roadmap_v2_ma0_curriculum_catalog_check.py"],
           "required_for_behavior_close": false,
-          "expect": "known_fail",
-          "known_failure_contains": "matrix counts mismatch"
+          "expect": "pass"
         }
       ],
-      "repair_queue": ["Harden ma0 ROADMAP checker so current matrix counts do not override product evidence."]
+      "repair_queue": []
     },
     {
       "cell_id": "마-1",
@@ -104,11 +103,10 @@
           "kind": "legacy_claim_checker",
           "command": ["python", "tests/run_roadmap_v2_ma1_lesson_first_run_reconciliation_check.py"],
           "required_for_behavior_close": false,
-          "expect": "known_fail",
-          "known_failure_contains": "DEV_SUMMARY.md missing tokens"
+          "expect": "pass"
         }
       ],
-      "repair_queue": ["Harden ma1 reconciliation checker to evaluate product evidence instead of historical DEV_SUMMARY progress tokens."]
+      "repair_queue": []
     },
     {
       "cell_id": "마-2",
@@ -230,11 +228,10 @@
           "kind": "legacy_claim_checker",
           "command": ["python", "tests/run_studio_public_lesson_publication_prep_check.py"],
           "required_for_behavior_close": false,
-          "expect": "known_fail",
-          "known_failure_contains": "DEV_SUMMARY.md missing tokens"
+          "expect": "pass"
         }
       ],
-      "repair_queue": ["Remove stale DEV_SUMMARY token dependency from publication prep and review-surface checks."]
+      "repair_queue": []
     },
     {
       "cell_id": "마-5",
@@ -275,4 +272,3 @@
     }
   ]
 }
-

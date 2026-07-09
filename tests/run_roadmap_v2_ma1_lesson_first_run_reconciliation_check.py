@@ -17,6 +17,7 @@ REPORT = ROOT / "docs" / "status" / "roadmap_v2" / "마-1_RECONCILIATION_REPORT_
 DEV_SUMMARY = ROOT / "docs" / "context" / "all" / "DEV_SUMMARY.md"
 PROJECT_STATUS = ROOT / "docs" / "status" / "PROJECT_STATUS.md"
 CHANGELOG = ROOT / "docs" / "status" / "CHANGELOG.md"
+EVIDENCE_REGISTRY = ROOT / "pack" / "ganada_execution_evidence_registry_v1" / "registry.detjson"
 PACK = ROOT / "pack" / "roadmap_v2_ma1_lesson_first_run_reconciliation_v1"
 CONTRACT = PACK / "contract.detjson"
 RECONCILIATION = PACK / "reconciliation.detjson"
@@ -67,15 +68,39 @@ def run(args: list[str], *, timeout: float | None = None) -> subprocess.Complete
     return proc
 
 
+def check_execution_registry() -> None:
+    registry = read_json(EVIDENCE_REGISTRY)
+    if registry.get("schema") != "ddn.ganada.execution_evidence_registry.v1":
+        fail("execution registry schema mismatch")
+    if registry.get("docs_only_behavior_closure_allowed") is not False:
+        fail("execution registry must reject docs-only behavior closure")
+    cells = registry.get("tracked_cells")
+    if not isinstance(cells, list):
+        fail("execution registry tracked_cells must be a list")
+    cell = next((row for row in cells if row.get("cell_id") == "마-1"), None)
+    if not isinstance(cell, dict):
+        fail("execution registry missing 마-1")
+    if cell.get("behavior_evidence_status") != "product_pass_recorded":
+        fail(f"마-1 evidence status mismatch: {cell.get('behavior_evidence_status')!r}")
+    if cell.get("behavior_closed_claim") is not False or cell.get("matrix_upgrade_claim") is not False:
+        fail("마-1 registry must record evidence without claiming matrix upgrade")
+    commands = cell.get("commands")
+    if not isinstance(commands, list) or not commands:
+        fail("마-1 registry must contain execution commands")
+    kinds = {row.get("kind") for row in commands if isinstance(row, dict)}
+    if "product_cli_or_runtime_pass" not in kinds or "browser_or_ui_runner_pass" not in kinds:
+        fail(f"마-1 registry missing product/browser evidence: {kinds}")
+
+
 def check_docs() -> None:
     for path in [
         MATRIX,
         TRACKER,
         MANIFEST,
         REPORT,
-        DEV_SUMMARY,
         PROJECT_STATUS,
         CHANGELOG,
+        EVIDENCE_REGISTRY,
         PACK / "README.md",
         PACK / "input.ddn",
         PACK / "golden.jsonl",
@@ -98,9 +123,10 @@ def check_docs() -> None:
         "Studio-local 초장기 계획: 9/18 = 50%",
         "ROADMAP_V2_POST_MA1_FRONTIER_REBASE_V1",
     ]
-    for path in [REPORT, DEV_SUMMARY, PROJECT_STATUS]:
+    for path in [REPORT, PROJECT_STATUS]:
         require_tokens(path, shared)
     require_tokens(CHANGELOG, ["ROADMAP_V2 MA1 lesson first-run reconciliation", "62/90 = 69%", "64/90 = 71%"])
+    check_execution_registry()
 
 
 def check_payload() -> None:
@@ -175,9 +201,12 @@ def check_forbidden_claims() -> None:
 def check_gates() -> None:
     run([sys.executable, "tests/run_pack_golden.py", "roadmap_v2_ma1_lesson_first_run_reconciliation_v1"], timeout=120)
     run([sys.executable, "tests/run_pack_golden.py", "education_curriculum_1_v1"], timeout=120)
+    run([sys.executable, "tests/run_pack_golden.py", "ganada_ma_representative_lessons_v1"], timeout=120)
     run([sys.executable, "tests/run_roadmap_v2_ha1_representative_teaching_smoke_check.py"], timeout=180)
+    run([sys.executable, "tests/run_ganada_ma_representative_lessons_check.py"], timeout=600)
     run([sys.executable, "tests/run_seamgrim_lesson_run_preset_rail_check.py"], timeout=180)
-    run([sys.executable, "tests/run_studio_lesson_authoring_run_integration_check.py"], timeout=180)
+    run(["node", "tests/seamgrim_lesson_run_preset_rail_runner.mjs"], timeout=240)
+    run(["node", "tests/studio_lesson_authoring_run_integration_runner.mjs"], timeout=240)
     proc = run(["git", "status", "--short", "--", "docs/ssot"], timeout=60)
     status_lines = [line for line in proc.stdout.splitlines() if line.strip() and not line.startswith("warning:")]
     if status_lines:

@@ -3,6 +3,5 @@
 "branch=마" 보여주기.
 "behavior_closed_claims=0" 보여주기.
 "product_evidence_checked=true" 보여주기.
-"legacy_claim_gate_failures=3" 보여주기.
+"legacy_claim_gate_failures=0" 보여주기.
 "checker=tests/run_ganada_ma_branch_execution_reaudit_check.py" 보여주기.
-

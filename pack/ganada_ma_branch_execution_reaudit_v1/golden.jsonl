@@ -1,2 +1,1 @@
-{"id":"c01_ganada_ma_branch_execution_reaudit_marker","cmd":["run","pack/ganada_ma_branch_execution_reaudit_v1/input.ddn"],"stdout":["GANADA_MA_BRANCH_EXECUTION_REAUDIT_V1","cells=6","branch=마","behavior_closed_claims=0","product_evidence_checked=true","legacy_claim_gate_failures=3","checker=tests/run_ganada_ma_branch_execution_reaudit_check.py"],"exit_code":0}
-
+{"id":"c01_ganada_ma_branch_execution_reaudit_marker","cmd":["run","pack/ganada_ma_branch_execution_reaudit_v1/input.ddn"],"stdout":["GANADA_MA_BRANCH_EXECUTION_REAUDIT_V1","cells=6","branch=마","behavior_closed_claims=0","product_evidence_checked=true","legacy_claim_gate_failures=0","checker=tests/run_ganada_ma_branch_execution_reaudit_check.py"],"exit_code":0}
