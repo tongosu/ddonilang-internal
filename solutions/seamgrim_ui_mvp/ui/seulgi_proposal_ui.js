@@ -168,6 +168,8 @@ export function renderSeulgiProposalUi(root, proposal = {}) {
   const activeId = asText(payload.active_row_id, rows[0]?.id ?? "");
   const active = rows.find((row) => row.id === activeId) || rows[0] || {};
   root.dataset.seulgiProposalUiStatus = asText(payload.status, "seulgi_proposal_ui_incomplete");
+  root.dataset.testid = "seulgi-proposal-panel";
+  root.setAttribute("data-testid", "seulgi-proposal-panel");
   root.innerHTML = `
     <div class="question-card-head">
       <div>
@@ -180,13 +182,19 @@ export function renderSeulgiProposalUi(root, proposal = {}) {
         <span>${escapeHtml(String(progress.current_stage_percent ?? 0))}%</span>
       </div>
     </div>
-    <div class="question-card-summary" data-seulgi-proposal-summary>
+    <div class="question-card-summary" data-seulgi-proposal-summary data-testid="seulgi-boundary-warning" data-seulgi-boundary-warning>
       슬기제안, 미리보기, 승인, 거절, 감사 기록을 로컬 UI로 묶습니다. AI call, auto-apply, file write, runtime AST persistence는 이번 범위가 아닙니다.
     </div>
     <div class="question-card-body">
       <div class="question-card-list">
         ${rows.map((row) => `
-          <button type="button" class="question-card-btn${row.id === activeId ? " active" : ""}" data-seulgi-proposal-row="${escapeHtml(row.id)}">
+          <button
+            type="button"
+            class="question-card-btn${row.id === activeId ? " active" : ""}"
+            data-seulgi-proposal-row="${escapeHtml(row.id)}"
+            ${row.id === "approve" ? 'data-testid="seulgi-approve" data-seulgi-approve' : ""}
+            ${row.id === "reject" ? 'data-testid="seulgi-reject" data-seulgi-reject' : ""}
+          >
             <span>${escapeHtml(row.title)}</span>
             <small>${escapeHtml(row.kind)} · ${escapeHtml(row.decision)}</small>
           </button>

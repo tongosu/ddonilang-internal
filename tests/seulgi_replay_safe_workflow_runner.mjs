@@ -115,6 +115,7 @@ async function main() {
 
     await page.goto(`${baseUrl}/solutions/seamgrim_ui_mvp/ui/index.html?devSurfaces=1`, { waitUntil: "domcontentloaded" });
     await page.waitForSelector("[data-seulgi-replay-safe-workflow][data-seulgi-replay-safe-status='seulgi_replay_safe_workflow_ready']");
+    await page.waitForSelector("[data-testid='seulgi-replay-log'][data-seulgi-replay-log]");
 
     const moduleResult = await page.evaluate(async () => {
       const {
@@ -173,6 +174,8 @@ async function main() {
         title: document.querySelector("[data-seulgi-replay-active-title]")?.textContent || "",
         link: document.querySelector("[data-seulgi-replay-active-link]")?.textContent || "",
         preview: document.querySelector("[data-seulgi-replay-preview]")?.textContent || "",
+        replayLog: document.querySelector("[data-testid='seulgi-replay-log'][data-seulgi-replay-log]")?.textContent || "",
+        replayLogCount: document.querySelectorAll("[data-testid='seulgi-replay-log'][data-seulgi-replay-log]").length,
         globalSchema: window.__SEULGI_REPLAY_SAFE_WORKFLOW__?.schema || "",
         globalText: window.__SEULGI_REPLAY_SAFE_WORKFLOW_TEXT__ || "",
       };
@@ -186,6 +189,8 @@ async function main() {
     assert(domResult.title === "AI 재호출 없음", `active title mismatch: ${domResult.title}`);
     assert(domResult.link.includes("seulgi://replay/no-ai-recall"), "no-recall URI mismatch");
     assert(domResult.preview.includes("ai_recall:false") && domResult.preview.includes("state_hash_owner:false"), "preview mismatch");
+    assert(domResult.replayLogCount === 1, `stable replay log selector mismatch: ${domResult.replayLogCount}`);
+    assert(domResult.replayLog.includes("ai_recall:false") && domResult.replayLog.includes("no_recall"), "stable replay log mismatch");
     assert(domResult.globalSchema === "ddn.ja.seulgi_replay_safe_workflow.v1", "global schema mismatch");
     assert(domResult.globalText.includes("roadmap_matrix\t75/90"), "global text missing roadmap matrix");
     if (failures.length > 0) throw new Error(failures.join("\n"));

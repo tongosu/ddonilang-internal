@@ -205,7 +205,7 @@ export function renderSeulgiReplaySafeWorkflow(root, workflow = {}) {
             <span data-seulgi-replay-artifact="${escapeHtml(row.id)}">${escapeHtml(row.kind)} · ${escapeHtml(row.replay)}</span>
           `).join("")}
         </div>
-        <pre class="question-card-preview" data-seulgi-replay-preview>${escapeHtml(payload.replay_text ?? "")}</pre>
+        <pre class="question-card-preview" data-seulgi-replay-preview data-testid="seulgi-replay-log" data-seulgi-replay-log>${escapeHtml(payload.replay_text ?? "")}</pre>
         <button type="button" class="ghost" data-seulgi-replay-copy>Replay-safe workflow 텍스트 복사</button>
       </div>
     </div>

@@ -115,6 +115,10 @@ async function main() {
 
     await page.goto(`${baseUrl}/solutions/seamgrim_ui_mvp/ui/index.html?devSurfaces=1`, { waitUntil: "domcontentloaded" });
     await page.waitForSelector("[data-seulgi-proposal-ui][data-seulgi-proposal-ui-status='seulgi_proposal_ui_ready']");
+    await page.waitForSelector("[data-testid='seulgi-proposal-panel'][data-seulgi-proposal-ui]");
+    await page.waitForSelector("[data-testid='seulgi-approve'][data-seulgi-approve]");
+    await page.waitForSelector("[data-testid='seulgi-reject'][data-seulgi-reject]");
+    await page.waitForSelector("[data-testid='seulgi-boundary-warning'][data-seulgi-boundary-warning]");
 
     const moduleResult = await page.evaluate(async () => {
       const {
@@ -163,16 +167,29 @@ async function main() {
     const domResult = await page.evaluate(async () => {
       const root = document.querySelector("[data-seulgi-proposal-ui]");
       const buttons = Array.from(document.querySelectorAll("[data-seulgi-proposal-row]"));
-      buttons.find((button) => button.getAttribute("data-seulgi-proposal-row") === "approve")?.click();
+      document.querySelector("[data-testid='seulgi-approve']")?.click();
+      const approveTitle = document.querySelector("[data-seulgi-proposal-active-title]")?.textContent || "";
+      const approveLink = document.querySelector("[data-seulgi-proposal-active-link]")?.textContent || "";
+      document.querySelector("[data-testid='seulgi-reject']")?.click();
+      const rejectTitle = document.querySelector("[data-seulgi-proposal-active-title]")?.textContent || "";
+      const rejectLink = document.querySelector("[data-seulgi-proposal-active-link]")?.textContent || "";
       document.querySelector("[data-seulgi-proposal-copy]")?.click();
       await new Promise((resolve) => setTimeout(resolve, 0));
       return {
         rootStatus: root?.getAttribute("data-seulgi-proposal-ui-status") || "",
         copied: root?.getAttribute("data-seulgi-proposal-copied") || "",
+        panelCount: document.querySelectorAll("[data-testid='seulgi-proposal-panel'][data-seulgi-proposal-ui]").length,
+        approveCount: document.querySelectorAll("[data-testid='seulgi-approve'][data-seulgi-approve]").length,
+        rejectCount: document.querySelectorAll("[data-testid='seulgi-reject'][data-seulgi-reject]").length,
+        boundaryWarning: document.querySelector("[data-testid='seulgi-boundary-warning'][data-seulgi-boundary-warning]")?.textContent || "",
         buttonCount: buttons.length,
         artifactCount: document.querySelectorAll("[data-seulgi-proposal-artifact]").length,
         progress: document.querySelector("[data-seulgi-proposal-progress]")?.textContent || "",
         summary: document.querySelector("[data-seulgi-proposal-summary]")?.textContent || "",
+        approveTitle,
+        approveLink,
+        rejectTitle,
+        rejectLink,
         title: document.querySelector("[data-seulgi-proposal-active-title]")?.textContent || "",
         link: document.querySelector("[data-seulgi-proposal-active-link]")?.textContent || "",
         preview: document.querySelector("[data-seulgi-proposal-preview]")?.textContent || "",
@@ -182,12 +199,20 @@ async function main() {
     });
     assert(domResult.rootStatus === "seulgi_proposal_ui_ready", `DOM status mismatch: ${domResult.rootStatus}`);
     assert(domResult.copied === "true", "copy state missing");
+    assert(domResult.panelCount === 1, `stable proposal panel selector mismatch: ${domResult.panelCount}`);
+    assert(domResult.approveCount === 1, `stable approve selector mismatch: ${domResult.approveCount}`);
+    assert(domResult.rejectCount === 1, `stable reject selector mismatch: ${domResult.rejectCount}`);
     assert(domResult.buttonCount === 5, `button count mismatch: ${domResult.buttonCount}`);
     assert(domResult.artifactCount === 5, `artifact count mismatch: ${domResult.artifactCount}`);
     assert(domResult.progress.includes("74/90 ROADMAP") && domResult.progress.includes("5/5 stage") && domResult.progress.includes("100%"), `progress mismatch: ${domResult.progress}`);
     assert(domResult.summary.includes("AI call") && domResult.summary.includes("auto-apply") && domResult.summary.includes("file write"), "summary missing boundary");
-    assert(domResult.title === "승인", `active title mismatch: ${domResult.title}`);
-    assert(domResult.link.includes("seulgi://proposal/approval-receipt"), "approval URI mismatch");
+    assert(domResult.boundaryWarning.includes("AI call") && domResult.boundaryWarning.includes("auto-apply") && domResult.boundaryWarning.includes("file write"), "stable boundary warning missing");
+    assert(domResult.approveTitle === "승인", `approve title mismatch: ${domResult.approveTitle}`);
+    assert(domResult.approveLink.includes("seulgi://proposal/approval-receipt"), "approval URI mismatch");
+    assert(domResult.rejectTitle === "거절", `reject title mismatch: ${domResult.rejectTitle}`);
+    assert(domResult.rejectLink.includes("seulgi://proposal/rejection-receipt"), "rejection URI mismatch");
+    assert(domResult.title === "거절", `active title mismatch: ${domResult.title}`);
+    assert(domResult.link.includes("seulgi://proposal/rejection-receipt"), "active rejection URI mismatch");
     assert(domResult.preview.includes("ai_call:false") && domResult.preview.includes("state_hash_owner:false"), "preview mismatch");
     assert(domResult.globalSchema === "ddn.ja.seulgi_proposal_ui.v1", "global schema mismatch");
     assert(domResult.globalText.includes("roadmap_matrix\t74/90"), "global text missing roadmap matrix");
