@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
+use ddonirang_lang::connect_endpoint_relation_seum_rows;
 use serde_json::{json, Value as JsonValue};
 use sha2::{Digest, Sha256};
 
@@ -54,10 +55,11 @@ impl IntegratorMethod {
 
 pub fn write_solveplan_out(path: &Path, program: &Program, source: &str) -> Result<(), String> {
     let method = IntegratorMethod::from_source(source);
-    let plans = collect_assertion_exprs(program)
+    let mut plans = collect_assertion_exprs(program)
         .into_iter()
         .map(|expr| build_solveplan_for_assertion(&expr.assertion.body_source, method))
         .collect::<Vec<_>>();
+    plans.extend(collect_connect_desugar_plans(source, method));
     let payload = match plans.as_slice() {
         [single] => single.clone(),
         _ => json!({
@@ -66,6 +68,29 @@ pub fn write_solveplan_out(path: &Path, program: &Program, source: &str) -> Resu
         }),
     };
     write_json(path, &payload)
+}
+
+pub fn write_connect_diagnostic_out_if_any(path: &Path, source: &str) -> Result<bool, String> {
+    let plans = collect_connect_desugar_plans(source, IntegratorMethod::from_source(source))
+        .into_iter()
+        .filter(|plan| {
+            plan.get("diagnostics")
+                .and_then(JsonValue::as_array)
+                .is_some_and(|diagnostics| !diagnostics.is_empty())
+        })
+        .collect::<Vec<_>>();
+    if plans.is_empty() {
+        return Ok(false);
+    }
+    let payload = match plans.as_slice() {
+        [single] => single.clone(),
+        _ => json!({
+            "schema": BUNDLE_SCHEMA,
+            "plans": plans,
+        }),
+    };
+    write_json(path, &payload)?;
+    Ok(true)
 }
 
 #[derive(Clone, Copy)]
@@ -77,6 +102,100 @@ fn collect_assertion_exprs(program: &Program) -> Vec<AssertionExpr<'_>> {
     let mut out = Vec::new();
     collect_assertions_from_stmts(&program.stmts, &mut out);
     out
+}
+
+fn collect_connect_desugar_plans(
+    source: &str,
+    _integrator_method: IntegratorMethod,
+) -> Vec<JsonValue> {
+    source
+        .replace("\r\n", "\n")
+        .replace('\r', "\n")
+        .lines()
+        .map(|line| line.trim().trim_start_matches('\u{feff}').trim())
+        .filter(|line| line.contains("잇기"))
+        .map(|line| {
+            if let Some((code, message)) = connect_diagnostic_for_surface(line) {
+                return connect_diagnostic_plan(line, code, &message);
+            }
+            let Some(rows) = connect_endpoint_relation_seum_rows(line) else {
+                return connect_diagnostic_plan(
+                    line,
+                    "E_CONNECT_UNSUPPORTED_RULE",
+                    "connect surface cannot lower to seum rows",
+                );
+            };
+            connect_desugar_plan(line, &rows)
+        })
+        .collect()
+}
+
+fn connect_diagnostic_for_surface(surface: &str) -> Option<(&'static str, String)> {
+    let rhs = surface
+        .trim()
+        .trim_end_matches('.')
+        .split_once("<-")
+        .map(|(_, expr)| expr.trim())
+        .unwrap_or_else(|| surface.trim().trim_end_matches('.'));
+    let (endpoints_part, rest) = rhs
+        .split_once("을 (")
+        .or_else(|| rhs.split_once("를 ("))?;
+    let endpoints = split_connect_endpoint_names(endpoints_part)?;
+    if endpoints.iter().any(|endpoint| !endpoint.contains('.')) {
+        return Some((
+            "E_CONNECT_NO_PORT",
+            "connect endpoint must name an object and port".to_string(),
+        ));
+    }
+    let inner = rest.split_once(") 잇기").map(|(inner, _)| inner)?;
+    let mut channel_rules = BTreeMap::new();
+    for sentence in inner.split(',').map(str::trim).filter(|it| !it.is_empty()) {
+        let Some((channel, rule)) = parse_connect_inner_sentence(sentence) else {
+            return Some((
+                "E_CONNECT_UNSUPPORTED_RULE",
+                format!("unsupported connect inner sentence: {sentence}"),
+            ));
+        };
+        if let Some(previous) = channel_rules.insert(channel.to_string(), rule) {
+            if previous != rule {
+                return Some((
+                    "E_CONNECT_CHANNEL_MISMATCH",
+                    format!("conflicting connect rules for channel: {channel}"),
+                ));
+            }
+        }
+    }
+    None
+}
+
+fn split_connect_endpoint_names(input: &str) -> Option<[String; 2]> {
+    let (left, right) = input
+        .split_once("과 ")
+        .or_else(|| input.split_once("와 "))
+        .or_else(|| input.split_once("과"))
+        .or_else(|| input.split_once("와"))?;
+    Some([left.trim().to_string(), right.trim().to_string()])
+}
+
+fn parse_connect_inner_sentence(sentence: &str) -> Option<(&str, &'static str)> {
+    if sentence.contains("실리게") || sentence.contains("거슬러 흐르게") {
+        return None;
+    }
+    let (channel, rest) = sentence
+        .split_once("은 ")
+        .or_else(|| sentence.split_once("는 "))
+        .or_else(|| sentence.split_once("가 "))
+        .or_else(|| sentence.split_once('은'))
+        .or_else(|| sentence.split_once('는'))
+        .or_else(|| sentence.split_once('가'))?;
+    let rule = if rest.contains("같게") {
+        "equality"
+    } else if rest.contains("흐르게") {
+        "flow"
+    } else {
+        return None;
+    };
+    Some((channel.trim(), rule))
 }
 
 fn collect_assertions_from_stmts<'a>(stmts: &'a [Stmt], out: &mut Vec<AssertionExpr<'a>>) {
@@ -284,15 +403,40 @@ fn build_solveplan_for_assertion(
 }
 
 fn parse_relation_rows(body_source: &str) -> Vec<RelationRow> {
-    body_source
-        .replace("\r\n", "\n")
-        .replace('\r', "\n")
-        .split(|ch| ch == '.' || ch == '\n')
-        .map(str::trim)
-        .filter(|line| !line.is_empty())
+    split_relation_statements(body_source)
+        .into_iter()
         .enumerate()
-        .filter_map(|(idx, line)| parse_relation_row(idx, line))
+        .filter_map(|(idx, line)| parse_relation_row(idx, &line))
         .collect()
+}
+
+fn split_relation_statements(body_source: &str) -> Vec<String> {
+    let normalized = body_source.replace("\r\n", "\n").replace('\r', "\n");
+    let mut out = Vec::new();
+    let mut start = 0usize;
+    for (idx, ch) in normalized.char_indices() {
+        let split_here = if ch == '.' {
+            normalized[idx + ch.len_utf8()..]
+                .chars()
+                .next()
+                .map(|next| next.is_whitespace())
+                .unwrap_or(true)
+        } else {
+            ch == '\n'
+        };
+        if split_here {
+            let line = normalized[start..idx].trim();
+            if !line.is_empty() {
+                out.push(line.to_string());
+            }
+            start = idx + ch.len_utf8();
+        }
+    }
+    let line = normalized[start..].trim().trim_end_matches('.').trim();
+    if !line.is_empty() {
+        out.push(line.to_string());
+    }
+    out
 }
 
 fn parse_relation_row(idx: usize, line: &str) -> Option<RelationRow> {
@@ -345,7 +489,7 @@ fn tokens_from_expr(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let mut current = String::new();
     for ch in text.chars() {
-        if ch == '_' || ch == '\'' || ch.is_alphanumeric() {
+        if ch == '_' || ch == '\'' || ch == '.' || ch.is_alphanumeric() {
             current.push(ch);
         } else {
             push_token(&mut out, &mut current);
@@ -362,7 +506,10 @@ fn push_token(out: &mut Vec<String>, current: &mut String) {
     if current.is_empty() {
         return;
     }
-    if !current.chars().all(|ch| ch.is_ascii_digit()) {
+    if !current
+        .chars()
+        .all(|ch| ch.is_ascii_digit() || ch == '.')
+    {
         out.push(current.clone());
     }
     current.clear();
@@ -586,6 +733,58 @@ fn diagnostic_plan(
     })
 }
 
+fn connect_desugar_plan(surface: &str, rows: &[String]) -> JsonValue {
+    let body_source = rows.join("\n");
+    let relation_rows = parse_relation_rows(&body_source);
+    json!({
+        "schema": SCHEMA,
+        "source_hash": sha256_prefixed(surface),
+        "stage": "S1",
+        "method": "connect_desugar_to_seum_rows_v1",
+        "relations": relation_json(&relation_rows, false),
+        "unknowns": collect_unknowns(&relation_rows),
+        "lowering": {
+            "connect_desugar": {
+                "surface": surface,
+                "rows": rows,
+                "sign_convention": "incoming_positive_v1",
+                "pure_desugar": true,
+                "runtime_path": "seum_solveplan",
+            },
+            "phase": seum_phase_json(),
+        },
+        "diagnostics": [],
+        "state_hash_inputs": default_state_hash_inputs(),
+    })
+}
+
+fn connect_diagnostic_plan(surface: &str, code: &'static str, message: &str) -> JsonValue {
+    json!({
+        "schema": SCHEMA,
+        "source_hash": sha256_prefixed(surface),
+        "stage": "S3",
+        "method": "connect_desugar_unsupported_v1",
+        "relations": [],
+        "unknowns": [],
+        "lowering": {
+            "connect_desugar": {
+                "surface": surface,
+                "rows": [],
+                "sign_convention": "incoming_positive_v1",
+                "pure_desugar": true,
+                "runtime_path": "seum_solveplan",
+            },
+            "phase": seum_phase_json(),
+        },
+        "diagnostics": [{
+            "code": code,
+            "severity": "error",
+            "message": message,
+        }],
+        "state_hash_inputs": default_state_hash_inputs(),
+    })
+}
+
 fn relation_json(rows: &[RelationRow], include_defines: bool) -> Vec<JsonValue> {
     rows.iter()
         .map(|row| {
@@ -720,6 +919,35 @@ mod tests {
             .collect::<Vec<_>>();
         assert_eq!(plans.len(), 1);
         assert_eq!(plans[0]["stage"], "S0");
+    }
+
+    #[test]
+    fn connect_surface_lowers_to_solveplan_rows() {
+        let source = "전지.양극과 전구.왼핀을 (전압은 같게, 전류는 흐르게) 잇기.";
+        let plans = collect_connect_desugar_plans(source, IntegratorMethod::Euler);
+        assert_eq!(plans.len(), 1);
+        assert_eq!(plans[0]["stage"], "S1");
+        assert_eq!(
+            plans[0]["lowering"]["connect_desugar"]["rows"],
+            json!([
+                "전지.양극.전압 =:= 전구.왼핀.전압.",
+                "전지.양극.전류 + 전구.왼핀.전류 =:= 0."
+            ])
+        );
+        assert_eq!(
+            plans[0]["lowering"]["connect_desugar"]["sign_convention"],
+            "incoming_positive_v1"
+        );
+    }
+
+    #[test]
+    fn connect_surface_reports_artifact_diagnostics() {
+        let plans = collect_connect_desugar_plans(
+            "이음관계 <- 전지.양극과 전구.왼핀을 (전압은 같게, 전압은 흐르게) 잇기.",
+            IntegratorMethod::Euler,
+        );
+        assert_eq!(plans[0]["stage"], "S3");
+        assert_eq!(plans[0]["diagnostics"][0]["code"], "E_CONNECT_CHANNEL_MISMATCH");
     }
 
     #[test]

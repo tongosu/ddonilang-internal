@@ -3142,11 +3142,22 @@ pub fn run_file_with_emitter(
     let project_policy = load_project_policy(path)?;
     let parse_mode = resolve_lang_mode(options.lang_mode, &project_policy)?;
     let (program_for_gate, prepared_source) =
-        parse_program_for_runtime_with_mode(&source, parse_mode).map_err(|err| match err {
-            FrontdoorParseFailure::Guard(message) => message,
-            FrontdoorParseFailure::Lex(err) => RunError::Lex(err).format(&file_label),
-            FrontdoorParseFailure::Parse(err) => RunError::Parse(err).format(&file_label),
-        })?;
+        match parse_program_for_runtime_with_mode(&source, parse_mode) {
+            Ok(parsed) => parsed,
+            Err(err) => {
+                if let Some(solveplan_path) = options.solveplan_out.as_ref() {
+                    let _ = crate::cli::solveplan::write_connect_diagnostic_out_if_any(
+                        solveplan_path,
+                        &source,
+                    );
+                }
+                return Err(match err {
+                    FrontdoorParseFailure::Guard(message) => message,
+                    FrontdoorParseFailure::Lex(err) => RunError::Lex(err).format(&file_label),
+                    FrontdoorParseFailure::Parse(err) => RunError::Parse(err).format(&file_label),
+                });
+            }
+        };
     let parse_warnings = collect_lang_parse_warnings_for_run(&prepared_source);
     emit_lang_parse_warnings_for_run(&parse_warnings, emit);
     let exec_policy_extract = extract_exec_policy(&program_for_gate)?;

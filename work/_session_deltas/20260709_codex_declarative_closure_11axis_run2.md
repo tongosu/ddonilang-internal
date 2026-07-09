@@ -3,7 +3,7 @@
 ## 결과 요약
 
 - G0: 진행 중. Run2 범위는 G4~G6으로 제한한다.
-- G4: 미착수.
+- G4: 완료. `잇기` 문장형 surface를 `teul-cli run --solveplan-out` SolvePlan artifact의 `lowering.connect_desugar`로 기록한다.
 - G5: 미착수.
 - G6: 미착수.
 - G7~G11: 이번 실행 범위 밖이라 착수하지 않는다.
@@ -35,3 +35,10 @@
 ## 검증 로그
 
 - G0 커밋 전: `git status --short -- docs/ssot` PASS(변경 없음).
+- G4:
+  - `python -m json.tool` on G4 contracts/expected artifact PASS.
+  - `python -m py_compile tests/run_declarative_closure_g4_connect_check.py` PASS.
+  - `python tests/run_pack_golden.py lang_connect_lowering_v1 sim_circuit_series_v1 sim_econ_market_v1 lang_connect_diag_v1` PASS.
+  - `python tests/run_declarative_closure_g4_connect_check.py` PASS.
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml solveplan -- --nocapture` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
