@@ -5,7 +5,7 @@
 - D0: 완료. `codex/queue-20260706`에서 시작 상태와 경계를 기록했다.
 - D1 Settings digest: 완료. `문서`만 doc/meta 제외로 두고 `이야기.들머리`를 result-affecting으로 고정했다.
 - D2 NuriGym step_record v0.2: 완료. 기존 consumer pack과 분리된 roundtrip pack을 `run_pack_golden.py`와 전용 checker로 재검증했다.
-- D3 Gaji metadata stale closure: 미착수.
+- D3 Gaji metadata stale closure: 완료. 세 metadata가 `9d94496 [LHF-E]`에서 이미 적용된 상태임을 보고서와 checker로 고정했다.
 
 ## 경계
 
@@ -48,6 +48,13 @@
   - `python tests/run_nurigym_step_record_v02_roundtrip_pack_check.py` PASS.
   - `python tests/run_nurigym_step_record_v02_roundtrip_check.py` PASS.
   - `python tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS.
+- D3 gaji status:
+  - `python -m py_compile tests/run_gaji_metadata_3_applied_status_check.py` PASS.
+  - `python tests/run_gaji_metadata_3_applied_status_check.py` PASS.
+  - `python tests/run_gaji_registry_pack_check.py` PASS.
+  - `python tests/run_gaji_registry_strict_audit_check.py` PASS.
+  - `python tests/run_gaji_registry_defaults_check.py` PASS.
+  - `git status --short -- docs/ssot` PASS.
 
 ## 변경 기록
 
@@ -60,3 +67,7 @@
   - `pack/nurigym_step_record_v02_roundtrip_v1/input.ddn`과 golden runner fields를 추가해 `run_pack_golden.py` 경로에서 pack을 인식하게 했다.
   - `pack/nurigym_step_record_v02_roundtrip_v1/contract.detjson`: `E_STEP_RECORD_REJECTED_IN_MERGE`, `E_STEP_RECORD_CLIP_NOOP`, `E_STEP_RECORD_MISSING_STATUS_MISMATCH` diagnostic contract를 명시했다.
   - `tests/run_nurigym_step_record_v02_roundtrip_check.py`: add-only 필드, v0.1 backward read, shared merge provenance, 세 진단 shape, runtime/state_hash 비접촉 경계를 검사한다.
+- D3 gaji status:
+  - `docs/context/reports/GAJI_METADATA_3_APPLIED_STATUS_V1_20260709.md`: `GAJI_REGISTRY_CLOSURE_V1`와 `PROPOSAL_GAJI_MISSING_METADATA_V1_20260706`의 stale "생성 없음" 상태를 현재 적용 상태로 보정했다.
+  - `docs/context/reports/INDEX.md`: 새 status 보고서를 인덱스에 추가했다.
+  - `tests/run_gaji_metadata_3_applied_status_check.py`: 세 `gaji.toml` 값, tracked 상태, `9d94496 [LHF-E]` 이력, 보고서 토큰, `docs/ssot` 비접촉을 검사한다.
