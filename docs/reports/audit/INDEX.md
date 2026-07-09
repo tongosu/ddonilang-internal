@@ -4,6 +4,7 @@
 
 | 날짜 | 파일 | 요약 |
 |---|---|---|
+| 2026-07-09 | [LANGUAGE_IDENTITY_BOUNDARY_AUDIT_V1_20260709.md](./LANGUAGE_IDENTITY_BOUNDARY_AUDIT_V1_20260709.md) | 지시문 7 — 언어 정체성/교육/국제화/게임엔진 경계 감사: 한국어 네이티브 세계 모델링 언어 중심 권장 문구와 과잉 claim 금지선 정리 |
 | 2026-07-09 | [SSOT_MERGE_AUDIT_20260706.md](./SSOT_MERGE_AUDIT_20260706.md) | 지시문 13 — 지시문 12 SSOT 병합 준비 묶음 독립 감사: 경계/주장등급/용어drift/SSOT권위순서 PASS, 교차참조(OI 번들 중복, SSOT 인용 line drift) PARTIAL, 병합 보류 사유 없음 |
 | 2026-07-08 | [SEVEN_PURPOSE_EXCELLENCE_PROGRESS_V1.md](./SEVEN_PURPOSE_EXCELLENCE_PROGRESS_V1.md) | 7목적 훌륭 전환 현황판: docs-first/pack-skeleton/tooling/behavior 분리와 목적별 gap/다음 증빙 |
 | 2026-07-08 | [NURIGYM_CONSUMER_EVIDENCE_STATUS_V1.md](./NURIGYM_CONSUMER_EVIDENCE_STATUS_V1.md) | 누리짐 consumer closure 증빙 현황: export/shared-sync/bounded parity PASS와 wasmtime/PyO3 보류, A3 checker matrix drift |
