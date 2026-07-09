@@ -84,6 +84,8 @@ function buildOperationsText(rows, artifacts) {
   return [
     "education_operations_lts:education_curriculum_5_v1",
     "coordinate:하-5",
+    "lts_runner_matrix:local",
+    "lts_certification_claim:false",
     "remote_lts_certification:false",
     "live_submission:false",
     "gradebook_write:false",
@@ -149,6 +151,8 @@ export function buildEducationOperationsLts({
     rows: operationRows,
     artifacts: operationArtifacts,
     active_row_id: active,
+    lts_runner_matrix_policy: "local_regression_gate",
+    lts_certification_claim: false,
     operations_text: buildOperationsText(operationRows, operationArtifacts),
     artifact_size_bytes: operationArtifacts.reduce((sum, artifact) => sum + artifact.bytes, 0),
     progress: {
@@ -221,6 +225,8 @@ export function renderEducationOperationsLts(root, operations = {}) {
   const activeId = asText(payload.active_row_id, rows[0]?.id ?? "");
   const active = rows.find((row) => row.id === activeId) || rows[0] || {};
   root.dataset.educationOperationsLtsStatus = asText(payload.status, "education_operations_lts_incomplete");
+  root.setAttribute("data-testid", "lts-readiness-panel");
+  root.dataset.ltsRunnerMatrixPolicy = asText(payload.lts_runner_matrix_policy, "local_regression_gate");
   root.innerHTML = `
     <div class="education-operations-head">
       <div>
@@ -233,7 +239,7 @@ export function renderEducationOperationsLts(root, operations = {}) {
         <span>${escapeHtml(String(progress.current_stage_percent ?? 0))}%</span>
       </div>
     </div>
-    <div class="education-operations-summary" data-education-operations-summary>
+    <div class="education-operations-summary" data-education-operations-summary data-testid="lts-boundary-warning">
       Submission versioning, assessment archive, curriculum version lock, local LTS gate, operations handoff를 로컬 education operations LTS로 고정하고 remote LTS certification, live submission, gradebook write는 후속으로 둡니다.
     </div>
     <div class="education-operations-body">
@@ -258,7 +264,8 @@ export function renderEducationOperationsLts(root, operations = {}) {
             <span data-education-operations-artifact="${escapeHtml(artifact.name)}">${escapeHtml(artifact.name)} · ${escapeHtml(artifact.kind)} · ${escapeHtml(String(artifact.bytes))}b</span>
           `).join("")}
         </div>
-        <pre class="education-operations-preview" data-education-operations-preview>${escapeHtml(payload.operations_text ?? "")}</pre>
+        <pre class="education-operations-preview" data-education-operations-preview data-testid="lts-operations-report">${escapeHtml(payload.operations_text ?? "")}</pre>
+        <button type="button" class="ghost" data-lts-regression-gate data-testid="lts-regression-gate">LTS regression gate 확인</button>
         <button type="button" class="ghost" data-education-operations-copy>Operations LTS 텍스트 복사</button>
       </div>
     </div>
@@ -266,6 +273,9 @@ export function renderEducationOperationsLts(root, operations = {}) {
   const rerender = (rowId) => renderEducationOperationsLts(root, { ...payload, active_row_id: rowId });
   root.querySelectorAll("[data-education-operations-row]").forEach((button) => {
     button.addEventListener("click", () => rerender(button.getAttribute("data-education-operations-row") || ""));
+  });
+  root.querySelector("[data-lts-regression-gate]")?.addEventListener("click", () => {
+    root.dataset.ltsRegressionGate = "true";
   });
   root.querySelector("[data-education-operations-copy]")?.addEventListener("click", async () => {
     root.dataset.educationOperationsLtsCopied = "true";
