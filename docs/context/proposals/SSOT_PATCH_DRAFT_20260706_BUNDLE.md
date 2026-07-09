@@ -29,10 +29,10 @@
 | 결정 후보 | `SSOT_PLATFORM_v24.12.9.md` / `§P0A 시간 / lifecycle / reset contract` | `마디수`는 실행 길이 선택 key 후보이며, 정본 위치 후보는 `설정.실행.마디수`다. flat `설정 { 마디수: ... }` 입력은 compat+lint 또는 즉시 비허용 중 하나를 SSOT 오너가 선택해야 한다. | `또니랑/CODEX_HANDOFF_20260706_설정헤더_정합_및_구제안_델타.md:39` |
 | 결정 후보 | `SSOT_PLATFORM_v24.12.9.md` / `§P0B 다중 에이전트 시간 코어` | 실행 위상 후보는 `마디 열기 -> 입력 봉인 -> 전처리/제안 -> action 파이프라인 -> 매마디/세움/흐름씨 -> 훅 -> 보람/판끝 -> 거울 기록 -> 보개 방출` 순서를 기준 초안으로 검토한다. | `docs/context/proposals/PROPOSAL_NURI_MADI_PHASE_WRITE_CONFLICT_DEEPDIVE_V1_20260706.md:30` |
 | 결정 후보 | `SSOT_PLATFORM_v24.12.9.md` / `§P0B.3 completion / noop` 및 `§P0B.3A filter-before-merge canonical boundary` | `합치기갈래` 신설보다 기존 `행동모음갈래` 값 확장을 우선 검토한다. 후보 값은 `차례모음/보탬모음/앞선모음/다수결모음/자리모음`이며, `거부`는 merge 후보에서 제외한다. | `docs/context/proposals/PROPOSAL_NURI_MADI_PHASE_WRITE_CONFLICT_DEEPDIVE_V1_20260706.md:130`, `docs/context/proposals/PROPOSAL_NURI_MADI_TASK_SCHEDULING_AND_CONFLICT_CONTRACT_V1_20260706.md:180` |
-| 결정 후보 | `SSOT_PLATFORM_v24.12.9.md` / `§P21 슬기 v1` | 슬기 지연은 `accepted_madi/target_madi` export metadata로 드러낼 수 있으나, 실행 적용 순서는 계속 `(agent_id, recv_seq)`가 정본이다. `accepted_madi/target_madi`는 실행 정렬 key가 아니다. | `docs/context/proposals/PROPOSAL_NURI_MADI_TASK_SCHEDULING_AND_CONFLICT_CONTRACT_V1_20260706.md:196`, `docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:1825` |
-| 결정 후보 | `SSOT_MASTER_v24.12.9.md` / `보개 백엔드/프로필 분리` | 보개 표준팩은 언어 코어 문법이 아니라 표준팩/product pack 계층으로 둔다. 1차 후보는 `std_bogae_grid2d`, `std_bogae_graph2d`, `std_bogae_table`, `std_bogae_timeline`이다. | `docs/context/proposals/PROPOSAL_BOGAE_STANDARD_PACK_AND_LOWERING_CONTRACT_V1_20260706.md:476`, `docs/ssot/ssot/SSOT_MASTER_v24.12.9.md:752` |
+| 결정 후보 | `SSOT_PLATFORM_v24.12.9.md` / `§P21 슬기 v1` | 슬기 지연은 `accepted_madi/target_madi` export metadata로 드러낼 수 있으나, 실행 적용 순서는 계속 `(agent_id, recv_seq)`가 정본이다. `accepted_madi/target_madi`는 실행 정렬 key가 아니다. | `docs/context/proposals/PROPOSAL_NURI_MADI_TASK_SCHEDULING_AND_CONFLICT_CONTRACT_V1_20260706.md:196`, `docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:1894` |
+| 결정 후보 | `SSOT_MASTER_v24.12.9.md` / `보개 백엔드/프로필 분리` | 보개 표준팩은 언어 코어 문법이 아니라 표준팩/product pack 계층으로 둔다. 1차 후보는 `std_bogae_grid2d`, `std_bogae_graph2d`, `std_bogae_table`, `std_bogae_timeline`이다. | `docs/context/proposals/PROPOSAL_BOGAE_STANDARD_PACK_AND_LOWERING_CONTRACT_V1_20260706.md:476`, `docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:76` |
 | 결정 후보 | `SSOT_PLATFORM_v24.12.9.md` / `보개 보기 의미 / 보기 조립 / 입력 경계` | graph2d lowering은 axis/tick/label/series/legend/label-collision/auto-tick deterministic policy를 표준 보개팩 계약으로 다루며, 사용자가 그래프를 `모양` 원자만으로 직접 조립하도록 요구하지 않는다. | `docs/context/proposals/PROPOSAL_BOGAE_STANDARD_PACK_AND_LOWERING_CONTRACT_V1_20260706.md:119` |
-| 결정 후보 | `SSOT_TOOLCHAIN_v24.12.9.md` / `v24.6.0 immediate_dev_track cluster` | 성능 기준선은 `perf_baseline_v1`로 별도 관리하고, consumer path별 수치를 단순 동일 기준으로 비교하지 않는다. 기준선 고정 전에는 성능 충분 주장을 하지 않는다. | `docs/context/proposals/PROPOSAL_SEVEN_PURPOSE_ADVANCEMENT_DESIGN_V1_20260706.md:25`, `docs/ssot/ssot/SSOT_TOOLCHAIN_v24.12.9.md:204` |
+| 결정 후보 | `SSOT_TOOLCHAIN_v24.12.9.md` / `v24.6.0 immediate_dev_track cluster` | 성능 기준선은 `perf_baseline_v1`로 별도 관리하고, consumer path별 수치를 단순 동일 기준으로 비교하지 않는다. 기준선 고정 전에는 성능 충분 주장을 하지 않는다. | `docs/context/proposals/PROPOSAL_SEVEN_PURPOSE_ADVANCEMENT_DESIGN_V1_20260706.md:25`, `docs/ssot/ssot/SSOT_TOOLCHAIN_v24.12.9.md:25` |
 | 결정 후보 | `SSOT_TOOLCHAIN_v24.12.9.md` / `v24.12.9 toolchain additions` | AI 닫힌 베타는 `BETA_USER_BUNDLE`만 제공하는 지식 격리 방식으로 수행하고, 저장소 전체 지식을 가진 세션은 베타 사용자 실행자가 될 수 없다. | `docs/context/proposals/PROPOSAL_CLOSED_BETA_AI_PROTOCOL_V1_20260706.md:22` |
 
 ## 후보
@@ -129,3 +129,15 @@
 2. 결정 후보 중 `state_hash` 산식/record schema에 닿는 항목은 문장만 반영하고 구현은 Tier B 해금 전까지 금지한다.
 3. pack 후보 충돌 4건은 기존 pack 보강 항목으로 재분류한다.
 4. 예약어/문법 공간 선점은 `docs/reports/audit/PRE_RELEASE_FREEZE_SWEEP_V1.md` 결과를 먼저 검토한다.
+
+## 2026-07-09 SSOT line 재확인 로그
+
+범위: `결정 후보` / `후보` / `질문` 표의 SSOT `file:line` 인용만 재확인했다. 제안 문장 내용은 변경하지 않았다.
+
+| 항목 | 이전 인용 | 현재 인용 | 판정 |
+|---|---|---|---|
+| `§P21 슬기 v1` 지연/export ordering | `docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:1825` | `docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:1894` | 재확인 완료 |
+| 보개 표준팩 후보 | `docs/ssot/ssot/SSOT_MASTER_v24.12.9.md:752` | `docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:76` | 재확인 완료 |
+| `perf_baseline_v1` toolchain 후보 | `docs/ssot/ssot/SSOT_TOOLCHAIN_v24.12.9.md:204` | `docs/ssot/ssot/SSOT_TOOLCHAIN_v24.12.9.md:25` | 재확인 완료 |
+
+요약: 대상 SSOT `file:line` 인용 3건 중 3건 재확인 완료, 재확인 불가 0건.
