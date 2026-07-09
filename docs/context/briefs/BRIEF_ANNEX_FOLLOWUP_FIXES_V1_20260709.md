@@ -72,6 +72,6 @@
 
 (트랙 완료 시 `[AFF-I]`/`[AFF-J]`/`[AFF-K]` 태그로 기록)
 
-- [AFF-I] 2026-07-09 KST: `OI_CANDIDATES_20260706_BUNDLE.md`를 기준본으로 유지하고, 07-07판 16개 항목을 통합 ID 16개에 전부 반영했다. 같은 주제의 다른 ID는 최신 ID로 통합했으며, `OI-SETTINGS-SEULGI-KEY-DRIFT-01`와 `OI-BOGAE-STANDARD-PACK-NAMING-01`는 07-08판에 새 행으로 추가했다. `OI_CANDIDATE_BUNDLE_20260706.md` 상단에는 2026-07-09 통합 각주만 추가하고 원문은 보존했다. 검증: 통합 대조표 추가, 중복 ID 0건 확인 예정.
+- [AFF-I] 2026-07-09 KST: `OI_CANDIDATES_20260706_BUNDLE.md`를 기준본으로 유지하고, 07-07판 16개 항목을 통합 ID 16개에 전부 반영했다. 같은 주제의 다른 ID는 최신 ID로 통합했으며, `OI-SETTINGS-SEULGI-KEY-DRIFT-01`와 `OI-BOGAE-STANDARD-PACK-NAMING-01`는 07-08판에 새 행으로 추가했다. `OI_CANDIDATE_BUNDLE_20260706.md` 상단에는 2026-07-09 통합 각주만 추가하고 원문은 보존했다. 검증: 통합 대조표 추가, 중복 ID 0건 확인.
 - [AFF-J] 2026-07-09 KST: `SSOT_PATCH_DRAFT_20260706_BUNDLE.md`의 `결정 후보` / `후보` / `질문` 표에서 SSOT `file:line` 인용 3건을 재확인했다. 3건 모두 현재 line으로 갱신했고, 재확인 불가 0건이다. 제안 문장 내용은 변경하지 않았다.
 - [AFF-K] 2026-07-09 KST: `pack/nurigym_step_record_v02_roundtrip_v1/`를 새로 생성하고 ANNEX A §(d)의 6개 케이스(`c01_valid`, `c02_noop_missing`, `c03_clip`, `c04_reject`, `c05_shared_merge`, `c06_v01_backward_read`)를 golden fixture로 고정했다. evidence tier는 `runner_golden`, closure claim은 `no`로 유지했다. 검증: `python tests/run_nurigym_step_record_v02_roundtrip_pack_check.py` PASS(6 cases, field_crosscheck PASS), `cargo test --manifest-path tools/teul-cli/Cargo.toml` PASS(1109 passed).
