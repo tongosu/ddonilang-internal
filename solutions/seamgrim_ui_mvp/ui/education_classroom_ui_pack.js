@@ -84,6 +84,9 @@ function buildClassroomText(rows, artifacts) {
   return [
     "education_classroom_ui_pack:education_curriculum_3_v1",
     "coordinate:하-3",
+    "teacher_student_modes:local",
+    "roster_result_review:local_fixture",
+    "report_export:local_dry_run",
     "gradebook_write:false",
     "student_personal_data_collection:false",
     "remote_classroom_sync:false",
@@ -145,6 +148,8 @@ export function buildEducationClassroomUiPack({
     rows: classroomRows,
     artifacts: classroomArtifacts,
     active_row_id: active,
+    roster_result_review_policy: "local_fixture_only",
+    report_export_policy: "local_dry_run",
     classroom_text: buildClassroomText(classroomRows, classroomArtifacts),
     artifact_size_bytes: classroomArtifacts.reduce((sum, artifact) => sum + artifact.bytes, 0),
     progress: {
@@ -215,6 +220,8 @@ export function renderEducationClassroomUiPack(root, classroom = {}) {
   const activeId = asText(payload.active_row_id, rows[0]?.id ?? "");
   const active = rows.find((row) => row.id === activeId) || rows[0] || {};
   root.dataset.educationClassroomUiPackStatus = asText(payload.status, "education_classroom_ui_pack_incomplete");
+  root.setAttribute("data-testid", "classroom-workflow-panel");
+  root.dataset.classroomReportExportPolicy = asText(payload.report_export_policy, "local_dry_run");
   root.innerHTML = `
     <div class="education-classroom-head">
       <div>
@@ -233,14 +240,14 @@ export function renderEducationClassroomUiPack(root, classroom = {}) {
     <div class="education-classroom-body">
       <div class="education-classroom-list">
         ${rows.map((row) => `
-          <button type="button" class="education-classroom-btn${row.id === activeId ? " active" : ""}" data-education-classroom-row="${escapeHtml(row.id)}">
+          <button type="button" class="education-classroom-btn${row.id === activeId ? " active" : ""}" data-education-classroom-row="${escapeHtml(row.id)}" data-testid="classroom-${escapeHtml(row.id.replace(/_/g, "-"))}">
             <span>${escapeHtml(row.title)}</span>
             <small>${escapeHtml(row.classroom_kind)}</small>
           </button>
         `).join("")}
       </div>
       <div class="education-classroom-detail">
-        <div class="education-classroom-title" data-education-classroom-active-title>${escapeHtml(active.title)}</div>
+        <div class="education-classroom-title" data-education-classroom-active-title data-testid="classroom-result-review">${escapeHtml(active.title)}</div>
         <p data-education-classroom-active-link>${escapeHtml(active.local_uri)}</p>
         <dl>
           <div><dt>coordinate</dt><dd>${escapeHtml(payload.primary_coordinate ?? "")}</dd></div>
@@ -252,7 +259,8 @@ export function renderEducationClassroomUiPack(root, classroom = {}) {
             <span data-education-classroom-artifact="${escapeHtml(artifact.name)}">${escapeHtml(artifact.name)} · ${escapeHtml(artifact.kind)} · ${escapeHtml(String(artifact.bytes))}b</span>
           `).join("")}
         </div>
-        <pre class="education-classroom-preview" data-education-classroom-preview>${escapeHtml(payload.classroom_text ?? "")}</pre>
+        <pre class="education-classroom-preview" data-education-classroom-preview data-testid="classroom-roster">${escapeHtml(payload.classroom_text ?? "")}</pre>
+        <button type="button" class="ghost" data-classroom-report-export data-testid="classroom-report-export">Classroom report export 확인</button>
         <button type="button" class="ghost" data-education-classroom-copy>Classroom UI pack 텍스트 복사</button>
       </div>
     </div>
@@ -260,6 +268,9 @@ export function renderEducationClassroomUiPack(root, classroom = {}) {
   const rerender = (rowId) => renderEducationClassroomUiPack(root, { ...payload, active_row_id: rowId });
   root.querySelectorAll("[data-education-classroom-row]").forEach((button) => {
     button.addEventListener("click", () => rerender(button.getAttribute("data-education-classroom-row") || ""));
+  });
+  root.querySelector("[data-classroom-report-export]")?.addEventListener("click", () => {
+    root.dataset.classroomReportExported = "true";
   });
   root.querySelector("[data-education-classroom-copy]")?.addEventListener("click", async () => {
     root.dataset.educationClassroomUiPackCopied = "true";
