@@ -1,0 +1,6 @@
+설정 {
+  document { name: "데모". }.
+  run { ticks: 12. }.
+  nuri { seed: 7. }.
+  story { entry: "시작". }.
+}.

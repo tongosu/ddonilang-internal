@@ -21,10 +21,11 @@ EXPECTED = {
     "josa_only_count": 18,
     "lexer_keyword_literal_candidates": 41,
     "dialect_tsv_rows": 119,
-    # 3805 was the pre-CAE-H1 tracked-file scan. 5c03c46 intentionally removed
-    # orphan Seamgrim runners (-7 unique E_* tokens); SSOTADD later added
-    # E_MADI_WRITE_CONFLICT (+1), so the current tracked scan is 3799.
-    "e_unique_tokens_wide": 3799,
+    # 3799 was the post-DAYRUN-G6 baseline. Declarative closure packs/checkers
+    # then intentionally added five SEUM diagnostics, one step-record clip-noop
+    # diagnostic, three CONNECT diagnostics, E_INIT_UNSUPPORTED, and three
+    # MAGEUM diagnostics.
+    "e_unique_tokens_wide": 3812,
     "e_unique_tokens_dayrun_reported": 3749,
     "pack_candidates": 53,
     "pack_collisions": 4,

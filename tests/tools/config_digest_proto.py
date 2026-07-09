@@ -515,9 +515,9 @@ SELFTEST_PAIRS = [
 ]
 
 CLASSIFIER_VERSION = "draft-20260708-ssot-addendum-tooling-only"
-RUN_SECTIONS = {"실행", "누리", "샘", "슬기"}
+RUN_SECTIONS = {"실행", "누리", "샘", "슬기", "이야기"}
 VIEW_SECTIONS = {"보개", "거울"}
-DOC_SECTIONS = {"문서", "이야기"}
+DOC_SECTIONS = {"문서"}
 RESULT_AFFECTING_KEYS = {
     "실행": {
         "차림새",
@@ -559,6 +559,9 @@ RESULT_AFFECTING_KEYS = {
         "승인갈래",
         "재연갈래",
     },
+    "이야기": {
+        "들머리",
+    },
 }
 
 
@@ -596,12 +599,35 @@ def run_selftest() -> int:
         return fail("seed stream derived seed must be BLAKE3")
     if seed_report["hashes"]["run_config_hash"] == seed_report["hashes"]["view_config_hash"]:
         return fail("run_config_hash and view_config_hash should be separate hash values")
+
+    doc_left = hash_report(canonical_payload('설정 { 문서 { 제목: "A". }. 실행 { 마디수: 3. }. }.'))
+    doc_right = hash_report(canonical_payload('설정 { 문서 { 제목: "B". }. 실행 { 마디수: 3. }. }.'))
+    if doc_left["hashes"]["run_config_hash"] != doc_right["hashes"]["run_config_hash"]:
+        return fail("문서 metadata must not affect run_config_hash")
+    if doc_left["hashes"]["doc_config_hash"] == doc_right["hashes"]["doc_config_hash"]:
+        return fail("문서 metadata should still affect doc_config_hash")
+
+    story_left = hash_report(canonical_payload('설정 { 이야기 { 들머리: "시작A". }. 실행 { 마디수: 3. }. }.'))
+    story_right = hash_report(canonical_payload('설정 { 이야기 { 들머리: "시작B". }. 실행 { 마디수: 3. }. }.'))
+    if story_left["hashes"]["run_config_hash"] == story_right["hashes"]["run_config_hash"]:
+        return fail("이야기.들머리 must affect run_config_hash")
+    story_rows = {
+        row["path"]: row["class"]
+        for row in story_left["result_affecting_classifier"]["rows"]
+    }
+    if story_rows.get("이야기.들머리") != "result_affecting":
+        return fail(f"이야기.들머리 classifier mismatch: {story_rows}")
     print("config_digest_proto: PASS")
     print(
         json.dumps(
             {
                 "schema": "ddn.config_digest_proto.selftest.v2",
                 "pairs": rows,
+                "policy_cases": {
+                    "doc_title_run_hash_unchanged": True,
+                    "story_entry_run_hash_changed": True,
+                    "story_entry_class": story_rows.get("이야기.들머리"),
+                },
                 "seed_stream_fixture": seed_fixture,
                 "result_affecting_classifier": seed_report["result_affecting_classifier"],
                 "runtime_schema_touched": False,

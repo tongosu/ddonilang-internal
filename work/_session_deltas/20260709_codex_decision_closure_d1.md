@@ -2,8 +2,8 @@
 
 ## 결과 요약
 
-- D0: 진행 중. Run3A 이후 남은 결정/schema drift를 닫는 배치로 시작한다.
-- D1 Settings digest: 미착수.
+- D0: 완료. `codex/queue-20260706`에서 시작 상태와 경계를 기록했다.
+- D1 Settings digest: 완료. `문서`만 doc/meta 제외로 두고 `이야기.들머리`를 result-affecting으로 고정했다.
 - D2 NuriGym step_record v0.2: 미착수.
 - D3 Gaji metadata stale closure: 미착수.
 
@@ -33,3 +33,19 @@
 ## 검증 로그
 
 - D0 시작: `git status --short` PASS(추적 변경 없음, 기존 untracked 참고 파일만 존재).
+- D1 settings:
+  - `python -m json.tool pack/settings_config_digest_v1/contract.detjson` PASS.
+  - `python -m py_compile tests/tools/config_digest_proto.py tests/run_settings_config_digest_v1_check.py` PASS.
+  - `python tests/tools/config_digest_proto.py --selftest` PASS.
+  - `python tests/run_pack_golden.py settings_config_digest_v1` PASS.
+  - `python tests/run_settings_config_digest_v1_check.py` PASS.
+  - `python tests/run_dayrun_g6_tools_check.py` PASS.
+  - `git status --short -- docs/ssot` PASS.
+
+## 변경 기록
+
+- D1 settings:
+  - `tests/tools/config_digest_proto.py`: `DOC_SECTIONS={"문서"}`를 유지하고 `이야기.들머리`를 run/result-affecting classifier에 포함했다.
+  - `pack/settings_config_digest_v1`: alias, 절 순서, `문서` 제외, `이야기.들머리` 포함 정책을 고정하는 pack을 추가했다.
+  - `tests/run_settings_config_digest_v1_check.py`: pack contract, digest 정책, classifier, state_hash 비접촉 경계를 검사한다.
+  - `tests/tools/reserved_sweep_lint.py`: Run3A까지 누적된 의도적 진단 토큰 추가로 `e_unique_tokens_wide` 기준값을 3812로 보정했다. 원인은 `6f69eb4` 3799 이후 declarative closure 진단 토큰이 단계별로 추가된 것이며 누락 회귀는 아니다.
