@@ -67,3 +67,35 @@
   - `python -m py_compile tests/run_declarative_closure_g11_plan_hash_boundary_check.py` PASS.
   - `python tests/run_declarative_closure_g11_plan_hash_boundary_check.py` PASS.
   - `git status --short -- docs/ssot` PASS(변경 없음).
+
+## 종합 검증
+
+- 신규:
+  - `python tests/run_declarative_closure_g7_constraint_red_check.py` PASS.
+  - `python tests/run_declarative_closure_g8_experiment_manifest_check.py` PASS.
+  - `python tests/run_declarative_closure_g9_standard_parts_catalog_check.py` PASS.
+  - `python tests/run_declarative_closure_g10_agent_rng_stream_red_check.py` PASS.
+  - `python tests/run_declarative_closure_g11_plan_hash_boundary_check.py` PASS.
+- 회귀:
+  - `python tests/run_declarative_closure_g4_connect_check.py` PASS.
+  - `python tests/run_declarative_closure_g5_unit_check.py` PASS.
+  - `python tests/run_declarative_closure_g6_init_vector_check.py` PASS.
+  - `cargo check` PASS(기존 dead code warning만 발생).
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
+
+## 커밋
+
+- `31cdc82 [DC-RUN3-G0] start declarative closure run3a`
+- `5061778 [DC-G7-CONSTRAINT-RED] add constraint reaction red packs`
+- `4b61119 [DC-G8-EXPERIMENT-MANIFEST] add experiment manifest fixture`
+- `22d97b0 [DC-G9-STANDARD-PARTS] add standard parts catalog`
+- `e50d63d [DC-G10-RNG-STREAM-RED] add per-agent rng stream proof fixtures`
+- `53df9f8 [DC-G11-PLAN-HASH] document solveplan plan hash boundary`
+
+## 운영 메모
+
+- G8 커밋 직후 main ref가 queue 선행 커밋으로 fast-forward된 상태를 확인했다. `codex/queue-20260706`를 G8까지 fast-forward한 뒤, main ref는 reflog의 정상 복구점 `fd1132e`로 되돌렸다. 최종 작업 브랜치는 `codex/queue-20260706`이다.
+- `python tests/run_ci_sanity_gate.py --profile core_lang` 실행 중 `pack/open_bundle_artifact/run_bundle/geoul.diag.jsonl`, `pack/open_end_to_end/open.log.jsonl`가 재생성됐고, 이번 작업 산출물이 아니므로 해당 두 tracked side effect만 복구했다.
+- 기존 untracked 참고 파일은 커밋하지 않았다.

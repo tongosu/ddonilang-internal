@@ -12,6 +12,29 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [DECLARATIVE-CLOSURE][RUN3A] G7~G11 red/contract packs and hash boundary (2026-07-09)
+
+- 변경:
+  - G7: `sim_constraint_reaction_v1` umbrella와 `sim_mageum_floor_v1`, `sim_mageum_box_v1`, `sim_mageum_chain_v1`, `lang_mageum_diag_v1` red pack/checker를 추가했다. canonical family/verb는 `막음`/`막기`, reaction vocab은 `멈춤`, `튕김(e)`, `조임`, `감쌈`으로 고정했다.
+  - G8: `sim_experiment_manifest_v1` candidate manifest/checker를 추가했다. `state_hash_policy.formula_change=false`, `plan_hash_status=pending_canonical_bytes_decision`로 고정했다.
+  - G9: `sim_standard_parts_catalog_v1` catalog/checker를 추가했다. 기계/회로/경제/대기열 part family를 나열하고 직접 증빙이 약한 항목은 `candidate_only`로 유지했다.
+  - G10: `sim_agent_rng_stream_v1` proof fixture/checker를 추가했다. derivation은 `(global_seed, agent_id, stream_name)`이고 traversal order A/B의 stream별 draw sequence 동일성을 검증한다.
+  - G11: `docs/reports/impl/SOLVEPLAN_PLAN_HASH_BOUNDARY_V1_20260709.md`와 checker를 추가했다. `state_hash_inputs`는 manifest field only, runtime `state_hash` 산식 통합은 `plan_hash` canonical-byte 결정 뒤로 보류한다.
+- 검증:
+  - `python tests/run_declarative_closure_g7_constraint_red_check.py` PASS.
+  - `python tests/run_declarative_closure_g8_experiment_manifest_check.py` PASS.
+  - `python tests/run_declarative_closure_g9_standard_parts_catalog_check.py` PASS.
+  - `python tests/run_declarative_closure_g10_agent_rng_stream_red_check.py` PASS.
+  - `python tests/run_declarative_closure_g11_plan_hash_boundary_check.py` PASS.
+  - 회귀: `python tests/run_declarative_closure_g4_connect_check.py`, `python tests/run_declarative_closure_g5_unit_check.py`, `python tests/run_declarative_closure_g6_init_vector_check.py` PASS.
+  - `cargo check` PASS, `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
+- 진행률:
+  - G7~G11: 완료(`닫힘-문서` 또는 proof/checker 기준).
+  - parser/runtime 문법 확장, 새 core/language block, runtime RNG 교체, `state_hash` 산식 변경 없음.
+  - `docs/ssot/**` 변경 없음.
+
 ### [DECLARATIVE-CLOSURE][RUN2] G4~G6 Connect/Unit/Init artifact behavior (2026-07-09)
 
 - 변경:
