@@ -23,9 +23,9 @@ EXPECTED = {
     "dialect_tsv_rows": 119,
     # 3799 was the post-DAYRUN-G6 baseline. Declarative closure packs/checkers
     # then intentionally added five SEUM diagnostics, one step-record clip-noop
-    # diagnostic, three CONNECT diagnostics, E_INIT_UNSUPPORTED, and three
-    # MAGEUM diagnostics.
-    "e_unique_tokens_wide": 3812,
+    # diagnostic, three CONNECT diagnostics, E_INIT_UNSUPPORTED, three MAGEUM
+    # diagnostics, then two D1 step-record roundtrip diagnostics.
+    "e_unique_tokens_wide": 3814,
     "e_unique_tokens_dayrun_reported": 3749,
     "pack_candidates": 53,
     "pack_collisions": 4,

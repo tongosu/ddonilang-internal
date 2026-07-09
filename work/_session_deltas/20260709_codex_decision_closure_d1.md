@@ -55,6 +55,22 @@
   - `python tests/run_gaji_registry_strict_audit_check.py` PASS.
   - `python tests/run_gaji_registry_defaults_check.py` PASS.
   - `git status --short -- docs/ssot` PASS.
+- 마감 검증:
+  - `python tests/tools/config_digest_proto.py --selftest` PASS.
+  - `python tests/run_settings_config_digest_v1_check.py` PASS.
+  - `python tests/run_pack_golden.py settings_config_digest_v1` PASS.
+  - `python tests/run_pack_golden.py nurigym_step_record_v02_roundtrip_v1` PASS.
+  - `python tests/run_nurigym_step_record_v02_roundtrip_check.py` PASS.
+  - `python tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS.
+  - `python tests/run_dayrun_g6_tools_check.py` PASS after `e_unique_tokens_wide=3814` 보정.
+  - `python tests/run_gaji_metadata_3_applied_status_check.py` PASS.
+  - `python tests/run_gaji_registry_pack_check.py` PASS.
+  - `python tests/run_gaji_registry_strict_audit_check.py` PASS.
+  - `python tests/run_gaji_registry_defaults_check.py` PASS.
+  - `cargo check` PASS(기존 dead code warning only).
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `git status --short -- docs/ssot` PASS.
 
 ## 변경 기록
 
@@ -71,3 +87,11 @@
   - `docs/context/reports/GAJI_METADATA_3_APPLIED_STATUS_V1_20260709.md`: `GAJI_REGISTRY_CLOSURE_V1`와 `PROPOSAL_GAJI_MISSING_METADATA_V1_20260706`의 stale "생성 없음" 상태를 현재 적용 상태로 보정했다.
   - `docs/context/reports/INDEX.md`: 새 status 보고서를 인덱스에 추가했다.
   - `tests/run_gaji_metadata_3_applied_status_check.py`: 세 `gaji.toml` 값, tracked 상태, `9d94496 [LHF-E]` 이력, 보고서 토큰, `docs/ssot` 비접촉을 검사한다.
+
+## 커밋
+
+- `e054868 [DC-D1-G0] start decision closure batch`
+- `2ddc63a [DC-D1-SETTINGS] classify story entry as result-affecting`
+- `475c8bf [DC-D1-STEPRECORD] verify NuriGym step record roundtrip`
+- `0e7aa07 [DC-D1-GAJI-STATUS] document applied gaji metadata`
+- `[DC-D1-REPORT]`: DEV_SUMMARY, 세션 델타, D2로 인한 reserved sweep 기준값 3814 보정.

@@ -12,6 +12,34 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [DECISION-CLOSURE][D1] Settings digest / NuriGym step_record / gaji metadata status (2026-07-09)
+
+- 변경:
+  - D0: `codex/queue-20260706`에서 시작 상태와 경계를 기록했다.
+  - D1: `tests/tools/config_digest_proto.py`에서 `문서`만 doc/meta 제외로 유지하고 `이야기.들머리`를 result-affecting으로 분류했다. `settings_config_digest_v1` pack/checker로 alias, 절 순서, `문서` 제외, `들머리` 포함을 고정했다.
+  - D1/D2 보정: Run3A와 D2 roundtrip diagnostic contract까지 누적된 의도적 진단 토큰 추가를 반영해 `tests/tools/reserved_sweep_lint.py`의 `e_unique_tokens_wide` 기준값을 3814로 갱신했다. 누락 회귀가 아니라 `6f69eb4` 이후 SEUM/STEP_RECORD/CONNECT/INIT/MAGEUM 진단 추가분이다.
+  - D2: `nurigym_step_record_v02_roundtrip_v1` pack을 `run_pack_golden.py` 경로에서 인식되게 보강하고, `tests/run_nurigym_step_record_v02_roundtrip_check.py`로 add-only 필드, v0.1 backward read, shared merge provenance, 세 diagnostic shape를 검증한다.
+  - D3: `docs/context/reports/GAJI_METADATA_3_APPLIED_STATUS_V1_20260709.md`를 추가해 `std_grid`, `std_input_map`, `std_physics_1d` metadata 3건이 `9d94496 [LHF-E]`에서 이미 적용된 상태임을 stale 문서 직접 수정 없이 보정했다.
+- 검증:
+  - `python tests/tools/config_digest_proto.py --selftest` PASS.
+  - `python tests/run_settings_config_digest_v1_check.py` PASS.
+  - `python tests/run_pack_golden.py settings_config_digest_v1` PASS.
+  - `python tests/run_pack_golden.py nurigym_step_record_v02_roundtrip_v1` PASS.
+  - `python tests/run_nurigym_step_record_v02_roundtrip_check.py` PASS.
+  - `python tests/run_nurigym_step_record_v02_consumer_g6_check.py` PASS.
+  - `python tests/run_dayrun_g6_tools_check.py` PASS.
+  - `python tests/run_gaji_metadata_3_applied_status_check.py` PASS.
+  - `python tests/run_gaji_registry_pack_check.py` PASS.
+  - `python tests/run_gaji_registry_strict_audit_check.py` PASS.
+  - `python tests/run_gaji_registry_defaults_check.py` PASS.
+  - `cargo check` PASS, `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `git status --short -- docs/ssot` PASS.
+- 진행률:
+  - Decision Closure Batch D1: 완료.
+  - `docs/ssot/**`, parser/runtime 문법, runtime `state_hash` 산식 변경 없음.
+  - 기존 untracked 참고 파일은 커밋하지 않았다.
+
 ### [DECLARATIVE-CLOSURE][RUN3A] G7~G11 red/contract packs and hash boundary (2026-07-09)
 
 - 변경:
