@@ -1,0 +1,6 @@
+{"case_id":"c01_valid","format_version":"v0.2","expected_status":"맞음","expected_applied_action":1,"expected_missing_input_count":0,"roundtrip_expect":"raw_action_equals_applied_action","minimal_replay":false}
+{"case_id":"c02_noop_missing","format_version":"v0.2","expected_status":"가만히","expected_applied_action":0,"expected_missing_input_count":1,"roundtrip_expect":"missing_input_has_one_slot_path","minimal_replay":false}
+{"case_id":"c03_clip","format_version":"v0.2","expected_status":"잘림","expected_applied_action":1,"expected_missing_input_count":0,"roundtrip_expect":"normalized_differs_from_raw_and_applied_equals_normalized","minimal_replay":false}
+{"case_id":"c04_reject","format_version":"v0.2","expected_status":"거부","expected_applied_action":0,"expected_missing_input_count":0,"roundtrip_expect":"rejected_action_excluded_from_merge_candidates","minimal_replay":false}
+{"case_id":"c05_shared_merge","format_version":"v0.2","expected_status":"맞음","expected_applied_action":1,"expected_missing_input_count":0,"expected_merge_candidate_count":2,"roundtrip_expect":"two_candidates_one_merged_action","minimal_replay":false}
+{"case_id":"c06_v01_backward_read","format_version":"v0.1","expected_status":"미상","expected_applied_action":1,"expected_missing_input_count":0,"roundtrip_expect":"v01_minimal_replay_from_applied_action","minimal_replay":true}

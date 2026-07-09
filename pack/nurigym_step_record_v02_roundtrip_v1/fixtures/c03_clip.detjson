@@ -1,0 +1,63 @@
+{
+  "schema": "ddn.nurigym.step_record.v0.2.roundtrip_fixture.case.v1",
+  "case_id": "c03_clip",
+  "format_version": "v0.2",
+  "annex_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:57",
+  "producer_input": {
+    "mode": "single",
+    "agent_id": 1,
+    "raw_action": 99,
+    "out_of_range_policy": "clip"
+  },
+  "wire_record": {
+    "schema": "nurigym.step.v1",
+    "episode_id": 901,
+    "env_slot": 0,
+    "agent_id": 1,
+    "madi": 1,
+    "observation": {
+      "schema": "nurigym.obs.v1",
+      "slot_count": 2,
+      "values": [
+        1.0,
+        0.0
+      ]
+    },
+    "action": {
+      "schema": "nurigym.action.v1",
+      "value": 1
+    },
+    "reward": 0.5,
+    "next_observation": {
+      "schema": "nurigym.obs.v1",
+      "slot_count": 2,
+      "values": [
+        2.0,
+        0.0
+      ]
+    },
+    "done": false,
+    "raw_action": 99,
+    "resolved_action": 99,
+    "normalized_action": 1,
+    "action_status": "잘림",
+    "merge_candidates": [
+      1
+    ],
+    "merged_action": 1,
+    "applied_action": 1,
+    "missing_input": []
+  },
+  "expected_consumer": {
+    "action_status": "잘림",
+    "raw_action": 99,
+    "normalized_action": 1,
+    "merged_action": 1,
+    "applied_action": 1,
+    "missing_input": [],
+    "raw_normalized_equal": false,
+    "applied_equals_normalized": true,
+    "expected_warnings": [],
+    "minimal_replay": false
+  }
+}

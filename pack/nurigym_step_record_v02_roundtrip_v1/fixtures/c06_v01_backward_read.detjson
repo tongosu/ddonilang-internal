@@ -1,0 +1,55 @@
+{
+  "schema": "ddn.nurigym.step_record.v0.2.roundtrip_fixture.case.v1",
+  "case_id": "c06_v01_backward_read",
+  "format_version": "v0.1",
+  "annex_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:60",
+  "producer_input": {
+    "mode": "legacy_v01",
+    "agent_id": 1,
+    "applied_action": 1
+  },
+  "wire_record": {
+    "schema": "nurigym.step.v1",
+    "episode_id": 900,
+    "env_slot": 0,
+    "agent_id": 1,
+    "madi": 0,
+    "observation": {
+      "schema": "nurigym.obs.v1",
+      "slot_count": 2,
+      "values": [
+        0.0,
+        0.0
+      ]
+    },
+    "action": {
+      "schema": "nurigym.action.v1",
+      "value": 1
+    },
+    "reward": 1.0,
+    "next_observation": {
+      "schema": "nurigym.obs.v1",
+      "slot_count": 2,
+      "values": [
+        1.0,
+        0.0
+      ]
+    },
+    "done": false,
+    "applied_action": 1
+  },
+  "expected_consumer": {
+    "action_status": "미상",
+    "raw_action": null,
+    "normalized_action": null,
+    "merged_action": null,
+    "applied_action": 1,
+    "missing_input": [],
+    "absent_v02_fields": [
+      "raw_action",
+      "normalized_action",
+      "action_status"
+    ],
+    "minimal_replay": true
+  }
+}
