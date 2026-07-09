@@ -1,6 +1,6 @@
 # 또니랑 Codex 개발 요약 (Development Summary)
 > 이전 기록은 DEV_SUMMARY_ARCHIVE_20260706.md 참고
-Last Updated: 2026-07-09
+Last Updated: 2026-07-10
 Workspace: `i:\dev\ddonilang\codex`
 
 ---
@@ -11,6 +11,20 @@ Workspace: `i:\dev\ddonilang\codex`
 - 최신 의사결정/검증 결과를 빠르게 확인하는 용도로 유지한다.
 
 ## 최근 핵심 변경 (요약)
+
+### [GANADA][GVC] 15줄기 x 6마루 검증 계약 선행 (2026-07-10)
+
+- 변경:
+  - `ganada_maru_verification_contract_v1` pack을 추가해 15줄기 x 6마루 90칸 전체의 검증 조건을 manifest로 고정했다.
+  - `tests/run_ganada_maru_verification_contract_check.py`를 추가해 90칸 완전성, file:line 근거, 문서-only 증거 배제, UI/CLI/도구 workflow별 `닫힘-동작` 최소 조건을 검사한다.
+  - `docs/context/roadmap/GANADA_MARU_VERIFICATION_CONTRACT_V1_20260710.md`와 `docs/context/roadmap/PROPOSAL_GANADA_STRUCTURE_RECONSIDERATION_V1_20260710.md`를 추가했다.
+- 검증:
+  - `python -m json.tool pack/ganada_maru_verification_contract_v1/contract.detjson` PASS.
+  - `python tests/run_pack_golden.py ganada_maru_verification_contract_v1` PASS.
+  - `python tests/run_ganada_maru_verification_contract_check.py` PASS.
+- 진행률:
+  - Ganada verification contract: 완료(`닫힘-문서`).
+  - 기존 90칸 상태 재판정, parser/runtime/product UI 변경, `docs/ssot/**` 변경 없음.
 
 ### [DECISION-CLOSURE][D2] Settings keyset + NuriGym step_record v0.2 public schema (2026-07-09)
 
