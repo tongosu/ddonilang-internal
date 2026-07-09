@@ -1,0 +1,1 @@
+{"cmd":["run","pack/sim_constraint_reaction_v1/input.ddn"],"stdout":["SIM_CONSTRAINT_REACTION_V1","family=막음","verb=막기","runtime_claim=false","subpacks=sim_mageum_floor_v1,sim_mageum_box_v1,sim_mageum_chain_v1,lang_mageum_diag_v1"],"exit_code":0}

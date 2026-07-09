@@ -2,8 +2,8 @@
 
 ## 결과 요약
 
-- G0: 진행 중. Run3A 범위는 G7~G11 red/contract pack과 보고서로 제한한다.
-- G7: 미착수.
+- G0: 완료. Run3A 범위는 G7~G11 red/contract pack과 보고서로 제한한다.
+- G7: 완료(`닫힘-문서`). `막음`/`막기` constraint reaction red pack과 umbrella/subpack/checker를 추가했다. parser/runtime landed claim은 `false`로 고정했다.
 - G8: 미착수.
 - G9: 미착수.
 - G10: 미착수.
@@ -39,3 +39,9 @@
 ## 검증 로그
 
 - G0 커밋 전: `git status --short -- docs/ssot` PASS(변경 없음).
+- G7:
+  - `python -m json.tool pack/*mageum*/*.detjson` PASS(실행은 개별 G7 detjson 전체).
+  - `python -m py_compile tests/run_declarative_closure_g7_constraint_red_check.py` PASS.
+  - `python tests/run_pack_golden.py sim_constraint_reaction_v1 sim_mageum_floor_v1 sim_mageum_box_v1 sim_mageum_chain_v1 lang_mageum_diag_v1` PASS.
+  - `python tests/run_declarative_closure_g7_constraint_red_check.py` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
