@@ -1,0 +1,42 @@
+{
+  "id": "lang_unit_check_v1",
+  "kind": "declarative_closure_unit_dimension_product_pack",
+  "product_entrypoint": "teul-cli run",
+  "accepted_cases": [
+    "@m",
+    "@s",
+    "@m/s",
+    "@m/s^2",
+    "temperature_normalization_existing"
+  ],
+  "rejected_cases": [
+    {
+      "surface": "add dimension mismatch",
+      "expected_error_code": "E_UNIT_MISMATCH"
+    },
+    {
+      "surface": "subtract dimension mismatch",
+      "expected_error_code": "E_UNIT_MISMATCH"
+    },
+    {
+      "surface": "compare dimension mismatch",
+      "expected_error_code": "E_UNIT_MISMATCH"
+    },
+    {
+      "surface": "scalar-unit add mix",
+      "expected_error_code": "E_UNIT_MISMATCH"
+    },
+    {
+      "surface": "unknown unit",
+      "expected_error_code": "E_UNIT_UNKNOWN"
+    }
+  ],
+  "scalar_unit_mix_policy": "B_add_sub_compare_assignment_no_implicit_mix",
+  "assignment_dimension_check_claim": false,
+  "state_hash_formula_change": false,
+  "solveplan_state_hash_inputs_change": false,
+  "notes": [
+    "Assignment-dimension mismatch is recorded as not claimed because the current product path does not retain declaration-unit constraints for plain reassignment.",
+    "Multiplication/division physical-dimension composition keeps existing runtime behavior and is not extended by this pack."
+  ]
+}
