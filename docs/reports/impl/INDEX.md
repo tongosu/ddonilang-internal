@@ -14,6 +14,7 @@
 
 | W | generated_at | 파일 | scope | 결과 | 증거(해시) |
 |---:|---|---|---|---|---|
+| - | 2026-07-09 | [SOLVEPLAN_PLAN_HASH_BOUNDARY_V1_20260709.md](./SOLVEPLAN_PLAN_HASH_BOUNDARY_V1_20260709.md) | SolvePlan `state_hash_inputs` / future `plan_hash` / runtime `state_hash` 산식 경계 | 정리 | `python tests/run_declarative_closure_g11_plan_hash_boundary_check.py` |
 | - | 2026-07-09 | [DECLARATIVE_CLOSURE_G1_G3_IMPLEMENTATION_GAP_V1_20260709.md](./DECLARATIVE_CLOSURE_G1_G3_IMPLEMENTATION_GAP_V1_20260709.md) | 선언형 closure G1~G3 SolvePlan/세움 tick/prime S2 런타임 갭 | 부분 | `docs/context/proposals/PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V1_20260709.md` |
 
 ## 목록 (2026-03-03)
