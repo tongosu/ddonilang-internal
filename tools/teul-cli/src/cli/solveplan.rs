@@ -6,7 +6,7 @@ use ddonirang_lang::connect_endpoint_relation_seum_rows;
 use serde_json::{json, Value as JsonValue};
 use sha2::{Digest, Sha256};
 
-use crate::lang::ast::{ArgBinding, Binding, Expr, Program, Stmt};
+use crate::lang::ast::{ArgBinding, Assertion, Binding, Expr, Program, Stmt};
 
 const SCHEMA: &str = "ddn.solveplan.v1";
 const BUNDLE_SCHEMA: &str = "ddn.solveplan.bundle.v1";
@@ -57,7 +57,7 @@ pub fn write_solveplan_out(path: &Path, program: &Program, source: &str) -> Resu
     let method = IntegratorMethod::from_source(source);
     let mut plans = collect_assertion_exprs(program)
         .into_iter()
-        .map(|expr| build_solveplan_for_assertion(&expr.assertion.body_source, method))
+        .map(|expr| build_solveplan_for_assertion_expr(expr, method))
         .collect::<Vec<_>>();
     plans.extend(collect_connect_desugar_plans(source, method));
     let payload = match plans.as_slice() {
@@ -95,7 +95,14 @@ pub fn write_connect_diagnostic_out_if_any(path: &Path, source: &str) -> Result<
 
 #[derive(Clone, Copy)]
 struct AssertionExpr<'a> {
-    assertion: &'a crate::lang::ast::Assertion,
+    assertion: &'a Assertion,
+    context: AssertionContext,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum AssertionContext {
+    Runtime,
+    Init,
 }
 
 fn collect_assertion_exprs(program: &Program) -> Vec<AssertionExpr<'_>> {
@@ -201,7 +208,17 @@ fn parse_connect_inner_sentence(sentence: &str) -> Option<(&str, &'static str)> 
 fn collect_assertions_from_stmts<'a>(stmts: &'a [Stmt], out: &mut Vec<AssertionExpr<'a>>) {
     for stmt in stmts {
         match stmt {
-            Stmt::DeclBlock { items, .. } => {
+            Stmt::DeclBlock {
+                items,
+                init_assertions,
+                ..
+            } => {
+                for assertion in init_assertions {
+                    out.push(AssertionExpr {
+                        assertion,
+                        context: AssertionContext::Init,
+                    });
+                }
                 for item in items {
                     if let Some(expr) = item.value.as_ref() {
                         collect_assertions_from_expr(expr, out);
@@ -303,7 +320,10 @@ fn collect_assertions_from_args<'a>(args: &'a [ArgBinding], out: &mut Vec<Assert
 
 fn collect_assertions_from_expr<'a>(expr: &'a Expr, out: &mut Vec<AssertionExpr<'a>>) {
     match expr {
-        Expr::Assertion { assertion, .. } => out.push(AssertionExpr { assertion }),
+        Expr::Assertion { assertion, .. } => out.push(AssertionExpr {
+            assertion,
+            context: AssertionContext::Runtime,
+        }),
         Expr::Unary { expr, .. } => collect_assertions_from_expr(expr, out),
         Expr::Binary { left, right, .. } => {
             collect_assertions_from_expr(left, out);
@@ -336,6 +356,58 @@ fn collect_assertions_from_expr<'a>(expr: &'a Expr, out: &mut Vec<AssertionExpr<
         | Expr::FormulaEval { .. }
         | Expr::Template { .. } => {}
     }
+}
+
+fn build_solveplan_for_assertion_expr(
+    expr: AssertionExpr<'_>,
+    integrator_method: IntegratorMethod,
+) -> JsonValue {
+    let plan = build_solveplan_for_assertion(&expr.assertion.body_source, integrator_method);
+    match expr.context {
+        AssertionContext::Runtime => plan,
+        AssertionContext::Init => init_plan_from_base(&expr.assertion.body_source, plan),
+    }
+}
+
+fn init_plan_from_base(body_source: &str, mut plan: JsonValue) -> JsonValue {
+    let stage = plan
+        .get("stage")
+        .and_then(JsonValue::as_str)
+        .unwrap_or("S3");
+    if matches!(stage, "S0" | "S1") {
+        if let Some(object) = plan.as_object_mut() {
+            object.insert("init_plan".to_string(), init_plan_marker());
+        }
+        return plan;
+    }
+
+    let rows = parse_relation_rows(body_source);
+    let unknowns = collect_unknowns(&rows);
+    let mut unsupported = diagnostic_plan(
+        body_source,
+        "S3",
+        "init_unsupported_v1",
+        &rows,
+        unknowns,
+        "E_INIT_UNSUPPORTED",
+        "채비 안 세움 초기화는 S0/S1 SolvePlan만 허용합니다",
+    );
+    if let Some(object) = unsupported.as_object_mut() {
+        object.insert("init_plan".to_string(), init_plan_marker());
+    }
+    unsupported
+}
+
+fn init_plan_marker() -> JsonValue {
+    json!({
+        "kind": "t0_one_shot",
+        "source": "chaebi_inner_seum",
+        "apply": "before_madi_0",
+        "allowed_stages": [
+            "S0",
+            "S1"
+        ]
+    })
 }
 
 fn build_solveplan_for_assertion(
@@ -654,6 +726,21 @@ fn s2_plan(
         .filter(|state| seen.insert((*state).to_string()))
         .map(str::to_string)
         .collect::<Vec<_>>();
+    let vector_components = vector_components_json(&slots);
+    let mut lowering = json!({
+        "derivative_lowering": "prime_slot_to_stdlib_integrator_v1",
+        "integrator": {
+            "surface": integrator_method.surface(),
+            "stdlib_reference": integrator_method.surface(),
+        },
+        "state_slots": slots,
+        "phase": seum_phase_json(),
+    });
+    if !vector_components.is_empty() {
+        if let Some(object) = lowering.as_object_mut() {
+            object.insert("vector_components".to_string(), JsonValue::Array(vector_components));
+        }
+    }
     json!({
         "schema": SCHEMA,
         "source_hash": sha256_prefixed(body_source),
@@ -661,18 +748,56 @@ fn s2_plan(
         "method": integrator_method.solveplan_method(),
         "relations": relation_json(rows, false),
         "unknowns": unknowns,
-        "lowering": {
-            "derivative_lowering": "prime_slot_to_stdlib_integrator_v1",
-            "integrator": {
-                "surface": integrator_method.surface(),
-                "stdlib_reference": integrator_method.surface(),
-            },
-            "state_slots": slots,
-            "phase": seum_phase_json(),
-        },
+        "lowering": lowering,
         "diagnostics": [],
         "state_hash_inputs": default_state_hash_inputs(),
     })
+}
+
+fn vector_components_json(slots: &[JsonValue]) -> Vec<JsonValue> {
+    let mut groups: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
+    for slot in slots {
+        let Some(state) = slot.get("state").and_then(JsonValue::as_str) else {
+            continue;
+        };
+        let Some((base, axis)) = state.rsplit_once('_') else {
+            continue;
+        };
+        if !matches!(axis, "x" | "y" | "z") {
+            continue;
+        }
+        let Some(slot_name) = slot.get("slot").and_then(JsonValue::as_str) else {
+            continue;
+        };
+        groups
+            .entry(base.to_string())
+            .or_default()
+            .insert(axis.to_string(), slot_name.to_string());
+    }
+
+    groups
+        .into_iter()
+        .map(|(base, axes)| {
+            let present_components = ["x", "y", "z"]
+                .into_iter()
+                .filter(|axis| axes.contains_key(*axis))
+                .collect::<Vec<_>>();
+            let slots = ["x", "y", "z"]
+                .into_iter()
+                .filter_map(|axis| axes.get(axis).cloned())
+                .collect::<Vec<_>>();
+            json!({
+                "base": base,
+                "component_order": [
+                    "x",
+                    "y",
+                    "z"
+                ],
+                "present_components": present_components,
+                "slots": slots,
+            })
+        })
+        .collect()
 }
 
 fn unsupported_plan(
@@ -913,12 +1038,34 @@ mod tests {
         let (program, _) = parse_program_for_runtime(source).expect("parse");
         let plans = collect_assertion_exprs(&program)
             .into_iter()
-            .map(|expr| {
-                build_solveplan_for_assertion(&expr.assertion.body_source, IntegratorMethod::Euler)
-            })
+            .map(|expr| build_solveplan_for_assertion_expr(expr, IntegratorMethod::Euler))
             .collect::<Vec<_>>();
         assert_eq!(plans.len(), 1);
         assert_eq!(plans[0]["stage"], "S0");
+    }
+
+    #[test]
+    fn chaebi_inner_seum_marks_init_plan_or_rejects_s2() {
+        let source = "채비 { 세움 { 위치 =:= 0. }. }.";
+        let (program, _) = parse_program_for_runtime(source).expect("parse");
+        let plans = collect_assertion_exprs(&program)
+            .into_iter()
+            .map(|expr| build_solveplan_for_assertion_expr(expr, IntegratorMethod::Euler))
+            .collect::<Vec<_>>();
+        assert_eq!(plans.len(), 1);
+        assert_eq!(plans[0]["stage"], "S0");
+        assert_eq!(plans[0]["init_plan"]["kind"], "t0_one_shot");
+        assert_eq!(plans[0]["init_plan"]["apply"], "before_madi_0");
+
+        let source = "채비 { 세움 { 위치' =:= 속도. }. }.";
+        let (program, _) = parse_program_for_runtime(source).expect("parse");
+        let plans = collect_assertion_exprs(&program)
+            .into_iter()
+            .map(|expr| build_solveplan_for_assertion_expr(expr, IntegratorMethod::Euler))
+            .collect::<Vec<_>>();
+        assert_eq!(plans[0]["stage"], "S3");
+        assert_eq!(plans[0]["method"], "init_unsupported_v1");
+        assert_eq!(plans[0]["diagnostics"][0]["code"], "E_INIT_UNSUPPORTED");
     }
 
     #[test]
@@ -967,6 +1114,22 @@ mod tests {
         assert_eq!(
             semi["lowering"]["integrator"]["surface"],
             "적분.반암시적오일러"
+        );
+    }
+
+    #[test]
+    fn vector_prime_slots_record_xyz_component_order() {
+        let plan = build_solveplan_for_assertion(
+            "위치_x' =:= 속도_x.\n위치_y' =:= 속도_y.",
+            IntegratorMethod::Euler,
+        );
+        assert_eq!(
+            plan["lowering"]["vector_components"][0]["component_order"],
+            json!(["x", "y", "z"])
+        );
+        assert_eq!(
+            plan["lowering"]["vector_components"][0]["present_components"],
+            json!(["x", "y"])
         );
     }
 }

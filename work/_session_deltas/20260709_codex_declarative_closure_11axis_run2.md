@@ -5,7 +5,7 @@
 - G0: 진행 중. Run2 범위는 G4~G6으로 제한한다.
 - G4: 완료. `잇기` 문장형 surface를 `teul-cli run --solveplan-out` SolvePlan artifact의 `lowering.connect_desugar`로 기록한다.
 - G5: 완료. `lang_unit_check_v1` pack/checker로 단위 리터럴 5건, 차원/단위 오류 5건, SolvePlan `state_hash_inputs` 비침투를 고정했다.
-- G6: 미착수.
+- G6: 완료. `채비 { 세움 { ... }. }` init assertion을 `init_plan.t0_one_shot` artifact로 표시하고, S2/S3 초기화는 `E_INIT_UNSUPPORTED`로 고정했다. `sim_ode_vector_v1`은 x/y/z 성분 순서 기록을 보강했다.
 - G7~G11: 이번 실행 범위 밖이라 착수하지 않는다.
 
 ## 경계
@@ -47,4 +47,13 @@
   - `python -m py_compile tests/run_declarative_closure_g5_unit_check.py` PASS.
   - `python tests/run_pack_golden.py lang_unit_check_v1` PASS.
   - `python tests/run_declarative_closure_g5_unit_check.py` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
+- G6:
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml parse_decl_block_inner_seum_init_assertion -- --nocapture` PASS.
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml solveplan -- --nocapture` PASS.
+  - `python -m json.tool` on `sim_init_equation_v1` and `sim_ode_vector_v1` contracts/expected artifacts PASS.
+  - `python -m py_compile tests/run_declarative_closure_g6_init_vector_check.py` PASS.
+  - `python tests/run_pack_golden.py sim_init_equation_v1 sim_ode_vector_v1` PASS.
+  - `python tests/run_declarative_closure_g6_init_vector_check.py` PASS.
+  - `python tests/run_declarative_closure_g3_s2_check.py` PASS.
   - `git status --short -- docs/ssot` PASS(변경 없음).

@@ -98,6 +98,7 @@ pub enum Stmt {
     },
     DeclBlock {
         items: Vec<DeclItem>,
+        init_assertions: Vec<Assertion>,
         #[allow(dead_code)]
         span: Span,
     },
