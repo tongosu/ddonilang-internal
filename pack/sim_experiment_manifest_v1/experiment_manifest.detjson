@@ -1,0 +1,58 @@
+{
+  "schema": "ddn.sim.experiment_manifest.v1",
+  "manifest_id": "sim_experiment_manifest_v1.c01_init_s0_artifact_candidate",
+  "source": {
+    "kind": "ddn_file",
+    "path": "pack/sim_init_equation_v1/source_init_s0.ddn",
+    "hash_kind": "sha256_file_bytes",
+    "hash": "sha256:2939797fd94957cdf89c5a7eb2990eeff4c5c1cc1f2764c7861b98473d9c2e41"
+  },
+  "source_hash": "sha256:2939797fd94957cdf89c5a7eb2990eeff4c5c1cc1f2764c7861b98473d9c2e41",
+  "run_config": {
+    "entrypoint": "teul-cli run --solveplan-out",
+    "args": [
+      "run",
+      "pack/sim_init_equation_v1/source_init_s0.ddn",
+      "--solveplan-out",
+      "build/declarative_closure_g8/sim_experiment_manifest_v1_solveplan.detjson"
+    ],
+    "profile": "core_lang",
+    "environment": "local",
+    "determinism": "byte_identical_artifact_required"
+  },
+  "run_config_hash": "sha256:8c38b4d5a9323a48107be80f85b81c582035d9c9720bcb724de28a5280f65621",
+  "seed": {
+    "global_seed": 0,
+    "deterministic": true,
+    "policy": "explicit_even_when_unused"
+  },
+  "solveplan_artifact": {
+    "schema": "ddn.solveplan.v1",
+    "path": "pack/sim_init_equation_v1/expected_init_s0.detjson",
+    "produced_by": "teul-cli run --solveplan-out",
+    "required_for_manifest": true
+  },
+  "input_snapshot": {
+    "schema": "ddn.input_snapshot.ref.v1",
+    "kind": "source_file_reference",
+    "path": "pack/sim_init_equation_v1/source_init_s0.ddn",
+    "source_hash": "sha256:2939797fd94957cdf89c5a7eb2990eeff4c5c1cc1f2764c7861b98473d9c2e41",
+    "capture_policy": "source_only_no_runtime_state"
+  },
+  "input_snapshot_hash": "sha256:c0112e92df1a51422b328c6fdad16e01d949559e804914ba4233dc4de4a83b3a",
+  "outputs": [
+    {
+      "kind": "solveplan_artifact",
+      "schema": "ddn.solveplan.v1",
+      "path": "build/declarative_closure_g8/sim_experiment_manifest_v1_solveplan.detjson",
+      "expected_path": "pack/sim_init_equation_v1/expected_init_s0.detjson",
+      "determinism": "byte_identical_expected_artifact"
+    }
+  ],
+  "state_hash_policy": {
+    "formula_change": false,
+    "integration": "none",
+    "state_hash_inputs_manifest_field_only": true
+  },
+  "plan_hash_status": "pending_canonical_bytes_decision"
+}
