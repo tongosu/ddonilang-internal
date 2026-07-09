@@ -1,0 +1,7 @@
+"GANADA_JA_SEULGI_CONTEXT_V1" 보여주기.
+"cells=자-3,자-5" 보여주기.
+"lesson_context=seamgrim_lesson_run_preset_rail_v1" 보여주기.
+"editor_context=seamgrim_lesson_authoring_flow_v1" 보여주기.
+"replay_context=lesson_editor_fixture" 보여주기.
+"ai_call_claim=false" 보여주기.
+"checker=tests/run_ganada_ja_seulgi_context_check.py" 보여주기.

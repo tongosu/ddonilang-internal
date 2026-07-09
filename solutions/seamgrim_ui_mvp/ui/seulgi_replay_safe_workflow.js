@@ -58,6 +58,9 @@ function buildReplayText(rows) {
   return [
     "seulgi_replay_safe_workflow:seulgi_replay_safe_workflow_v1",
     "coordinate:자-5",
+    "proposal_receipt_source:seulgi_proposal_ui_v1",
+    "replay_context:lesson_editor_fixture",
+    "receipt_replay_policy:local_append_only",
     "ai_recall:false",
     "auto_apply:false",
     "file_write:false",
@@ -106,6 +109,9 @@ export function buildSeulgiReplaySafeWorkflow({
     model_training_claim: false,
     rows: workflowRows,
     active_row_id: active,
+    proposal_receipt_source: "seulgi_proposal_ui_v1",
+    replay_context: "lesson_editor_fixture",
+    receipt_replay_policy: "local_append_only",
     replay_text: buildReplayText(workflowRows),
     progress: {
       current_stage_closed: ready ? 5 : Math.min(4, readyCount),
@@ -168,6 +174,9 @@ export function renderSeulgiReplaySafeWorkflow(root, workflow = {}) {
   const activeId = asText(payload.active_row_id, rows[0]?.id ?? "");
   const active = rows.find((row) => row.id === activeId) || rows[0] || {};
   root.dataset.seulgiReplaySafeStatus = asText(payload.status, "seulgi_replay_safe_workflow_incomplete");
+  root.setAttribute("data-testid", "seulgi-replay-panel");
+  root.dataset.seulgiReplayContext = asText(payload.replay_context, "lesson_editor_fixture");
+  root.dataset.seulgiReceiptReplayPolicy = asText(payload.receipt_replay_policy, "local_append_only");
   root.innerHTML = `
     <div class="question-card-head">
       <div>

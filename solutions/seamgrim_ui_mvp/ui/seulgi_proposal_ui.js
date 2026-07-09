@@ -58,6 +58,10 @@ function buildProposalText(rows) {
   return [
     "seulgi_proposal_ui:seulgi_proposal_ui_v1",
     "coordinate:자-3",
+    "lesson_context:seamgrim_lesson_run_preset_rail_v1",
+    "editor_context:seamgrim_lesson_authoring_flow_v1",
+    "fixture_proposal_import:true",
+    "receipt_policy:approve_reject_local",
     "ai_call:false",
     "auto_apply:false",
     "file_write:false",
@@ -106,6 +110,10 @@ export function buildSeulgiProposalUi({
     model_training_claim: false,
     rows: proposalRows,
     active_row_id: active,
+    lesson_context: "seamgrim_lesson_run_preset_rail_v1",
+    editor_context: "seamgrim_lesson_authoring_flow_v1",
+    fixture_proposal_import_claim: true,
+    receipt_policy: "approve_reject_local",
     proposal_text: buildProposalText(proposalRows),
     progress: {
       current_stage_closed: ready ? 5 : Math.min(4, readyCount),
@@ -170,6 +178,8 @@ export function renderSeulgiProposalUi(root, proposal = {}) {
   root.dataset.seulgiProposalUiStatus = asText(payload.status, "seulgi_proposal_ui_incomplete");
   root.dataset.testid = "seulgi-proposal-panel";
   root.setAttribute("data-testid", "seulgi-proposal-panel");
+  root.dataset.seulgiLessonContext = asText(payload.lesson_context, "seamgrim_lesson_run_preset_rail_v1");
+  root.dataset.seulgiEditorContext = asText(payload.editor_context, "seamgrim_lesson_authoring_flow_v1");
   root.innerHTML = `
     <div class="question-card-head">
       <div>
@@ -213,14 +223,23 @@ export function renderSeulgiProposalUi(root, proposal = {}) {
             <span data-seulgi-proposal-artifact="${escapeHtml(row.id)}">${escapeHtml(row.kind)} · ${escapeHtml(row.decision)}</span>
           `).join("")}
         </div>
-        <pre class="question-card-preview" data-seulgi-proposal-preview>${escapeHtml(payload.proposal_text ?? "")}</pre>
+        <pre class="question-card-preview" data-seulgi-proposal-preview data-testid="seulgi-preview">${escapeHtml(payload.proposal_text ?? "")}</pre>
+        <button type="button" class="ghost" data-seulgi-fixture-import data-testid="seulgi-fixture-import">Fixture proposal import 확인</button>
         <button type="button" class="ghost" data-seulgi-proposal-copy>AI 제안 UI 텍스트 복사</button>
       </div>
     </div>
   `;
   const rerender = (rowId) => renderSeulgiProposalUi(root, { ...payload, active_row_id: rowId });
   root.querySelectorAll("[data-seulgi-proposal-row]").forEach((button) => {
-    button.addEventListener("click", () => rerender(button.getAttribute("data-seulgi-proposal-row") || ""));
+    button.addEventListener("click", () => {
+      const rowId = button.getAttribute("data-seulgi-proposal-row") || "";
+      if (rowId === "approve") root.dataset.seulgiApprovalReceipt = "local";
+      if (rowId === "reject") root.dataset.seulgiRejectionReceipt = "local";
+      rerender(rowId);
+    });
+  });
+  root.querySelector("[data-seulgi-fixture-import]")?.addEventListener("click", () => {
+    root.dataset.seulgiFixtureImported = "true";
   });
   root.querySelector("[data-seulgi-proposal-copy]")?.addEventListener("click", async () => {
     root.dataset.seulgiProposalCopied = "true";
