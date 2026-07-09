@@ -174,11 +174,16 @@ async function main() {
 
     await page.goto(`${baseUrl}/solutions/seamgrim_ui_mvp/ui/index.html`, { waitUntil: "domcontentloaded" });
     await waitVisible(page, "#screen-browse");
+    await page.waitForSelector("[data-testid='lesson-catalog'][data-lesson-catalog]");
     const presetRailLessonSelector = ".lesson-card[data-lesson-id='rep_math_function_line_v1']";
     await page.waitForSelector(`${presetRailLessonSelector} .card-launch-btn[data-launch-profile='student']`);
 
     await page.click(`${presetRailLessonSelector} .card-launch-btn[data-launch-profile='student']`);
     await waitVisible(page, "#screen-run");
+    await page.waitForSelector("[data-testid='lesson-run-preset'][data-lesson-run-preset]", { state: "attached" });
+    await page.waitForSelector("[data-testid='lesson-run-button'][data-lesson-run-button]", { state: "attached" });
+    await page.waitForSelector("[data-testid='lesson-error-panel'][data-lesson-error-panel]", { state: "attached" });
+    await page.waitForSelector("[data-testid='lesson-run-result'][data-lesson-run-result]", { state: "attached" });
     await page.waitForFunction(() => window.__SEAMGRIM_RUN_PRESET_RAIL__?.onboarding_profile === "student");
     const studentRail = await readRail(page);
     assert(studentRail.railCount === 1, `run preset rail count mismatch: ${studentRail.railCount}`);
@@ -189,6 +194,21 @@ async function main() {
     assert(studentRail.layout.startsWith("화면:"), `student layout label mismatch: ${studentRail.layout}`);
     assert(studentRail.views.startsWith("결과 확인:"), `student views label mismatch: ${studentRail.views}`);
     assert(studentRail.model?.schema === "seamgrim.run_preset_rail.v1", "student rail model schema mismatch");
+    await page.waitForFunction(() => {
+      const hash = document.querySelector("#run-mirror-hash")?.textContent ?? "";
+      const madi = document.querySelector("#run-madi-status")?.textContent ?? "";
+      return hash.includes("blake3:") || /\d+\s*\/\s*\d+/.test(madi);
+    });
+    await page.click("#run-tab-btn-output");
+    await waitVisible(page, "[data-testid='lesson-run-result']");
+    const studentRunResult = await page.evaluate(() => ({
+      resultText: document.querySelector("[data-testid='lesson-run-result']")?.textContent?.trim() ?? "",
+      errorPanelHidden: document.querySelector("[data-testid='lesson-error-panel']")?.classList.contains("hidden"),
+      hashText: document.querySelector("#run-mirror-hash")?.textContent?.trim() ?? "",
+    }));
+    assert(studentRunResult.errorPanelHidden === true, "student run should not show error panel");
+    assert(studentRunResult.resultText.length > 0, "student run result panel should not be empty");
+    assert(studentRunResult.hashText.includes("blake3:"), `student state hash missing: ${studentRunResult.hashText}`);
 
     await page.click('#screen-run .main-shell-tab[data-main-tab-target="browse"]');
     await waitVisible(page, "#screen-browse");

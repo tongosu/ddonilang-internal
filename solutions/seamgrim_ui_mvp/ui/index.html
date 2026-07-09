@@ -66,7 +66,7 @@
 
         <div id="browse-legacy-guide-hint" class="hint browse-legacy-guide-hint hidden"></div>
         <div class="catalog-body">
-          <div id="lesson-card-grid" class="card-grid"></div>
+          <div id="lesson-card-grid" class="card-grid" data-testid="lesson-catalog" data-lesson-catalog></div>
           <aside id="catalog-detail-panel" class="catalog-detail-panel hidden">
             <div id="detail-subject-badge" class="detail-subject-badge"></div>
             <h3 id="detail-title" class="detail-title">교과 선택</h3>
@@ -183,7 +183,7 @@
           </div>
           <div class="run-control-bar">
             <span id="studio-source-label" class="studio-source-label">새 작업</span>
-            <div id="run-preset-rail" class="run-preset-rail" data-run-preset-rail aria-label="실행 프리셋">
+            <div id="run-preset-rail" class="run-preset-rail" data-run-preset-rail data-testid="lesson-run-preset" data-lesson-run-preset aria-label="실행 프리셋">
               <span class="run-preset-chip" data-run-preset-launch-kind>수동</span>
               <span class="run-preset-chip" data-run-preset-onboarding>기본 시작</span>
               <span class="run-preset-chip" data-run-preset-layout>화면: 나눠 보기</span>
@@ -202,7 +202,7 @@
             <button id="btn-ddn-save" type="button">↓ 저장</button>
             <span id="run-local-save-status" class="run-local-save-status" data-status="idle">저장 대기</span>
             <span class="run-control-sep"></span>
-            <button id="btn-run" class="btn-primary" type="button">▶ 수업 실행</button>
+            <button id="btn-run" class="btn-primary" type="button" data-testid="lesson-run-button" data-lesson-run-button>▶ 수업 실행</button>
             <button id="btn-pause" class="ghost" type="button" disabled>⏸ 일시정지</button>
             <button id="btn-reset" class="ghost bogae-ctrl-secondary" type="button" title="초기화" aria-label="초기화">↺ 초기화</button>
             <button id="btn-step" class="ghost bogae-ctrl-secondary" type="button" title="한 단계씩" aria-label="한 단계씩">▷ 한 단계씩</button>
@@ -247,7 +247,7 @@
             <div id="run-layout-splitter" class="run-layout-splitter" role="separator" aria-label="실행 화면 분할 조절" aria-orientation="vertical"></div>
 
             <div class="run-visual-column">
-              <div id="run-error-banner" class="run-error-banner hidden">
+              <div id="run-error-banner" class="run-error-banner hidden" data-testid="lesson-error-panel" data-lesson-error-panel>
                 <span id="run-error-text"></span>
                 <button id="btn-run-error-action" class="studio-cta-button studio-cta-button--quiet hidden" type="button">원인 확인</button>
                 <button id="btn-run-warning-platform-login" class="studio-cta-button studio-cta-button--quiet hidden" type="button">로그인</button>
@@ -281,7 +281,7 @@
                   </div>
                 </section>
 
-                <section id="run-tab-panel-output" class="run-tab-panel hidden">
+                <section id="run-tab-panel-output" class="run-tab-panel hidden" data-testid="lesson-run-result" data-lesson-run-result>
                   <div id="run-console-warning-summary" class="run-console-warning-summary" data-level="ok">경고 없음</div>
                   <div id="run-observe-summary" class="run-observe-summary" data-level="none">
                     <span id="run-observe-summary-text" class="run-observe-summary-text">관찰 출력 대기</span>
