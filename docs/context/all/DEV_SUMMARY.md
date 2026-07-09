@@ -12,6 +12,22 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [Q27-V2] 삭제 체크 111건 실행 기반 재감사 정정 (2026-07-09)
+
+- 변경:
+  - `docs/context/reports/Q27_DELETION_REAUDIT_V2_EXECUTION_BASED_20260709.md`를 추가해 `2e6a956 [Q27] 죽은 체크 삭제`에서 삭제된 체크 111건을 삭제 직전 소스로 임시 복원하고 실제 실행 결과만으로 재분류했다.
+  - `docs/context/reports/INDEX.md`에 Q27 V2 보고서를 등록했다.
+- 검증:
+  - 111/111건 실행 완료. PASS 1 / FAIL 110 / 실행불가 0.
+  - 최종분류: 정말죽음 110 / 실수삭제 1 / 실행불가 0.
+  - V1 대비 불일치 84건은 모두 `실수삭제->정말죽음`으로 정정했다.
+  - 브리프 지목 15건은 15/15 `정말죽음`으로 정정 확인했다.
+  - 임시 복원 경로 `work/_tmp_q27_reaudit_v2` 제거 완료, `tests/__tmp_q27_reaudit_v2_*.py` 잔여 0건.
+- 진행률:
+  - Q27 삭제 재감사 정정: 완료.
+  - 삭제된 체크 파일은 되살리지 않고 보고서만 추가했다.
+  - `docs/ssot/**`, `lang`, `core`, `tool`, `tools/teul-cli/src` 변경 없음.
+
 ### [DECLARATIVE-CLOSURE][11AXIS] SSOT 패치 후보 + G1~G3 런타임 갭 정리 (2026-07-09)
 
 - 변경:
