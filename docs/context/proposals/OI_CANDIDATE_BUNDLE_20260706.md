@@ -1,5 +1,7 @@
 # OI_CANDIDATE_BUNDLE_20260706
 
+> 통합 각주(2026-07-09): 이 문서는 `docs/context/proposals/OI_CANDIDATES_20260706_BUNDLE.md`로 통합됨. 아래 원 내용은 감사 추적을 위해 보존한다.
+
 - 작성: 2026-07-07 KST, Codex
 - 성격: 2026-07-06 논의에서 나온 OI 후보 일괄 초안.
 - 경계: 이 문서는 결정하지 않는다. SSOT 오너가 `SSOT_OPEN_ISSUES_v24.12.9.md` 반영 여부와 문구를 결정한다.

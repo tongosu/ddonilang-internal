@@ -71,3 +71,5 @@
 ## 실행 로그
 
 (트랙 완료 시 `[AFF-I]`/`[AFF-J]`/`[AFF-K]` 태그로 기록)
+
+- [AFF-I] 2026-07-09 KST: `OI_CANDIDATES_20260706_BUNDLE.md`를 기준본으로 유지하고, 07-07판 16개 항목을 통합 ID 16개에 전부 반영했다. 같은 주제의 다른 ID는 최신 ID로 통합했으며, `OI-SETTINGS-SEULGI-KEY-DRIFT-01`와 `OI-BOGAE-STANDARD-PACK-NAMING-01`는 07-08판에 새 행으로 추가했다. `OI_CANDIDATE_BUNDLE_20260706.md` 상단에는 2026-07-09 통합 각주만 추가하고 원문은 보존했다. 검증: 통합 대조표 추가, 중복 ID 0건 확인 예정.
