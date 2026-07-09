@@ -14,6 +14,7 @@ Verification:
 
 ```bash
 python tests/run_nurigym_step_record_v02_roundtrip_pack_check.py
+python tests/run_nurigym_step_record_v02_roundtrip_check.py
 ```
 
 The checker validates six golden cases, cross-checks the v0.2 field names against `pack/nurigym_step_record_v02_consumer_g6_v1`, and keeps this pack at wire-schema evidence only.

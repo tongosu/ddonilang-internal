@@ -63,6 +63,29 @@
     "잘림",
     "거부"
   ],
+  "diagnostic_contracts": [
+    {
+      "code": "E_STEP_RECORD_REJECTED_IN_MERGE",
+      "severity": "error",
+      "fatal": true,
+      "trigger": "action_status=거부 while rejected action is present in merge_candidates",
+      "source_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:36"
+    },
+    {
+      "code": "E_STEP_RECORD_CLIP_NOOP",
+      "severity": "warning",
+      "fatal": false,
+      "trigger": "action_status=잘림 while normalized_action equals raw_action",
+      "source_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:37"
+    },
+    {
+      "code": "E_STEP_RECORD_MISSING_STATUS_MISMATCH",
+      "severity": "error",
+      "fatal": true,
+      "trigger": "missing_input is non-empty while action_status is not 가만히",
+      "source_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:39"
+    }
+  ],
   "case_files": [
     "fixtures/c01_valid.detjson",
     "fixtures/c02_noop_missing.detjson",
