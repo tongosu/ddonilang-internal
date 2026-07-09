@@ -12,6 +12,28 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [DECLARATIVE-CLOSURE][RUN2] G4~G6 Connect/Unit/Init artifact behavior (2026-07-09)
+
+- 변경:
+  - G4: `teul-cli run --solveplan-out`가 `잇기` 문장형 surface를 `lowering.connect_desugar` artifact로 기록하고, `incoming_positive_v1` 부호 규약과 `E_CONNECT_*` 진단 3종을 고정한다.
+  - G5: `lang_unit_check_v1` pack/checker로 `@m`, `@s`, `@m/s`, `@m/s^2`, 온도 normalization과 단위 오류 5건을 제품 경로에서 고정한다.
+  - G6: `채비 { 세움 { ... }. }`를 init assertion으로 수용하고 `init_plan.kind=t0_one_shot`, `apply=before_madi_0` artifact를 기록한다. S2/S3 init은 `E_INIT_UNSUPPORTED`로 고정한다.
+  - `sim_ode_vector_v1`은 벡터 prime slot의 `component_order=["x","y","z"]` 기록을 보강했다.
+- 검증:
+  - `python tests/run_pack_golden.py lang_connect_lowering_v1 sim_circuit_series_v1 sim_econ_market_v1 lang_connect_diag_v1 lang_unit_check_v1 sim_init_equation_v1 sim_ode_vector_v1` PASS.
+  - `python tests/run_declarative_closure_g4_connect_check.py` PASS.
+  - `python tests/run_declarative_closure_g5_unit_check.py` PASS.
+  - `python tests/run_declarative_closure_g6_init_vector_check.py` PASS.
+  - `cargo test -p ddonirang-lang connect_endpoint_ -- --nocapture` PASS.
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml solveplan -- --nocapture` PASS.
+  - `cargo check` PASS, `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+- 진행률:
+  - G4: 완료(`teul-cli run --solveplan-out` artifact behavior).
+  - G5: 완료(`teul-cli run` unit/dimension diagnostic behavior, assignment dimension runtime claim 없음).
+  - G6: 완료(`채비` 내부 `세움` init artifact behavior, runtime state initialization claim 없음).
+  - `docs/ssot/**` 변경 없음, `state_hash` 산식 변경 없음.
+
 ### [DECLARATIVE-CLOSURE][RUN1B] 11축 Proposal V2 + G1~G3 SolvePlan 제품 배선 (2026-07-09)
 
 - 변경:

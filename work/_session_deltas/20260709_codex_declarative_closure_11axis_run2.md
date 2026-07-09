@@ -2,7 +2,7 @@
 
 ## 결과 요약
 
-- G0: 진행 중. Run2 범위는 G4~G6으로 제한한다.
+- G0: 완료. Run2 범위는 G4~G6으로 제한했다.
 - G4: 완료. `잇기` 문장형 surface를 `teul-cli run --solveplan-out` SolvePlan artifact의 `lowering.connect_desugar`로 기록한다.
 - G5: 완료. `lang_unit_check_v1` pack/checker로 단위 리터럴 5건, 차원/단위 오류 5건, SolvePlan `state_hash_inputs` 비침투를 고정했다.
 - G6: 완료. `채비 { 세움 { ... }. }` init assertion을 `init_plan.t0_one_shot` artifact로 표시하고, S2/S3 초기화는 `E_INIT_UNSUPPORTED`로 고정했다. `sim_ode_vector_v1`은 x/y/z 성분 순서 기록을 보강했다.
@@ -57,3 +57,23 @@
   - `python tests/run_declarative_closure_g6_init_vector_check.py` PASS.
   - `python tests/run_declarative_closure_g3_s2_check.py` PASS.
   - `git status --short -- docs/ssot` PASS(변경 없음).
+
+## 마감 검증
+
+- `python tests/run_pack_golden.py lang_connect_lowering_v1 sim_circuit_series_v1 sim_econ_market_v1 lang_connect_diag_v1 lang_unit_check_v1 sim_init_equation_v1 sim_ode_vector_v1` PASS.
+- `python tests/run_declarative_closure_g4_connect_check.py` PASS.
+- `python tests/run_declarative_closure_g5_unit_check.py` PASS.
+- `python tests/run_declarative_closure_g6_init_vector_check.py` PASS.
+- `cargo test -p ddonirang-lang connect_endpoint_ -- --nocapture` PASS(32 tests).
+- `cargo test --manifest-path tools/teul-cli/Cargo.toml solveplan -- --nocapture` PASS(10 tests).
+- `cargo check` PASS(existing warnings only).
+- `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+- `python tests/run_ci_sanity_gate.py --profile core_lang` PASS(`ci_sanity_status=pass code=OK step=all`).
+- `git status --short -- docs/ssot` PASS(변경 없음).
+
+## 커밋
+
+- `8905944 [DC-RUN2-G0] start declarative closure run2`
+- `36fb388 [DC-G4-CONNECT] lower connect surfaces into SolvePlan artifacts`
+- `f59ea52 [DC-G5-UNIT] add unit dimension check pack`
+- `3af64a3 [DC-G6-INIT] add init plan artifacts and vector component order`
