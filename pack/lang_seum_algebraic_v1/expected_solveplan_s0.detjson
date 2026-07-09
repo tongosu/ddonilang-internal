@@ -1,0 +1,57 @@
+{
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:red-s0-source-fixture",
+  "stage": "S0",
+  "method": "explicit_algebra_causalized_v1",
+  "relations": [
+    {
+      "id": "r1",
+      "source_order": 0,
+      "text": "x =:= 2",
+      "kind": "explicit_algebra",
+      "defines": "x",
+      "depends_on": []
+    },
+    {
+      "id": "r2",
+      "source_order": 1,
+      "text": "y =:= x + 3",
+      "kind": "explicit_algebra",
+      "defines": "y",
+      "depends_on": [
+        "x"
+      ]
+    }
+  ],
+  "unknowns": [
+    "x",
+    "y"
+  ],
+  "lowering": {
+    "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+    "causal_order": [
+      "r1",
+      "r2"
+    ],
+    "materialized_values": [
+      "x",
+      "y"
+    ]
+  },
+  "diagnostics": [],
+  "state_hash_inputs": {
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ],
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ]
+  }
+}

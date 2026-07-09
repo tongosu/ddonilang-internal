@@ -1,0 +1,21 @@
+{
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:red-s1-tiebreak-source-fixture",
+  "stage": "S1",
+  "method": "linear_system_bounded_exact_v1",
+  "relations": [
+    {"id": "r1", "source_order": 0, "text": "b =:= 2", "kind": "linear", "defines": "b", "depends_on": []},
+    {"id": "r2", "source_order": 1, "text": "a =:= 1", "kind": "linear", "defines": "a", "depends_on": []},
+    {"id": "r3", "source_order": 2, "text": "c =:= a + b", "kind": "linear", "defines": "c", "depends_on": ["a", "b"]}
+  ],
+  "unknowns": ["b", "a", "c"],
+  "lowering": {
+    "causalization": "linear_system_source_order_tiebreak",
+    "causal_order": ["r1", "r2", "r3"]
+  },
+  "diagnostics": [],
+  "state_hash_inputs": {
+    "include": ["schema", "source_hash", "stage", "method", "relations", "unknowns", "lowering"],
+    "exclude": ["diagnostics", "execution_results"]
+  }
+}

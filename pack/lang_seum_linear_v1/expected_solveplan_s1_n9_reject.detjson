@@ -1,0 +1,22 @@
+{
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:red-s1-n9-source-fixture",
+  "stage": "S3",
+  "method": "unsupported_deferred_v1",
+  "relations": [],
+  "unknowns": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9"],
+  "lowering": {
+    "bound": {"unknown_count_max": 8, "unknown_count": 9}
+  },
+  "diagnostics": [
+    {
+      "code": "E_SEUM_UNSUPPORTED",
+      "severity": "error",
+      "message": "S1 linear SolvePlan supports at most 8 unknowns"
+    }
+  ],
+  "state_hash_inputs": {
+    "include": ["schema", "source_hash", "stage", "method", "unknowns", "lowering"],
+    "exclude": ["diagnostics", "execution_results"]
+  }
+}

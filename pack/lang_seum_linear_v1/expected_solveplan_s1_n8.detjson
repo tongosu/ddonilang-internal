@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:red-s1-n8-source-fixture",
+  "stage": "S1",
+  "method": "linear_system_bounded_exact_v1",
+  "relations": [
+    {"id": "r1", "source_order": 0, "text": "x1 =:= 1", "kind": "linear", "defines": "x1", "depends_on": []},
+    {"id": "r2", "source_order": 1, "text": "x2 =:= 2", "kind": "linear", "defines": "x2", "depends_on": []},
+    {"id": "r3", "source_order": 2, "text": "x3 =:= 3", "kind": "linear", "defines": "x3", "depends_on": []},
+    {"id": "r4", "source_order": 3, "text": "x4 =:= 4", "kind": "linear", "defines": "x4", "depends_on": []},
+    {"id": "r5", "source_order": 4, "text": "x5 =:= 5", "kind": "linear", "defines": "x5", "depends_on": []},
+    {"id": "r6", "source_order": 5, "text": "x6 =:= 6", "kind": "linear", "defines": "x6", "depends_on": []},
+    {"id": "r7", "source_order": 6, "text": "x7 =:= 7", "kind": "linear", "defines": "x7", "depends_on": []},
+    {"id": "r8", "source_order": 7, "text": "x8 =:= 8", "kind": "linear", "defines": "x8", "depends_on": []}
+  ],
+  "unknowns": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8"],
+  "lowering": {
+    "bound": {"unknown_count_max": 8, "unknown_count": 8},
+    "causalization": "linear_system_source_order_tiebreak",
+    "causal_order": ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"]
+  },
+  "diagnostics": [],
+  "state_hash_inputs": {
+    "include": ["schema", "source_hash", "stage", "method", "relations", "unknowns", "lowering"],
+    "exclude": ["diagnostics", "execution_results"]
+  }
+}
