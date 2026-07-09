@@ -1,0 +1,17 @@
+{
+  "schema": "ddn.smoke.golden.v1",
+  "ddn_file": "../../solutions/seamgrim_ui_mvp/lessons/rep_science_phase_change_timeline_v1/lesson.ddn",
+  "contract": "D-STRICT",
+  "checkpoints": [
+    {
+      "tick": 0,
+      "state_hash": "blake3:c3e6b447c0e73d968aae63593afffed6884a56873ddb3e1a2716766905277e71"
+    },
+    {
+      "tick": 10,
+      "state_hash": "blake3:eb4daba405f54a48ced140eacfd87684d7d724db3bfdca8d7e9ada6d67e96eb6"
+    }
+  ],
+  "max_ticks": 10,
+  "timeout_ms": 30000
+}
