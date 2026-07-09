@@ -1,0 +1,15 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_ode_vector_v1",
+  "kind": "declarative_closure_s2_vector_component_product",
+  "goal": "G3",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "ssot_edit_claim": false,
+  "artifact_schema": "ddn.solveplan.v1",
+  "product_entrypoint": "teul-cli run --solveplan-out",
+  "stage": "S2",
+  "component_order": "source_order",
+  "expected_artifact": "expected_solveplan_vector.detjson",
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation"
+}

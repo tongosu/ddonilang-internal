@@ -3855,7 +3855,7 @@ pub fn run_file_with_emitter(
         write_trace_json(trace_path, &output.trace, &state_hash, &trace_hash)?;
     }
     if let Some(solveplan_path) = options.solveplan_out.as_ref() {
-        crate::cli::solveplan::write_solveplan_out(solveplan_path, &program_for_gate)?;
+        crate::cli::solveplan::write_solveplan_out(solveplan_path, &program_for_gate, &source)?;
     }
 
     if let Some(mode) = options.bogae_mode {

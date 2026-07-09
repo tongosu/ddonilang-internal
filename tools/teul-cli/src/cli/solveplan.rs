@@ -22,10 +22,41 @@ struct RelationRow {
     depends_on: Vec<String>,
 }
 
-pub fn write_solveplan_out(path: &Path, program: &Program) -> Result<(), String> {
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum IntegratorMethod {
+    Euler,
+    SemiImplicitEuler,
+}
+
+impl IntegratorMethod {
+    fn from_source(source: &str) -> Self {
+        if source.contains("적분.반암시적오일러") || source.contains("반암시적오일러") {
+            Self::SemiImplicitEuler
+        } else {
+            Self::Euler
+        }
+    }
+
+    fn solveplan_method(self) -> &'static str {
+        match self {
+            Self::Euler => "ode_explicit_euler_v1",
+            Self::SemiImplicitEuler => "ode_semi_implicit_euler_v1",
+        }
+    }
+
+    fn surface(self) -> &'static str {
+        match self {
+            Self::Euler => "적분.오일러",
+            Self::SemiImplicitEuler => "적분.반암시적오일러",
+        }
+    }
+}
+
+pub fn write_solveplan_out(path: &Path, program: &Program, source: &str) -> Result<(), String> {
+    let method = IntegratorMethod::from_source(source);
     let plans = collect_assertion_exprs(program)
         .into_iter()
-        .map(|expr| build_solveplan_for_assertion(&expr.assertion.body_source))
+        .map(|expr| build_solveplan_for_assertion(&expr.assertion.body_source, method))
         .collect::<Vec<_>>();
     let payload = match plans.as_slice() {
         [single] => single.clone(),
@@ -188,10 +219,16 @@ fn collect_assertions_from_expr<'a>(expr: &'a Expr, out: &mut Vec<AssertionExpr<
     }
 }
 
-fn build_solveplan_for_assertion(body_source: &str) -> JsonValue {
+fn build_solveplan_for_assertion(
+    body_source: &str,
+    integrator_method: IntegratorMethod,
+) -> JsonValue {
     let rows = parse_relation_rows(body_source);
     if rows.is_empty() {
         return unsupported_plan(body_source, Vec::new(), "E_SEUM_UNSUPPORTED", "no relation rows");
+    }
+    if rows.iter().any(|row| derivative_slot(&row.lhs).is_some()) {
+        return s2_plan(body_source, &rows, integrator_method);
     }
     let unknowns = collect_unknowns(&rows);
     if unknowns.len() > MAX_S1_UNKNOWNS {
@@ -277,6 +314,19 @@ fn parse_relation_row(idx: usize, line: &str) -> Option<RelationRow> {
         defines,
         depends_on,
     })
+}
+
+fn derivative_slot(symbol: &str) -> Option<(String, usize)> {
+    let apostrophes = symbol.chars().rev().take_while(|ch| *ch == '\'').count();
+    if apostrophes == 0 || apostrophes > 2 {
+        return None;
+    }
+    let base_len = symbol.len().checked_sub(apostrophes)?;
+    let base = symbol[..base_len].trim();
+    if base.is_empty() || !is_simple_symbol(base) {
+        return None;
+    }
+    Some((base.to_string(), apostrophes))
 }
 
 fn is_simple_symbol(text: &str) -> bool {
@@ -431,6 +481,53 @@ fn s1_plan(body_source: &str, rows: &[RelationRow], unknowns: Vec<String>) -> Js
     })
 }
 
+fn s2_plan(
+    body_source: &str,
+    rows: &[RelationRow],
+    integrator_method: IntegratorMethod,
+) -> JsonValue {
+    let slots = rows
+        .iter()
+        .filter_map(|row| {
+            derivative_slot(&row.lhs).map(|(state, order)| {
+                json!({
+                    "source_order": row.source_order,
+                    "slot": row.lhs,
+                    "state": state,
+                    "derivative_order": order,
+                    "rhs": row.rhs,
+                })
+            })
+        })
+        .collect::<Vec<_>>();
+    let mut seen = BTreeSet::new();
+    let unknowns = slots
+        .iter()
+        .filter_map(|slot| slot.get("state").and_then(|value| value.as_str()))
+        .filter(|state| seen.insert((*state).to_string()))
+        .map(str::to_string)
+        .collect::<Vec<_>>();
+    json!({
+        "schema": SCHEMA,
+        "source_hash": sha256_prefixed(body_source),
+        "stage": "S2",
+        "method": integrator_method.solveplan_method(),
+        "relations": relation_json(rows, false),
+        "unknowns": unknowns,
+        "lowering": {
+            "derivative_lowering": "prime_slot_to_stdlib_integrator_v1",
+            "integrator": {
+                "surface": integrator_method.surface(),
+                "stdlib_reference": integrator_method.surface(),
+            },
+            "state_slots": slots,
+            "phase": seum_phase_json(),
+        },
+        "diagnostics": [],
+        "state_hash_inputs": default_state_hash_inputs(),
+    })
+}
+
 fn unsupported_plan(
     body_source: &str,
     unknowns: Vec<String>,
@@ -567,7 +664,8 @@ mod tests {
 
     #[test]
     fn s0_causalizes_by_dependency_then_source_order() {
-        let plan = build_solveplan_for_assertion("x =:= 2.\ny =:= x + 3.");
+        let plan =
+            build_solveplan_for_assertion("x =:= 2.\ny =:= x + 3.", IntegratorMethod::Euler);
         assert_eq!(plan["stage"], "S0");
         assert_eq!(plan["lowering"]["causal_order"], json!(["r1", "r2"]));
         assert_eq!(plan["unknowns"], json!(["x", "y"]));
@@ -577,6 +675,7 @@ mod tests {
     fn s1_rejects_more_than_eight_unknowns() {
         let plan = build_solveplan_for_assertion(
             "x1 =:= 1.\nx2 =:= 2.\nx3 =:= 3.\nx4 =:= 4.\nx5 =:= 5.\nx6 =:= 6.\nx7 =:= 7.\nx8 =:= 8.\nx9 =:= 9.",
+            IntegratorMethod::Euler,
         );
         assert_eq!(plan["stage"], "S3");
         assert_eq!(plan["diagnostics"][0]["code"], "E_SEUM_UNSUPPORTED");
@@ -584,22 +683,27 @@ mod tests {
 
     #[test]
     fn s1_reports_under_and_over_determined_diagnostics() {
-        let under = build_solveplan_for_assertion("x + y =:= 3.");
+        let under = build_solveplan_for_assertion("x + y =:= 3.", IntegratorMethod::Euler);
         assert_eq!(under["stage"], "S3");
         assert_eq!(under["diagnostics"][0]["code"], "E_SEUM_UNDERDETERMINED");
 
-        let over = build_solveplan_for_assertion("x + y =:= 3.\nx - y =:= 1.\nx + 2*y =:= 4.");
+        let over = build_solveplan_for_assertion(
+            "x + y =:= 3.\nx - y =:= 1.\nx + 2*y =:= 4.",
+            IntegratorMethod::Euler,
+        );
         assert_eq!(over["stage"], "S3");
         assert_eq!(over["diagnostics"][0]["code"], "E_SEUM_OVERDETERMINED");
     }
 
     #[test]
     fn s0_reports_cycle_and_assign_conflict_diagnostics() {
-        let cycle = build_solveplan_for_assertion("x =:= y.\ny =:= x.");
+        let cycle =
+            build_solveplan_for_assertion("x =:= y.\ny =:= x.", IntegratorMethod::Euler);
         assert_eq!(cycle["stage"], "S3");
         assert_eq!(cycle["diagnostics"][0]["code"], "E_SEUM_CYCLE");
 
-        let conflict = build_solveplan_for_assertion("x =:= 1.\nx =:= 2.");
+        let conflict =
+            build_solveplan_for_assertion("x =:= 1.\nx =:= 2.", IntegratorMethod::Euler);
         assert_eq!(conflict["stage"], "S3");
         assert_eq!(conflict["diagnostics"][0]["code"], "E_SEUM_ASSIGN_CONFLICT");
     }
@@ -610,9 +714,31 @@ mod tests {
         let (program, _) = parse_program_for_runtime(source).expect("parse");
         let plans = collect_assertion_exprs(&program)
             .into_iter()
-            .map(|expr| build_solveplan_for_assertion(&expr.assertion.body_source))
+            .map(|expr| {
+                build_solveplan_for_assertion(&expr.assertion.body_source, IntegratorMethod::Euler)
+            })
             .collect::<Vec<_>>();
         assert_eq!(plans.len(), 1);
         assert_eq!(plans[0]["stage"], "S0");
+    }
+
+    #[test]
+    fn prime_slots_lower_to_s2_integrator_method() {
+        let euler = build_solveplan_for_assertion(
+            "위치' =:= 속도.\n속도' =:= 가속도.",
+            IntegratorMethod::Euler,
+        );
+        assert_eq!(euler["stage"], "S2");
+        assert_eq!(euler["method"], "ode_explicit_euler_v1");
+        assert_eq!(euler["lowering"]["integrator"]["surface"], "적분.오일러");
+
+        let semi =
+            build_solveplan_for_assertion("위치'' =:= 가속도.", IntegratorMethod::SemiImplicitEuler);
+        assert_eq!(semi["stage"], "S2");
+        assert_eq!(semi["method"], "ode_semi_implicit_euler_v1");
+        assert_eq!(
+            semi["lowering"]["integrator"]["surface"],
+            "적분.반암시적오일러"
+        );
     }
 }
