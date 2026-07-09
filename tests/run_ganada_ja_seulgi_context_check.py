@@ -69,7 +69,7 @@ def check_shape(payload: dict) -> None:
     if not isinstance(context, dict):
         fail("context must be object")
     for key, value in {
-        "lesson_context": "seamgrim_lesson_run_preset_rail_v1",
+        "lesson_context": "seamgrim_lesson_run_rail_v1",
         "editor_context": "seamgrim_lesson_authoring_flow_v1",
         "replay_context": "lesson_editor_fixture",
         "fixture_proposal_import": True,
@@ -83,7 +83,7 @@ def check_static_ui_tokens() -> None:
     proposal_text = PROPOSAL_UI.read_text(encoding="utf-8-sig")
     replay_text = REPLAY_UI.read_text(encoding="utf-8-sig")
     for token in [
-        "lesson_context:seamgrim_lesson_run_preset_rail_v1",
+        "lesson_context:seamgrim_lesson_run_rail_v1",
         "editor_context:seamgrim_lesson_authoring_flow_v1",
         "fixture_proposal_import:true",
         'data-testid="seulgi-preview"',

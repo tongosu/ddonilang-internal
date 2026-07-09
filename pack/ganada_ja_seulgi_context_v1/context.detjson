@@ -14,7 +14,7 @@
   "runtime_change": false,
   "state_hash_change": false,
   "context": {
-    "lesson_context": "seamgrim_lesson_run_preset_rail_v1",
+    "lesson_context": "seamgrim_lesson_run_rail_v1",
     "editor_context": "seamgrim_lesson_authoring_flow_v1",
     "replay_context": "lesson_editor_fixture",
     "fixture_proposal_import": true,

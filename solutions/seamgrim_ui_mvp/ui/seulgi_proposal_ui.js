@@ -58,7 +58,7 @@ function buildProposalText(rows) {
   return [
     "seulgi_proposal_ui:seulgi_proposal_ui_v1",
     "coordinate:자-3",
-    "lesson_context:seamgrim_lesson_run_preset_rail_v1",
+    "lesson_context:seamgrim_lesson_run_rail_v1",
     "editor_context:seamgrim_lesson_authoring_flow_v1",
     "fixture_proposal_import:true",
     "receipt_policy:approve_reject_local",
@@ -110,7 +110,7 @@ export function buildSeulgiProposalUi({
     model_training_claim: false,
     rows: proposalRows,
     active_row_id: active,
-    lesson_context: "seamgrim_lesson_run_preset_rail_v1",
+    lesson_context: "seamgrim_lesson_run_rail_v1",
     editor_context: "seamgrim_lesson_authoring_flow_v1",
     fixture_proposal_import_claim: true,
     receipt_policy: "approve_reject_local",
@@ -178,7 +178,7 @@ export function renderSeulgiProposalUi(root, proposal = {}) {
   root.dataset.seulgiProposalUiStatus = asText(payload.status, "seulgi_proposal_ui_incomplete");
   root.dataset.testid = "seulgi-proposal-panel";
   root.setAttribute("data-testid", "seulgi-proposal-panel");
-  root.dataset.seulgiLessonContext = asText(payload.lesson_context, "seamgrim_lesson_run_preset_rail_v1");
+  root.dataset.seulgiLessonContext = asText(payload.lesson_context, "seamgrim_lesson_run_rail_v1");
   root.dataset.seulgiEditorContext = asText(payload.editor_context, "seamgrim_lesson_authoring_flow_v1");
   root.innerHTML = `
     <div class="question-card-head">

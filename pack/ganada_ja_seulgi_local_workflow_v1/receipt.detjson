@@ -17,7 +17,7 @@
   "runtime_change": false,
   "state_hash_change": false,
   "provenance": {
-    "lesson_context": "seamgrim_lesson_run_preset_rail_v1",
+    "lesson_context": "seamgrim_lesson_run_rail_v1",
     "editor_context": "seamgrim_lesson_authoring_flow_v1",
     "proposal_pack": "seulgi_proposal_ui_v1",
     "replay_pack": "seulgi_replay_safe_workflow_v1",

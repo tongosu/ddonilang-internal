@@ -51,11 +51,11 @@ async function main() {
       };
     });
     assert(proposal.imported === "true", "fixture proposal import state missing");
-    assert(proposal.lessonContext === "seamgrim_lesson_run_preset_rail_v1", `lesson context mismatch: ${proposal.lessonContext}`);
+    assert(proposal.lessonContext === "seamgrim_lesson_run_rail_v1", `lesson context mismatch: ${proposal.lessonContext}`);
     assert(proposal.editorContext === "seamgrim_lesson_authoring_flow_v1", `editor context mismatch: ${proposal.editorContext}`);
     assert(proposal.activeTitle === "미리보기", `preview row mismatch: ${proposal.activeTitle}`);
     assert(proposal.preview.includes("fixture_proposal_import:true"), "fixture import line missing");
-    assert(proposal.preview.includes("lesson_context:seamgrim_lesson_run_preset_rail_v1"), "lesson context line missing");
+    assert(proposal.preview.includes("lesson_context:seamgrim_lesson_run_rail_v1"), "lesson context line missing");
     assert(proposal.preview.includes("editor_context:seamgrim_lesson_authoring_flow_v1"), "editor context line missing");
     assert(proposal.preview.includes("ai_call:false") && proposal.preview.includes("file_write:false"), "AI/file boundary missing");
 
