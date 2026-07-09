@@ -1,6 +1,8 @@
 # PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V1_20260709
 
-Status: proposal-ready, docs-first. Runtime landed claim: no.
+Status: superseded by `PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V2_20260709.md`.
+Previous status: proposal-ready, docs-first. Runtime landed claim: no.
+Superseded reason: 2026-07-09 handoff review found five drift items: A7 direction, S0 definition, A4 contract 2, A5 naming/reaction vocabulary, and pack queue omissions.
 Generated: 2026-07-09 KST.
 Source instruction: `CODEX DEVGOALS 2026-07-09 — 선언형 closure 11축 SSOT 반영`.
 
