@@ -12,6 +12,30 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [DECLARATIVE-CLOSURE][RUN1B] 11축 Proposal V2 + G1~G3 SolvePlan 제품 배선 (2026-07-09)
+
+- 변경:
+  - `docs/context/proposals/PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V1_20260709.md`를 superseded로 표시하고, drift 5건을 고친 `PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V2_20260709.md`를 재발행했다.
+  - `tools/teul-cli/src/cli/solveplan.rs`와 `teul-cli run --solveplan-out` 경로를 추가해 `세움{}` relation에서 `ddn.solveplan.v1` S0/S1/S2 artifact를 생성한다.
+  - `pack/lang_seum_algebraic_v1`, `pack/lang_seum_linear_v1`, `pack/sim_seum_tick_phase_v1`, `pack/lang_seum_diag_v1`, `pack/sim_ode_first_order_v1`, `pack/sim_ode_second_order_v1`, `pack/sim_ode_method_switch_v1`, `pack/sim_ode_vector_v1` 및 전용 checker 4개를 추가했다.
+  - `work/_session_deltas/20260709_codex_declarative_closure_11axis_run1b.md`에 V2 diff 요약, Questions 반영, 커밋별 증빙, `state_hash_inputs` 설계 노트를 남겼다.
+- 검증:
+  - `cargo check` PASS.
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+  - `python tests/run_pack_golden.py lang_seum_algebraic_v1 lang_seum_linear_v1 sim_seum_tick_phase_v1 lang_seum_diag_v1 sim_ode_first_order_v1 sim_ode_second_order_v1 sim_ode_method_switch_v1 sim_ode_vector_v1` PASS.
+  - `python tests/run_declarative_closure_g1_red_check.py` PASS.
+  - `python tests/run_declarative_closure_g1_core_check.py` PASS.
+  - `python tests/run_declarative_closure_g2_phase_diag_check.py` PASS.
+  - `python tests/run_declarative_closure_g3_s2_check.py` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+- 진행률:
+  - Proposal V2: 완료.
+  - G1: 완료(`teul-cli run --solveplan-out` SolvePlan S0/S1 artifact behavior).
+  - G2: 완료(SolvePlan `seum_solve` phase와 `E_SEUM_*` 진단 artifact behavior).
+  - G3: 완료(prime derivative slot S2 lowering과 기존 stdlib 적분기 선택 artifact behavior).
+  - G4~G6: 지시상 2차 실행 범위라 미착수.
+  - `docs/ssot/**` 변경 없음, `state_hash` 산식 변경 없음.
+
 ### [Q27-V2] 삭제 체크 111건 실행 기반 재감사 정정 (2026-07-09)
 
 - 변경:
