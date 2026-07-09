@@ -84,6 +84,7 @@ function buildPublicationText(rows, artifacts) {
   return [
     "education_publication_pack:education_curriculum_4_v1",
     "coordinate:하-4",
+    "publication_dry_run:local_only",
     "public_upload:false",
     "public_link_creation:false",
     "registry_publish:false",
@@ -145,6 +146,7 @@ export function buildEducationPublicationPack({
     rows: publicationRows,
     artifacts: publicationArtifacts,
     active_row_id: active,
+    publication_dry_run_policy: "local_only",
     publication_text: buildPublicationText(publicationRows, publicationArtifacts),
     artifact_size_bytes: publicationArtifacts.reduce((sum, artifact) => sum + artifact.bytes, 0),
     progress: {
@@ -215,6 +217,8 @@ export function renderEducationPublicationPack(root, publication = {}) {
   const activeId = asText(payload.active_row_id, rows[0]?.id ?? "");
   const active = rows.find((row) => row.id === activeId) || rows[0] || {};
   root.dataset.educationPublicationPackStatus = asText(payload.status, "education_publication_pack_incomplete");
+  root.setAttribute("data-testid", "publication-review-panel");
+  root.dataset.publicationDryRunPolicy = asText(payload.publication_dry_run_policy, "local_only");
   root.innerHTML = `
     <div class="education-publication-head">
       <div>
@@ -227,7 +231,7 @@ export function renderEducationPublicationPack(root, publication = {}) {
         <span>${escapeHtml(String(progress.current_stage_percent ?? 0))}%</span>
       </div>
     </div>
-    <div class="education-publication-summary" data-education-publication-summary>
+    <div class="education-publication-summary" data-education-publication-summary data-testid="publication-boundary-warning">
       5-minute course, 1-hour workshop, 4-week course, publication bundle, share handoff를 로컬 publication pack으로 고정하고 public upload, public link creation, registry publish, release execution은 후속으로 둡니다.
     </div>
     <div class="education-publication-body">
@@ -252,7 +256,8 @@ export function renderEducationPublicationPack(root, publication = {}) {
             <span data-education-publication-artifact="${escapeHtml(artifact.name)}">${escapeHtml(artifact.name)} · ${escapeHtml(artifact.kind)} · ${escapeHtml(String(artifact.bytes))}b</span>
           `).join("")}
         </div>
-        <pre class="education-publication-preview" data-education-publication-preview>${escapeHtml(payload.publication_text ?? "")}</pre>
+        <pre class="education-publication-preview" data-education-publication-preview data-testid="publication-artifact-preview">${escapeHtml(payload.publication_text ?? "")}</pre>
+        <button type="button" class="ghost" data-publication-dryrun data-testid="publication-dryrun">Publication dry-run 확인</button>
         <button type="button" class="ghost" data-education-publication-copy>Publication pack 텍스트 복사</button>
       </div>
     </div>
@@ -260,6 +265,9 @@ export function renderEducationPublicationPack(root, publication = {}) {
   const rerender = (rowId) => renderEducationPublicationPack(root, { ...payload, active_row_id: rowId });
   root.querySelectorAll("[data-education-publication-row]").forEach((button) => {
     button.addEventListener("click", () => rerender(button.getAttribute("data-education-publication-row") || ""));
+  });
+  root.querySelector("[data-publication-dryrun]")?.addEventListener("click", () => {
+    root.dataset.publicationDryRun = "true";
   });
   root.querySelector("[data-education-publication-copy]")?.addEventListener("click", async () => {
     root.dataset.educationPublicationPackCopied = "true";
