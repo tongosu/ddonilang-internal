@@ -6,7 +6,7 @@
 - G7: 완료(`닫힘-문서`). `막음`/`막기` constraint reaction red pack과 umbrella/subpack/checker를 추가했다. parser/runtime landed claim은 `false`로 고정했다.
 - G8: 완료(`닫힘-문서`). `sim_experiment_manifest_v1` candidate manifest와 checker를 추가했다. `state_hash_policy.formula_change=false`, `plan_hash_status=pending_canonical_bytes_decision`로 고정했다.
 - G9: 완료(`닫힘-문서`). `sim_standard_parts_catalog_v1` catalog와 checker를 추가했다. 기존 증빙이 약한 part는 `candidate_only`로 유지했다.
-- G10: 미착수.
+- G10: 완료(`닫힘-문서`). `sim_agent_rng_stream_v1` proof fixture와 checker를 추가했다. derivation은 `(global_seed, agent_id, stream_name)`로 고정하고 runtime RNG 교체는 하지 않았다.
 - G11: 미착수.
 
 ## 경계
@@ -56,4 +56,10 @@
   - `python -m py_compile tests/run_declarative_closure_g9_standard_parts_catalog_check.py` PASS.
   - `python tests/run_pack_golden.py sim_standard_parts_catalog_v1` PASS.
   - `python tests/run_declarative_closure_g9_standard_parts_catalog_check.py` PASS.
+  - `git status --short -- docs/ssot` PASS(변경 없음).
+- G10:
+  - `python -m json.tool pack/sim_agent_rng_stream_v1/*.detjson` PASS(실행은 개별 detjson 전체).
+  - `python -m py_compile tests/run_declarative_closure_g10_agent_rng_stream_red_check.py` PASS.
+  - `python tests/run_pack_golden.py sim_agent_rng_stream_v1` PASS.
+  - `python tests/run_declarative_closure_g10_agent_rng_stream_red_check.py` PASS.
   - `git status --short -- docs/ssot` PASS(변경 없음).
