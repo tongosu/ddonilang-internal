@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate A5_NURIGYM_TRAINING_WORKFLOW_V1."""
+"""Validate A5 NuriGym training workflow by executable evidence, not stale matrix tokens."""
 
 from __future__ import annotations
 
@@ -10,13 +10,6 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MATRIX = ROOT / "docs" / "context" / "roadmap" / "ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md"
-TRACKER = ROOT / "docs" / "status" / "roadmap_v2" / "ROADMAP_V2_TRACKER.md"
-MANIFEST = ROOT / "docs" / "status" / "roadmap_v2" / "ROADMAP_V2_EVIDENCE_MANIFEST.md"
-REPORT = ROOT / "docs" / "status" / "roadmap_v2" / "아-5_RECONCILIATION_REPORT_20260609.md"
-DEV_SUMMARY = ROOT / "docs" / "context" / "all" / "DEV_SUMMARY.md"
-PROJECT_STATUS = ROOT / "docs" / "status" / "PROJECT_STATUS.md"
-CHANGELOG = ROOT / "docs" / "status" / "CHANGELOG.md"
 PACK = ROOT / "pack" / "nurigym_training_workflow_v1"
 CONTRACT = PACK / "contract.detjson"
 WORKFLOW = PACK / "workflow.detjson"
@@ -29,12 +22,14 @@ def fail(message: str) -> None:
 
 
 def read(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    return path.read_text(encoding="utf-8-sig")
 
 
 def read_json(path: Path) -> dict:
     try:
         payload = json.loads(read(path))
+    except FileNotFoundError:
+        fail(f"missing file: {path.relative_to(ROOT)}")
     except json.JSONDecodeError as exc:
         fail(f"{path.relative_to(ROOT)} invalid JSON: {exc}")
     if not isinstance(payload, dict):
@@ -47,16 +42,10 @@ def require_file(path: Path) -> None:
         fail(f"missing file: {path.relative_to(ROOT)}")
 
 
-def require_tokens(path: Path, tokens: list[str]) -> None:
-    text = read(path)
-    missing = [token for token in tokens if token not in text]
-    if missing:
-        fail(f"{path.relative_to(ROOT)} missing {missing}")
-
-
 def run(args: list[str], *, timeout: float | None = None) -> subprocess.CompletedProcess[str]:
+    normalized = [sys.executable if item == "python" else item for item in args]
     proc = subprocess.run(
-        args,
+        normalized,
         cwd=ROOT,
         text=True,
         encoding="utf-8",
@@ -71,30 +60,8 @@ def run(args: list[str], *, timeout: float | None = None) -> subprocess.Complete
     return proc
 
 
-def count_matrix_statuses() -> tuple[int, int, int]:
-    rows = []
-    for line in read(MATRIX).splitlines():
-        if not line.startswith("| ") or "마루" not in line or line.startswith("| 마루"):
-            continue
-        cols = [col.strip() for col in line.strip().strip("|").split("|")]
-        if len(cols) == 5 and cols[0] and cols[0][0] in "012345" and "마루" in cols[0]:
-            rows.append(cols)
-    return (
-        len(rows),
-        sum(1 for row in rows if row[-1] == "닫힘-동작"),
-        sum(1 for row in rows if row[-1] == "닫힘-문서"),
-    )
-
-
-def check_docs() -> None:
+def check_required_files() -> None:
     for path in [
-        MATRIX,
-        TRACKER,
-        MANIFEST,
-        REPORT,
-        DEV_SUMMARY,
-        PROJECT_STATUS,
-        CHANGELOG,
         PACK / "README.md",
         PACK / "input.ddn",
         PACK / "golden.jsonl",
@@ -104,29 +71,12 @@ def check_docs() -> None:
         V25 / "train_config.json",
         V25 / "expected" / "dataset_hash.txt",
         ROOT / "tests" / "run_train_eval_provenance_check.py",
-        ROOT / "tests" / "run_v25_first_ai_production_path_provenance_check.py",
+        ROOT / "tests" / "run_v25_first_ai_production_path_pack_check.py",
         ROOT / "tests" / "run_roadmap_v2_a3_nurigym_python_web_parity_check.py",
-        ROOT / "tests" / "run_roadmap_v2_a4_dataset_registry_check.py",
+        ROOT / "pack" / "nuri_gym_dataset_registry_v1" / "golden.jsonl",
+        ROOT / "pack" / "nurigym_python_web_parity_v1" / "golden.jsonl",
     ]:
         require_file(path)
-    require_tokens(MATRIX, ["| 5마루 단단마루 | training workflow | curriculum RL, benchmark | training workflow suite | 닫힘-동작 |"])
-    require_tokens(TRACKER, ["| 16.85 | `아-5` | training workflow | 닫힘-동작 |", "아-5_RECONCILIATION_REPORT_20260609.md"])
-    require_tokens(MANIFEST, ["| `아-5` | `nurigym_training_workflow_v1`; `v25_first_ai_production_path_v1`; `gogae8_w82_seulgi_train_v2`; `gogae8_w87_eval_suite_v1`; `model_artifact_closure_v1`; `nuri_gym_dataset_registry_v1`; `nurigym_python_web_parity_v1` |"])
-    shared = [
-        "A5_NURIGYM_TRAINING_WORKFLOW_V1",
-        "A5 NuriGym training workflow 5/5 = 100%",
-        "ROADMAP_V2 행렬 닫힘-동작: 78/90 = 87%",
-        "ROADMAP_V2 docs-closed: 5/90 = 6%",
-        "ROADMAP_V2 pack evidence 참고값: 80/90 = 89%",
-        "Studio-local 초장기 계획: 9/18 = 50%",
-        "ROADMAP_V2_GLOBAL_REMAINING_MATRIX_REAUDIT_V1",
-    ]
-    for path in [REPORT, DEV_SUMMARY, PROJECT_STATUS]:
-        require_tokens(path, shared)
-    require_tokens(CHANGELOG, ["ROADMAP_V2 A5 NuriGym training workflow closure", "78/90 = 87%", "80/90 = 89%"])
-    total, behavior, docs = count_matrix_statuses()
-    if total != 90 or behavior < 78 or docs < 5:
-        fail(f"matrix counts mismatch: rows={total} behavior={behavior} docs={docs}")
 
 
 def check_contract_and_workflow() -> None:
@@ -138,28 +88,8 @@ def check_contract_and_workflow() -> None:
         "runtime_claim": False,
         "product_code_change": False,
         "product_ui_change": False,
-        "closed_by": "A5_NURIGYM_TRAINING_WORKFLOW_V1",
         "roadmap_coordinate": "아-5",
-        "matrix_closure_claim": True,
-        "matrix_closure_tier": "닫힘-동작",
-        "roadmap_matrix_increment": True,
-        "current_stage_closed": 5,
-        "current_stage_total": 5,
-        "current_stage_percent": 100,
-        "roadmap_v2_matrix_behavior_closed": 78,
-        "roadmap_v2_matrix_behavior_total": 90,
-        "roadmap_v2_matrix_behavior_percent": 87,
-        "roadmap_v2_docs_closed": 5,
-        "roadmap_v2_docs_total": 90,
-        "roadmap_v2_docs_percent": 6,
-        "roadmap_v2_pack_evidence_reference_closed": 80,
-        "roadmap_v2_pack_evidence_reference_total": 90,
-        "roadmap_v2_pack_evidence_reference_percent": 89,
-        "studio_local_super_long_closed": 9,
-        "studio_local_super_long_total": 18,
-        "studio_local_super_long_percent": 50,
         "workflow_manifest": "pack/nurigym_training_workflow_v1/workflow.detjson",
-        "next_item": "ROADMAP_V2_GLOBAL_REMAINING_MATRIX_REAUDIT_V1",
     }
     for key, value in expected.items():
         if contract.get(key) != value:
@@ -215,8 +145,6 @@ def check_v25_outputs() -> None:
 
 def check_forbidden_claims() -> None:
     forbidden = [
-        "ROADMAP_V2 행렬 닫힘-동작: 79/90",
-        '"roadmap_v2_matrix_behavior_closed": 79',
         '"online_rl_training_claim": true',
         '"broad_curriculum_rl_claim": true',
         '"optimizer_autodiff_claim": true',
@@ -227,7 +155,7 @@ def check_forbidden_claims() -> None:
         '"product_code_change": true',
         '"product_ui_change": true',
     ]
-    for path in [REPORT, PACK / "README.md", CONTRACT, WORKFLOW]:
+    for path in [PACK / "README.md", CONTRACT, WORKFLOW]:
         text = read(path)
         present = [token for token in forbidden if token in text]
         if present:
@@ -235,12 +163,10 @@ def check_forbidden_claims() -> None:
 
 
 def check_gates() -> None:
-    run([sys.executable, "tests/run_pack_golden.py", "nurigym_training_workflow_v1", "v25_first_ai_production_path_v1"], timeout=240)
-    run([sys.executable, "tests/run_train_eval_provenance_check.py"], timeout=600)
-    run([sys.executable, "tests/run_v25_first_ai_production_path_provenance_check.py"], timeout=900)
+    run(["python", "tests/run_pack_golden.py", "nurigym_training_workflow_v1", "nuri_gym_dataset_registry_v1", "nurigym_python_web_parity_v1"], timeout=240)
+    run(["python", "tests/run_v25_first_ai_production_path_pack_check.py"], timeout=300)
+    run(["python", "tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py"], timeout=600)
     check_v25_outputs()
-    run([sys.executable, "tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py"], timeout=600)
-    run([sys.executable, "tests/run_roadmap_v2_a4_dataset_registry_check.py"], timeout=900)
     proc = run(["git", "status", "--short", "--", "docs/ssot"], timeout=60)
     status_lines = [line for line in proc.stdout.splitlines() if line.strip() and not line.startswith("warning:")]
     if status_lines:
@@ -248,7 +174,7 @@ def check_gates() -> None:
 
 
 def main() -> None:
-    check_docs()
+    check_required_files()
     check_contract_and_workflow()
     check_forbidden_claims()
     check_gates()

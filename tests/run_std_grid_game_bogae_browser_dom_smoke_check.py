@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate STD_GRID_GAME_BOGAE_BROWSER_DOM_SMOKE_V1 evidence."""
+"""Validate STD_GRID_GAME_BOGAE_BROWSER_DOM_SMOKE_V1 by product evidence."""
 
 from __future__ import annotations
 
@@ -32,9 +32,10 @@ def require_dir(path: Path) -> None:
 
 
 def run(args: list[str]) -> subprocess.CompletedProcess[str]:
-    resolved = shutil.which(args[0]) or args[0]
+    normalized = [sys.executable if item == "python" else item for item in args]
+    resolved = shutil.which(normalized[0]) or normalized[0]
     proc = subprocess.run(
-        [resolved, *args[1:]],
+        [resolved, *normalized[1:]],
         cwd=ROOT,
         text=True,
         encoding="utf-8",
@@ -51,7 +52,7 @@ def run(args: list[str]) -> subprocess.CompletedProcess[str]:
 
 def load_json(path: Path) -> dict:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
     except json.JSONDecodeError as exc:
         fail(f"{path.relative_to(ROOT)} invalid JSON: {exc}")
     if not isinstance(data, dict):
@@ -61,7 +62,7 @@ def load_json(path: Path) -> dict:
 
 def load_jsonl(path: Path) -> list[dict]:
     rows: list[dict] = []
-    for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    for lineno, line in enumerate(path.read_text(encoding="utf-8-sig").splitlines(), start=1):
         if not line.strip():
             continue
         try:
@@ -149,23 +150,20 @@ def require_pack() -> None:
 
 
 def main() -> None:
-    require_file(ROOT / "NEXT_DEV_ROADMAP_AFTER_VIEWER_JS_DOM_V2.md")
-    require_file(ROOT / "STD_GRID_GAME_BOGAE_BROWSER_DOM_SMOKE_V1.md")
-    require_file(ROOT / "tests" / "run_std_grid_game_bogae_viewer_js_dom_check.py")
     require_file(ROOT / "tests" / "std_grid_game_bogae_browser_dom_smoke_runner.mjs")
-    require_file(ROOT / "pack" / "std_grid_game_bogae_viewer_js_dom_closure_v1" / "contract.detjson")
     require_file(ROOT / "pack" / LIVE_ASSETS / "golden.jsonl")
-    require_file(ROOT / "gaji" / "std_grid_game_bogae_browser_dom_smoke" / "README.md")
-    require_file(ROOT / "gaji" / "std_grid_game_bogae_browser_dom_smoke" / "example.ddn")
     require_node_and_playwright()
     require_pack()
 
-    run([sys.executable, "tests/run_pack_golden.py", LIVE_ASSETS])
+    run(["python", "tests/run_pack_golden.py", LIVE_ASSETS])
     out_dir = require_generated_assets()
     node_proc = run(["node", "tests/std_grid_game_bogae_browser_dom_smoke_runner.mjs", str(out_dir)])
     if node_proc.stdout.strip() != NODE_OK:
         fail(f"node runner stdout mismatch: {node_proc.stdout.strip()}")
-    run([sys.executable, "tests/run_pack_golden.py", PACK])
+    run(["python", "tests/run_pack_golden.py", PACK])
+    proc = run(["git", "status", "--short", "--", "docs/ssot"])
+    if proc.stdout.strip():
+        fail(f"docs/ssot changed:\n{proc.stdout}")
     print("[std-grid-game-bogae-browser-dom] OK")
 
 

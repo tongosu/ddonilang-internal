@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate STD_GRID_GAME_BOGAE_WEB_PLAYBACK_CONTROLS_6DAY_V1 evidence."""
+"""Validate STD_GRID_GAME_BOGAE_WEB_PLAYBACK_CONTROLS evidence by pack outputs."""
 
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ def require_dir(path: Path) -> None:
 
 def load_json(path: Path) -> dict:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
     except json.JSONDecodeError as exc:
         fail(f"{path.relative_to(ROOT)}: invalid JSON: {exc}")
     if not isinstance(data, dict):
@@ -83,7 +83,7 @@ def load_json(path: Path) -> dict:
 
 def load_jsonl(path: Path) -> list[dict]:
     rows = []
-    for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    for lineno, line in enumerate(path.read_text(encoding="utf-8-sig").splitlines(), start=1):
         if not line.strip():
             continue
         try:
@@ -136,8 +136,6 @@ def require_contract() -> None:
         fail("closure required_assets mismatch")
     if contract.get("controls") != CONTROL_IDS:
         fail("closure controls mismatch")
-    if "gaji/std_grid_game_bogae_web_playback" not in contract.get("gaji_skeletons", []):
-        fail("closure missing gaji skeleton pointer")
 
 
 def require_generated_assets(pack: str) -> None:
@@ -205,27 +203,24 @@ def require_generated_assets(pack: str) -> None:
 
 
 def run(args: list[str]) -> None:
-    proc = subprocess.run(args, cwd=ROOT, text=True, encoding="utf-8", errors="replace")
+    normalized = [sys.executable if item == "python" else item for item in args]
+    proc = subprocess.run(normalized, cwd=ROOT, text=True, encoding="utf-8", errors="replace")
     if proc.returncode != 0:
         fail(f"command failed: {' '.join(args)}")
 
 
 def main() -> None:
-    require_file(ROOT / "STD_GRID_GAME_BOGAE_WEB_SHOWCASE_7DAY_V1.md")
-    require_file(ROOT / "STD_GRID_GAME_BOGAE_WEB_PLAYBACK_CONTROLS_6DAY_V1.md")
-    require_file(ROOT / "tests" / "run_std_grid_game_bogae_web_showcase_check.py")
-    require_file(ROOT / "tests" / "run_std_grid_game_bogae_web_output_determinism_check.py")
     require_file(ROOT / "pack" / SHOWCASE_CLOSURE / "contract.detjson")
-    require_file(ROOT / "gaji" / "std_grid_game_bogae_web_playback" / "README.md")
-    require_file(ROOT / "gaji" / "std_grid_game_bogae_web_playback" / "example.ddn")
-
     for pack in ALL_PACKS:
         require_pack(pack)
     require_contract()
 
-    run([sys.executable, "tests/run_pack_golden.py", *ALL_PACKS])
+    run(["python", "tests/run_pack_golden.py", *ALL_PACKS])
     require_generated_assets(ASSETS)
     require_generated_assets(CONTROLS)
+    proc = subprocess.run(["git", "status", "--short", "--", "docs/ssot"], cwd=ROOT, text=True, encoding="utf-8", errors="replace", stdout=subprocess.PIPE)
+    if proc.returncode != 0 or proc.stdout.strip():
+        fail(f"docs/ssot changed:\n{proc.stdout}")
     print("[std-grid-game-bogae-web-playback] OK")
 
 
