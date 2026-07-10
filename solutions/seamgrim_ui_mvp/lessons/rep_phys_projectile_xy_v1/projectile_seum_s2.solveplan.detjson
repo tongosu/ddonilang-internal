@@ -1,0 +1,145 @@
+{
+  "diagnostics": [],
+  "lowering": {
+    "derivative_lowering": "prime_slot_to_stdlib_integrator_v1",
+    "integrator": {
+      "stdlib_reference": "적분.오일러",
+      "surface": "적분.오일러"
+    },
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    },
+    "state_slots": [
+      {
+        "derivative_order": 1,
+        "rhs": "속도_x",
+        "slot": "위치_x'",
+        "source_order": 0,
+        "state": "위치_x"
+      },
+      {
+        "derivative_order": 1,
+        "rhs": "속도_y",
+        "slot": "위치_y'",
+        "source_order": 1,
+        "state": "위치_y"
+      },
+      {
+        "derivative_order": 1,
+        "rhs": "0",
+        "slot": "속도_x'",
+        "source_order": 2,
+        "state": "속도_x"
+      },
+      {
+        "derivative_order": 1,
+        "rhs": "중력_y",
+        "slot": "속도_y'",
+        "source_order": 3,
+        "state": "속도_y"
+      }
+    ],
+    "vector_components": [
+      {
+        "base": "속도",
+        "component_order": [
+          "x",
+          "y",
+          "z"
+        ],
+        "present_components": [
+          "x",
+          "y"
+        ],
+        "slots": [
+          "속도_x'",
+          "속도_y'"
+        ]
+      },
+      {
+        "base": "위치",
+        "component_order": [
+          "x",
+          "y",
+          "z"
+        ],
+        "present_components": [
+          "x",
+          "y"
+        ],
+        "slots": [
+          "위치_x'",
+          "위치_y'"
+        ]
+      }
+    ]
+  },
+  "method": "ode_explicit_euler_v1",
+  "relations": [
+    {
+      "depends_on": [
+        "속도_x"
+      ],
+      "id": "r1",
+      "kind": "linear",
+      "source_order": 0,
+      "text": "위치_x' =:= 속도_x"
+    },
+    {
+      "depends_on": [
+        "속도_y"
+      ],
+      "id": "r2",
+      "kind": "linear",
+      "source_order": 1,
+      "text": "위치_y' =:= 속도_y"
+    },
+    {
+      "depends_on": [],
+      "id": "r3",
+      "kind": "linear",
+      "source_order": 2,
+      "text": "속도_x' =:= 0"
+    },
+    {
+      "depends_on": [
+        "중력_y"
+      ],
+      "id": "r4",
+      "kind": "linear",
+      "source_order": 3,
+      "text": "속도_y' =:= 중력_y"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:4d99aeae2b52b417bac82789228228495c29b15a366b692a3fefb8d8b56944e2",
+  "stage": "S2",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "위치_x",
+    "위치_y",
+    "속도_x",
+    "속도_y"
+  ]
+}
