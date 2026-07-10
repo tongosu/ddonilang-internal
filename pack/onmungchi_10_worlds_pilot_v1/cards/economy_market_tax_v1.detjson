@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "economy_market_tax_v1",
+  "world_concept_id": "economy.market_tax",
+  "name": "수요·공급과 세금",
+  "one_line": "세금과 수요·공급 민감도가 가격 경로를 어떻게 바꾸는지 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["설정", "채비", "매김", "매마디마다", "조건"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "economy", "age_band": "middle", "textbook_candidates": ["3권 상태와 마디", "4권 세계 모델"]},
+  "source": {"lesson_id": "rep_econ_supply_demand_tax_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_econ_supply_demand_tax_v1/lesson.ddn", "existing_pack_id": "edu_seamgrim_rep_econ_supply_demand_tax_v1", "representative_madi": 24},
+  "surfaces": ["설정", "채비", "매김", "시작할때", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:2eb6105578f83c34b8017fea29a297736792e22bda6aa86b365e1346d5e4c3e6", "trace_hash": "blake3:ff78bdff90afe17dcd31505f5d3a6dd641b4ea100a52085d7b4b87d562491c45", "pilot_case_id": "economy_market_tax_v1"},
+  "few_shot": [{"audience": "child", "intent": "세금이 생기면 물건 가격과 거래량이 어떻게 바뀌는지 보여줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "수요·공급 차이를 가격 조정식으로 전개하고 세금 충격을 비교하는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "세금", "range": "0..40", "effect": "공급량과 가격 경로가 달라진다."}, {"parameter": "수요기울기", "range": "0.1..2.0", "effect": "가격 변화에 대한 수요 반응이 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_econ_supply_demand_tax_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

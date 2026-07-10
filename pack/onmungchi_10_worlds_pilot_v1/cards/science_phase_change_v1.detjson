@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "science_phase_change_v1",
+  "world_concept_id": "science.phase_change",
+  "name": "상변화와 온도 그래프",
+  "one_line": "가열 중 온도와 잠열 단계가 어떻게 이어지는지 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["채비", "매김", "매마디마다", "조건"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "science", "age_band": "middle", "textbook_candidates": ["3권 상태와 마디", "4권 세계 모델"]},
+  "source": {"lesson_id": "rep_science_phase_change_timeline_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_science_phase_change_timeline_v1/lesson.ddn", "existing_pack_id": "edu_seamgrim_rep_science_phase_change_timeline_v1", "representative_madi": 120},
+  "surfaces": ["설정", "채비", "매김", "시작할때", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:973e5baaa8ba51ba505e6941efa7d37706c20652cd8fb670e125cf9c12e2209e", "trace_hash": "blake3:03bdf92977e4137eb1c754f776a963a994c88b0bbcae825e12b8f4443eb479b8", "pilot_case_id": "science_phase_change_v1"},
+  "few_shot": [{"audience": "child", "intent": "얼음이 녹고 물이 끓을 때 온도가 왜 멈추는지 보여줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "융해·가열·기화 단계를 상태값과 남은 잠열로 전개하는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "마디열량", "range": "1..200", "effect": "각 상변화 단계에 도달하는 시간이 달라진다."}, {"parameter": "융해필요열", "range": "10..300", "effect": "융점 정체 구간의 길이가 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_science_phase_change_timeline_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

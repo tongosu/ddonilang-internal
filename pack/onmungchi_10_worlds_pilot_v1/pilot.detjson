@@ -1,0 +1,28 @@
+{
+  "schema": "ddn.onmungchi.10_worlds_pilot.v1",
+  "status": "verification_in_progress",
+  "public_name_candidate": "정본말뭉치 100세계",
+  "internal_name_candidate": "온뭉치",
+  "world_count": 10,
+  "feasibility_grade": "ga",
+  "included_count": 0,
+  "verified_pending_human_count": 10,
+  "corpus_inclusion_claim": false,
+  "selection_policy": "existing_representative_product_evidence_first",
+  "candidate_list_note": "The original named ten-world list was a start candidate and was not auto-promoted.",
+  "machine_gate_names": ["pack_pass", "canonical_roundtrip", "remix_handles", "few_shot_pair"],
+  "human_gate_names": ["read_aloud"],
+  "owner_decision_required": true,
+  "cards": [
+    "cards/math_linear_function_v1.detjson",
+    "cards/physics_projectile_v1.detjson",
+    "cards/economy_market_tax_v1.detjson",
+    "cards/cs_linear_search_v1.detjson",
+    "cards/science_phase_change_v1.detjson",
+    "cards/game_grid_drop_v1.detjson",
+    "cards/physics_velocity_history_v1.detjson",
+    "cards/economy_compound_growth_v1.detjson",
+    "cards/cs_map_values_v1.detjson",
+    "cards/cs_state_transition_v1.detjson"
+  ]
+}
