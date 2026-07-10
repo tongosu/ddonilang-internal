@@ -1,0 +1,33 @@
+{
+  "schema": "ddn.ganada.la.malblock_first_run.v1",
+  "pack": "ganada_la_malblock_first_run_v1",
+  "cell_id": "라-1",
+  "status": "product_pass_gate",
+  "workflow": "block_palette_to_generated_ddn_to_run_result",
+  "required_selectors": [
+    "malblock-workbench",
+    "malblock-block-palette",
+    "malblock-generated-ddn",
+    "malblock-run-button",
+    "malblock-run-result",
+    "malblock-error-panel"
+  ],
+  "product_runner": "tests/ganada_la_malblock_first_run_runner.mjs",
+  "source_runner": "tests/malblock_authoring_ui_browser_runner.mjs",
+  "supporting_checks": [
+    "tests/run_seamgrim_malblock_design_check.py",
+    "tests/run_seamgrim_malblock_codegen_check.py"
+  ],
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_la_malblock_first_run_v1/workflow.detjson:1",
+    "tests/ganada_la_malblock_first_run_runner.mjs:1",
+    "tests/malblock_authoring_ui_browser_runner.mjs:1"
+  ]
+}

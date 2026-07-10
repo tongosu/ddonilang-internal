@@ -1,0 +1,22 @@
+{
+  "schema": "ddn.ganada.la.malblock_workbench.v1",
+  "pack": "ganada_la_malblock_workbench_v1",
+  "cell_id": "라-3",
+  "status": "product_pass_gate",
+  "workflow": "malblock_three_mode_workbench",
+  "required_modes": ["block", "source", "preview"],
+  "product_runner": "tests/ganada_la_malblock_workbench_runner.mjs",
+  "source_runner": "tests/studio_malblock_workbench_integration_runner.mjs",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_la_malblock_workbench_v1/workflow.detjson:1",
+    "tests/ganada_la_malblock_workbench_runner.mjs:1",
+    "tests/studio_malblock_workbench_integration_runner.mjs:1"
+  ]
+}
