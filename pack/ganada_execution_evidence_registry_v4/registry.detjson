@@ -1,0 +1,133 @@
+{
+  "schema": "ddn.ganada.execution_evidence_registry.v4",
+  "pack": "ganada_execution_evidence_registry_v4",
+  "source_registry": "ganada_execution_evidence_registry_v3",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "scope": "Ganada Product Advancement Week6-7 touched cells and repaired gates",
+  "matrix_cells_total": 90,
+  "inherited_total_tracked_cells_count": 17,
+  "tracked_cells_count": 2,
+  "repair_gates_count": 3,
+  "total_tracked_cells_after_inheritance": 19,
+  "week67_workflow_gates_count": 5,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "docs_only_behavior_closure_allowed": false,
+  "strong_evidence_required_for_behavior_close": true,
+  "strong_evidence_kinds": [
+    "pack_golden_pass",
+    "product_cli_or_runtime_pass",
+    "browser_or_ui_runner_pass",
+    "tooling_runner_or_ci_pass"
+  ],
+  "weak_evidence_kinds": [
+    "doc_report",
+    "proposal",
+    "markdown_existence_checker_only",
+    "status_token_only"
+  ],
+  "tracked_cells": [
+    {
+      "cell_id": "카-5",
+      "branch": "카",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ka5_platform_hardening",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_ka_platform_hardening_check.py"],
+          "expect_stdout_contains": "ganada_ka_platform_hardening_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ka_platform_hardening_v1/workflow.detjson:1",
+        "tests/ganada_ka_platform_hardening_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-5",
+      "branch": "라",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la5_editor_stability",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_la_editor_stability_check.py"],
+          "expect_stdout_contains": "ganada_la_editor_stability_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_editor_stability_v1/workflow.detjson:1",
+        "tests/run_ganada_la_editor_stability_check.py:1"
+      ]
+    }
+  ],
+  "repair_gates": [
+    {
+      "id": "repair_malblock_authoring_ui",
+      "commands": [
+        {
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_malblock_authoring_ui_check.py"],
+          "expect_stdout_contains": "[malblock-authoring-ui-v1] OK"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_malblock_authoring_ui_check.py:1",
+        "pack/ganada_stale_checker_repair_v1/repair.detjson:1"
+      ]
+    },
+    {
+      "id": "repair_studio_malblock_workbench",
+      "commands": [
+        {
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_studio_malblock_workbench_integration_check.py"],
+          "expect_stdout_contains": "studio_malblock_workbench_integration_check: ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_studio_malblock_workbench_integration_check.py:1",
+        "pack/ganada_stale_checker_repair_v1/repair.detjson:1"
+      ]
+    },
+    {
+      "id": "repair_malblock_roundtrip_subset",
+      "commands": [
+        {
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_seamgrim_malblock_roundtrip_subset_check.py"],
+          "expect_stdout_contains": "[seamgrim-malblock-roundtrip-subset] ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_seamgrim_malblock_roundtrip_subset_check.py:1",
+        "pack/ganada_stale_checker_repair_v1/repair.detjson:1"
+      ]
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "docs_only_behavior_close_block_v4",
+      "evidence_kinds": ["doc_report", "proposal", "markdown_existence_checker_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    },
+    {
+      "id": "status_token_only_behavior_close_block_v4",
+      "evidence_kinds": ["status_token_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    }
+  ]
+}
