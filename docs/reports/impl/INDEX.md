@@ -17,6 +17,17 @@
 | - | 2026-07-09 | [SOLVEPLAN_PLAN_HASH_BOUNDARY_V1_20260709.md](./SOLVEPLAN_PLAN_HASH_BOUNDARY_V1_20260709.md) | SolvePlan `state_hash_inputs` / future `plan_hash` / runtime `state_hash` 산식 경계 | 정리 | `python tests/run_declarative_closure_g11_plan_hash_boundary_check.py` |
 | - | 2026-07-09 | [DECLARATIVE_CLOSURE_G1_G3_IMPLEMENTATION_GAP_V1_20260709.md](./DECLARATIVE_CLOSURE_G1_G3_IMPLEMENTATION_GAP_V1_20260709.md) | 선언형 closure G1~G3 SolvePlan/세움 tick/prime S2 런타임 갭 | 부분 | `docs/context/proposals/PROPOSAL_DECLARATIVE_CLOSURE_11AXIS_SSOT_PATCH_V1_20260709.md` |
 
+## 목록 (2026-07-10)
+
+| W | generated_at | 파일 | scope | 결과 | 증거(해시) |
+|---:|---|---|---|---|---|
+| W1 | 2026-07-10 | [SEAMGRIM_FIRST_DELIGHT_PROJECTILE_V1_20260710.md](./SEAMGRIM_FIRST_DELIGHT_PROJECTILE_V1_20260710.md) | 활성 대표 포물선 첫 세계 진입, 세 조절값, 실제 궤적, 실행 제어, 결정적 재실행 | `닫힘-동작` | `python tests/run_seamgrim_first_delight_projectile_check.py` |
+| W2 | 2026-07-10 | [SEAMGRIM_CURRENT_LINE_THREE_WORLDS_V1_20260710.md](./SEAMGRIM_CURRENT_LINE_THREE_WORLDS_V1_20260710.md) | 일차함수·포물선·시장세금 대표 세계의 공통 첫 세계 계약과 교과 축 그래프 | `닫힘-동작` | `python tests/run_seamgrim_current_line_three_worlds_check.py` |
+| W3 | 2026-07-10 | [ONMUNGCHI_10_WORLDS_PILOT_V1_20260710.md](./ONMUNGCHI_10_WORLDS_PILOT_V1_20260710.md) | 가등급 대표 차시 10개 corpus card와 기계 4관문 검증, 사람 관문 분리 | machine-verified / 수록 0 | `python tests/run_onmungchi_10_worlds_pilot_check.py` |
+| W4 | 2026-07-10 | [SEAMGRIM_PROJECTILE_REPRESENTATION_PAIR_V1_20260710.md](./SEAMGRIM_PROJECTILE_REPRESENTATION_PAIR_V1_20260710.md) | 포물선 마디별 계산과 `세움` S2 선언의 가르침 짝 및 SolvePlan 경계 | 비교 UI `닫힘-동작` / 선언형 runtime 미착지 | `python tests/run_seamgrim_projectile_representation_pair_check.py` |
+| W5 | 2026-07-10 | [TOOL_WORLD_DIFF_V1_20260710.md](./TOOL_WORLD_DIFF_V1_20260710.md) | 매김 조절 뜻 단위 diff 제품 명령과 AI 무권한 사람 검토 흐름 | 조절 diff/UI `닫힘-동작` / 전체 world diff 미완료 | `python tests/run_tool_world_diff_v1_check.py` |
+| W6 | 2026-07-10 | [LEARNING_SPINE_INDEX_V1_20260710.md](./LEARNING_SPINE_INDEX_V1_20260710.md) | 기존 교재·셈그림 세계·팩·가나다 좌표를 잇는 8단계 배움길 | 연결 색인/UI `닫힘-동작` / 교육과정 완성 미완료 | `python tests/run_learning_spine_index_v1_check.py` |
+
 ## 목록 (2026-03-03)
 
 | W | generated_at | 파일 | scope | 결과 | 증거(해시) |

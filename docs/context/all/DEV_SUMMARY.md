@@ -1,6 +1,6 @@
 # 또니랑 Codex 개발 요약 (Development Summary)
 > 이전 기록은 DEV_SUMMARY_ARCHIVE_20260706.md 참고
-Last Updated: 2026-07-10
+Last Updated: 2026-07-11
 Workspace: `i:\dev\ddonilang\codex`
 
 ---
@@ -11,6 +11,100 @@ Workspace: `i:\dev\ddonilang\codex`
 - 최신 의사결정/검증 결과를 빠르게 확인하는 용도로 유지한다.
 
 ## 최근 핵심 변경 (요약)
+
+### [SEAMGRIM][LEARNING-SPINE-W6] 기존 교육 자산 8단계 연결 색인 (2026-07-10)
+
+- 변경:
+  - 값·식·단위부터 Python/Rust/JavaScript/Modelica 대응 교과까지 8단계를 `ddn.learning_spine_index.v1`으로 연결했다.
+  - 각 단계에 기존 교재, 셈그림 세계, 검증 팩, 가나다 좌표, 노출 수준, 열린 항목을 연결했다.
+  - 교과 화면에 배움길 탐색과 세계 열기를 추가하고 데스크톱·모바일 배치를 닫았다.
+  - 독립 검토 뒤 출처 종류, 네 상태 축, 키보드 초점 복원, landed 세계 5개 실행 관문을 보강했다.
+  - 강화 관문이 발견한 포물선 모바일 조절 영역 20px 축소 회귀를 보정하고 W2/W5 브라우저 검사를 재통과했다.
+- 검증:
+  - `node tests/seamgrim_learning_spine_index_runner.mjs` PASS.
+  - `python tests/run_pack_golden.py learning_spine_index_v1` PASS.
+  - `python tests/run_learning_spine_index_v1_check.py` PASS, `connector-index-behavior-closed curriculum-completion-open owner-decision-required`.
+  - W5 world diff, W4 표현판, W3 온뭉치 회귀 PASS.
+- 진행률:
+  - W6 연결 색인 및 제품 탐색 UI: `닫힘-동작`.
+  - 교육과정 전체 완성, 다언어 일대일 대응표, 선언형 runtime, 사용자 승격 결정: 미완료.
+  - `docs/ssot/**`, parser/runtime 의미론, state hash 산식 변경 없음.
+
+### [TOOLCHAIN][WORLD-DIFF-W5] 뜻 단위 변경과 사람 검토 (2026-07-10)
+
+- 변경:
+  - `teul-cli world-diff`가 공통 정본화 결과의 매김 조절 계획을 비교해 `ddn.world_diff.v1`을 생성한다.
+  - 같은 입력 0개 변경, 중력 기본값 한 항목 변경 1개 축, 두 번 생성 바이트 결정성을 제품 검사로 고정했다.
+  - 포물선 첫 세계에 권한 없는 후보와 사람 적용/버리기 UI를 연결했다.
+  - 승인 시에만 현재 브라우저 세션의 중력값을 4.9로 바꾸고 재실행하며, 거절은 9.8을 유지한다.
+- 검증:
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml world_diff -- --nocapture` PASS(3).
+  - `node tests/seamgrim_world_diff_review_runner.mjs` PASS.
+  - `python tests/run_tool_world_diff_v1_check.py` PASS, `toolchain-behavior-closed review-behavior-closed ai-authority-none`.
+  - W4 표현판, 슬기 gatekeeper, 온뭉치 pilot 회귀 PASS.
+- 진행률:
+  - W5 매김 조절 diff 및 사람 검토: `닫힘-동작`.
+  - full AST/설정/세움/SolvePlan/막음 diff, 첫 분기 마디, CLI/browser hash parity: 미완료.
+  - AI call, 자동 적용, 파일 쓰기, parser/runtime/state hash 산식 변경 없음.
+
+### [SEAMGRIM][REPRESENTATION-PAIR-W4] 포물선 마디별 계산 / `세움` 선언 비교 (2026-07-10)
+
+- 변경:
+  - 실제 실행되는 포물선 마디 계산판과 제품 SolvePlan artifact까지만 착지한 `세움` S2 선언판을 `teaching_pair`로 연결했다.
+  - 셈그림 조절 탭에 같은 세계의 두 표현, 각 판의 상태, 풀이계획 요약, 관측 동등성 미검증 경계를 표시했다.
+  - 모바일 1열 비교판의 이중 스크롤을 제거했다.
+- 검증:
+  - `node tests/seamgrim_projectile_representation_pair_runner.mjs` PASS.
+  - `python tests/run_seamgrim_projectile_representation_pair_check.py` PASS, `comparison-behavior-closed declarative-runtime-open`.
+  - SolvePlan 2회 바이트 결정성, 명시적 실행 2회 state hash, desktop/mobile 배치 직접 확인.
+- 진행률:
+  - W4 비교 UI: `닫힘-동작`.
+  - 선언형 세계 실행 및 관측 동등성: 미완료.
+  - `docs/ssot/**`, parser/runtime 의미론, state hash 산식 변경 없음.
+
+### [ONMUNGCHI][PILOT-W3] 가등급 10세계 카드/관문 검증 (2026-07-10)
+
+- 변경:
+  - 제품 대표 차시 10개를 `corpus_card.v1` 후보와 pilot manifest로 연결했다.
+  - pack, canonical roundtrip, remix handle, few-shot pair를 기계 관문으로 검사한다.
+  - 낭독과 owner decision은 사람 관문으로 분리해 자동 승격을 금지한다.
+- 검증:
+  - `python tests/run_onmungchi_10_worlds_pilot_check.py` PASS.
+- 진행률:
+  - W3 pilot manifest/card checker: 완료.
+  - machine gates 40 PASS, read-aloud 10 pending, owner 10 pending, included 0.
+  - 제품 UI/runtime/state hash 산식 변경 없음.
+
+### [SEAMGRIM][CURRENT-LINE-W2] 대표 3세계 첫 제품 계약 (2026-07-10)
+
+- 변경:
+  - 일차함수·포물선·수요공급세금 대표 차시를 공통 첫 세계 주소와 UI 계약으로 정렬했다.
+  - 세 세계에 핵심 조절값 3개와 교과 축 기반 큰 보개를 제공했다.
+  - `graph_series`와 `trajectory_trail`을 분리하고 그래프 단일 점 payload의 이력을 이어 그린다.
+  - 일차함수 대표 원문은 pack meta와 같은 24마디 종료 계약을 갖는다.
+- 검증:
+  - `node tests/seamgrim_current_line_three_worlds_runner.mjs` PASS.
+  - `python tests/run_seamgrim_current_line_three_worlds_check.py` PASS, `behavior-closed`.
+- 진행률:
+  - W2 current-line 대표 3세계: `닫힘-동작`.
+  - 온뭉치 수록, 선언형 비교판, world diff는 미완료.
+  - `docs/ssot/**`, parser/runtime 의미론, state hash 산식 변경 없음.
+
+### [SEAMGRIM][FIRST-DELIGHT-W1] 포물선 첫 세계 제품 닫힘 (2026-07-10)
+
+- 변경:
+  - `?first_delight=projectile`을 활성 대표 차시 `rep_phys_projectile_xy_v1`로 연결했다.
+  - 가로 속도, 세로 속도, 중력 세 조절값과 실제 상태 `x/y` 기반 궤적을 첫 화면에 배치했다.
+  - `trajectory_trail`/`afterimage` 보기 역할을 분리하고 상태 해시 밖에 유지했다.
+  - 제품 browser runner와 `seamgrim_first_delight_projectile_v1` 증거 팩을 추가했다.
+- 검증:
+  - `node tests/seamgrim_first_delight_projectile_runner.mjs` PASS.
+  - `python tests/run_seamgrim_first_delight_projectile_check.py` PASS, `behavior-closed`.
+  - 데스크톱 1360x860, 모바일 390x844 직접 캡처 확인.
+- 진행률:
+  - W1 포물선 첫 세계: `닫힘-동작`.
+  - 기본 루트 승격, 선언형 비교판, world diff는 미완료.
+  - `docs/ssot/**`, parser/runtime 의미론, state hash 산식 변경 없음.
 
 ### [GANADA][PRODUCT-W1] 마줄기/자줄기 제품 실행 전진 (2026-07-10)
 
