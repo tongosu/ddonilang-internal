@@ -13,9 +13,35 @@ export class SliderPanel {
     this.warnings = [];
   }
 
-  parseFromDdn(ddnText, { preserveValues = false, maegimControlJson = "" } = {}) {
+  parseFromDdn(
+    ddnText,
+    {
+      preserveValues = false,
+      maegimControlJson = "",
+      visibleControlNames = [],
+      controlLabels = {},
+    } = {},
+  ) {
     const parsed = buildControlSpecsFromDdn(ddnText, { maegimControlJson });
-    const nextSpecs = Array.isArray(parsed.specs) ? parsed.specs : [];
+    const visibleNames = Array.isArray(visibleControlNames)
+      ? visibleControlNames.map((name) => String(name ?? "").trim()).filter(Boolean)
+      : [];
+    const visibleNameSet = new Set(visibleNames);
+    const labelMap = controlLabels && typeof controlLabels === "object" ? controlLabels : {};
+    const sourceSpecs = Array.isArray(parsed.specs) ? parsed.specs : [];
+    const filteredSpecs = visibleNameSet.size
+      ? sourceSpecs.filter((spec) => visibleNameSet.has(String(spec?.name ?? "").trim()))
+      : sourceSpecs;
+    const orderedSpecs = visibleNameSet.size
+      ? [...filteredSpecs].sort((left, right) => (
+          visibleNames.indexOf(String(left?.name ?? "").trim())
+          - visibleNames.indexOf(String(right?.name ?? "").trim())
+        ))
+      : filteredSpecs;
+    const nextSpecs = orderedSpecs.map((spec) => ({
+      ...spec,
+      displayLabel: String(labelMap?.[spec.name] ?? spec.name ?? "").trim() || String(spec.name ?? ""),
+    }));
     const nextValues = {};
     nextSpecs.forEach((spec) => {
       const prev = Number(this.values?.[spec.name]);
@@ -68,13 +94,20 @@ export class SliderPanel {
     this.specs.forEach((spec) => {
       const row = document.createElement("div");
       row.className = "slider-row";
+      row.dataset.controlName = String(spec.name ?? "");
 
-      const label = document.createElement("div");
+      const label = document.createElement("label");
       label.className = "slider-label";
-      label.textContent = `${spec.name}${spec.unit ? ` (${spec.unit})` : ""}`;
+      const displayLabel = String(spec.displayLabel ?? spec.name ?? "").trim() || String(spec.name ?? "");
+      const controlId = `seamgrim-control-${String(spec.name ?? "control").replace(/[^A-Za-z0-9_가-힣-]/gu, "-")}`;
+      label.htmlFor = `${controlId}-range`;
+      label.textContent = `${displayLabel}${spec.unit ? ` (${spec.unit})` : ""}`;
 
       const range = document.createElement("input");
       range.type = "range";
+      range.id = `${controlId}-range`;
+      range.dataset.controlName = String(spec.name ?? "");
+      range.setAttribute("aria-label", `${displayLabel} 조절`);
       range.min = String(spec.min);
       range.max = String(spec.max);
       range.step = String(spec.step);
@@ -82,6 +115,9 @@ export class SliderPanel {
 
       const number = document.createElement("input");
       number.type = "number";
+      number.id = `${controlId}-number`;
+      number.dataset.controlName = String(spec.name ?? "");
+      number.setAttribute("aria-label", `${displayLabel} 값`);
       number.min = String(spec.min);
       number.max = String(spec.max);
       number.step = String(spec.step);

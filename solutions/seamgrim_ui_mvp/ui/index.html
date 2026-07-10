@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>셈그림</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="./styles.css?v=20260503-view-mode-split" />
+    <link rel="stylesheet" href="./styles.css?v=20260710-first-delight-w6a" />
   </head>
   <body>
     <div id="app">
@@ -23,6 +23,7 @@
           <button class="browse-tab active" data-tab="official" type="button">대표 교과</button>
           <button class="browse-tab" data-tab="examples" type="button">샘플 교과</button>
           <button class="browse-tab" data-tab="search" type="button">전체 검색</button>
+          <button id="btn-learning-spine" class="ghost" type="button" aria-controls="learning-spine-panel" aria-expanded="false">배움길</button>
           <button id="btn-open-local-package" class="ghost" type="button">배포 열기</button>
           <button id="btn-paste-local-package" class="ghost" type="button" aria-controls="local-package-paste-panel" aria-expanded="false">붙여넣기 열기</button>
           <button id="btn-copy-course-package" class="ghost" type="button">대표 묶음 복사</button>
@@ -53,6 +54,8 @@
           <div id="numeric-track-result-compare-panel" class="numeric-track-compare-panel hidden"></div>
           <div id="numeric-track-result-compare-history-panel" class="numeric-track-compare-history-panel hidden"></div>
         </section>
+
+        <section id="learning-spine-panel" class="learning-spine-panel hidden" aria-label="또니랑 배움길" aria-hidden="true"></section>
 
         <div class="browse-filters">
           <select id="filter-grade">
@@ -203,10 +206,10 @@
             <span id="run-local-save-status" class="run-local-save-status" data-status="idle">저장 대기</span>
             <span class="run-control-sep"></span>
             <button id="btn-run" class="btn-primary" type="button" data-testid="lesson-run-button" data-lesson-run-button>▶ 수업 실행</button>
-            <button id="btn-pause" class="ghost" type="button" disabled>⏸ 일시정지</button>
-            <button id="btn-reset" class="ghost bogae-ctrl-secondary" type="button" title="초기화" aria-label="초기화">↺ 초기화</button>
-            <button id="btn-step" class="ghost bogae-ctrl-secondary" type="button" title="한 단계씩" aria-label="한 단계씩">▷ 한 단계씩</button>
-            <span id="run-madi-status" class="run-madi-status" title="현재 단계 / 전체 단계">0/-단계</span>
+            <button id="btn-pause" class="ghost" type="button" data-testid="lesson-pause-button" disabled>⏸ 일시정지</button>
+            <button id="btn-reset" class="ghost bogae-ctrl-secondary" type="button" data-testid="lesson-reset-button" title="초기화" aria-label="초기화">↺ 초기화</button>
+            <button id="btn-step" class="ghost bogae-ctrl-secondary" type="button" data-testid="lesson-step-button" title="한 단계씩" aria-label="한 단계씩">▷ 한 단계씩</button>
+            <span id="run-madi-status" class="run-madi-status" data-testid="lesson-madi-status" title="현재 단계 / 전체 단계">0/-단계</span>
             <button id="btn-run-teacher-report-copy" class="ghost" type="button" title="수업 리포트 복사" disabled>리포트 복사</button>
             <button id="btn-run-teacher-package-copy" class="ghost" type="button" title="교사용 배포 묶음 복사" disabled>배포 복사</button>
             <button id="btn-run-teacher-package-download" class="ghost" type="button" title="교사용 배포 파일 저장" disabled>배포 저장</button>
@@ -259,7 +262,7 @@
                 <div class="bogae-frame">
                   <div id="run-main-graph-host" class="run-main-visual-host run-main-graph-host hidden"></div>
                   <div id="run-main-console-host" class="run-main-visual-host run-main-console-host hidden"></div>
-                  <canvas id="canvas-bogae"></canvas>
+                  <canvas id="canvas-bogae" data-testid="lesson-space2d-canvas"></canvas>
                   <div id="overlay-description" class="overlay-desc hidden"></div>
                 </div>
               </div>
@@ -275,10 +278,37 @@
 
                 <div id="subpanel-tab-panel" class="subpanel-tab-panel">
                 <section id="run-tab-panel-console" class="run-tab-panel hidden">
-                  <div id="run-slider-area" class="run-slider-area hidden">
+                  <div id="run-slider-area" class="run-slider-area hidden" data-testid="lesson-control-panel">
                     <div id="slider-status" class="hint">값 조절: -</div>
                     <div id="slider-list"></div>
                   </div>
+                  <section id="run-representation-pair" class="run-representation-pair hidden" data-testid="lesson-representation-pair" aria-label="표현판 비교">
+                    <div class="run-representation-pair-head">
+                      <strong>같은 세계, 두 표현</strong>
+                      <span id="run-representation-pair-class">가르침 짝</span>
+                    </div>
+                    <div class="run-representation-pair-grid">
+                      <div class="run-representation-column">
+                        <div class="run-representation-column-head">
+                          <strong id="run-representation-left-title">마디별 계산</strong>
+                          <span id="run-representation-left-status">실행됨</span>
+                        </div>
+                        <pre id="run-representation-left-source"></pre>
+                      </div>
+                      <div class="run-representation-column">
+                        <div class="run-representation-column-head">
+                          <strong id="run-representation-right-title">세움 선언</strong>
+                          <span id="run-representation-right-status">풀이계획만</span>
+                        </div>
+                        <pre id="run-representation-right-source"></pre>
+                      </div>
+                    </div>
+                    <div class="run-representation-boundary">
+                      <span id="run-representation-plan-summary"></span>
+                      <span id="run-representation-equivalence">관측 동등성: 미검증</span>
+                    </div>
+                  </section>
+                  <section id="run-world-diff-review" class="run-world-diff-review hidden" data-testid="world-diff-review" aria-label="뜻 단위 변경 검토"></section>
                 </section>
 
                 <section id="run-tab-panel-output" class="run-tab-panel hidden" data-testid="lesson-run-result" data-lesson-run-result>
@@ -532,6 +562,6 @@
 
     </div>
 
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=20260710-first-delight-w6a"></script>
   </body>
 </html>

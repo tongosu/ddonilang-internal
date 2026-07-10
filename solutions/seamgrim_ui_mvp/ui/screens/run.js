@@ -37,7 +37,8 @@ import {
   applyPreviewViewModelMetadata,
   buildPreviewViewModel,
 } from "../preview_view_model.js";
-import { SliderPanel } from "../components/slider_panel.js";
+import { SliderPanel } from "../components/slider_panel.js?v=20260710-first-delight-w1c";
+import { renderWorldDiffReview } from "../world_diff_review.js?v=20260710-first-delight-w5a";
 import { OverlayDescription } from "../components/overlay.js";
 import { markdownToHtml } from "../components/markdown.js";
 import { showGlobalToast } from "../components/toast.js";
@@ -3014,7 +3015,11 @@ export function synthesizePointSpace2dFromObservation(observation) {
   };
 }
 
-export function synthesizeSpace2dFromGraph(graph, observation = null) {
+export function synthesizeSpace2dFromGraph(
+  graph,
+  observation = null,
+  { lineRole = "graph_series", prevSpace2d = null } = {},
+) {
   const hitSeries = readPreferredGraphSeries(graph);
   if (!hitSeries) return null;
   const point = readLatestPointFromSeries(hitSeries);
@@ -3051,7 +3056,7 @@ export function synthesizeSpace2dFromGraph(graph, observation = null) {
 
   const axis = graph && typeof graph === "object" ? graph.axis : null;
   const rawPoints = Array.isArray(hitSeries?.points) ? hitSeries.points : [];
-  const trailPoints = rawPoints
+  let trailPoints = rawPoints
     .map((row) => {
       const x = finiteNumber(row?.x);
       const y = finiteNumber(row?.y);
@@ -3060,6 +3065,24 @@ export function synthesizeSpace2dFromGraph(graph, observation = null) {
     })
     .filter(Boolean)
     .slice(-32);
+  if (trailPoints.length <= 1 && hasSpace2dDrawable(prevSpace2d)) {
+    const previousPoints = Array.isArray(prevSpace2d?.points)
+      ? prevSpace2d.points
+          .map((row) => {
+            const x = finiteNumber(row?.x);
+            const y = finiteNumber(row?.y);
+            if (x === null || y === null) return null;
+            return { x, y };
+          })
+          .filter(Boolean)
+          .slice(-31)
+      : [];
+    const nextPoint = trailPoints[trailPoints.length - 1] ?? point;
+    const previousLast = previousPoints[previousPoints.length - 1] ?? null;
+    trailPoints = previousLast && previousLast.x === nextPoint.x && previousLast.y === nextPoint.y
+      ? previousPoints
+      : [...previousPoints, nextPoint].slice(-32);
+  }
   if (!trailPoints.length) {
     trailPoints.push({ x: point.x, y: point.y });
   }
@@ -3070,6 +3093,7 @@ export function synthesizeSpace2dFromGraph(graph, observation = null) {
   const yMin = finiteNumber(axis?.y_min) ?? (Math.min(0, ...ys) - 1);
   const yMax = finiteNumber(axis?.y_max) ?? (Math.max(0, ...ys) + 1);
   const trailShapes = [];
+  const normalizedLineRole = String(lineRole ?? "").trim() || "graph_series";
   for (let i = 1; i < trailPoints.length; i += 1) {
     const from = trailPoints[i - 1];
     const to = trailPoints[i];
@@ -3082,6 +3106,7 @@ export function synthesizeSpace2dFromGraph(graph, observation = null) {
       stroke: "rgba(59, 130, 246, 0.52)",
       width: 0.01,
       group_id: "graph.series.trail",
+      role: normalizedLineRole,
     });
   }
   return {
@@ -3089,6 +3114,7 @@ export function synthesizeSpace2dFromGraph(graph, observation = null) {
     meta: {
       title: "graph-point-fallback",
       source: "graph",
+      view_roles: [normalizedLineRole],
     },
     camera: {
       x_min: xMin,
@@ -3114,10 +3140,65 @@ function synthesizePendulumSpace2dFromGraph(graph, observation = null) {
 }
 
 export function synthesizeSpace2dFromObservation(observation) {
-  return (
-    synthesizePendulumSpace2dFromObservation(observation) ??
-    synthesizePointSpace2dFromObservation(observation)
+  const pendulum = synthesizePendulumSpace2dFromObservation(observation);
+  if (pendulum) return pendulum;
+  return synthesizePointSpace2dFromObservation(observation);
+}
+
+function synthesizeTrajectorySpace2dFromObservation(observation, { prevSpace2d = null } = {}) {
+  const x = readNumericObservationValue(observation, ["x", "x_pos", "pos_x", "px", "위치x"]);
+  const y = readNumericObservationValue(observation, ["y", "y_pos", "pos_y", "py", "위치y"]);
+  if (x === null || y === null) return null;
+  if (!hasSpace2dDrawable(prevSpace2d)) {
+    return synthesizePointSpace2dFromObservation(observation);
+  }
+  return synthesizeSpace2dFromOutputRows(
+    [
+      { key: "x", value: String(x) },
+      { key: "y", value: String(y) },
+    ],
+    { prevSpace2d },
   );
+}
+
+function synthesizeGraphSeriesSpace2dFromObservation(
+  observation,
+  graphAxes = [],
+  { prevSpace2d = null, lineRole = "graph_series" } = {},
+) {
+  const axes = Array.isArray(graphAxes)
+    ? graphAxes.map((axis) => String(axis ?? "").trim()).filter(Boolean)
+    : [];
+  if (axes.length !== 2) return null;
+  const x = readNumericObservationValue(observation, [axes[0]]);
+  const y = readNumericObservationValue(observation, [axes[1]]);
+  if (x === null || y === null) return null;
+  const candidate = synthesizeSpace2dFromOutputRows(
+    [
+      { key: "x", value: String(x) },
+      { key: "y", value: String(y) },
+    ],
+    { prevSpace2d },
+  );
+  if (!candidate) return null;
+  const normalizedLineRole = String(lineRole ?? "").trim() || "graph_series";
+  return {
+    ...candidate,
+    meta: {
+      ...(candidate.meta ?? {}),
+      title: `observation-series:${axes[0]}:${axes[1]}`,
+      source: "observation_series",
+      axes,
+      view_roles: [normalizedLineRole, "afterimage"],
+    },
+    shapes: Array.isArray(candidate.shapes)
+      ? candidate.shapes.map((shape) => (
+          String(shape?.role ?? "").trim() === "trajectory_trail"
+            ? { ...shape, role: normalizedLineRole, group_id: "observation.series.trail" }
+            : shape
+        ))
+      : [],
+  };
 }
 
 function readNumericOutputRowsValue(outputRows = [], keys = []) {
@@ -3189,6 +3270,7 @@ export function synthesizeSpace2dFromOutputRows(outputRows = [], { prevSpace2d =
       stroke: "rgba(59, 130, 246, 0.45)",
       width: 0.01,
       group_id: "output.point.trail",
+      role: "trajectory_trail",
     });
   }
   for (let i = 0; i < Math.max(0, points.length - 1); i += 1) {
@@ -3202,6 +3284,7 @@ export function synthesizeSpace2dFromOutputRows(outputRows = [], { prevSpace2d =
       stroke: "rgba(59, 130, 246, 0.45)",
       width: 0.01,
       group_id: "output.point.history",
+      role: "afterimage",
     });
   }
   return {
@@ -3209,6 +3292,7 @@ export function synthesizeSpace2dFromOutputRows(outputRows = [], { prevSpace2d =
     meta: {
       title: "output-rows-fallback",
       source: "observation_output_rows",
+      view_roles: ["trajectory_trail", "afterimage"],
     },
     camera: {
       x_min: xMin,
@@ -3268,7 +3352,27 @@ function normalizeRunLaunchKind(raw) {
   if (kind === "editor_run") return "editor_run";
   if (kind === "featured_seed_quick") return "featured_seed_quick";
   if (kind === "local_package_import") return "local_package_import";
+  if (kind === "first_delight") return "first_delight";
   return "manual";
+}
+
+function resolveFirstDelightControlPresentation(lesson, launchKind) {
+  if (normalizeRunLaunchKind(launchKind) !== "first_delight") {
+    return { visibleControlNames: [], controlLabels: {} };
+  }
+  const meta = lesson?.meta && typeof lesson.meta === "object" ? lesson.meta : {};
+  const visibleControlNames = Array.isArray(meta.first_delight_controls)
+    ? meta.first_delight_controls.map((name) => String(name ?? "").trim()).filter(Boolean)
+    : [];
+  const rawLabels = meta.first_delight_control_labels;
+  const controlLabels = rawLabels && typeof rawLabels === "object" && !Array.isArray(rawLabels)
+    ? Object.fromEntries(
+        Object.entries(rawLabels)
+          .map(([name, label]) => [String(name ?? "").trim(), String(label ?? "").trim()])
+          .filter(([name, label]) => Boolean(name) && Boolean(label)),
+      )
+    : {};
+  return { visibleControlNames, controlLabels };
 }
 
 function normalizeRunOnboardingProfile(raw) {
@@ -3284,6 +3388,7 @@ function formatRunLaunchKindLabel(raw) {
   if (kind === "editor_run") return "편집 실행";
   if (kind === "featured_seed_quick") return "Alt+6";
   if (kind === "local_package_import") return "배포 열기";
+  if (kind === "first_delight") return "첫 세계";
   return "수동";
 }
 
@@ -4445,6 +4550,8 @@ export function resolveRunMainVisualMode({
   allowShapeFallback = false,
   prevSpace2d = null,
   lessonRequiredViews = [],
+  lessonViewRoles = [],
+  lessonGraphAxes = [],
 } = {}) {
   // ── 보개종류 명시 선언 ────────────────────────────────────────────────────
   const declaredKind = readDeclaredBogaeKind(observation);
@@ -4468,6 +4575,54 @@ export function resolveRunMainVisualMode({
     return {
       mode: "space2d",
       space2d: nativeSpace2d,
+      graphHtml: "",
+      consoleHtml: "",
+      consoleLinesForGrid: [],
+    };
+  }
+
+  const requiredViewSet = new Set(
+    (Array.isArray(lessonRequiredViews) ? lessonRequiredViews : [])
+      .map((view) => String(view ?? "").trim().toLowerCase()),
+  );
+  const preferDeclaredSpace2dFallback = Boolean(allowShapeFallback && requiredViewSet.has("space2d"));
+  const declaredSpace2dFallback = preferDeclaredSpace2dFallback
+    ? (
+      synthesizeTrajectorySpace2dFromObservation(observation, { prevSpace2d }) ??
+      synthesizeSpace2dFromGraph(views?.graph, observation, { prevSpace2d }) ??
+      synthesizeSpace2dFromObservation(observation)
+    )
+    : null;
+  if (declaredSpace2dFallback) {
+    return {
+      mode: "debug-fallback",
+      space2d: declaredSpace2dFallback,
+      graphHtml: "",
+      consoleHtml: "",
+      consoleLinesForGrid: [],
+    };
+  }
+
+  const lessonRoleSet = new Set(
+    (Array.isArray(lessonViewRoles) ? lessonViewRoles : [])
+      .map((role) => String(role ?? "").trim())
+      .filter(Boolean),
+  );
+  const graphLineRole = lessonRoleSet.has("trajectory_trail") ? "trajectory_trail" : "graph_series";
+  const declaredGraphFallback = allowShapeFallback && requiredViewSet.has("graph")
+    ? (
+      synthesizeGraphSeriesSpace2dFromObservation(
+        observation,
+        lessonGraphAxes,
+        { lineRole: graphLineRole, prevSpace2d },
+      ) ??
+      synthesizeSpace2dFromGraph(views?.graph, observation, { lineRole: graphLineRole, prevSpace2d })
+    )
+    : null;
+  if (declaredGraphFallback) {
+    return {
+      mode: "debug-fallback",
+      space2d: declaredGraphFallback,
       graphHtml: "",
       consoleHtml: "",
       consoleLinesForGrid: [],
@@ -4505,7 +4660,8 @@ export function resolveRunMainVisualMode({
   // graph/observation 기반 합성만 허용.
   const syntheticSpace2d = allowShapeFallback
     ? (
-      synthesizeSpace2dFromGraph(views?.graph, observation) ??
+      synthesizeSpace2dFromGraph(views?.graph, observation, { prevSpace2d }) ??
+      synthesizeTrajectorySpace2dFromObservation(observation, { prevSpace2d }) ??
       synthesizeSpace2dFromObservation(observation)
     )
     : null;
@@ -4586,6 +4742,7 @@ export class RunScreen {
     this.allowServerFallback = Boolean(allowServerFallback);
 
     this.lesson = null;
+    this.sliderPresentation = { visibleControlNames: [], controlLabels: {} };
     this.baseDdn = "";
     this.currentDdn = "";
     this.sourceKind = "scratch";
@@ -4967,6 +5124,17 @@ export class RunScreen {
     this.runMirrorWorldSummaryEl = this.root.querySelector("#run-mirror-world-summary");
     this.runMirrorKvEl = this.root.querySelector("#run-mirror-kv");
     this.runSliderAreaEl = this.root.querySelector("#run-slider-area");
+    this.runRepresentationPairEl = this.root.querySelector("#run-representation-pair");
+    this.runRepresentationPairClassEl = this.root.querySelector("#run-representation-pair-class");
+    this.runRepresentationLeftTitleEl = this.root.querySelector("#run-representation-left-title");
+    this.runRepresentationLeftStatusEl = this.root.querySelector("#run-representation-left-status");
+    this.runRepresentationLeftSourceEl = this.root.querySelector("#run-representation-left-source");
+    this.runRepresentationRightTitleEl = this.root.querySelector("#run-representation-right-title");
+    this.runRepresentationRightStatusEl = this.root.querySelector("#run-representation-right-status");
+    this.runRepresentationRightSourceEl = this.root.querySelector("#run-representation-right-source");
+    this.runRepresentationPlanSummaryEl = this.root.querySelector("#run-representation-plan-summary");
+    this.runRepresentationEquivalenceEl = this.root.querySelector("#run-representation-equivalence");
+    this.runWorldDiffReviewEl = this.root.querySelector("#run-world-diff-review");
     this.saveSnapshotBtn = this.root.querySelector("#btn-save-snapshot-v0");
     this.saveSessionBtn = this.root.querySelector("#btn-save-session-v0");
     this.runTabButtons = RUN_TAB_IDS.map((tab) => this.root.querySelector(`#run-tab-btn-${tab}`)).filter(Boolean);
@@ -5107,6 +5275,7 @@ export class RunScreen {
       const parsed = this.sliderPanel.parseFromDdn(this.baseDdn, {
         preserveValues: true,
         maegimControlJson: this.lesson?.maegimControlJson ?? "",
+        ...this.sliderPresentation,
       });
       this.syncRunSliderAreaVisibility();
       this.syncGraphDraftFromParsed(parsed);
@@ -5289,6 +5458,24 @@ export class RunScreen {
   renderMainVisual({ mode = "none", space2d = null, graphHtml = "", consoleHtml = "", consoleLinesForGrid = [] } = {}) {
     const nextMode = normalizeRunMainVisualMode(mode, "none");
     this.setMainVisualMode(nextMode);
+    if (this.root?.dataset) {
+      const viewRoles = Array.isArray(space2d?.meta?.view_roles)
+        ? space2d.meta.view_roles.map((role) => String(role ?? "").trim()).filter(Boolean)
+        : [];
+      const shapes = Array.isArray(space2d?.shapes) ? space2d.shapes : [];
+      this.root.dataset.mainViewRoles = viewRoles.join(",");
+      this.root.dataset.mainViewSource = String(space2d?.meta?.source ?? "").trim();
+      this.root.dataset.mainViewAxes = Array.isArray(space2d?.meta?.axes)
+        ? space2d.meta.axes.map((axis) => String(axis ?? "").trim()).filter(Boolean).join(",")
+        : "";
+      this.root.dataset.mainShapeCount = String(shapes.length);
+      this.root.dataset.mainTrajectorySegmentCount = String(
+        shapes.filter((shape) => String(shape?.role ?? "").trim() === "trajectory_trail").length,
+      );
+      this.root.dataset.mainGraphSeriesSegmentCount = String(
+        shapes.filter((shape) => String(shape?.role ?? "").trim() === "graph_series").length,
+      );
+    }
     this.syncBogaeShellForMainVisual(nextMode);
     if (this.runMainGraphHostEl) {
       const showGraph = nextMode === "graph";
@@ -5355,6 +5542,9 @@ export class RunScreen {
 
   setEngineStatus(status, { errorMessage = "" } = {}) {
     this.engineStatus = normalizeEngineStatus(status, this.engineStatus);
+    if (this.root?.dataset) {
+      this.root.dataset.engineStatus = this.engineStatus;
+    }
     if (typeof errorMessage === "string") {
       this.runErrorMessage = String(errorMessage).trim();
       this.runErrorDismissed = false;
@@ -7707,6 +7897,108 @@ runs: 0</pre>
     this.soloOverlayRunId = this.soloOverlayRunId === target ? "" : target;
     this.renderRunManagerUi();
     this.syncRunManagerOverlaySeries();
+  }
+
+  renderRepresentationPair(rawPair = null) {
+    const pair = rawPair && typeof rawPair === "object" ? rawPair : null;
+    const valid = Boolean(
+      pair
+      && String(pair.schema ?? "").trim() === "ddn.seamgrim.representation_pair.v1"
+      && pair.left
+      && pair.right,
+    );
+    this.runRepresentationPairEl?.classList.toggle("hidden", !valid);
+    if (this.root?.dataset) {
+      if (valid) {
+        this.root.dataset.representationPair = String(pair.equivalence_class ?? "teaching_pair").trim() || "teaching_pair";
+        this.root.dataset.representationEquivalence = String(pair.equivalence_status ?? "not_asserted").trim() || "not_asserted";
+        this.root.dataset.declarativeRuntime = String(pair?.right?.runtime_execution ?? "not_landed").trim() || "not_landed";
+      } else {
+        delete this.root.dataset.representationPair;
+        delete this.root.dataset.representationEquivalence;
+        delete this.root.dataset.declarativeRuntime;
+      }
+    }
+    if (!valid) {
+      try {
+        window.__SEAMGRIM_REPRESENTATION_PAIR__ = null;
+      } catch (_) {
+        // ignore browser instrumentation errors
+      }
+      return null;
+    }
+
+    const left = pair.left && typeof pair.left === "object" ? pair.left : {};
+    const right = pair.right && typeof pair.right === "object" ? pair.right : {};
+    const summary = pair.solveplan_summary && typeof pair.solveplan_summary === "object"
+      ? pair.solveplan_summary
+      : {};
+    if (this.runRepresentationPairClassEl) {
+      this.runRepresentationPairClassEl.textContent = pair.equivalence_class === "teaching_pair" ? "가르침 짝" : String(pair.equivalence_class ?? "표현 짝");
+    }
+    if (this.runRepresentationLeftTitleEl) this.runRepresentationLeftTitleEl.textContent = String(left.title ?? "마디별 계산");
+    if (this.runRepresentationLeftStatusEl) this.runRepresentationLeftStatusEl.textContent = left.runtime_execution === "landed" ? "실행됨" : "검토용";
+    if (this.runRepresentationLeftSourceEl) {
+      this.runRepresentationLeftSourceEl.textContent = Array.isArray(left.teaching_snippet) ? left.teaching_snippet.join("\n") : "";
+    }
+    if (this.runRepresentationRightTitleEl) this.runRepresentationRightTitleEl.textContent = String(right.title ?? "세움 선언");
+    if (this.runRepresentationRightStatusEl) this.runRepresentationRightStatusEl.textContent = right.runtime_execution === "landed" ? "실행됨" : "풀이계획만";
+    if (this.runRepresentationRightSourceEl) {
+      this.runRepresentationRightSourceEl.textContent = Array.isArray(right.teaching_snippet) ? right.teaching_snippet.join("\n") : "";
+    }
+    if (this.runRepresentationPlanSummaryEl) {
+      const stage = String(summary.stage ?? "").trim();
+      const method = String(summary.method ?? "").trim();
+      const relationCount = Number(summary.relation_count ?? 0);
+      this.runRepresentationPlanSummaryEl.textContent = [stage, method, relationCount > 0 ? `관계 ${relationCount}개` : ""]
+        .filter(Boolean)
+        .join(" · ");
+    }
+    if (this.runRepresentationEquivalenceEl) {
+      this.runRepresentationEquivalenceEl.textContent = pair.same_observables_claim === true
+        ? "관측 동등성: 확인됨"
+        : "관측 동등성: 미검증";
+    }
+    try {
+      window.__SEAMGRIM_REPRESENTATION_PAIR__ = pair;
+    } catch (_) {
+      // ignore browser instrumentation errors
+    }
+    return pair;
+  }
+
+  async applyWorldDiffControlChange(change = {}) {
+    if (String(change?.axis ?? "").trim() !== "control_init") return { applied: false };
+    if (String(change?.applies_as ?? "").trim() !== "control_value") return { applied: false };
+    const subject = String(change?.subject ?? "").trim();
+    const value = Number(change?.after?.canon);
+    const known = this.sliderPanel?.getSpecs?.().some((spec) => String(spec?.name ?? "").trim() === subject);
+    if (!subject || !Number.isFinite(value) || !known) return { applied: false };
+    this.sliderPanel.setValues({ [subject]: value });
+    await this.restart();
+    return { applied: true, subject, value };
+  }
+
+  renderWorldDiffReview(rawArtifact = null) {
+    const artifact = renderWorldDiffReview(this.runWorldDiffReviewEl, rawArtifact, {
+      onApprove: (change) => this.applyWorldDiffControlChange(change),
+      onReject: async () => ({ rejected: true }),
+      onDecision: (event) => {
+        if (this.root?.dataset) this.root.dataset.worldDiffDecision = String(event?.decision ?? "pending");
+      },
+    });
+    if (this.root?.dataset) {
+      if (artifact) {
+        this.root.dataset.worldDiff = String(artifact.status ?? "candidate_preview");
+        this.root.dataset.worldDiffAuthority = String(artifact.authority ?? "none");
+        this.root.dataset.worldDiffDecision = "pending";
+      } else {
+        delete this.root.dataset.worldDiff;
+        delete this.root.dataset.worldDiffAuthority;
+        delete this.root.dataset.worldDiffDecision;
+      }
+    }
+    return artifact;
   }
 
   syncAdvancedExportVisibility() {
@@ -10320,6 +10612,7 @@ runs: 0</pre>
     const parsed = this.sliderPanel.parseFromDdn(this.baseDdn, {
       preserveValues: Boolean(preserveControlValues),
       maegimControlJson: this.lesson?.maegimControlJson ?? "",
+      ...this.sliderPresentation,
     });
     this.syncRunSliderAreaVisibility();
     this.syncGraphDraftFromParsed(parsed);
@@ -11686,7 +11979,10 @@ runs: 0</pre>
   loadLesson(lesson, { launchKind = "manual", sourceKind = "lesson", sourceLabel = "" } = {}) {
     this.lesson = lesson;
     this.lastLaunchKind = normalizeRunLaunchKind(launchKind);
-    this.classroomModeAccess = this.lastLaunchKind === "browse_select_student" || this.lastLaunchKind === "local_package_import"
+    this.sliderPresentation = resolveFirstDelightControlPresentation(lesson, this.lastLaunchKind);
+    this.renderRepresentationPair(lesson?.representationPair ?? null);
+    this.renderWorldDiffReview(lesson?.worldDiff ?? null);
+    this.classroomModeAccess = this.lastLaunchKind === "browse_select_student" || this.lastLaunchKind === "local_package_import" || this.lastLaunchKind === "first_delight"
       ? "student"
       : this.lastLaunchKind === "browse_select_teacher"
         ? "teacher"
@@ -11709,6 +12005,11 @@ runs: 0</pre>
     if (this.root?.dataset) {
       this.root.dataset.primaryView = "sim";
       this.root.dataset.graphTabMode = "graph";
+      if (this.lastLaunchKind === "first_delight") {
+        this.root.dataset.firstDelight = String(lesson?.meta?.first_delight_id ?? "projectile").trim() || "projectile";
+      } else {
+        delete this.root.dataset.firstDelight;
+      }
     }
     this.lastRuntimeHash = "-";
     this.lastRuntimeSnapshotKey = "";
@@ -11813,6 +12114,7 @@ runs: 0</pre>
     const parsed = this.sliderPanel.parseFromDdn(this.baseDdn, {
       preserveValues: false,
       maegimControlJson: lesson?.maegimControlJson ?? "",
+      ...this.sliderPresentation,
     });
     this.syncRunSliderAreaVisibility();
     this.syncGraphDraftFromParsed(parsed);
@@ -12341,13 +12643,17 @@ runs: 0</pre>
       }
       this.updateRuntimeHint();
       this.publishRunManagerSession();
-      this.switchRunTab(resolveRunPostExecuteTab({
-        views: this.lastRuntimeDerived?.views ?? null,
-        outputRows: this.lastRuntimeDerived?.outputRows ?? [],
-        outputLines: this.lastRuntimeDerived?.outputLines ?? [],
-        outputLog: this.lastRuntimeDerived?.outputLog ?? [],
-        warnings: this.lastParseWarnings,
-      }));
+      this.switchRunTab(
+        this.lastLaunchKind === "first_delight"
+          ? SUBPANEL_TAB.MAEGIM
+          : resolveRunPostExecuteTab({
+              views: this.lastRuntimeDerived?.views ?? null,
+              outputRows: this.lastRuntimeDerived?.outputRows ?? [],
+              outputLines: this.lastRuntimeDerived?.outputLines ?? [],
+              outputLog: this.lastRuntimeDerived?.outputLog ?? [],
+              warnings: this.lastParseWarnings,
+            }),
+      );
       this.applyTeacherPackageFocus();
       if (!shouldBatchConfiguredMadi && engineMode === RUN_ENGINE_MODE_LIVE) {
         if (shouldAutoStartLive) {
@@ -12415,13 +12721,17 @@ runs: 0</pre>
           this.updateRuntimeStatus(serverDerived);
           this.updateRuntimeHint();
           this.publishRunManagerSession();
-          this.switchRunTab(resolveRunPostExecuteTab({
-            views: serverDerived?.views ?? null,
-            outputRows: serverDerived?.outputRows ?? [],
-            outputLines: serverDerived?.outputLines ?? [],
-            outputLog: serverDerived?.outputLog ?? [],
-            warnings: this.lastParseWarnings,
-          }));
+          this.switchRunTab(
+            this.lastLaunchKind === "first_delight"
+              ? SUBPANEL_TAB.MAEGIM
+              : resolveRunPostExecuteTab({
+                  views: serverDerived?.views ?? null,
+                  outputRows: serverDerived?.outputRows ?? [],
+                  outputLines: serverDerived?.outputLines ?? [],
+                  outputLog: serverDerived?.outputLog ?? [],
+                  warnings: this.lastParseWarnings,
+                }),
+          );
           this.applyTeacherPackageFocus();
           if (engineMode === RUN_ENGINE_MODE_LIVE) {
             if (shouldAutoStartLive) {
@@ -12636,7 +12946,7 @@ runs: 0</pre>
       : (hasSpace2dDrawable(prevDerived?.views?.space2d) ? prevDerived.views.space2d : null);
     const nativeSpace2d = views?.space2d ?? null;
     const hasNativeSpace2d = hasSpace2dDrawable(nativeSpace2d);
-    const allowShapeFallback = Boolean(this.allowShapeFallback);
+    const allowShapeFallback = Boolean(this.allowShapeFallback || this.lastLaunchKind === "first_delight");
     const mainVisual = resolveRunMainVisualMode({
       views,
       observation,
@@ -12647,6 +12957,8 @@ runs: 0</pre>
       allowShapeFallback: allowShapeFallback,
       prevSpace2d,
       lessonRequiredViews: this.lesson?.requiredViews ?? [],
+      lessonViewRoles: this.lesson?.meta?.view_roles ?? [],
+      lessonGraphAxes: this.lesson?.meta?.first_delight_graph_axes ?? [],
     });
 
     this.lastSpace2dMode = hasNativeSpace2d

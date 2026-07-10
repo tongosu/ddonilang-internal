@@ -1,8 +1,9 @@
 import { createWasmLoader, applyWasmLogicAndDispatchState } from "./wasm_page_common.js";
 import { createLessonCanonHydrator, buildFlatPlanView } from "./runtime/index.js";
 import { BrowseScreen } from "./screens/browse.js";
+import { mountLearningSpineIndex } from "./learning_spine_index.js?v=20260710-first-delight-w6a";
 import { EditorScreen, saveDdnToFile } from "./screens/editor.js";
-import { RunScreen, applyLegacyAutofixToDdn, hasLegacyAutofixCandidate } from "./screens/run.js";
+import { RunScreen, applyLegacyAutofixToDdn, hasLegacyAutofixCandidate } from "./screens/run.js?v=20260710-first-delight-w5a";
 import { normalizeViewFamilyList } from "./view_family_contract.js";
 import {
   buildAutofixResultContract,
@@ -105,6 +106,25 @@ const SCENE_SUMMARY_STORAGE_KEY = "seamgrim.scene_summary.v0";
 const SNAPSHOT_V0_STORAGE_KEY = "seamgrim.snapshot.v0";
 const SESSION_V0_STORAGE_KEY = "seamgrim.session.v0";
 const BROWSE_PRESET_QUERY_KEY = "browsePreset";
+const FIRST_DELIGHT_QUERY_KEY = "first_delight";
+const LEARNING_SPINE_QUERY_KEY = "learning_spine";
+const FIRST_DELIGHT_PROJECTILE_ID = "rep_phys_projectile_xy_v1";
+const FIRST_DELIGHT_LESSON_BY_ALIAS = Object.freeze({
+  "1": FIRST_DELIGHT_PROJECTILE_ID,
+  true: FIRST_DELIGHT_PROJECTILE_ID,
+  projectile: FIRST_DELIGHT_PROJECTILE_ID,
+  physics_projectile: FIRST_DELIGHT_PROJECTILE_ID,
+  [FIRST_DELIGHT_PROJECTILE_ID]: FIRST_DELIGHT_PROJECTILE_ID,
+  line: "rep_math_function_line_v1",
+  "linear-function": "rep_math_function_line_v1",
+  math_function_line: "rep_math_function_line_v1",
+  rep_math_function_line_v1: "rep_math_function_line_v1",
+  economy: "rep_econ_supply_demand_tax_v1",
+  "market-tax": "rep_econ_supply_demand_tax_v1",
+  supply_demand_tax: "rep_econ_supply_demand_tax_v1",
+  econ_supply_demand_tax: "rep_econ_supply_demand_tax_v1",
+  rep_econ_supply_demand_tax_v1: "rep_econ_supply_demand_tax_v1",
+});
 const BROWSE_UI_PREFS_STORAGE_KEY = "seamgrim.ui.browse_prefs.v1";
 const DEV_SURFACES_QUERY_KEY = "devSurfaces";
 // lesson canon runtime(./runtime/*)에서 동적 import하므로 경로 기준은 runtime 디렉터리다.
@@ -384,7 +404,21 @@ function normalizeLessonIdFromRoute(raw) {
     const matched = direct.match(/^lessons\/([^/]+)\/lesson\.ddn$/i);
     if (matched && matched[1]) return String(matched[1]).trim();
   }
-  return direct;
+  const aliasHit = FIRST_DELIGHT_LESSON_BY_ALIAS[direct.toLowerCase()];
+  return aliasHit || direct;
+}
+
+function readFirstDelightFromLocation() {
+  try {
+    const href = String(window?.location?.href ?? "").trim();
+    if (!href) return "";
+    const url = new URL(href);
+    const requested = String(url.searchParams.get(FIRST_DELIGHT_QUERY_KEY) ?? "").trim().toLowerCase();
+    return FIRST_DELIGHT_LESSON_BY_ALIAS[requested] || "";
+  } catch (_) {
+    // ignore invalid route input
+  }
+  return "";
 }
 
 function readStudioRouteRequestFromLocation() {
@@ -2267,6 +2301,10 @@ async function loadLessonById(lessonId) {
   const textMd = (await fetchText(base.textCandidates)) ?? "";
   const metaRaw = await fetchText(base.metaCandidates);
   const meta = parseTomlMeta(metaRaw);
+  const representationPairPath = String(meta.representation_pair_path ?? "").trim();
+  const representationPair = representationPairPath ? await fetchJson(representationPairPath) : null;
+  const worldDiffPath = String(meta.world_diff_path ?? "").trim();
+  const worldDiff = worldDiffPath ? await fetchJson(worldDiffPath) : null;
   const ddnMetaHeader = parseLessonDdnMetaHeader(ddnText);
   const displayMeta = resolveLessonDisplayMeta({
     baseTitle: base.title,
@@ -2294,6 +2332,8 @@ async function loadLessonById(lessonId) {
     structureCandidates: base.structureCandidates,
     ddnMetaHeader,
     meta,
+    representationPair,
+    worldDiff,
   }, meta);
 
   const lesson = await lessonCanonHydrator.hydrateLessonCanon(lessonBase);
@@ -2566,6 +2606,8 @@ async function main() {
     ? readWindowStringArray("SEAMGRIM_FEDERATED_FILE_CANDIDATES", [])
     : [];
   const browsePresetFromLocation = readBrowsePresetFromLocation();
+  const firstDelightLessonId = readFirstDelightFromLocation();
+  const learningSpineFromLocation = readQueryBoolean(LEARNING_SPINE_QUERY_KEY, false);
   const studioRouteRequest = readStudioRouteRequestFromLocation();
   const platformRouteSlots = readPlatformRouteSlotsFromLocation();
   const catalogMode = resolveCatalogMode();
@@ -3461,6 +3503,45 @@ async function main() {
   browseScreen.init();
   editorScreen.init();
   runScreen.init();
+  const learningSpineButton = byId("btn-learning-spine");
+  const learningSpinePanel = byId("learning-spine-panel");
+  const learningSpineIndex =
+    (await fetchJson(`${PROJECT_PREFIX}learning_spine_index.detjson`)) ??
+    (await fetchJson("learning_spine_index.detjson"));
+  let learningSpine = null;
+  const setLearningSpineBrowseMode = (open) => {
+    const active = Boolean(open);
+    learningSpineButton?.classList.toggle("active", active);
+    learningSpineButton?.setAttribute("aria-expanded", active ? "true" : "false");
+    byId("screen-browse")?.classList.toggle("learning-spine-open", active);
+  };
+  if (learningSpineIndex && learningSpinePanel) {
+    learningSpine = mountLearningSpineIndex({
+      root: learningSpinePanel,
+      index: learningSpineIndex,
+      opener: learningSpineButton,
+      onOpenLesson: async (lessonId) => {
+        await switchMainTab(MAIN_TAB_STUDIO, {
+          lessonId,
+          launchKind: "learning_spine",
+          autoExecute: true,
+          fallbackToBlankOnLessonError: false,
+        });
+      },
+      onOpenChange: setLearningSpineBrowseMode,
+    });
+    learningSpineButton?.addEventListener("click", () => learningSpine?.toggle());
+    document.querySelectorAll(".browse-tab[data-tab]").forEach((button) => {
+      button.addEventListener("click", () => learningSpine?.close());
+    });
+    try {
+      window.__SEAMGRIM_LEARNING_SPINE_INDEX__ = learningSpineIndex;
+    } catch (_) {
+      // Browser instrumentation is optional.
+    }
+  } else if (learningSpineButton) {
+    learningSpineButton.disabled = true;
+  }
   if (!DEV_SURFACES_ENABLED) {
     mountSeulgiProductSurfaces();
   }
@@ -3555,7 +3636,19 @@ async function main() {
     if (studioRouteRequest.fromLegacyPlayRedirect && consumeLegacyPlayRedirectParam()) {
       showPlatformToast("예전 Playground 주소를 작업실로 옮겼습니다. 이제 작업실에서 편집하고 실행하세요.");
     }
-    if (studioRouteRequest.lessonId) {
+    if (firstDelightLessonId) {
+      const opened = await switchMainTab(MAIN_TAB_STUDIO, {
+        lessonId: firstDelightLessonId,
+        launchKind: "first_delight",
+        autoExecute: true,
+        fallbackToBlankOnLessonError: false,
+      });
+      if (!opened) {
+        showPlatformToast("첫 세계를 열지 못했습니다.");
+        setScreen("browse");
+      }
+      initialScreenApplied = true;
+    } else if (studioRouteRequest.lessonId) {
       const opened = await switchMainTab(MAIN_TAB_STUDIO, {
         lessonId: studioRouteRequest.lessonId,
         launchKind: "browse_select",
@@ -3581,6 +3674,10 @@ async function main() {
 
   if (!initialScreenApplied) {
     setScreen("browse");
+  }
+  if (learningSpineFromLocation && !firstDelightLessonId && !studioRouteRequest.hasStudioRequest) {
+    setScreen("browse");
+    learningSpine?.open();
   }
   window.addEventListener("beforeunload", () => {
     runScreen?.flushOverlaySession?.();
