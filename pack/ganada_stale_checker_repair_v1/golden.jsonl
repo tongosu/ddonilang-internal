@@ -1,0 +1,1 @@
+{"id":"c00_ganada_stale_checker_repair_marker","cmd":["run","pack/ganada_stale_checker_repair_v1/input.ddn"],"stdout":["GANADA_STALE_CHECKER_REPAIR_V1","repaired_checkers=3","legacy_markdown_dependency_removed=true","dev_summary_token_dependency_removed=true","matrix_upgrade_claim=false"],"exit_code":0}

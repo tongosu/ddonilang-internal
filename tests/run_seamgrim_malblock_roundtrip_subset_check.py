@@ -14,7 +14,6 @@ ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "pack" / "seamgrim_malblock_roundtrip_subset_v1"
 CASES_PATH = PACK / "fixtures" / "cases.detjson"
 EXPECTED_PATH = PACK / "expected" / "malblock_roundtrip_subset.detjson"
-QUEUE = ROOT / "NEXT_WORK_QUEUE_AFTER_CONNECT_V1.md"
 
 
 def fail(message: str) -> int:
@@ -221,53 +220,6 @@ def generate_report() -> dict:
     }
 
 
-def check_reference_docs() -> None:
-    root_doc = ROOT / "SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1.md"
-    if not root_doc.exists():
-        raise RuntimeError("missing SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1.md")
-    text = root_doc.read_text(encoding="utf-8")
-    required = [
-        "ROADMAP_V2 `라-2`",
-        "DDN -> 말블록",
-        "canonBlockEditorPlan",
-        "canonical DDN",
-        "raw/opaque blocks",
-        "(조건)이 될때",
-        "(조건)인 동안",
-        "ROADMAP_V2_LA2_FINAL_CLOSURE_V1",
-        "docs/ssot/**",
-    ]
-    missing = [token for token in required if token not in text]
-    if missing:
-        raise RuntimeError(f"root doc missing tokens: {missing}")
-
-
-def check_queue() -> None:
-    if not QUEUE.exists():
-        raise RuntimeError("missing NEXT_WORK_QUEUE_AFTER_CONNECT_V1.md")
-    text = QUEUE.read_text(encoding="utf-8")
-    required = [
-        "SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1",
-        "closed by `SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1.md`",
-        "pack/seamgrim_malblock_roundtrip_subset_v1",
-        "ROADMAP_V2_LA2_FINAL_CLOSURE_V1",
-        "closed by `ROADMAP_V2_LA2_FINAL_CLOSURE_V1.md`",
-        "ROADMAP_V2_A1_NURIGYM_REBASE_V1",
-        "ROOT_LOW_RISK_RETIRE_DELETE_V1",
-        "No automatic next development item is selected.",
-        "docs/ssot/**",
-    ]
-    missing = [token for token in required if token not in text]
-    if missing:
-        raise RuntimeError(f"queue missing tokens: {missing}")
-    if "1. `SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1`" in text:
-        raise RuntimeError("SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1 is still listed as next open item")
-    if "1. `ROADMAP_V2_LA2_FINAL_CLOSURE_V1`" in text:
-        raise RuntimeError("ROADMAP_V2_LA2_FINAL_CLOSURE_V1 is still listed as next open item")
-    if "1. `ROOT_LOW_RISK_RETIRE_DELETE_V1`" in text:
-        raise RuntimeError("ROOT_LOW_RISK_RETIRE_DELETE_V1 is still listed as next open item")
-
-
 def check_docs_ssot_clean() -> None:
     result = run_cmd(["git", "status", "--short", "--", "docs/ssot"], timeout=60)
     if result.returncode != 0:
@@ -282,7 +234,6 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        check_reference_docs()
         report = generate_report()
         actual_text = format_json(report)
         if args.update:
@@ -293,7 +244,6 @@ def main() -> int:
         expected_text = EXPECTED_PATH.read_text(encoding="utf-8")
         if expected_text != actual_text:
             raise RuntimeError(f"expected mismatch: {EXPECTED_PATH.relative_to(ROOT)}")
-        check_queue()
         check_docs_ssot_clean()
     except Exception as exc:
         return fail(str(exc))

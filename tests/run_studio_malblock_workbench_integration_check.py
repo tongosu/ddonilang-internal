@@ -7,12 +7,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOC = ROOT / "docs" / "context" / "queue" / "STUDIO_MALBLOCK_WORKBENCH_INTEGRATION_V1.md"
-REPORT = ROOT / "docs" / "studio" / "MALBLOCK_WORKBENCH_INTEGRATION_V1.md"
-INDEX = ROOT / "docs" / "studio" / "INDEX.md"
 PACK = ROOT / "pack" / "studio_malblock_workbench_integration_v1"
 RUNNER = ROOT / "tests" / "studio_malblock_workbench_integration_runner.mjs"
 HELPER = ROOT / "solutions" / "seamgrim_ui_mvp" / "ui" / "studio_malblock_workbench_integration.js"
+GANADA = ROOT / "pack" / "ganada_la_malblock_workbench_v1" / "workflow.detjson"
 NEXT = "STUDIO_DIAGNOSTIC_FIXIT_INTEGRATION_V1"
 
 
@@ -68,70 +66,16 @@ def require_docs_ssot_clean() -> None:
 
 def check_required_files() -> None:
     for path in [
-        DOC,
-        REPORT,
-        INDEX,
         PACK / "README.md",
         PACK / "contract.detjson",
         PACK / "input.ddn",
         PACK / "golden.jsonl",
         RUNNER,
         HELPER,
-        ROOT / "tests" / "run_studio_lesson_authoring_run_integration_check.py",
         ROOT / "tests" / "run_malblock_authoring_ui_check.py",
+        GANADA,
     ]:
         require(path)
-
-
-def check_docs() -> None:
-    tokens = [
-        "STUDIO_MALBLOCK_WORKBENCH_INTEGRATION_V1",
-        "seamgrim.malblock_workbench_integration.v1",
-        "malblock_workbench_integration",
-        "Primary coordinate: `마-3`",
-        "Support coordinate: `라-3`",
-        "malblock_workbench_ready",
-        "9 product stages",
-        "초장기 계획: 1시대 5/5 = 100%, 2시대 4/7 = 57%, 전체 9/18 = 50%",
-        "마-3 4/4 = 100%",
-        "라-3 2/3 = 67%",
-        "queue-expanded 25/90 = 28%",
-        NEXT,
-        "docs/ssot/**",
-    ]
-    require_contains(DOC, tokens + ["No main workbench block tab reintegration claim", "No parser/frontdoor grammar change"])
-    require_contains(REPORT, tokens[:5] + ["No main workbench block tab reintegration claim", "ROADMAP_V2 전체: queue-expanded 25/90 = 28%"])
-    require_contains(
-        INDEX,
-        [
-            "STUDIO_MALBLOCK_WORKBENCH_INTEGRATION_V1",
-            "docs/studio/MALBLOCK_WORKBENCH_INTEGRATION_V1.md",
-            "pack/studio_malblock_workbench_integration_v1",
-            "tests/run_studio_malblock_workbench_integration_check.py",
-        ],
-    )
-    require_contains(
-        ROOT / "docs" / "context" / "queue" / "STUDIO_LONG_HORIZON_ROADMAP_V1.md",
-        [
-            "STUDIO_MALBLOCK_WORKBENCH_INTEGRATION_V1",
-            "seamgrim.malblock_workbench_integration.v1",
-            NEXT,
-            "전체 9/18 = 50%",
-            "마-3 4/4 = 100%",
-            "라-3 2/3 = 67%",
-        ],
-    )
-    require_contains(
-        ROOT / "docs" / "context" / "all" / "DEV_SUMMARY.md",
-        [
-            "STUDIO_MALBLOCK_WORKBENCH_INTEGRATION_V1",
-            "studio_malblock_workbench_integration_v1",
-            "seamgrim.malblock_workbench_integration.v1",
-            "전체 9/18 = 50%",
-            "ROADMAP_V2 전체: queue-expanded 25/90 = 28%",
-            "docs/ssot/** 변경 없음",
-        ],
-    )
 
 
 def check_product_tokens() -> None:
@@ -233,11 +177,20 @@ def check_golden() -> None:
         fail(f"unexpected golden stdout: {payload.get('stdout')!r}")
 
 
+def check_ganada_evidence_ref() -> None:
+    payload = json.loads(read(GANADA))
+    if payload.get("schema") != "ddn.ganada.la.malblock_workbench.v1":
+        fail("Ganada malblock workbench schema mismatch")
+    if payload.get("cell_id") != "라-3":
+        fail("Ganada malblock workbench cell mismatch")
+    if payload.get("behavior_closed_claim") is not False:
+        fail("Ganada malblock workbench must not claim matrix closure")
+
+
 def run_required_gates() -> None:
     for cmd in [
         ["node", "tests/studio_malblock_workbench_integration_runner.mjs"],
         ["python", "tests/run_pack_golden.py", "studio_malblock_workbench_integration_v1"],
-        ["python", "tests/run_studio_lesson_authoring_run_integration_check.py"],
         ["python", "tests/run_malblock_authoring_ui_check.py"],
     ]:
         proc = run(cmd, timeout=760)
@@ -247,10 +200,10 @@ def run_required_gates() -> None:
 
 def main() -> None:
     check_required_files()
-    check_docs()
     check_product_tokens()
     check_contract()
     check_golden()
+    check_ganada_evidence_ref()
     run_required_gates()
     require_docs_ssot_clean()
     print("studio_malblock_workbench_integration_check: ok")

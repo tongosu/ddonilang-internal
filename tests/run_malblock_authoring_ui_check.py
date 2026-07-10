@@ -3,12 +3,10 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DOC = ROOT / "MALBLOCK_AUTHORING_UI_V1.md"
-ROADMAP = ROOT / "docs" / "context" / "queue" / "STUDIO_LONG_HORIZON_ROADMAP_V1.md"
-PREV = ROOT / "SEAMGRIM_LESSON_AUTHORING_FLOW_V1.md"
 PACK = ROOT / "pack" / "malblock_authoring_ui_v1"
 RUNNER = ROOT / "tests" / "malblock_authoring_ui_browser_runner.mjs"
 
@@ -37,9 +35,6 @@ def run(cmd: list[str], *, timeout: int = 180) -> subprocess.CompletedProcess[st
 
 def require_files() -> int:
     required = [
-        DOC,
-        ROADMAP,
-        PREV,
         PACK / "README.md",
         PACK / "contract.detjson",
         PACK / "input.ddn",
@@ -53,7 +48,6 @@ def require_files() -> int:
         ROOT / "solutions" / "seamgrim_ui_mvp" / "ui" / "block_editor" / "seamgrim_palette.js",
         ROOT / "tests" / "run_block_editor_roundtrip_check.py",
         ROOT / "tests" / "run_seamgrim_block_editor_smoke_check.py",
-        ROOT / "tests" / "run_seamgrim_lesson_authoring_flow_check.py",
     ]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.exists()]
     if missing:
@@ -69,53 +63,20 @@ def require_tokens(path: Path, tokens: list[str], code: str) -> int:
     return 0
 
 
-def check_docs() -> int:
-    checks = [
-        (
-            DOC,
-            [
-                "MALBLOCK_AUTHORING_UI_V1",
-                "palette grouping",
-                "insert/delete/reorder",
-                "DDN generation",
-                "decode error display",
-                "No workbench main-tab reintegration",
-                "STUDIO_DIAGNOSTIC_FIXIT_PREVIEW_V1",
-                "docs/ssot/**",
-            ],
-            "E_MALBLOCK_AUTHORING_UI_DOC",
-        ),
-        (
-            ROADMAP,
-            [
-                "MALBLOCK_AUTHORING_UI_V1",
-                "STUDIO_DIAGNOSTIC_FIXIT_PREVIEW_V1",
-                "insert/delete/reorder",
-                "decode error display",
-            ],
-            "E_MALBLOCK_AUTHORING_UI_ROADMAP",
-        ),
-        (
-            PREV,
-            [
-                "SEAMGRIM_LESSON_AUTHORING_FLOW_V1",
-                "MALBLOCK_AUTHORING_UI_V1",
-            ],
-            "E_MALBLOCK_AUTHORING_UI_PREV",
-        ),
-    ]
-    for path, tokens, code in checks:
-        rc = require_tokens(path, tokens, code)
-        if rc:
-            return rc
-    return 0
-
-
 def check_product_markers() -> int:
     engine = read(ROOT / "solutions" / "seamgrim_ui_mvp" / "ui" / "block_editor" / "ddn_block_engine.js")
     for token in ["insertPaletteBlock(", "moveBlock(", "removeBlock(", "onChange?.(this.getBlocks())"]:
       if token not in engine:
           return fail("E_MALBLOCK_AUTHORING_UI_ENGINE", token)
+    return 0
+
+
+def run_pack_golden() -> int:
+    proc = run([sys.executable, "tests/run_pack_golden.py", "malblock_authoring_ui_v1"], timeout=120)
+    if proc.returncode != 0:
+        return fail("E_MALBLOCK_AUTHORING_UI_PACK_GOLDEN", proc.stdout.strip())
+    if "pack golden ok" not in proc.stdout:
+        return fail("E_MALBLOCK_AUTHORING_UI_PACK_GOLDEN_OK", proc.stdout.strip())
     return 0
 
 
@@ -188,22 +149,6 @@ def run_browser_smoke() -> int:
     return 0
 
 
-def check_dev_summary() -> int:
-    text = read(ROOT / "docs" / "context" / "all" / "DEV_SUMMARY.md")
-    required = [
-        "MALBLOCK_AUTHORING_UI_V1",
-        "malblock_authoring_ui_v1",
-        "malblock_authoring_ui_browser_runner.mjs",
-        "STUDIO_DIAGNOSTIC_FIXIT_PREVIEW_V1",
-        "python tests/run_malblock_authoring_ui_check.py",
-        "docs/ssot/** 변경 없음",
-    ]
-    missing = [token for token in required if token not in text]
-    if missing:
-        return fail("E_MALBLOCK_AUTHORING_UI_DEV_SUMMARY", str(missing))
-    return 0
-
-
 def check_docs_ssot_clean() -> int:
     proc = run(["git", "status", "--short", "--", "docs/ssot"], timeout=60)
     if proc.returncode != 0:
@@ -216,13 +161,12 @@ def check_docs_ssot_clean() -> int:
 def main() -> int:
     checks = (
         require_files,
-        check_docs,
         check_product_markers,
         check_pack_contract,
         check_golden,
+        run_pack_golden,
         check_playwright_available,
         run_browser_smoke,
-        check_dev_summary,
         check_docs_ssot_clean,
     )
     for check in checks:
