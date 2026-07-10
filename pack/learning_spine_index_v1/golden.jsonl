@@ -1,0 +1,2 @@
+{"id":"c01_learning_spine_index_v1_marker","cmd":["run","pack/learning_spine_index_v1/input.ddn"],"stdout":["LEARNING_SPINE_INDEX_V1","8 stages in fixed order","existing curriculum connector, not new curriculum","landed, mixed, and gap-open states stay separate","owner decision required for promotion"],"exit_code":0}
+

@@ -1,0 +1,466 @@
+{
+  "schema": "ddn.learning_spine_index.v1",
+  "index_id": "learning_spine_index_v1",
+  "title": "또니랑 배움길",
+  "purpose": "기존 교재, 셈그림 세계, 검증 팩, 가나다 좌표를 한 길로 잇는 연결 색인",
+  "policy": {
+    "new_curriculum": false,
+    "new_roadmap": false,
+    "completion_claim": false,
+    "connector_index_only": true,
+    "ssot_change": false,
+    "owner_decision_required_for_promotion": true
+  },
+  "overlays": ["learning_spine_index"],
+  "frozen_tags": [
+    "declarative_modeling",
+    "ai_audit",
+    "multilang_curriculum",
+    "manim",
+    "nurigym_game",
+    "freeze",
+    "governance"
+  ],
+  "status_labels": {
+    "landed": "지금 배울 수 있음",
+    "mixed": "기반 있음 · 일부 열림",
+    "gap_open": "설계 열림"
+  },
+  "stages": [
+    {
+      "id": "LS01",
+      "order": 1,
+      "title": "값·식·단위",
+      "nav_title": "값·식·단위",
+      "outcome": "값을 이름 붙이고 식과 단위를 읽어 첫 그래프를 만든다.",
+      "status": "landed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "landed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["기본"],
+      "ganada_cells": ["가", "마", "하"],
+      "tags": ["manim"],
+      "source_refs": [
+        {
+          "path": "docs/guides/study/ddonirang_vol1_lesson03_v1.md",
+          "title": "1권 · 값과 이름의 기초",
+          "role": "값 입문",
+          "source_kind": "textbook"
+        },
+        {
+          "path": "docs/guides/ddonirang_mastercourse/lessons/L02_text_to_program_units.md",
+          "title": "단위와 문장 종결",
+          "role": "단위 입문",
+          "source_kind": "guide"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_math_function_line_v1",
+          "title": "일차함수 그래프",
+          "role": "값과 식을 눈으로 확인",
+          "status": "landed"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/edu_ddn_mc_l02_units_and_dot", "role": "단위와 종결 자료", "evidence_status": "reference_only"},
+        {"path": "pack/lang_unit_check_v1", "role": "단위 검사 자료", "evidence_status": "reference_only"},
+        {"path": "pack/edu_seamgrim_rep_math_function_line_v1", "role": "셈그림 대표 세계", "evidence_status": "verified_by_stage_gate"}
+      ],
+      "evidence_gates": [["python", "tests/run_seamgrim_current_line_three_worlds_check.py"]],
+      "open_items": [],
+      "next_stage_id": "LS02"
+    },
+    {
+      "id": "LS02",
+      "order": 2,
+      "title": "상태와 마디",
+      "nav_title": "상태·마디",
+      "outcome": "한 세계의 상태가 마디마다 어떻게 달라지는지 관찰하고 재현한다.",
+      "status": "landed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "landed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["기본"],
+      "ganada_cells": ["가", "마", "사", "하"],
+      "tags": ["declarative_modeling", "manim"],
+      "source_refs": [
+        {
+          "path": "docs/guides/study/ddonirang_vol3_lesson02_v1.md",
+          "title": "3권 · 시작할때",
+          "role": "첫 상태",
+          "source_kind": "textbook"
+        },
+        {
+          "path": "docs/guides/study/ddonirang_vol3_lesson03_v1.md",
+          "title": "3권 · 매마디마다",
+          "role": "마디 변화",
+          "source_kind": "textbook"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_phys_projectile_xy_v1",
+          "title": "포물선 운동",
+          "role": "상태와 마디의 첫 세계",
+          "status": "landed"
+        },
+        {
+          "lesson_id": "rep_physics_velocity_history_v1",
+          "title": "속도 기록 그래프",
+          "role": "시간에 따른 상태 기록",
+          "status": "landed"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/edu_seamgrim_rep_phys_projectile_xy_v1", "role": "포물선 대표 세계", "evidence_status": "verified_by_stage_gate"},
+        {"path": "pack/seamgrim_first_delight_projectile_v1", "role": "첫 기쁨 브라우저 흐름", "evidence_status": "verified_by_stage_gate"}
+      ],
+      "evidence_gates": [["python", "tests/run_seamgrim_first_delight_projectile_check.py"]],
+      "open_items": [],
+      "next_stage_id": "LS03"
+    },
+    {
+      "id": "LS03",
+      "order": 3,
+      "title": "조건·반복·사건",
+      "nav_title": "조건·반복·사건",
+      "outcome": "조건과 반복을 쓰고 사건이 상태를 바꾸는 순서를 설명한다.",
+      "status": "landed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "landed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["기본", "중급"],
+      "ganada_cells": ["가", "마", "사", "하"],
+      "tags": ["nurigym_game"],
+      "source_refs": [
+        {
+          "path": "docs/guides/study/ddonirang_vol1_lesson09_v1.md",
+          "title": "1권 · 간단한 조건문",
+          "role": "조건",
+          "source_kind": "textbook"
+        },
+        {
+          "path": "docs/guides/study/ddonirang_vol1_lesson10_v1.md",
+          "title": "1권 · 반복 맛보기",
+          "role": "반복",
+          "source_kind": "textbook"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_ddonirang_vol4_event_dispatch_v1",
+          "title": "사건이 상태를 바꾸는 과정",
+          "role": "사건 전달",
+          "status": "landed"
+        },
+        {
+          "lesson_id": "rep_ddonirang_vol4_state_transition_v1",
+          "title": "상태 전이와 체력 변화",
+          "role": "조건부 상태 전이",
+          "status": "landed"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/vol4_event_dispatch_runtime_v1", "role": "사건 실행 자료", "evidence_status": "reference_only"},
+        {"path": "pack/onmungchi_10_worlds_pilot_v1", "role": "사건·상태 세계 카드", "evidence_status": "verified_by_stage_gate"}
+      ],
+      "evidence_gates": [["python", "tests/run_onmungchi_10_worlds_pilot_check.py"]],
+      "open_items": [],
+      "next_stage_id": "LS04"
+    },
+    {
+      "id": "LS04",
+      "order": 4,
+      "title": "순수 함수·함수값·자료형·차림",
+      "nav_title": "함수·자료·차림",
+      "outcome": "자료를 바꾸고 거르며 함수가 값처럼 이동하는 최소 의미를 읽는다.",
+      "status": "mixed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "mixed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["중급", "고급"],
+      "ganada_cells": ["가", "나", "하"],
+      "tags": ["governance"],
+      "source_refs": [
+        {
+          "path": "docs/guides/study/ddonirang_vol2_lesson01_v1.md",
+          "title": "2권 · 차림 다시 보기",
+          "role": "자료와 차림",
+          "source_kind": "textbook"
+        },
+        {
+          "path": "docs/guides/study/ddonirang_vol2_lesson03_v1.md",
+          "title": "2권 · 차림 값을 차례로 보기",
+          "role": "순회와 인라인 함수 입구",
+          "source_kind": "textbook"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_ddonirang_vol2_map_v1",
+          "title": "자료 바꾸기",
+          "role": "함수 적용",
+          "status": "landed"
+        },
+        {
+          "lesson_id": "rep_ddonirang_vol2_filter_v1",
+          "title": "자료 거르기",
+          "role": "조건 함수 적용",
+          "status": "landed"
+        },
+        {
+          "lesson_id": "rep_ddonirang_vol2_pipeline_v1",
+          "title": "자료 흐름 여러 단계",
+          "role": "함수 합성 읽기",
+          "status": "landed"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/stdlib_charim_basics", "role": "차림 기초", "evidence_status": "reference_only"},
+        {"path": "pack/lang_inline_lambda_function_pin_v1", "role": "인라인 함수 최소 의미", "evidence_status": "reference_only"},
+        {"path": "pack/lang_lambda_capture_runtime_v1", "role": "함수값 캡처 근거", "evidence_status": "reference_only"}
+      ],
+      "evidence_gates": [],
+      "open_items": [
+        "저장·반환되는 일급 함수 전체 계약과 캡처 해시",
+        "제한된 제네릭과 결과형의 교육 표면"
+      ],
+      "next_stage_id": "LS05"
+    },
+    {
+      "id": "LS05",
+      "order": 5,
+      "title": "모듬·가지·테스트·진단",
+      "nav_title": "모듬·테스트",
+      "outcome": "코드를 나누고 검증 팩과 진단으로 다시 실행 가능한 작업을 만든다.",
+      "status": "mixed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "mixed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["중급", "고급"],
+      "ganada_cells": ["가", "카", "타", "하"],
+      "tags": ["freeze", "governance"],
+      "source_refs": [
+        {
+          "path": "docs/guides/TESTING.md",
+          "title": "테스트와 팩 실행 가이드",
+          "role": "검증 입문",
+          "source_kind": "guide"
+        },
+        {
+          "path": "docs/guides/ddonirang_mastercourse/course_48/slides/L06.md",
+          "title": "가지·팩·걸음길·모듬",
+          "role": "구조 개념",
+          "source_kind": "textbook"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_ddonirang_vol4_resume_isolation_v1",
+          "title": "격리와 복귀 흐름",
+          "role": "실패 격리와 복귀 관찰",
+          "status": "landed"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/module_system_smoke_v1", "role": "모듬 v1 연기 시험", "evidence_status": "reference_only"},
+        {"path": "pack/gaji_registry_report_provenance_v1", "role": "가지와 출처", "evidence_status": "reference_only"},
+        {"path": "pack/studio_diagnostic_fixit_integration_v1", "role": "진단과 고침 제안", "evidence_status": "reference_only"}
+      ],
+      "evidence_gates": [],
+      "open_items": [
+        "package 배포 교과와 모듬 v1의 초심자용 연결 차시",
+        "결과형을 테스트·진단 흐름에 연결하는 표준 교범"
+      ],
+      "next_stage_id": "LS06"
+    },
+    {
+      "id": "LS06",
+      "order": 6,
+      "title": "관계·모델·논리·증명",
+      "nav_title": "관계·논리·증명",
+      "outcome": "값을 갱신하는 코드와 관계를 선언하는 모델을 비교하고 제한된 증명 근거를 읽는다.",
+      "status": "mixed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "mixed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["고급", "전문"],
+      "ganada_cells": ["다", "마", "타", "하"],
+      "tags": ["declarative_modeling", "governance"],
+      "source_refs": [
+        {
+          "path": "docs/reports/impl/SEAMGRIM_PROJECTILE_REPRESENTATION_PAIR_V1_20260710.md",
+          "title": "포물선 명령형·선언형 비교",
+          "role": "비교 차시 구현 근거",
+          "source_kind": "implementation_report"
+        },
+        {
+          "path": "docs/context/proposals/02_PROPOSAL_EQUATION_RELATION_IN_FORMULA_V1_20260422.md",
+          "title": "식 안의 관계 제안",
+          "role": "후속 설계 후보",
+          "source_kind": "proposal"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_phys_projectile_xy_v1",
+          "title": "포물선 운동",
+          "role": "명령형·세움 비교 기준 세계",
+          "status": "comparison_landed_runtime_open"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/seamgrim_projectile_representation_pair_v1", "role": "표현판 비교 UI", "evidence_status": "reference_only"},
+        {"path": "pack/lang_seum_vol3_prime_example_pack_v1", "role": "세움과 prime 예시", "evidence_status": "reference_only"},
+        {"path": "pack/relation_solve_wasm_cli_parity_v1", "role": "제한된 관계 풀이 parity", "evidence_status": "reference_only"},
+        {"path": "pack/proof_relation_equivalence_v1", "role": "관계 동치 증명 근거", "evidence_status": "reference_only"}
+      ],
+      "evidence_gates": [],
+      "open_items": [
+        "세움 11축의 선언형 런타임 닫힘",
+        "유한 관계·논리·증명 교육 경계와 비목표",
+        "무제한 Prolog 탐색을 목표로 하지 않는 범위 명시"
+      ],
+      "next_stage_id": "LS07"
+    },
+    {
+      "id": "LS07",
+      "order": 7,
+      "title": "AI 협업과 뜻 단위 diff",
+      "nav_title": "AI·뜻 diff",
+      "outcome": "AI 후보를 뜻 단위 차이로 읽고 사람이 승인하거나 거절한 뒤에만 적용한다.",
+      "status": "mixed",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "mixed",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["중급", "고급", "전문"],
+      "ganada_cells": ["자", "거", "타", "하"],
+      "tags": ["ai_audit", "freeze", "governance"],
+      "source_refs": [
+        {
+          "path": "docs/reports/impl/TOOL_WORLD_DIFF_V1_20260710.md",
+          "title": "world_diff와 사람 검토",
+          "role": "현재 제품 근거",
+          "source_kind": "implementation_report"
+        },
+        {
+          "path": "docs/guides/study/ddonirang_curriculum_master_v1.md",
+          "title": "기존 교재 전체 연결표",
+          "role": "AI 차시가 붙을 기존 교육 자산",
+          "source_kind": "curriculum_index"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_phys_projectile_xy_v1",
+          "title": "중력이 달라진 포물선 후보",
+          "role": "뜻 단위 변경 검토",
+          "status": "review_landed"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/tool_world_diff_v1", "role": "뜻 단위 diff와 사람 승인", "evidence_status": "reference_only"},
+        {"path": "pack/seulgi_ai_gate_no_authority_g7_v1", "role": "AI 무권한 경계", "evidence_status": "reference_only"},
+        {"path": "pack/seulgi_proposal_ui_v1", "role": "후보 제안 UI", "evidence_status": "reference_only"}
+      ],
+      "evidence_gates": [],
+      "open_items": [
+        "full AST·세움·SolvePlan 뜻 단위 diff",
+        "외부 AI 호출과 후보 출처 기록",
+        "파일 반영은 별도 사용자 승인 워크플로로 유지"
+      ],
+      "next_stage_id": "LS08"
+    },
+    {
+      "id": "LS08",
+      "order": 8,
+      "title": "Python·Rust·JS·Modelica 대응 교과",
+      "nav_title": "다언어 대응",
+      "outcome": "같은 개념이 네 생태계에서 어떻게 달라지는지 비교하는 대응 교과를 설계한다.",
+      "status": "gap_open",
+      "state_axes": {
+        "source": "referenced",
+        "reflection": "connector_index_only_not_ssot",
+        "implementation": "gap_open",
+        "owner_decision": "pending"
+      },
+      "exposure_levels": ["고급", "전문"],
+      "ganada_cells": ["가", "마", "아", "거", "하"],
+      "tags": ["multilang_curriculum", "declarative_modeling", "nurigym_game", "governance"],
+      "source_refs": [
+        {
+          "path": "docs/context/proposals/PROPOSAL_FRONTDOOR_PARITY_CLOSE_V1_20260322.md",
+          "title": "공통 frontdoor parity 제안",
+          "role": "대응 실행 경계",
+          "source_kind": "proposal"
+        },
+        {
+          "path": "docs/context/proposals/01_PROPOSAL_LANGUAGE_POSITIONING_AND_PRODUCT_LINES_V1_20260422.md",
+          "title": "언어 위치와 제품선 제안",
+          "role": "Modelica 비교 경계",
+          "source_kind": "proposal"
+        },
+        {
+          "path": "docs/context/proposals/ddonirang_language_matrix_v1.md",
+          "title": "교착어 공통 언어 행렬",
+          "role": "한국어·교착어 공통 교범 후보",
+          "source_kind": "proposal"
+        }
+      ],
+      "worlds": [
+        {
+          "lesson_id": "rep_math_function_line_v1",
+          "title": "일차함수 그래프",
+          "role": "다언어 비교의 작은 기준 세계",
+          "status": "reference_anchor"
+        },
+        {
+          "lesson_id": "rep_phys_projectile_xy_v1",
+          "title": "포물선 운동",
+          "role": "선언형 모델 비교의 기준 세계",
+          "status": "reference_anchor"
+        }
+      ],
+      "pack_refs": [
+        {"path": "pack/nurigym_python_web_parity_v1", "role": "Python·웹 소비자 parity 씨앗", "evidence_status": "reference_only"},
+        {"path": "pack/seamgrim_wasm_cli_runtime_parity_v1", "role": "Rust CLI·JS/WASM 제품 경로 parity", "evidence_status": "reference_only"},
+        {"path": "pack/relation_solve_wasm_cli_parity_v1", "role": "acausal-lite 비교 씨앗", "evidence_status": "reference_only"}
+      ],
+      "evidence_gates": [],
+      "correspondence": [
+        {"language": "Python", "status": "seed", "relation": "교육·AI Gym 소비자와 연결하되 또니랑 의미의 정본은 아님"},
+        {"language": "Rust", "status": "reference", "relation": "결정적 엔진 구현 언어와 개념을 비교"},
+        {"language": "JavaScript", "status": "reference", "relation": "브라우저 제품 소비자와 상태·사건을 비교"},
+        {"language": "Modelica", "status": "candidate", "relation": "acausal-lite 관계 모델을 비교하며 full DAE·일반 해석기 완성은 주장하지 않음"}
+      ],
+      "open_items": [
+        "개념 ID와 네 언어 예제의 일대일 대응표",
+        "한국어 및 교착어 공통 교범의 역할 ID와 원어민 검토",
+        "Modelica 경쟁 범위를 acausal-lite 교육 모델링으로 명시"
+      ],
+      "next_stage_id": null
+    }
+  ]
+}
