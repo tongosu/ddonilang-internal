@@ -1510,6 +1510,7 @@
         "세금 전후 균형점이 어느 방향으로 이동하는지 그래프에서 찾기",
         "거래량 변화와 세금 부담을 한 문장으로 설명하기"
       ],
+      "meta_path": "solutions/seamgrim_ui_mvp/lessons/rep_econ_supply_demand_tax_v1/meta.toml",
       "source": "representative_v1",
       "ssot_pack": "edu_seamgrim_rep_econ_supply_demand_tax_v1"
     },
@@ -1533,6 +1534,7 @@
         "기울기를 바꾸었을 때 그래프가 더 가팔라지는지 확인하기",
         "표의 x-y 쌍을 골라 직선 위의 점과 연결하기"
       ],
+      "meta_path": "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/meta.toml",
       "source": "representative_v1",
       "ssot_pack": "edu_seamgrim_rep_math_function_line_v1"
     },
@@ -1556,6 +1558,7 @@
         "초기 속도를 바꾸면 최고점과 도달 거리가 어떻게 달라지는지 관찰하기",
         "공간 그림과 그래프에서 같은 시간의 위치를 찾아 비교하기"
       ],
+      "meta_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/meta.toml",
       "source": "representative_v1",
       "ssot_pack": "edu_seamgrim_rep_phys_projectile_xy_v1"
     },

@@ -5,3 +5,8 @@ subject = "econ"
 level = "intro"
 goals = ["시장 가격과 거래량의 변화를 단계별로 본다", "세금 변화가 거래량에 미치는 영향을 확인한다"]
 required_views = ["graph", "text"]
+first_delight_id = "market-tax"
+first_delight_controls = ["시작가격", "세금", "수요기울기"]
+first_delight_control_labels = {"시작가격" = "시작 가격", "세금" = "세금", "수요기울기" = "수요 민감도"}
+first_delight_graph_axes = ["t", "가격"]
+view_roles = ["graph_series"]
