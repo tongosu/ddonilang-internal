@@ -71,3 +71,4 @@ pub mod view;
 pub mod warp;
 pub mod worker;
 pub mod workshop;
+pub mod world_diff;

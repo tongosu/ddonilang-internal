@@ -1,0 +1,82 @@
+{
+  "schema": "ddn.world_diff.v1",
+  "status": "candidate_preview",
+  "authority": "none",
+  "world_id": "physics.projectile",
+  "candidate_origin": "ai_fixture",
+  "baseline": {
+    "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn",
+    "canonical_source_hash": "sha256:f2135577704af43d53a544e3337ad7ab8707fb130cd68e634e5952d45faecd51",
+    "control_plan_hash": "sha256:ce5e7a932d322a04723a037f172673ebf47a200edf72b5ff6a28ec25ded2795f",
+    "warning_count": 0
+  },
+  "candidate": {
+    "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/candidates/ai_gravity_half.ddn",
+    "canonical_source_hash": "sha256:ddd0f75ef72d889cd77313d34c4e4f21518683ee3cf9f4349a4028e793ba272d",
+    "control_plan_hash": "sha256:14a0bdc0a202bba2299c3ebccfbc8542b1ce5afcc439d3f2f8e8591ff387e1ab",
+    "warning_count": 0
+  },
+  "coverage": {
+    "control_init": "landed",
+    "control_range": "landed",
+    "control_step": "landed",
+    "settings": "not_compared",
+    "seum_relations": "not_compared",
+    "solveplan": "not_compared",
+    "mageum": "not_compared",
+    "first_state_hash_divergence": "not_computed"
+  },
+  "change_count": 1,
+  "changes": [
+    {
+      "id": "control_init:중력가속도",
+      "axis": "control_init",
+      "role": "constant",
+      "subject": "중력가속도",
+      "before": {
+        "canon": "9.8"
+      },
+      "after": {
+        "canon": "4.9"
+      },
+      "korean": "채비 중력가속도 기본값: 9.8 -> 4.9",
+      "applies_as": "control_value"
+    }
+  ],
+  "summary_ko": [
+    "채비 중력가속도 기본값: 9.8 -> 4.9"
+  ],
+  "execution_preview": {
+    "engine": "teul-cli",
+    "madi": 240,
+    "baseline": {
+      "state_hash": "blake3:349745dfcb0a6944acaa02db955721c8833bd6508cecd5f4ebbd7862ec67f8a3",
+      "trace_hash": "blake3:21313036c6a6699eea72ea44a4678ab44dad8fbd9e6c19e08465879e030474b6"
+    },
+    "candidate": {
+      "state_hash": "blake3:84b98783b6ef2e6b8a4c9bbb3ac359fda60c59b4b0fd0e833a878baa0766daf8",
+      "trace_hash": "blake3:1bab1d1ece1072fc68e51ebd2f1e9ec17b4ccd2d82f26f897a6ddfad2454cdf3"
+    },
+    "state_hash_equal": false,
+    "trace_hash_equal": false,
+    "first_divergence_madi": null,
+    "first_divergence_status": "not_computed"
+  },
+  "review": {
+    "requires_human_confirmation": true,
+    "approval_event_required": true,
+    "rejection_event_supported": true,
+    "auto_apply": false,
+    "file_write": false,
+    "runtime_ast_persisted": false
+  },
+  "false_claims": {
+    "ai_call": false,
+    "automatic_authority": false,
+    "automatic_apply": false,
+    "file_write": false,
+    "full_ast_diff": false,
+    "solveplan_diff": false,
+    "first_divergence_madi": false
+  }
+}

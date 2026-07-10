@@ -268,6 +268,19 @@ pub(crate) enum Commands {
         #[arg(long)]
         check: bool,
     },
+    #[command(name = "world-diff")]
+    WorldDiff {
+        baseline: PathBuf,
+        candidate: PathBuf,
+        #[arg(long)]
+        out: Option<PathBuf>,
+        #[arg(long)]
+        madi: Option<u64>,
+        #[arg(long = "world-id", default_value = "world.unspecified")]
+        world_id: String,
+        #[arg(long = "candidate-origin", default_value = "unattributed_candidate")]
+        candidate_origin: String,
+    },
     Asset {
         #[command(subcommand)]
         command: AssetCommands,
@@ -2091,6 +2104,26 @@ fn main() {
                 check,
             };
             if let Err(err) = cli::canon::run(&file, args) {
+                eprintln!("{}", err);
+                exit_with_saturation(1);
+            }
+        }
+        Commands::WorldDiff {
+            baseline,
+            candidate,
+            out,
+            madi,
+            world_id,
+            candidate_origin,
+        } => {
+            if let Err(err) = cli::world_diff::run(
+                &baseline,
+                &candidate,
+                out.as_deref(),
+                madi,
+                &world_id,
+                &candidate_origin,
+            ) {
                 eprintln!("{}", err);
                 exit_with_saturation(1);
             }

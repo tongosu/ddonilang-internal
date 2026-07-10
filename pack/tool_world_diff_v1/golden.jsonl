@@ -1,0 +1,2 @@
+{"id":"c01_tool_world_diff_v1_marker","cmd":["run","pack/tool_world_diff_v1/input.ddn"],"stdout":["TOOL_WORLD_DIFF_V1","same source empty diff","one control change one semantic axis","human confirmation before session apply","AI authority and auto apply false"],"exit_code":0}
+
