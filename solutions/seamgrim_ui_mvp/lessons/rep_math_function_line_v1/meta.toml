@@ -10,3 +10,5 @@ first_delight_controls = ["기울기", "절편", "간격"]
 first_delight_control_labels = {"기울기" = "기울기", "절편" = "y 절편", "간격" = "x 간격"}
 first_delight_graph_axes = ["x", "y"]
 view_roles = ["graph_series"]
+primary_view = "graph"
+primary_view_rules_path = "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"

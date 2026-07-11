@@ -109,12 +109,17 @@ const BROWSE_PRESET_QUERY_KEY = "browsePreset";
 const FIRST_DELIGHT_QUERY_KEY = "first_delight";
 const LEARNING_SPINE_QUERY_KEY = "learning_spine";
 const FIRST_DELIGHT_PROJECTILE_ID = "rep_phys_projectile_xy_v1";
+const FIRST_DELIGHT_PENDULUM_ID = "rep_phys_pendulum_wave1_v1";
 const FIRST_DELIGHT_LESSON_BY_ALIAS = Object.freeze({
   "1": FIRST_DELIGHT_PROJECTILE_ID,
   true: FIRST_DELIGHT_PROJECTILE_ID,
   projectile: FIRST_DELIGHT_PROJECTILE_ID,
   physics_projectile: FIRST_DELIGHT_PROJECTILE_ID,
   [FIRST_DELIGHT_PROJECTILE_ID]: FIRST_DELIGHT_PROJECTILE_ID,
+  pendulum: FIRST_DELIGHT_PENDULUM_ID,
+  physics_pendulum: FIRST_DELIGHT_PENDULUM_ID,
+  "wave1-pendulum": FIRST_DELIGHT_PENDULUM_ID,
+  [FIRST_DELIGHT_PENDULUM_ID]: FIRST_DELIGHT_PENDULUM_ID,
   line: "rep_math_function_line_v1",
   "linear-function": "rep_math_function_line_v1",
   math_function_line: "rep_math_function_line_v1",
@@ -183,6 +188,7 @@ const appState = {
   currentLesson: null,
   currentScreen: "browse",
   shell: {
+    activeSpace: "learn",
     authSession: null,
     currentWorkId: null,
     currentProjectId: null,
@@ -993,7 +999,7 @@ function resolveShellScreenLabel(screenName = appState.currentScreen) {
   const screen = String(screenName ?? "").trim();
   if (screen === "browse") return "교과";
   if (screen === "editor") return "편집";
-  if (screen === "run") return "작업실";
+  if (screen === "run") return appState.shell.activeSpace === "learn" ? "수업" : "실험실";
   return "교과";
 }
 
@@ -1051,7 +1057,17 @@ function updateShellStatusRail() {
   });
 }
 
-function setScreen(name) {
+function setScreen(name, { shellSpace = "" } = {}) {
+  const requestedShellSpace = String(shellSpace ?? "").trim();
+  if (["learn", "lab", "create"].includes(requestedShellSpace)) {
+    appState.shell.activeSpace = requestedShellSpace;
+  } else if (name === "browse") {
+    appState.shell.activeSpace = "learn";
+  } else if (name === "editor") {
+    appState.shell.activeSpace = "create";
+  } else if (name === "run" && !["learn", "lab"].includes(appState.shell.activeSpace)) {
+    appState.shell.activeSpace = "lab";
+  }
   ["browse", "editor", "run"].forEach((screenName) => {
     const node = byId(`screen-${screenName}`);
     if (!node) return;
@@ -1064,17 +1080,24 @@ function setScreen(name) {
   }
   try {
     const tabButtons = document?.querySelectorAll?.(".main-shell-tab[data-main-tab-target]") ?? [];
+    const activeShellSpace = name === "browse" ? "learn" : name === "editor" ? "create" : appState.shell.activeSpace;
     tabButtons.forEach((button) => {
       const target = normalizeMainTabTarget(button?.dataset?.mainTabTarget, MAIN_TAB_BROWSE);
-      button?.classList?.toggle?.("active", target === mainTabTarget);
+      const shellSpace = String(button?.dataset?.shellSpace ?? "").trim();
+      const active = shellSpace ? shellSpace === activeShellSpace : target === mainTabTarget;
+      button?.classList?.toggle?.("active", active);
       try {
-        button?.setAttribute?.("aria-pressed", target === mainTabTarget ? "true" : "false");
+        button?.setAttribute?.("aria-pressed", active ? "true" : "false");
       } catch (_) {
         // ignore aria update errors
       }
     });
   } catch (_) {
     // ignore main tab update errors
+  }
+  const activeScreen = byId(`screen-${name}`);
+  if (activeScreen?.dataset) {
+    activeScreen.dataset.shellSpace = name === "run" ? appState.shell.activeSpace : name === "editor" ? "create" : "learn";
   }
   appState.screenListeners.forEach((listener) => {
     try {
@@ -1661,6 +1684,54 @@ async function fetchText(pathCandidates) {
     : buildPathCandidates(pathCandidates);
   const result = await fetchFirstOk(Array.from(new Set(list)), "text");
   return result.ok ? result.data : null;
+}
+
+function stableObjectString(value) {
+  if (Array.isArray(value)) return `[${value.map((item) => stableObjectString(item)).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableObjectString(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function fnv1a32Text(text = "") {
+  let hash = 0x811c9dc5;
+  const source = String(text ?? "");
+  for (let index = 0; index < source.length; index += 1) {
+    hash ^= source.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+function buildLessonDeclarationHash({ lessonId = "", meta = null, requiredViews = [] } = {}) {
+  return `candidate:fnv1a32:lesson_declaration:${fnv1a32Text(stableObjectString({
+    lesson_id: String(lessonId ?? "").trim(),
+    primary_view: String(meta?.primary_view ?? "").trim(),
+    required_views: Array.isArray(requiredViews) ? requiredViews.map((item) => String(item ?? "").trim()).filter(Boolean) : [],
+    view_roles: Array.isArray(meta?.view_roles) ? meta.view_roles.map((item) => String(item ?? "").trim()).filter(Boolean) : [],
+  }))}`;
+}
+
+function buildPrimaryViewContract({ lessonId = "", meta = null, ruleset = null, requiredViews = [] } = {}) {
+  const declaredPrimary = String(meta?.primary_view ?? "").trim();
+  const rules = Array.isArray(ruleset?.rules) ? ruleset.rules : [];
+  const matched = rules.find((rule) => String(rule?.lesson_id ?? "").trim() === String(lessonId ?? "").trim()) ?? null;
+  const primaryView = String(matched?.primary_view ?? declaredPrimary ?? "").trim();
+  if (!primaryView) return null;
+  return {
+    schema_id: String(ruleset?.schema_id ?? "seamgrim.primary_view_rules").trim(),
+    schema_version: String(ruleset?.schema_version ?? "v0").trim(),
+    ruleset_hash: String(ruleset?.ruleset_hash ?? "").trim(),
+    lesson_declaration_hash: buildLessonDeclarationHash({ lessonId, meta, requiredViews }),
+    lesson_id: String(lessonId ?? "").trim(),
+    primary_view: primaryView,
+    secondary_views: Array.isArray(matched?.secondary_views)
+      ? matched.secondary_views.map((item) => String(item ?? "").trim()).filter(Boolean)
+      : [],
+    reason: String(matched?.reason ?? "lesson_meta").trim(),
+    heuristic_selection: false,
+  };
 }
 
 function shouldProbeLessonInventoryApiForCatalog() {
@@ -2305,6 +2376,12 @@ async function loadLessonById(lessonId) {
   const representationPair = representationPairPath ? await fetchJson(representationPairPath) : null;
   const worldDiffPath = String(meta.world_diff_path ?? "").trim();
   const worldDiff = worldDiffPath ? await fetchJson(worldDiffPath) : null;
+  const viewPlanPath = String(meta.view_plan_path ?? "").trim();
+  const viewPlan = viewPlanPath ? await fetchJson(viewPlanPath) : null;
+  const sealedTraceReactionsPath = String(meta.sealed_trace_reactions_path ?? "").trim();
+  const sealedTraceReactions = sealedTraceReactionsPath ? await fetchJson(sealedTraceReactionsPath) : null;
+  const primaryViewRulesPath = String(meta.primary_view_rules_path ?? "").trim();
+  const primaryViewRules = primaryViewRulesPath ? await fetchJson(primaryViewRulesPath) : null;
   const ddnMetaHeader = parseLessonDdnMetaHeader(ddnText);
   const displayMeta = resolveLessonDisplayMeta({
     baseTitle: base.title,
@@ -2334,9 +2411,19 @@ async function loadLessonById(lessonId) {
     meta,
     representationPair,
     worldDiff,
+    viewPlan,
+    sealedTraceReactions,
   }, meta);
 
   const lesson = await lessonCanonHydrator.hydrateLessonCanon(lessonBase);
+  const primaryViewContract = buildPrimaryViewContract({
+    lessonId: lesson?.id ?? lessonBase.id,
+    meta,
+    ruleset: primaryViewRules,
+    requiredViews: lesson?.requiredViews ?? lessonBase.requiredViews ?? [],
+  });
+  if (primaryViewRules) lesson.primaryViewRules = primaryViewRules;
+  if (primaryViewContract) lesson.primaryViewContract = primaryViewContract;
 
   appState.currentLesson = lesson;
   appState.lessonsById.set(lesson.id, lesson);
@@ -2821,6 +2908,7 @@ async function main() {
       derivedFrom = "",
       onboardingProfile = "",
       runRequest = null,
+      shellSpace = "lab",
     } = {},
   ) => {
     if (!runScreen) return;
@@ -2872,7 +2960,7 @@ async function main() {
     }
     persistSceneSummarySnapshot(runScreen);
     persistRuntimeSnapshotBundleV0(runScreen);
-    setScreen("run");
+    setScreen("run", { shellSpace });
     if (String(launchKind ?? "").trim().toLowerCase() === "local_package_import") {
       runScreen.resetRuntimeForExplicitRun?.({ execPathHint: "받은 수업 실행 대기" });
       window.requestAnimationFrame?.(() => {
@@ -2884,8 +2972,8 @@ async function main() {
     return queuedRunRequest;
   };
 
-  const openRunWithLesson = (lesson, { launchKind = "manual", autoExecute = false } = {}) => {
-    openRunWithLessonWithSource(lesson, { launchKind, autoExecute });
+  const openRunWithLesson = (lesson, { launchKind = "manual", autoExecute = false, shellSpace = "lab" } = {}) => {
+    openRunWithLessonWithSource(lesson, { launchKind, autoExecute, shellSpace });
   };
 
   const openStudioWithDdnText = async (
@@ -2934,6 +3022,7 @@ async function main() {
       launchKind = "manual",
       autoExecute = false,
       onboardingProfile = "",
+      shellSpace = "lab",
       fallbackToBlankOnLessonError = true,
     } = {},
   ) => {
@@ -2952,6 +3041,7 @@ async function main() {
           autoExecute,
           sourceId: `lesson:${lesson.id}`,
           onboardingProfile,
+          shellSpace,
         });
         return true;
       } catch (err) {
@@ -3158,19 +3248,19 @@ async function main() {
       if (!lessonId) {
         throw new Error("교과를 찾지 못했습니다: invalid lesson selection");
       }
-      const onboardingProfile = normalizeRunOnboardingProfile(
-        selection?.launchProfile ?? selection?.onboardingProfile ?? readBrowseLaunchProfile(),
-      );
-      const launchKind = onboardingProfile ? `browse_select_${onboardingProfile}` : "browse_select";
+      const onboardingProfile = "";
+      const launchKind = "browse_select";
+      const shellSpace = String(selection?.launchAction ?? "learn").trim() === "lab" ? "lab" : "learn";
       await switchMainTab(MAIN_TAB_STUDIO, {
         lessonId,
         launchKind,
         autoExecute,
         onboardingProfile,
+        shellSpace,
       });
     },
     onCreate: () => {
-      void switchMainTab(MAIN_TAB_STUDIO, { launchKind: "manual" });
+      setScreen("editor");
     },
     onOpenLocalPackageFile: openLocalPackageFile,
     onOpenLegacyGuideExample: async ({ lesson, example, examples, warningNames }) => {
@@ -3557,8 +3647,17 @@ async function main() {
   }
   document.querySelectorAll(".main-shell-tab[data-main-tab-target]").forEach((button) => {
     button.addEventListener("click", () => {
+      const shellSpace = String(button?.dataset?.shellSpace ?? "").trim();
+      if (shellSpace === "create") {
+        setScreen("editor");
+        return;
+      }
+      if (shellSpace === "publish") {
+        showPlatformToast("배포 공간은 제품 셸 자리만 열려 있습니다. 실제 꾸러미 구성은 후속 단계에서 연결합니다.");
+        return;
+      }
       const target = normalizeMainTabTarget(button?.dataset?.mainTabTarget, MAIN_TAB_BROWSE);
-      void switchMainTab(target, { launchKind: "manual" });
+      void switchMainTab(target, { launchKind: "manual", shellSpace: shellSpace || "lab" });
     });
   });
   getFeaturedSeedButton()?.addEventListener("click", () => {

@@ -1539,6 +1539,30 @@
       "ssot_pack": "edu_seamgrim_rep_math_function_line_v1"
     },
     {
+      "id": "rep_phys_pendulum_wave1_v1",
+      "title": "진자 보기 코어",
+      "description": "줄 길이, 중력, 처음 각도, 마디 간격을 바꾸며 진자 위치와 각도를 같은 마디에서 봅니다.",
+      "required_views": [
+        "space2d",
+        "graph",
+        "text"
+      ],
+      "grade": "middle",
+      "subject": "physics",
+      "level": "intro",
+      "goals": [
+        "줄 길이와 중력이 각도 변화에 주는 영향을 관찰한다",
+        "진자 추 위치와 각도 눈금을 같은 틱에서 비교한다"
+      ],
+      "missions": [
+        "각도재기와 추 위치가 같은 마디에서 움직이는지 확인하기",
+        "fixed, fit, follow 카메라에서 state_hash가 유지되는지 비교하기"
+      ],
+      "meta_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/meta.toml",
+      "source": "representative_wave1",
+      "ssot_pack": "seamgrim_pendulum_wave1_view_core_v1"
+    },
+    {
       "id": "rep_phys_projectile_xy_v1",
       "title": "포물선 운동",
       "description": "초기 속도와 중력을 바꾸며 물체가 그리는 궤적을 봅니다.",

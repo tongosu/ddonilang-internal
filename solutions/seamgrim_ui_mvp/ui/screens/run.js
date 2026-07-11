@@ -33,6 +33,8 @@ import {
   buildFamilyPreviewResult,
   buildPreviewResultCollection,
 } from "../preview_result_contract.js";
+import { buildSeamgrimViewPlanRuntime } from "../view_plan_runtime.js";
+import { buildSeamgrimTraceReactionRuntime } from "../trace_reaction_runtime.js";
 import {
   applyPreviewViewModelMetadata,
   buildPreviewViewModel,
@@ -3201,6 +3203,68 @@ function synthesizeGraphSeriesSpace2dFromObservation(
   };
 }
 
+function synthesizeGraphViewFromObservation(
+  observation,
+  graphAxes = [],
+  { prevGraph = null, lessonId = "", primaryViewContract = null } = {},
+) {
+  const axes = Array.isArray(graphAxes)
+    ? graphAxes.map((axis) => String(axis ?? "").trim()).filter(Boolean)
+    : [];
+  if (axes.length !== 2) return null;
+  const x = readNumericObservationValue(observation, [axes[0]]);
+  const y = readNumericObservationValue(observation, [axes[1]]);
+  if (x === null || y === null) return null;
+
+  const seriesId = axes[1] || "y";
+  const previousSeries = Array.isArray(prevGraph?.series)
+    ? prevGraph.series.find((row) => String(row?.id ?? "").trim() === seriesId)
+      ?? prevGraph.series.find((row) => Array.isArray(row?.points))
+      ?? null
+    : null;
+  const previousPoints = Array.isArray(previousSeries?.points)
+    ? normalizeGraphSeriesPoints(previousSeries.points).slice(-63)
+    : [];
+  const points = [...previousPoints];
+  const last = points[points.length - 1] ?? null;
+  if (!last || last.x !== x || last.y !== y) {
+    points.push({ x, y });
+  }
+  const nextPoints = points.slice(-64);
+  const xs = nextPoints.map((point) => point.x);
+  const ys = nextPoints.map((point) => point.y);
+  const xMin = Math.min(0, ...xs) - 1;
+  const xMax = Math.max(1, ...xs) + 1;
+  const yMin = Math.min(0, ...ys) - 1;
+  const yMax = Math.max(1, ...ys) + 1;
+  const contract = primaryViewContract && typeof primaryViewContract === "object" ? primaryViewContract : {};
+  return {
+    schema: "seamgrim.graph.v0",
+    graph_kind: "timeseries",
+    axis: {
+      x_min: xMin,
+      x_max: xMax,
+      y_min: yMin,
+      y_max: yMax,
+    },
+    series: [
+      {
+        id: seriesId,
+        points: nextPoints,
+      },
+    ],
+    meta: {
+      title: `observation-graph:${axes[0]}:${axes[1]}`,
+      source: "observation_series",
+      axes,
+      lesson_id: String(lessonId ?? "").trim(),
+      primary_view: String(contract.primary_view ?? "graph").trim() || "graph",
+      ruleset_hash: String(contract.ruleset_hash ?? "").trim(),
+      lesson_declaration_hash: String(contract.lesson_declaration_hash ?? "").trim(),
+    },
+  };
+}
+
 function readNumericOutputRowsValue(outputRows = [], keys = []) {
   const rows = normalizeObserveOutputRows(outputRows);
   if (!rows.length) return null;
@@ -4003,6 +4067,149 @@ export function buildObserveOutputRowsPreview(outputRows = [], { maxRows = 3 } =
     .join(" · ");
 }
 
+const OBSERVATION_UNIT_BY_KEY = Object.freeze({
+  t: "마디",
+  time: "마디",
+  tick: "마디",
+  tick_id: "마디",
+  "시간": "마디",
+  x: "",
+  y: "",
+  px: "m",
+  py: "m",
+  bob_x: "m",
+  bob_y: "m",
+  theta: "rad",
+  angle: "rad",
+  "각도": "rad",
+  omega: "rad/s",
+  angular_velocity: "rad/s",
+  "각속도": "rad/s",
+  L: "m",
+  length: "m",
+  g: "m/s^2",
+  energy: "J",
+  "가격": "",
+  "수요량": "",
+  "공급량": "",
+  "거래량": "",
+});
+
+function normalizeObservationId(key) {
+  return String(key ?? "").trim();
+}
+
+function formatObservationPayloadValue(raw) {
+  const num = parseFiniteNumericValue(raw);
+  if (num !== null) {
+    if (Number.isInteger(num)) return String(num);
+    return Number(num.toFixed(6)).toString();
+  }
+  return String(raw?.value ?? raw ?? "").trim();
+}
+
+function readObservationChannelMeta(observation) {
+  const out = new Map();
+  const channels = Array.isArray(observation?.channels) ? observation.channels : [];
+  channels.forEach((channel) => {
+    const key = readObservationChannelKey(channel);
+    if (!key) return;
+    const row = channel && typeof channel === "object" ? channel : {};
+    out.set(key, {
+      id: String(row.id ?? row.key ?? key).trim() || key,
+      label: String(row.label ?? "").trim(),
+      unit: String(row.unit ?? row.units ?? "").trim(),
+      role: String(row.role ?? row.kind ?? "").trim(),
+      source_ref: String(row.source_ref ?? row.sourceRef ?? "").trim(),
+    });
+  });
+  return out;
+}
+
+function inferObservationRole(key, channelRole = "") {
+  const direct = String(channelRole ?? "").trim();
+  if (direct) return direct;
+  if (isTimeLikeObservationKey(key) || String(key ?? "").trim() === "tick_id") return "time";
+  return "state";
+}
+
+function inferObservationUnit(key, channelUnit = "") {
+  const direct = String(channelUnit ?? "").trim();
+  if (direct) return direct;
+  const exact = OBSERVATION_UNIT_BY_KEY[String(key ?? "").trim()];
+  if (exact !== undefined) return exact;
+  const lower = String(key ?? "").trim().toLowerCase();
+  return OBSERVATION_UNIT_BY_KEY[lower] ?? "";
+}
+
+function buildObservationContractRows(observation, { prevRows = [] } = {}) {
+  const entries = readObservationValueEntries(observation);
+  if (!entries.length) return [];
+  const channelMeta = readObservationChannelMeta(observation);
+  const prevMap = new Map(
+    (Array.isArray(prevRows) ? prevRows : [])
+      .map((row) => [String(row?.id ?? "").trim(), parseFiniteNumericValue(row?.value)])
+      .filter(([id, value]) => Boolean(id) && value !== null),
+  );
+  return entries
+    .map(([keyRaw, rawValue], index) => {
+      const key = normalizeObservationId(keyRaw);
+      if (!key) return null;
+      const meta = channelMeta.get(key) ?? {};
+      const id = String(meta.id ?? key).trim() || key;
+      const value = formatObservationPayloadValue(rawValue);
+      const num = parseFiniteNumericValue(rawValue);
+      const prev = prevMap.get(id);
+      const delta = num !== null && prev !== undefined && prev !== null
+        ? Number((num - prev).toFixed(6))
+        : null;
+      return {
+        id,
+        label: String(meta.label ?? "").trim() || formatDisplayLabel(key),
+        value,
+        unit: inferObservationUnit(key, meta.unit),
+        order: index + 1,
+        delta,
+        role: inferObservationRole(key, meta.role),
+        source_ref: String(meta.source_ref ?? "").trim() || `observation.${key}`,
+      };
+    })
+    .filter(Boolean);
+}
+
+function buildObservationContractTableHtml(rows = []) {
+  const normalized = Array.isArray(rows) ? rows.filter((row) => row && typeof row === "object") : [];
+  if (!normalized.length) return "";
+  const bodyHtml = normalized
+    .map((row) => {
+      const id = String(row.id ?? "").trim();
+      const label = String(row.label ?? id).trim() || id;
+      const unit = String(row.unit ?? "").trim();
+      const valueText = unit ? `${String(row.value ?? "").trim()} ${unit}` : String(row.value ?? "").trim();
+      const delta = row.delta === null || row.delta === undefined ? "" : String(row.delta);
+      return `
+        <tr data-observation-id="${escapeRuntimeTableHtml(id)}" data-observation-role="${escapeRuntimeTableHtml(row.role ?? "")}" data-source-ref="${escapeRuntimeTableHtml(row.source_ref ?? "")}">
+          <td>${buildRuntimeTableCellHtml(label)}</td>
+          <td>${buildRuntimeTableCellHtml(valueText)}</td>
+          <td>${buildRuntimeTableCellHtml(delta)}</td>
+        </tr>
+      `;
+    })
+    .join("");
+  return `
+    <section class="run-observation-contract" data-testid="lesson-observation-contract" data-observation-contract>
+      <div class="run-observation-contract-head">
+        <strong>관찰값</strong>
+        <span>${escapeRuntimeTableHtml(String(normalized.length))}개</span>
+      </div>
+      <table class="runtime-table run-observation-contract-table">
+        <thead><tr><th>이름</th><th>값</th><th>변화</th></tr></thead>
+        <tbody>${bodyHtml}</tbody>
+      </table>
+    </section>
+  `;
+}
+
 function buildObserveOutputRowsTableHtml(outputRows = [], { maxRows = 24, outputLog = [] } = {}) {
   const outputMeta = classifyObserveOutputRows(outputRows);
   const rows = outputMeta.rows;
@@ -4060,23 +4267,45 @@ function buildObserveOutputRowsTableHtml(outputRows = [], { maxRows = 24, output
   };
 }
 
-function renderObserveOutputRowsTable(container, outputRows = [], { maxRows = 24, outputLog = [] } = {}) {
+function renderObserveOutputRowsTable(
+  container,
+  outputRows = [],
+  { maxRows = 24, outputLog = [], observationContractRows = [] } = {},
+) {
   const rows = normalizeObserveOutputRows(outputRows);
+  const contractRows = Array.isArray(observationContractRows)
+    ? observationContractRows.filter((row) => row && typeof row === "object")
+    : [];
   if (!container || typeof container !== "object") {
     return {
       rowCount: rows.length,
       shownRowCount: 0,
       truncated: false,
+      observationRowCount: contractRows.length,
     };
   }
   const table = buildObserveOutputRowsTableHtml(rows, { maxRows, outputLog });
+  const contractHtml = buildObservationContractTableHtml(contractRows);
+  const rawHtml = rows.length
+    ? `<details class="run-observe-raw-details"><summary>원시 출력</summary>${table.html}</details>`
+    : "";
   if ("innerHTML" in container) {
-    container.innerHTML = table.html;
+    container.innerHTML = contractHtml ? `${contractHtml}${rawHtml}` : table.html;
+    if (container.dataset) {
+      container.dataset.observationPayloadSchema = contractRows.length ? "seamgrim.observation_payload.v1" : "";
+      container.dataset.observationPayloadJson = contractRows.length ? JSON.stringify(contractRows) : "";
+      container.dataset.observationPayloadCount = String(contractRows.length);
+    }
   } else if ("textContent" in container) {
     const shownRows = rows.slice(-Math.max(1, Math.trunc(Number(maxRows) || 24)));
-    container.textContent = shownRows.map((row) => `${formatDisplayLabel(row.key)}=${row.value}`).join("\n");
+    container.textContent = contractRows.length
+      ? contractRows.map((row) => `${row.label}=${row.value}${row.unit ? ` ${row.unit}` : ""}`).join("\n")
+      : shownRows.map((row) => `${formatDisplayLabel(row.key)}=${row.value}`).join("\n");
   }
-  return table;
+  return {
+    ...table,
+    observationRowCount: contractRows.length,
+  };
 }
 
 function summarizeObserveFamilyMetric(family, runtimeView) {
@@ -4549,9 +4778,11 @@ export function resolveRunMainVisualMode({
   warnings = [],
   allowShapeFallback = false,
   prevSpace2d = null,
+  prevGraph = null,
   lessonRequiredViews = [],
   lessonViewRoles = [],
   lessonGraphAxes = [],
+  lessonPrimaryViewContract = null,
 } = {}) {
   // ── 보개종류 명시 선언 ────────────────────────────────────────────────────
   const declaredKind = readDeclaredBogaeKind(observation);
@@ -4569,6 +4800,30 @@ export function resolveRunMainVisualMode({
     return { mode: "none", space2d: null, graphHtml: "", consoleHtml: "", consoleLinesForGrid: [] };
   }
 
+  const primaryViewContract = lessonPrimaryViewContract && typeof lessonPrimaryViewContract === "object"
+    ? lessonPrimaryViewContract
+    : null;
+  const declaredPrimaryView = String(primaryViewContract?.primary_view ?? "").trim().toLowerCase();
+  if (declaredPrimaryView === "graph") {
+    const nativeGraph = cloneGraphForRunManager(views?.graph ?? null);
+    const graphView = synthesizeGraphViewFromObservation(observation, lessonGraphAxes, {
+      prevGraph,
+      lessonId: primaryViewContract?.lesson_id ?? "",
+      primaryViewContract,
+    }) ?? nativeGraph;
+    if (graphView) {
+      return {
+        mode: "graph",
+        space2d: null,
+        graph: graphView,
+        graphHtml: buildMainGraphVisualHtml(graphView),
+        consoleHtml: "",
+        consoleLinesForGrid: [],
+        primaryViewContract,
+      };
+    }
+  }
+
   // ── space2d (네이티브) ───────────────────────────────────────────────────
   const nativeSpace2d = views?.space2d ?? null;
   if (hasSpace2dDrawable(nativeSpace2d)) {
@@ -4578,6 +4833,7 @@ export function resolveRunMainVisualMode({
       graphHtml: "",
       consoleHtml: "",
       consoleLinesForGrid: [],
+      primaryViewContract,
     };
   }
 
@@ -4585,7 +4841,9 @@ export function resolveRunMainVisualMode({
     (Array.isArray(lessonRequiredViews) ? lessonRequiredViews : [])
       .map((view) => String(view ?? "").trim().toLowerCase()),
   );
-  const preferDeclaredSpace2dFallback = Boolean(allowShapeFallback && requiredViewSet.has("space2d"));
+  const preferDeclaredSpace2dFallback = Boolean(
+    (allowShapeFallback || declaredPrimaryView === "space2d") && requiredViewSet.has("space2d"),
+  );
   const declaredSpace2dFallback = preferDeclaredSpace2dFallback
     ? (
       synthesizeTrajectorySpace2dFromObservation(observation, { prevSpace2d }) ??
@@ -4600,6 +4858,7 @@ export function resolveRunMainVisualMode({
       graphHtml: "",
       consoleHtml: "",
       consoleLinesForGrid: [],
+      primaryViewContract,
     };
   }
 
@@ -4626,6 +4885,7 @@ export function resolveRunMainVisualMode({
       graphHtml: "",
       consoleHtml: "",
       consoleLinesForGrid: [],
+      primaryViewContract,
     };
   }
 
@@ -4651,6 +4911,7 @@ export function resolveRunMainVisualMode({
       graphHtml: "",
       consoleHtml,
       consoleLinesForGrid: buildConsoleLinesForGrid({ outputRows, outputLog, outputLines }),
+      primaryViewContract,
     };
   }
 
@@ -4672,6 +4933,7 @@ export function resolveRunMainVisualMode({
       graphHtml: "",
       consoleHtml: "",
       consoleLinesForGrid: [],
+      primaryViewContract,
     };
   }
 
@@ -4684,6 +4946,7 @@ export function resolveRunMainVisualMode({
     graphHtml: "",
     consoleHtml: buildMainConsoleVisualHtml({ outputRows, outputLines, outputLog, warnings }),
     consoleLinesForGrid: buildConsoleLinesForGrid({ outputRows, outputLog, outputLines }),
+    primaryViewContract,
   };
 }
 
@@ -4752,6 +5015,7 @@ export class RunScreen {
     this.lastState = null;
     this.lastRuntimeDerived = null;
     this.lastGraphSnapshot = null;
+    this.lastTraceReactionRuntimeReport = null;
     this.lessonLayoutProfile = resolveRunLayoutProfile([]);
 
     this.loopActive = false;
@@ -4800,6 +5064,7 @@ export class RunScreen {
     this.playbackLoop = true;
     this.dockCursorTick = 0;
     this.dockCursorFollowLive = true;
+    this.dockCursorUserControlled = false;
     this.viewPlaybackTimer = null;
     this.lessonOptions = [];
     this.lastInspectorReport = null;
@@ -5144,6 +5409,10 @@ export class RunScreen {
     this.runVisualColumnEl = this.root.querySelector(".run-visual-column");
     this.runControlBarEl = this.root.querySelector(".run-control-bar");
     this.bogaeToolbarEl = this.runControlBarEl;
+    this.viewPlanCameraControlEl = this.root.querySelector("[data-view-plan-camera-control]");
+    this.viewPlanCameraSelectEl = this.root.querySelector("#select-view-plan-camera-policy");
+    this.viewPlanAngleControlEl = this.root.querySelector("[data-view-plan-angle-control]");
+    this.viewPlanAngleToggleEl = this.root.querySelector("#chk-view-plan-angle-measure");
     this.bogaeAreaEl = this.root.querySelector(".bogae-area");
     this.runMainGraphHostEl = this.root.querySelector("#run-main-graph-host");
     this.runMainConsoleHostEl = this.root.querySelector("#run-main-console-host");
@@ -5163,7 +5432,14 @@ export class RunScreen {
     this.runHistoryExportSummaryMetaEl = this.root.querySelector("[data-run-history-export-summary-meta]");
     this.runHistoryExportSummaryTextEl = this.root.querySelector("[data-run-history-export-summary-text]");
     this.runHistoryExportSummaryCopyBtn = this.root.querySelector("#btn-run-history-export-summary-copy");
+    this.labE1LineageEl = this.root.querySelector("[data-lab-e1-lineage]");
+    this.labE1StatusEl = this.root.querySelector("[data-lab-e1-status]");
+    this.labE1OriginHashEl = this.root.querySelector("[data-lab-e1-origin-hash]");
+    this.labE1DeltaRefEl = this.root.querySelector("[data-lab-e1-delta-ref]");
+    this.labE1ComparisonEl = this.root.querySelector("[data-lab-e1-comparison]");
     this.suspendLiveRunCapture = false;
+    this.viewPlanCameraPolicyId = "";
+    this.viewPlanAngleMeasureVisible = true;
     this.runtimeStatusEl = this.runExecStatusEl;
     this.runtimeTablePanelEl = this.root.querySelector("#runtime-table-panel");
     this.runtimeTableMetaEl = this.root.querySelector("#runtime-table-meta");
@@ -5193,6 +5469,7 @@ export class RunScreen {
     this.runViewModeBasicBtn = this.root.querySelector("#btn-run-view-basic");
     this.runViewModeAnalyzeBtn = this.root.querySelector("#btn-run-view-analyze");
     this.runViewModeFullBtn = this.root.querySelector("#btn-run-view-full");
+    this.runMobileDdnToggleBtn = this.root.querySelector("#btn-run-mobile-ddn-toggle");
     this.subpanelEl = this.root.querySelector(".dotbogi-panel.subpanel");
     this.subpanelPanelEl = this.root.querySelector("#subpanel-tab-panel");
     this.runResetBtn?.setAttribute("aria-label", RUN_MAIN_RESET_LABEL);
@@ -5294,6 +5571,24 @@ export class RunScreen {
       event.preventDefault();
       void this.restart();
     });
+    this.viewPlanCameraSelectEl?.addEventListener("change", () => {
+      this.viewPlanCameraPolicyId = String(this.viewPlanCameraSelectEl?.value ?? "").trim();
+      if (this.dockCursorUserControlled === true && this.renderReplayFrameFromDockCursor(this.dockCursorTick)) {
+        return;
+      }
+      if (this.lastRuntimeDerived) {
+        this.applyRuntimeDerived(this.lastRuntimeDerived, { forceView: true, prevDerived: this.lastRuntimeDerived });
+      }
+    });
+    this.viewPlanAngleToggleEl?.addEventListener("change", () => {
+      this.viewPlanAngleMeasureVisible = this.viewPlanAngleToggleEl?.checked !== false;
+      if (this.dockCursorUserControlled === true && this.renderReplayFrameFromDockCursor(this.dockCursorTick)) {
+        return;
+      }
+      if (this.lastRuntimeDerived) {
+        this.applyRuntimeDerived(this.lastRuntimeDerived, { forceView: true, prevDerived: this.lastRuntimeDerived });
+      }
+    });
     this.runErrorDismissBtn?.addEventListener("click", () => {
       this.clearRunErrorBanner();
     });
@@ -5342,6 +5637,10 @@ export class RunScreen {
     });
     this.root.querySelector("#select-y-axis")?.addEventListener("change", () => {
       this.saveCurrentLessonUiPrefs();
+    });
+    this.runMobileDdnToggleBtn?.addEventListener("click", () => {
+      const current = this.root?.dataset?.mobileDdnOpen === "1";
+      this.setMobileDdnOpen(!current);
     });
     this.graphKindSelectEl?.addEventListener("change", () => {
       this.dotbogi?.setGraphKind?.(this.graphKindSelectEl?.value ?? "line");
@@ -5455,19 +5754,43 @@ export class RunScreen {
     }
   }
 
-  renderMainVisual({ mode = "none", space2d = null, graphHtml = "", consoleHtml = "", consoleLinesForGrid = [] } = {}) {
+  setMobileDdnOpen(open = false) {
+    const active = Boolean(open);
+    if (this.root?.dataset) {
+      this.root.dataset.mobileDdnOpen = active ? "1" : "0";
+    }
+    if (this.runMobileDdnToggleBtn) {
+      this.runMobileDdnToggleBtn.setAttribute("aria-expanded", active ? "true" : "false");
+      this.runMobileDdnToggleBtn.textContent = active ? "보기" : "DDN";
+    }
+    return active;
+  }
+
+  renderMainVisual({
+    mode = "none",
+    space2d = null,
+    graph = null,
+    graphHtml = "",
+    consoleHtml = "",
+    consoleLinesForGrid = [],
+    primaryViewContract = null,
+  } = {}) {
     const nextMode = normalizeRunMainVisualMode(mode, "none");
     this.setMainVisualMode(nextMode);
     if (this.root?.dataset) {
+      const graphSeries = Array.isArray(graph?.series) ? graph.series : [];
+      const graphPointCount = graphSeries.reduce((acc, series) => (
+        acc + (Array.isArray(series?.points) ? series.points.length : 0)
+      ), 0);
       const viewRoles = Array.isArray(space2d?.meta?.view_roles)
         ? space2d.meta.view_roles.map((role) => String(role ?? "").trim()).filter(Boolean)
         : [];
       const shapes = Array.isArray(space2d?.shapes) ? space2d.shapes : [];
       this.root.dataset.mainViewRoles = viewRoles.join(",");
-      this.root.dataset.mainViewSource = String(space2d?.meta?.source ?? "").trim();
+      this.root.dataset.mainViewSource = String(space2d?.meta?.source ?? graph?.meta?.source ?? "").trim();
       this.root.dataset.mainViewAxes = Array.isArray(space2d?.meta?.axes)
         ? space2d.meta.axes.map((axis) => String(axis ?? "").trim()).filter(Boolean).join(",")
-        : "";
+        : (Array.isArray(graph?.meta?.axes) ? graph.meta.axes.map((axis) => String(axis ?? "").trim()).filter(Boolean).join(",") : "");
       this.root.dataset.mainShapeCount = String(shapes.length);
       this.root.dataset.mainTrajectorySegmentCount = String(
         shapes.filter((shape) => String(shape?.role ?? "").trim() === "trajectory_trail").length,
@@ -5475,6 +5798,19 @@ export class RunScreen {
       this.root.dataset.mainGraphSeriesSegmentCount = String(
         shapes.filter((shape) => String(shape?.role ?? "").trim() === "graph_series").length,
       );
+      this.root.dataset.mainGraphSeriesCount = String(graphSeries.length);
+      this.root.dataset.mainGraphPointCount = String(graphPointCount);
+      const contract = primaryViewContract && typeof primaryViewContract === "object"
+        ? primaryViewContract
+        : null;
+      this.root.dataset.primaryViewContract = contract ? "1" : "0";
+      this.root.dataset.primaryViewSchemaId = String(contract?.schema_id ?? "").trim();
+      this.root.dataset.primaryViewSchemaVersion = String(contract?.schema_version ?? "").trim();
+      this.root.dataset.primaryViewRulesetHash = String(contract?.ruleset_hash ?? "").trim();
+      this.root.dataset.lessonDeclarationHash = String(contract?.lesson_declaration_hash ?? "").trim();
+      this.root.dataset.primaryViewHeuristicSelection = contract
+        ? (contract.heuristic_selection === true ? "1" : "0")
+        : "";
     }
     this.syncBogaeShellForMainVisual(nextMode);
     if (this.runMainGraphHostEl) {
@@ -7610,6 +7946,17 @@ export class RunScreen {
         <span class="run-history-chip" data-run-history-active>활성 없음</span>
         <span class="run-history-chip" data-run-history-solo>solo 없음</span>
       </div>
+      <div class="run-lab-e1-lineage" data-testid="lab-e1-lineage" data-lab-e1-lineage data-state="empty">
+        <div class="run-lab-e1-lineage-head">
+          <strong>내 버전 비교</strong>
+          <span data-lab-e1-status>원본 실행 대기</span>
+        </div>
+        <div class="run-lab-e1-lineage-grid">
+          <span>origin_hash</span><code data-lab-e1-origin-hash>-</code>
+          <span>delta_ref</span><code data-lab-e1-delta-ref>-</code>
+          <span>비교</span><code data-lab-e1-comparison>run 없음</code>
+        </div>
+      </div>
       <div class="run-history-export-summary" data-run-history-export-summary aria-label="실행 이력 요약 내보내기">
         <div class="run-history-export-summary-head">
           <span class="run-history-export-summary-title">이력 요약</span>
@@ -8038,6 +8385,91 @@ runs: 0</pre>
     };
   }
 
+  buildLabE1LineageModel() {
+    const runs = Array.isArray(this.overlayRuns) ? this.overlayRuns : [];
+    const origin = runs[0] ?? null;
+    const activeId = String(this.activeOverlayRunId ?? "").trim();
+    const active = activeId
+      ? runs.find((row) => String(row?.id ?? "").trim() === activeId) ?? null
+      : null;
+    const current = active ?? runs[runs.length - 1] ?? null;
+    const originInputHash = String(origin?.hash?.input ?? "").trim();
+    const currentInputHash = String(current?.hash?.input ?? "").trim();
+    const originResultHash = String(origin?.hash?.result ?? "").trim();
+    const currentResultHash = String(current?.hash?.result ?? "").trim();
+    const hasOrigin = Boolean(originInputHash || originResultHash);
+    const hasCurrent = Boolean(currentInputHash || currentResultHash);
+    const changed = Boolean(hasOrigin && hasCurrent && currentInputHash && originInputHash && currentInputHash !== originInputHash);
+    const same = Boolean(hasOrigin && hasCurrent && currentInputHash && originInputHash && currentInputHash === originInputHash);
+    const deltaRef = changed
+      ? `delta:${stableHashHex(`${originInputHash}->${currentInputHash}`)}`
+      : "delta:none";
+    const comparisonStatus = !hasOrigin
+      ? "empty"
+      : !hasCurrent || runs.length <= 1
+        ? "origin_only"
+        : changed
+          ? "changed"
+          : same
+            ? "same_input"
+            : "pending";
+    return {
+      schema: "seamgrim.lab_e1_lineage.v1",
+      run_count: runs.length,
+      origin_run_id: String(origin?.id ?? "").trim(),
+      current_run_id: String(current?.id ?? "").trim(),
+      origin_hash: originInputHash || originResultHash || "",
+      current_hash: currentInputHash || currentResultHash || "",
+      delta_ref: deltaRef,
+      comparison_status: comparisonStatus,
+      has_origin: hasOrigin,
+      has_current: hasCurrent,
+      origin_hash_source: originInputHash ? "input" : originResultHash ? "result" : "",
+      current_hash_source: currentInputHash ? "input" : currentResultHash ? "result" : "",
+      auto_apply_claim: false,
+      file_write_claim: false,
+    };
+  }
+
+  syncLabE1LineagePanel() {
+    const model = this.buildLabE1LineageModel();
+    if (this.labE1LineageEl) {
+      this.labE1LineageEl.dataset.schema = model.schema;
+      this.labE1LineageEl.dataset.state = model.comparison_status;
+      this.labE1LineageEl.dataset.runCount = String(model.run_count);
+      this.labE1LineageEl.dataset.originHash = model.origin_hash;
+      this.labE1LineageEl.dataset.deltaRef = model.delta_ref;
+      this.labE1LineageEl.dataset.comparisonStatus = model.comparison_status;
+      this.labE1LineageEl.dataset.autoApplyClaim = "false";
+      this.labE1LineageEl.dataset.fileWriteClaim = "false";
+    }
+    if (this.labE1StatusEl) {
+      const label = model.comparison_status === "changed"
+        ? "내 버전 변화 있음"
+        : model.comparison_status === "same_input"
+          ? "입력 변화 없음"
+          : model.comparison_status === "origin_only"
+            ? "원본 run 저장됨"
+            : "원본 실행 대기";
+      this.labE1StatusEl.textContent = label;
+    }
+    if (this.labE1OriginHashEl) {
+      this.labE1OriginHashEl.textContent = model.origin_hash ? model.origin_hash.slice(0, 18) : "-";
+      this.labE1OriginHashEl.title = model.origin_hash || "origin_hash 없음";
+    }
+    if (this.labE1DeltaRefEl) {
+      this.labE1DeltaRefEl.textContent = model.delta_ref;
+      this.labE1DeltaRefEl.title = model.delta_ref;
+    }
+    if (this.labE1ComparisonEl) {
+      this.labE1ComparisonEl.textContent = `${model.comparison_status} · run ${model.run_count}`;
+    }
+    if (typeof window !== "undefined") {
+      window.__SEAMGRIM_LAB_E1_LINEAGE__ = model;
+    }
+    return model;
+  }
+
   buildRunHistoryExportSummaryModel() {
     const runs = Array.isArray(this.overlayRuns) ? this.overlayRuns : [];
     const comparison = this.buildRunHistoryComparisonRailModel();
@@ -8116,6 +8548,7 @@ runs: 0</pre>
       window.__SEAMGRIM_RUN_HISTORY_COMPARISON_RAIL__ = model;
     }
     this.syncRunHistoryExportSummary();
+    this.syncLabE1LineagePanel();
     return model;
   }
 
@@ -10156,7 +10589,7 @@ runs: 0</pre>
 
   syncClassroomModeSwitch(model = this.buildRunPresetRailModel()) {
     const profile = normalizeRunOnboardingProfile(model?.onboarding_profile);
-    const switchVisible = this.classroomModeAccess !== "student";
+    const switchVisible = false;
     if (this.root?.dataset) {
       this.root.dataset.onboardingProfile = profile || "default";
       this.root.dataset.classroomModeAccess = this.classroomModeAccess || "default";
@@ -10174,6 +10607,46 @@ runs: 0</pre>
       button.setAttribute("aria-pressed", active ? "true" : "false");
       button.disabled = !switchVisible;
     });
+  }
+
+  syncViewPlanCameraControl(lesson = this.lesson) {
+    const viewPlan = lesson?.viewPlan && typeof lesson.viewPlan === "object" ? lesson.viewPlan : null;
+    const policies = Array.isArray(viewPlan?.camera?.policies) ? viewPlan.camera.policies : [];
+    const visible = Boolean(viewPlan && policies.length > 0);
+    const angleVisible = Boolean(viewPlan && Array.isArray(viewPlan?.measures) && viewPlan.measures.some((item) => String(item?.kind ?? "").trim() === "angle"));
+    if (this.viewPlanCameraControlEl) {
+      this.viewPlanCameraControlEl.classList.toggle("hidden", !visible);
+      this.viewPlanCameraControlEl.setAttribute("aria-hidden", visible ? "false" : "true");
+    }
+    if (this.viewPlanAngleControlEl) {
+      this.viewPlanAngleControlEl.classList.toggle("hidden", !angleVisible);
+      this.viewPlanAngleControlEl.setAttribute("aria-hidden", angleVisible ? "false" : "true");
+    }
+    if (this.viewPlanAngleToggleEl) {
+      this.viewPlanAngleToggleEl.checked = this.viewPlanAngleMeasureVisible !== false;
+      this.viewPlanAngleToggleEl.disabled = !angleVisible;
+    }
+    if (!this.viewPlanCameraSelectEl) return;
+    if (!visible) {
+      this.viewPlanCameraPolicyId = "";
+      this.viewPlanCameraSelectEl.innerHTML = '<option value="fit">맞춤</option>';
+      this.viewPlanCameraSelectEl.value = "fit";
+      return;
+    }
+    const defaultPolicy = String(viewPlan?.camera?.default_policy ?? policies[0]?.policy_id ?? "fit").trim() || "fit";
+    this.viewPlanCameraPolicyId = this.viewPlanCameraPolicyId || defaultPolicy;
+    this.viewPlanCameraSelectEl.innerHTML = policies
+      .map((policy) => {
+        const id = String(policy?.policy_id ?? policy?.mode ?? "").trim();
+        if (!id) return "";
+        const label = id === "fixed" ? "고정" : id === "fit" ? "맞춤" : id === "follow" ? "따라가기" : id;
+        return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
+      })
+      .join("");
+    if (!policies.some((policy) => String(policy?.policy_id ?? policy?.mode ?? "").trim() === this.viewPlanCameraPolicyId)) {
+      this.viewPlanCameraPolicyId = defaultPolicy;
+    }
+    this.viewPlanCameraSelectEl.value = this.viewPlanCameraPolicyId;
   }
 
   applyClassroomModeSwitch(profile) {
@@ -10726,12 +11199,14 @@ runs: 0</pre>
     });
     this.root.querySelector("#btn-dock-play")?.addEventListener("click", () => {
       this.dockCursorFollowLive = false;
+      this.dockCursorUserControlled = true;
       this.setPlaybackPaused(false);
     });
     this.root.querySelector("#btn-dock-pause")?.addEventListener("click", () => {
       this.setPlaybackPaused(true);
     });
     this.root.querySelector("#btn-dock-next")?.addEventListener("click", () => {
+      this.dockCursorUserControlled = true;
       this.setPlaybackPaused(true);
       this.advanceDockCursor(1, { loop: this.playbackLoop });
     });
@@ -10747,6 +11222,7 @@ runs: 0</pre>
       }
     });
     this.dockTimeCursorEl?.addEventListener("input", () => {
+      this.dockCursorUserControlled = true;
       this.setDockCursorTick(this.dockTimeCursorEl?.value ?? 0, {
         followLive: false,
       });
@@ -10885,6 +11361,9 @@ runs: 0</pre>
       this.dockCursorFollowLive = followLive;
     }
     this.dotbogi?.setPlaybackCursor?.(nextTick, { render: true });
+    if (this.dockCursorFollowLive === false) {
+      this.renderReplayFrameFromDockCursor(nextTick);
+    }
     if (syncUi) {
       this.syncDockTimeUi();
     }
@@ -11218,6 +11697,7 @@ runs: 0</pre>
     const savedCursor = Math.max(0, Number(time.cursor ?? savedTick) || 0);
     this.dockCursorTick = savedCursor;
     this.dockCursorFollowLive = !hasSavedCursor;
+    this.dockCursorUserControlled = hasSavedCursor;
     this.dotbogi?.setPlaybackCursor?.(savedCursor, { render: false });
 
     const activeRunId = String(row.active_run_id ?? "").trim();
@@ -11263,7 +11743,7 @@ runs: 0</pre>
 
   syncRuntimeLayoutProfile(views, mainVisualMode, { outputRows = [], outputLines = [], outputLog = [] } = {}) {
     if (this.lesson?.requiredViews?.length > 0) return;
-    const hasMainVisual = ["space2d", "debug-fallback", "console-grid"].includes(normalizeRunMainVisualMode(mainVisualMode, "none"));
+    const hasMainVisual = ["space2d", "graph", "debug-fallback", "console-grid"].includes(normalizeRunMainVisualMode(mainVisualMode, "none"));
     const hasDockPanels = hasGraphTabPayload(views) || hasResultPanelPayload({ outputRows, outputLines, outputLog, views });
     if (!hasMainVisual && !hasDockPanels) return;
     const classList = this.layoutEl?.classList;
@@ -11382,7 +11862,7 @@ runs: 0</pre>
     return Boolean(text || structure || (showGraphPreview ? graph : null));
   }
 
-  updateObserveSummary({ observation = null, views = null, outputRows = [], outputLog = [] } = {}) {
+  updateObserveSummary({ observation = null, views = null, outputRows = [], outputLog = [], observationContractRows = [] } = {}) {
     if (!this.runObserveSummaryEl) return;
     const runtimeDerived = { observation, views };
     const channels = Array.isArray(observation?.channels) ? observation.channels.length : 0;
@@ -11424,7 +11904,10 @@ runs: 0</pre>
       this.runObserveSummaryTextEl.textContent = String(summaryViewModel.summaryText ?? "");
     }
     this.runObserveSummaryEl.dataset.level = String(summaryViewModel.level ?? "none");
-    this.updateObserveOutputRowsPanel(normalizedOutputRows, outputLog);
+    const contractRows = Array.isArray(observationContractRows) && observationContractRows.length
+      ? observationContractRows
+      : buildObservationContractRows(observation);
+    this.updateObserveOutputRowsPanel(normalizedOutputRows, outputLog, contractRows);
     this.updateNumericKernelPanel(runtimeDerived);
   }
 
@@ -11460,13 +11943,19 @@ runs: 0</pre>
     this.runNumericKernelBodyEl.textContent = `${message} · route=${route}`;
   }
 
-  updateObserveOutputRowsPanel(outputRows = [], outputLog = []) {
+  updateObserveOutputRowsPanel(outputRows = [], outputLog = [], observationContractRows = []) {
     const normalizedRows = normalizeObserveOutputRows(outputRows);
     const tableMetric = renderObserveOutputRowsTable(this.runObserveOutputBodyEl, normalizedRows, {
       maxRows: 24,
       outputLog,
+      observationContractRows,
     });
     if (!this.runObserveOutputMetaEl) return;
+    if (tableMetric.observationRowCount) {
+      const rawText = tableMetric.rowCount ? ` · 원시 ${tableMetric.rowCount}행` : "";
+      this.runObserveOutputMetaEl.textContent = `${tableMetric.observationRowCount}개 관찰값${rawText}`;
+      return;
+    }
     if (!tableMetric.rowCount) {
       this.runObserveOutputMetaEl.textContent = "0행";
       return;
@@ -12014,6 +12503,10 @@ runs: 0</pre>
     this.lastRuntimeHash = "-";
     this.lastRuntimeSnapshotKey = "";
     this.lastRuntimeDerived = null;
+    this.viewPlanCameraPolicyId = "";
+    this.viewPlanAngleMeasureVisible = true;
+    this.syncViewPlanCameraControl(lesson);
+    this.setMobileDdnOpen(false);
     this.lastExecPathHint = "";
     this.lastSpace2dMode = "none";
     this.setMainVisualMode("none");
@@ -12042,6 +12535,7 @@ runs: 0</pre>
     this.playbackLoop = true;
     this.dockCursorTick = 0;
     this.dockCursorFollowLive = true;
+    this.dockCursorUserControlled = false;
     this.clearViewPlaybackTimer();
     this.serverPlayback = null;
 
@@ -12136,7 +12630,7 @@ runs: 0</pre>
     if (savedOnboardingProfile) {
       this.applyRunOnboardingProfile(savedOnboardingProfile, { persist: false });
     } else if (this.lastLaunchKind === "browse_select" || this.lastLaunchKind === "browse_select_student" || this.lastLaunchKind === "browse_select_teacher") {
-      this.setRunOnboardingStatus(`${buildLessonOnboardingStatusText(lesson)} · 학생 시작/교사 시작 중 하나를 선택하고 결과를 확인하세요.`, { status: "warn" });
+      this.setRunOnboardingStatus(`${buildLessonOnboardingStatusText(lesson)} · 수업을 실행하고 필요하면 실험실에서 값을 바꿔 보세요.`, { status: "warn" });
     } else {
       this.setRunOnboardingStatus(buildLessonOnboardingStatusText(lesson), { status: "idle" });
     }
@@ -12538,6 +13032,7 @@ runs: 0</pre>
     this.runtimeTimeValue = null;
     this.dockCursorTick = 0;
     this.dockCursorFollowLive = true;
+    this.dockCursorUserControlled = false;
     const rawDdnText = this.getEffectiveDdn();
     const wasmDdnText = this.getEffectiveWasmSource(rawDdnText);
     const requestedMadi = Math.max(
@@ -12928,7 +13423,7 @@ runs: 0</pre>
     this.lastRuntimeDerived = applied ?? derived;
   }
 
-  applyRuntimeDerived(derived, { forceView = false, prevDerived = null } = {}) {
+  applyRuntimeDerived(derived, { forceView = false, prevDerived = null, replayFrame = false } = {}) {
     if (!derived || typeof derived !== "object") return;
     const observation = derived.observation ?? null;
     const outputLog = normalizeConsoleOutputLog(derived.outputLog ?? [], {
@@ -12936,7 +13431,70 @@ runs: 0</pre>
     });
     const outputLines = normalizeConsoleOutputLines(derived.outputLines ?? []);
     const outputRows = normalizeObserveOutputRows(derived.outputRows ?? []);
+    const observationContractRows = buildObservationContractRows(observation, {
+      prevRows: prevDerived?.observationContractRows ?? [],
+    });
     let views = derived.views ?? null;
+    const viewPlanRuntime = buildSeamgrimViewPlanRuntime({
+      viewPlan: this.lesson?.viewPlan ?? null,
+      observation,
+      views,
+      cameraPolicyId: this.viewPlanCameraPolicyId,
+      angleMeasureVisible: this.viewPlanAngleMeasureVisible,
+    });
+    if (viewPlanRuntime?.views) {
+      views = viewPlanRuntime.views;
+    }
+    const traceReactionRuntime = buildSeamgrimTraceReactionRuntime({
+      traceReactions: this.lesson?.sealedTraceReactions ?? null,
+      observation,
+      views,
+      viewPlanRuntime,
+    });
+    if (traceReactionRuntime?.views) {
+      views = traceReactionRuntime.views;
+    }
+    this.lastViewPlanRuntimeReport = viewPlanRuntime?.report ?? null;
+    this.lastTraceReactionRuntimeReport = traceReactionRuntime?.report ?? null;
+    if (this.root?.dataset) {
+      const report = this.lastViewPlanRuntimeReport;
+      this.root.dataset.viewPlanRuntime = report ? "1" : "0";
+      this.root.dataset.viewPlanBindingMode = String(report?.binding_mode ?? "").trim();
+      this.root.dataset.viewPlanCameraPolicy = String(report?.camera_policy ?? "").trim();
+      this.root.dataset.viewPlanHash = String(report?.view_plan_hash ?? "").trim();
+      this.root.dataset.worldDrawPayloadHashCandidate = String(report?.world_draw_payload_hash_candidate ?? "").trim();
+      delete this.root.dataset.bogaeHash;
+      this.root.dataset.viewPlanStateHashParticipation = report ? String(report.state_hash_participation === true ? "1" : "0") : "";
+      this.root.dataset.viewPlanAngleLabel = String(report?.angle_label ?? "").trim();
+      this.root.dataset.viewPlanAngleMeasureVisible = report ? (report.angle_measure_visible === false ? "0" : "1") : "";
+      const reaction = this.lastTraceReactionRuntimeReport;
+      this.root.dataset.traceReactionRuntime = reaction ? "1" : "0";
+      this.root.dataset.traceReactionSchema = String(reaction?.schema ?? "").trim();
+      this.root.dataset.traceReactionMode = String(reaction?.mode ?? "").trim();
+      this.root.dataset.traceReactionSealed = reaction ? (reaction.sealed === true ? "1" : "0") : "";
+      this.root.dataset.traceReactionLiveOnlineClaim = reaction ? (reaction.live_online_claim === true ? "1" : "0") : "";
+      this.root.dataset.traceReactionConditionEvaluationClaim = reaction ? (reaction.condition_evaluation_claim === true ? "1" : "0") : "";
+      this.root.dataset.traceReactionScheduleKind = String(reaction?.schedule_kind ?? "").trim();
+      this.root.dataset.traceReactionStateHashParticipation = reaction ? (reaction.state_hash_participation === true ? "1" : "0") : "";
+      this.root.dataset.traceReactionActionKinds = Array.isArray(reaction?.action_kinds) ? reaction.action_kinds.join(",") : "";
+      this.root.dataset.traceReactionPredicateKinds = Array.isArray(reaction?.predicate_kinds) ? reaction.predicate_kinds.join(",") : "";
+      this.root.dataset.traceReactionConditionKinds = Array.isArray(reaction?.condition_kinds) ? reaction.condition_kinds.join(",") : "";
+      this.root.dataset.traceReactionAppliedActions = Array.isArray(reaction?.applied_actions)
+        ? reaction.applied_actions.map((action) => String(action?.action_id ?? "").trim()).filter(Boolean).join(",")
+        : "";
+      this.root.dataset.traceReactionFrameHash = String(reaction?.reaction_frame_hash ?? "").trim();
+      this.root.dataset.traceReactionResolvedSceneTrace = reaction?.resolved_scene_trace ? "1" : "0";
+      this.root.dataset.traceReactionUtteranceTicks = Array.isArray(reaction?.resolved_scene_trace?.utterance_ticks)
+        ? reaction.resolved_scene_trace.utterance_ticks.join(",")
+        : "";
+      this.root.dataset.traceReactionDiagnostics = Array.isArray(reaction?.diagnostics)
+        ? reaction.diagnostics.map((diag) => String(diag?.code ?? "").trim()).filter(Boolean).join(",")
+        : "";
+    }
+    if (typeof window !== "undefined") {
+      window.__SEAMGRIM_VIEW_PLAN_RUNTIME__ = this.lastViewPlanRuntimeReport ?? null;
+      window.__SEAMGRIM_TRACE_REACTION_RUNTIME__ = this.lastTraceReactionRuntimeReport ?? null;
+    }
     const incomingGraph = cloneGraphForRunManager(views?.graph ?? null);
     if (incomingGraph) {
       this.lastGraphSnapshot = incomingGraph;
@@ -12944,6 +13502,7 @@ runs: 0</pre>
     const prevSpace2d = hasSpace2dDrawable(prevDerived?.mainVisualSpace2d)
       ? prevDerived.mainVisualSpace2d
       : (hasSpace2dDrawable(prevDerived?.views?.space2d) ? prevDerived.views.space2d : null);
+    const prevGraph = cloneGraphForRunManager(prevDerived?.mainVisualGraph ?? prevDerived?.views?.graph ?? null);
     const nativeSpace2d = views?.space2d ?? null;
     const hasNativeSpace2d = hasSpace2dDrawable(nativeSpace2d);
     const allowShapeFallback = Boolean(this.allowShapeFallback || this.lastLaunchKind === "first_delight");
@@ -12956,9 +13515,11 @@ runs: 0</pre>
       warnings: this.lastParseWarnings,
       allowShapeFallback: allowShapeFallback,
       prevSpace2d,
+      prevGraph,
       lessonRequiredViews: this.lesson?.requiredViews ?? [],
       lessonViewRoles: this.lesson?.meta?.view_roles ?? [],
       lessonGraphAxes: this.lesson?.meta?.first_delight_graph_axes ?? [],
+      lessonPrimaryViewContract: this.lastLaunchKind === "first_delight" ? null : (this.lesson?.primaryViewContract ?? null),
     });
 
     this.lastSpace2dMode = hasNativeSpace2d
@@ -12999,18 +13560,24 @@ runs: 0</pre>
     const shouldUpdateView = forceView || this.screenVisible;
 
     if (shouldUpdateView) {
-      this.dotbogi.appendObservation(observation);
+      if (!replayFrame) {
+        this.dotbogi.appendObservation(observation);
+      }
       const fallbackGraph = this.dotbogi?.exportCurrentGraphSnapshot?.() ?? null;
-      this.updateLiveRunCaptureFromDerived({ observation, views }, { fallbackGraph });
+      if (!replayFrame) {
+        this.updateLiveRunCaptureFromDerived({ observation, views }, { fallbackGraph });
+      }
       this.renderMainVisual(mainVisual);
       this.renderCurrentRuntimeTable(views?.table ?? null);
     } else {
-      this.updateLiveRunCaptureFromDerived({ observation, views });
+      if (!replayFrame) {
+        this.updateLiveRunCaptureFromDerived({ observation, views });
+      }
     }
     this.syncDockRangeLabels();
     this.syncDockPanelVisibility({ observation, views, outputRows });
     this.syncRuntimeLayoutProfile(views, mainVisual.mode, { outputRows, outputLines, outputLog });
-    this.updateObserveSummary({ observation, views, outputRows, outputLog });
+      this.updateObserveSummary({ observation, views, outputRows, outputLog, observationContractRows });
     this.updateRuntimeStatus({ observation, views });
     return {
       observation,
@@ -13021,7 +13588,36 @@ runs: 0</pre>
       views,
       mainVisualMode: mainVisual.mode,
       mainVisualSpace2d: mainVisual.space2d ?? null,
+      mainVisualGraph: mainVisual.graph ?? null,
+      observationContractRows,
+      viewPlanRuntimeReport: this.lastViewPlanRuntimeReport ?? null,
+      traceReactionRuntimeReport: this.lastTraceReactionRuntimeReport ?? null,
     };
+  }
+
+  renderReplayFrameFromDockCursor(cursorTick = this.dockCursorTick) {
+    const sample = this.dotbogi?.getTimelineSampleAt?.(cursorTick);
+    const values = sample?.values && typeof sample.values === "object" ? { ...sample.values } : null;
+    if (!values) return false;
+    values.tick_id = Math.max(0, Math.trunc(Number(cursorTick) || 0));
+    const channels = Object.keys(values).map((key) => ({ key, dtype: "number", role: key === "tick_id" ? "time" : "state" }));
+    const replayDerived = {
+      ...(this.lastRuntimeDerived && typeof this.lastRuntimeDerived === "object" ? this.lastRuntimeDerived : {}),
+      observation: {
+        values,
+        all_values: values,
+        channels,
+        tick_id: values.tick_id,
+      },
+      tick_id: values.tick_id,
+      views: this.lastRuntimeDerived?.views ?? null,
+    };
+    this.applyRuntimeDerived(replayDerived, {
+      forceView: true,
+      prevDerived: this.lastRuntimeDerived,
+      replayFrame: true,
+    });
+    return true;
   }
 
   setScreenVisible(visible) {

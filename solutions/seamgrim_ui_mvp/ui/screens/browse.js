@@ -350,7 +350,7 @@ function buildCourseDeliveryText(lesson) {
   const subject = formatSubjectLabel(lesson?.subject);
   const course = [grade, subject].filter((item) => item && item !== "-").join(" · ");
   const prefix = course ? `${course} 수업` : "교과 수업";
-  return `${prefix} · 학생 실행 · 교사용 배포`;
+  return `${prefix} · 수업 열기 · 실험실 변경`;
 }
 
 function buildCourseReadinessText(lesson) {
@@ -382,7 +382,7 @@ function buildCourseMissionTexts(lesson) {
   const views = getLessonRequiredViews(lesson);
   const viewText = views.map(formatRequiredViewLabel).filter(Boolean).slice(0, 3).join(", ");
   return [
-    "학생 시작으로 수업을 실행한다",
+    "수업 열기로 실행 화면을 연다",
     viewText ? `${viewText} 결과를 보고 수업 내용을 확인한다` : "결과 화면을 보고 수업 내용을 확인한다",
   ];
 }
@@ -488,10 +488,10 @@ function buildDetailRunReadinessRows(lesson) {
   const missionRows = buildCourseMissionTexts(lesson);
   return [
     `수업 준비 상태: ${buildCourseReadinessText(lesson)}`,
-    "학생으로 실행하면 이 수업이 바로 학생 화면에서 열립니다",
+    "수업 열기로 이 수업을 바로 실행 화면에서 엽니다",
     viewText ? `결과 확인: ${viewText}` : "결과 확인: 기본 실행 화면",
     missionRows.length ? `첫 활동: ${missionRows[0]}` : "첫 활동: 그래프와 표를 보고 수업 내용을 확인하기",
-    "교사용 배포 준비에서 같은 수업과 활동을 학생에게 보낼 수 있습니다",
+    "실험실에서 바꾸기로 같은 수업과 활동을 조절할 수 있습니다",
   ];
 }
 
@@ -893,14 +893,15 @@ export class BrowseScreen {
       if (!this.detailLesson) return;
       void this.onLessonSelect({
         ...this.detailLesson,
-        launchProfile: "student",
+        launchAction: "learn",
       }, { autoExecute: true });
     });
     this.detailTeacherOpenBtn?.addEventListener("click", () => {
       if (!this.detailLesson) return;
       void this.onLessonSelect({
         ...this.detailLesson,
-        launchProfile: "teacher",
+        launchProfile: "",
+        launchAction: "lab",
       }, { autoExecute: true });
     });
     this.detailCopyNumericTrackReportBtn?.addEventListener("click", () => {
@@ -3006,8 +3007,8 @@ export class BrowseScreen {
         <div class="card-run-hint">${runHint}</div>`
         : ""}
       <div class="card-launch-actions">
-        <button type="button" class="card-launch-primary card-launch-btn" data-launch-profile="student" title="학생 시작 프로필로 실행">▶ 학생 시작</button>
-        <button type="button" class="ghost card-launch-btn" data-launch-profile="teacher" title="교사용 배포 준비 프로필로 실행">교사용 배포</button>
+        <button type="button" class="card-launch-primary card-launch-btn" data-launch-profile="" data-launch-action="learn" title="수업 실행 화면으로 열기">수업 열기</button>
+        <button type="button" class="ghost card-launch-btn" data-launch-profile="" data-launch-action="lab" title="실험실에서 값을 바꿔 보기">실험실에서 바꾸기</button>
       </div>
     `;
     const shouldShowPreview = lessonHasPreviewDescriptor(lesson);
@@ -3038,9 +3039,11 @@ export class BrowseScreen {
         event.preventDefault();
         event.stopPropagation();
         const launchProfile = normalizeLaunchProfile(button?.dataset?.launchProfile ?? "");
+        const launchAction = String(button?.dataset?.launchAction ?? "learn").trim() === "lab" ? "lab" : "learn";
         void this.onLessonSelect({
           ...lesson,
           launchProfile,
+          launchAction,
         }, { autoExecute: true });
       });
     });
@@ -3438,7 +3441,7 @@ export class BrowseScreen {
     this.courseSummaryEl.dataset.courseCatalogTotal = String(totalCount);
     this.courseSummaryEl.dataset.courseCatalogVisible = String(lessons.length);
     this.courseSummaryEl.textContent =
-      `${lessons.length}개 대표 교과${suffix}${filteredText}${subjectCountSuffix} · DDN 실행 · 학생 시작 · 교사용 배포 가능 · 전체 검색으로 나머지 교과 확인`;
+      `${lessons.length}개 대표 수업${suffix}${filteredText}${subjectCountSuffix} · DDN 실행 · 수업 열기 · 실험실에서 바꾸기 · 전체 검색으로 나머지 수업 확인`;
     this.updateCourseSubjectShortcuts(this.filteredLessons({ subject: "" }));
   }
 

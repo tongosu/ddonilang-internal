@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -217,7 +218,6 @@ def check_product_wiring() -> int:
     required = [
         ("btn-learning-spine", html),
         ("learning-spine-panel", html),
-        ("20260710-first-delight-w6a", html),
         ("LEARNING_SPINE_QUERY_KEY", app),
         ("mountLearningSpineIndex", app),
         ("learning_spine", app),
@@ -228,7 +228,16 @@ def check_product_wiring() -> int:
         ("connector_index_only_not_ssot", INDEX.read_text(encoding="utf-8")),
     ]
     missing = [token for token, source in required if token not in source]
-    return fail("E_LEARNING_SPINE_WIRING", repr(missing)) if missing else 0
+    if missing:
+        return fail("E_LEARNING_SPINE_WIRING", repr(missing))
+    style_version = re.search(r'styles\.css\?v=([^"\']+)', html)
+    app_version = re.search(r'app\.js\?v=([^"\']+)', html)
+    if not style_version or not app_version or style_version.group(1) != app_version.group(1):
+        return fail("E_LEARNING_SPINE_CACHE_VERSION", repr({
+            "styles": style_version.group(1) if style_version else None,
+            "app": app_version.group(1) if app_version else None,
+        }))
+    return 0
 
 
 def gate(cmd: list[str], code: str, timeout: int) -> int:

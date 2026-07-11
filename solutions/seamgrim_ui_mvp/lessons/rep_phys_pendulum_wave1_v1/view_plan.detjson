@@ -1,0 +1,85 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "rep_phys_pendulum_wave1_v1",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "anchors": [
+    {
+      "anchor_id": "obs.theta",
+      "source_ref": {"kind": "observation", "key": "theta"},
+      "value_type": "scalar",
+      "unit": "rad",
+      "label": "각도",
+      "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn", "source_span": "theta <- theta + omega * dt"}
+    },
+    {
+      "anchor_id": "obs.angular_velocity",
+      "source_ref": {"kind": "observation", "key": "omega"},
+      "value_type": "scalar",
+      "unit": "rad/s",
+      "label": "각속도",
+      "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn", "source_span": "omega <- omega + alpha * dt"}
+    },
+    {
+      "anchor_id": "obs.pivot",
+      "source_ref": {"kind": "constant", "value": {"x": 0, "y": 0}},
+      "value_type": "point2",
+      "unit": "m",
+      "label": "고정점",
+      "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn", "source_span": "점(0, 0, 크기=0.05, 색=\"#f59e0b\")"}
+    },
+    {
+      "anchor_id": "obs.bob",
+      "source_ref": {"kind": "point2", "x_key": "bob_x", "y_key": "bob_y"},
+      "value_type": "point2",
+      "unit": "m",
+      "label": "추",
+      "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn", "source_span": "bob_x <- L * ((theta) sin); bob_y <- -L * ((theta) cos)"}
+    },
+    {
+      "anchor_id": "obs.time",
+      "source_ref": {"kind": "observation", "key": "t"},
+      "value_type": "scalar",
+      "unit": "s",
+      "label": "시간",
+      "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn", "source_span": "t <- t + dt"}
+    }
+  ],
+  "measures": [
+    {
+      "measure_id": "measure.angle.theta",
+      "kind": "angle",
+      "pivot_anchor": "obs.pivot",
+      "reference_direction": {"x": 0, "y": -1, "unit": "m", "label": "수직 기준"},
+      "end_anchor": "obs.bob",
+      "value_anchor": "obs.theta",
+      "unit": "rad",
+      "label": "θ",
+      "style": {"arc_color": "#ef4444", "baseline_color": "#94a3b8", "current_color": "#0ea5e9", "label_color": "#991b1b"},
+      "diagnostics": {"unit_mismatch": "E_VIEW_PLAN_UNIT_MISMATCH"}
+    }
+  ],
+  "graph_cursor": {
+    "cursor_id": "graph.current.theta",
+    "x_anchor": "obs.time",
+    "y_anchor": "obs.theta",
+    "series_id": "theta",
+    "label": "현재 각도"
+  },
+  "camera": {
+    "default_policy": "fit",
+    "policies": [
+      {"policy_id": "fixed", "mode": "fixed", "range": {"x_min": -1.35, "x_max": 1.35, "y_min": -1.35, "y_max": 0.35}},
+      {"policy_id": "fit", "mode": "fit", "padding": 0.28, "min_span": 1.4},
+      {"policy_id": "follow", "mode": "follow", "target_anchor": "obs.bob", "span": {"x": 1.8, "y": 1.8}}
+    ],
+    "conflict_diagnostic": "W_VIEW_CAMERA_POLICY_CONFLICT",
+    "state_hash_participation": false
+  },
+  "hash_policy": {
+    "state_hash_participation": false,
+    "view_plan_hash_candidate": true,
+    "world_draw_payload_hash_candidate_uses_world_coordinates": true,
+    "canonical_bogae_hash_claim": false
+  }
+}

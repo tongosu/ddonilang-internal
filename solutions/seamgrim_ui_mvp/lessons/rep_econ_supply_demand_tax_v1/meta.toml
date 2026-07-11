@@ -10,3 +10,5 @@ first_delight_controls = ["시작가격", "세금", "수요기울기"]
 first_delight_control_labels = {"시작가격" = "시작 가격", "세금" = "세금", "수요기울기" = "수요 민감도"}
 first_delight_graph_axes = ["t", "가격"]
 view_roles = ["graph_series"]
+primary_view = "graph"
+primary_view_rules_path = "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"

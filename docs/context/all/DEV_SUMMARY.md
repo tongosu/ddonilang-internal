@@ -12,6 +12,30 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [SEAMGRIM][KOREAN-MANIM-VERTICAL-AH] 제품 UI에서 한국어 Manim 최소 코어 수직화 (2026-07-11)
+
+- 변경:
+  - 배우기/실험실/만들기/배포 4공간 셸을 실제 `solutions/seamgrim_ui_mvp` UI에 반영하고, 런타임 학생/교사 토글을 숨겼다. `수업 열기`는 배우기 공간, `실험실에서 바꾸기`는 실험실 공간을 유지하도록 실제 라우팅과 browser test를 분리했다.
+  - 일차함수/포물선/수요공급세금 3대표 세계에 `primary_view_rules.v1` 기반 primary view 계약과 관찰 payload(`seamgrim.observation_payload.v1`)를 붙였다.
+  - 실험실 E1에서 DDN 조절값 변경→재실행→내 버전 비교 lineage(`origin_hash`, `delta_ref`)를 제품 화면에 추가했다.
+  - 진자 lesson `rep_phys_pendulum_wave1_v1`을 추가하고 explicit `view_plan.v1`로 의미 닻, 각도재기, same-tick 그래프 커서, 고정/맞춤/따라가기 카메라를 제품 보개에 연결했다. 같은 lesson은 `teul-cli run ... --madi 2` CLI frontdoor와 브라우저/WASM frontdoor 모두에서 실행 검증한다.
+  - 각도재기 표시 on/off는 view-only toggle로 고정했고, `state_hash`와 world-coordinate draw payload 후보 해시가 바뀌지 않음을 제품 runner로 검증했다. FNV 후보값을 정본 `bogae_hash`로 부르지 않는다.
+  - 봉인 trace reaction(`seamgrim.sealed_trace_reactions.v1`)은 미리 계산된 `zero_crossing/sign_change/extremum/tolerance_entry` 발화 tick에서 highlight/visibility/camera_focus 반응을 재생한다. 네 조건을 관찰 샘플에서 계산한다는 주장은 하지 않으며, `seamgrim.resolved_scene_trace.v1`, `E_TRACE_REACTION_CONFLICT`, scrub/replay 안정성을 검증한다.
+  - `state_hash` 산식, parser/runtime 의미론, `docs/ssot/**`는 변경하지 않았다. view/reaction 결과는 각각 view_plan/report와 trace reaction report로만 노출한다.
+- 검증:
+  - `python tests/run_seamgrim_ui_v2_product_shell_check.py` PASS.
+  - `python tests/run_seamgrim_primary_view_contract_check.py` PASS.
+  - `python tests/run_seamgrim_lab_e1_minimal_check.py` PASS.
+  - `python tests/run_seamgrim_pendulum_view_plan_product_check.py` PASS.
+  - `python tests/run_seamgrim_sealed_trace_reaction_check.py` PASS.
+  - `python tests/run_pack_golden.py seamgrim_ui_v2_product_shell_v1 seamgrim_primary_view_contract_v1 seamgrim_lab_e1_minimal_v1 seamgrim_pendulum_view_plan_product_v1 seamgrim_sealed_trace_reaction_product_v1` PASS.
+  - `python tests/run_ci_sanity_gate.py --profile core_lang` PASS.
+  - `cargo check` PASS, `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS.
+- 진행률:
+  - A~G: 제품 UI/browser runner 기준 PASS. H는 미리 계산된 봉인 일정 재생 범위만 PASS.
+  - `닫힘-동작`: UI V2 셸과 배우기/실험실 진입 분리, primary view/관찰 계약, 실험실 E1, 진자 view_plan, 미리 계산된 봉인 일정 재생.
+  - 관찰 trace 기반 4종 조건 evaluator, live online reaction, sealed trace 외부 trace ingestion, matrix 장기 완료 승격: 범위 밖.
+
 ### [SEAMGRIM][LEARNING-SPINE-W6] 기존 교육 자산 8단계 연결 색인 (2026-07-10)
 
 - 변경:

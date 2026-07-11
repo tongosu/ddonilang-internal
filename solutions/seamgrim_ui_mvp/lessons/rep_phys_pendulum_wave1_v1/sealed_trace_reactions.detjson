@@ -1,0 +1,188 @@
+{
+  "schema": "seamgrim.sealed_trace_reactions.v1",
+  "lesson_id": "rep_phys_pendulum_wave1_v1",
+  "mode": "sealed_observation_trace",
+  "sealed": true,
+  "live_online_claim": false,
+  "runtime_semantics_claim": false,
+  "state_hash_participation": false,
+  "view_plan_hash_participation": false,
+  "trace_hash": "candidate:fnv1a32:sealed_trace_reactions:4c8b2a14",
+  "predicate_contract": {
+    "supported_kinds": ["edge", "level"],
+    "precomputed_condition_labels": ["zero_crossing", "sign_change", "extremum", "tolerance_entry"],
+    "condition_evaluation_claim": false,
+    "supported_actions": ["highlight", "visibility", "camera_focus"],
+    "source": "precomputed_sealed_schedule",
+    "implicit_lww_allowed": false,
+    "conflict_diagnostic": "E_TRACE_REACTION_CONFLICT"
+  },
+  "predicates": [
+    {
+      "predicate_id": "edge.frame_sample",
+      "kind": "edge",
+      "label": "봉인 trace 프레임 도착",
+      "source": "sealed_trace_row"
+    },
+    {
+      "predicate_id": "level.theta_explainer_visible",
+      "kind": "level",
+      "label": "각도 설명 레이어 표시",
+      "source": "sealed_trace_row"
+    },
+    {
+      "predicate_id": "edge.theta_zero_crossing",
+      "kind": "edge",
+      "condition_kind": "zero_crossing",
+      "label": "각도 0 통과",
+      "source": "sealed_reaction_schedule"
+    },
+    {
+      "predicate_id": "edge.omega_sign_change",
+      "kind": "edge",
+      "condition_kind": "sign_change",
+      "label": "각속도 부호 변화",
+      "source": "sealed_reaction_schedule"
+    },
+    {
+      "predicate_id": "edge.theta_extremum",
+      "kind": "edge",
+      "condition_kind": "extremum",
+      "label": "각도 극값 도달",
+      "source": "sealed_reaction_schedule"
+    },
+    {
+      "predicate_id": "level.theta_tolerance_entry",
+      "kind": "level",
+      "condition_kind": "tolerance_entry",
+      "label": "각도 허용오차 진입",
+      "source": "sealed_reaction_schedule"
+    }
+  ],
+  "reaction_schedule": [
+    {
+      "schedule_id": "schedule.theta.zero_crossing",
+      "condition_kind": "zero_crossing",
+      "predicate_id": "edge.theta_zero_crossing",
+      "utterance_tick": 12,
+      "tick_min": 12,
+      "tick_max": 12,
+      "time_min": 0,
+      "time_max": 8,
+      "source_row": "sealed.pendulum.visible_window"
+    },
+    {
+      "schedule_id": "schedule.omega.sign_change",
+      "condition_kind": "sign_change",
+      "predicate_id": "edge.omega_sign_change",
+      "utterance_tick": 25,
+      "tick_min": 25,
+      "tick_max": 25,
+      "time_min": 0,
+      "time_max": 8,
+      "source_row": "sealed.pendulum.visible_window"
+    },
+    {
+      "schedule_id": "schedule.theta.extremum",
+      "condition_kind": "extremum",
+      "predicate_id": "edge.theta_extremum",
+      "utterance_tick": 25,
+      "tick_min": 25,
+      "tick_max": 25,
+      "time_min": 0,
+      "time_max": 8,
+      "source_row": "sealed.pendulum.visible_window"
+    },
+    {
+      "schedule_id": "schedule.theta.tolerance_entry",
+      "condition_kind": "tolerance_entry",
+      "predicate_id": "level.theta_tolerance_entry",
+      "utterance_tick": 38,
+      "tick_min": 38,
+      "tick_max": 38,
+      "time_min": 0,
+      "time_max": 8,
+      "source_row": "sealed.pendulum.visible_window"
+    }
+  ],
+  "trace_rows": [
+    {
+      "row_id": "sealed.pendulum.visible_window",
+      "tick_min": 0,
+      "tick_max": 240,
+      "time_min": 0,
+      "time_max": 8,
+      "predicate_states": {
+        "edge.frame_sample": true,
+        "level.theta_explainer_visible": true
+      }
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "highlight.theta_measure",
+      "kind": "highlight",
+      "when": "edge.theta_zero_crossing",
+      "priority": 10,
+      "targets": {
+        "group_ids": ["measure.angle.theta"]
+      },
+      "style": {
+        "stroke": "#f97316",
+        "color": "#f97316",
+        "width_add": 1.6,
+        "opacity": 1
+      }
+    },
+    {
+      "action_id": "visibility.baseline_dim",
+      "kind": "visibility",
+      "when": "level.theta_tolerance_entry",
+      "priority": 10,
+      "targets": {
+        "shape_ids": ["measure.angle.theta.baseline"]
+      },
+      "visible": false,
+      "opacity": 0.18
+    },
+    {
+      "action_id": "camera_focus.bob",
+      "kind": "camera_focus",
+      "when": "edge.theta_extremum",
+      "priority": 10,
+      "target_anchor": "obs.bob",
+      "label": "추 중심",
+      "span": {
+        "x": 1.2,
+        "y": 1.2
+      },
+      "style": {
+        "stroke": "#22c55e",
+        "color": "#22c55e",
+        "opacity": 0.8
+      }
+    },
+    {
+      "action_id": "highlight.bob_motion",
+      "kind": "highlight",
+      "when": "edge.omega_sign_change",
+      "priority": 10,
+      "targets": {
+        "roles": ["pendulum_bob"]
+      },
+      "style": {
+        "stroke": "#14b8a6",
+        "color": "#14b8a6",
+        "width_add": 1,
+        "opacity": 1
+      }
+    }
+  ],
+  "resolved_scene_trace_policy": {
+    "schema": "seamgrim.resolved_scene_trace.v1",
+    "stage_plan_created": false,
+    "implicit_lww_allowed": false,
+    "records_utterance_tick": true,
+    "records_selected_and_suppressed_actions": true
+  }
+}
