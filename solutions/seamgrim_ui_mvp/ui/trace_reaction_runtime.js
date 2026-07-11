@@ -1,3 +1,5 @@
+import { evaluateSealedTracePredicates } from "./sealed_trace_evaluator.js";
+
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
@@ -84,7 +86,7 @@ function normalizePredicates(traceReactions) {
   return byId;
 }
 
-function resolveActivePredicates(traceReactions, tickId, time) {
+function resolveActivePredicatesFromRows(traceReactions, tickId, time) {
   const rows = Array.isArray(traceReactions?.trace_rows) ? traceReactions.trace_rows : [];
   const row = rows.find((candidate) => rowMatches(candidate, tickId, time)) ?? null;
   const predicateDefs = normalizePredicates(traceReactions);
@@ -125,6 +127,60 @@ function resolveActivePredicates(traceReactions, tickId, time) {
       };
     });
   return { row, active: Array.from(activeById.values()), activeSchedule };
+}
+
+function resolveActivePredicates(traceReactions, tickId, time, observationTrace = null) {
+  const rowResult = resolveActivePredicatesFromRows(traceReactions, tickId, time);
+  const scheduleKind = String(traceReactions?.predicate_contract?.source ?? "").trim();
+  if (scheduleKind !== "sealed_observation_trace_evaluator" || !isObject(observationTrace)) {
+    return { ...rowResult, evaluation: null };
+  }
+  const predicateDefs = normalizePredicates(traceReactions);
+  const activeById = new Map(rowResult.active.map((predicate) => [predicate.predicate_id, predicate]));
+  const evaluation = evaluateSealedTracePredicates({
+    observationTrace,
+    conditionRules: traceReactions.condition_rules ?? [],
+  });
+  const events = Array.isArray(evaluation?.events) ? evaluation.events : [];
+  const activeEvents = events.filter((event) => Math.trunc(toFiniteNumber(event?.tick_id, -1)) === tickId);
+  const activeSchedule = activeEvents.map((event) => {
+    const predicateId = String(event?.predicate_id ?? "").trim();
+    const def = predicateDefs.get(predicateId) ?? {
+      predicate_id: predicateId,
+      kind: String(predicateId).startsWith("level.") ? "level" : "edge",
+      label: predicateId,
+      source: "sealed_observation_trace_evaluator",
+      condition_kind: String(event?.condition_kind ?? "").trim(),
+    };
+    if (predicateId) {
+      activeById.set(predicateId, {
+        ...def,
+        source: "sealed_observation_trace_evaluator",
+        condition_kind: String(event?.condition_kind ?? def.condition_kind ?? "").trim(),
+        active: true,
+        event_id: String(event?.event_id ?? "").trim(),
+        rule_id: String(event?.rule_id ?? "").trim(),
+        utterance_tick: tickId,
+      });
+    }
+    return {
+      schedule_id: String(event?.event_id ?? "").trim(),
+      event_id: String(event?.event_id ?? "").trim(),
+      rule_id: String(event?.rule_id ?? "").trim(),
+      predicate_id: predicateId,
+      condition_kind: String(event?.condition_kind ?? "").trim(),
+      utterance_tick: tickId,
+      source_row: "sealed_observation_trace",
+      source: "sealed_observation_trace_evaluator",
+      detail: event?.detail ?? null,
+    };
+  });
+  return {
+    row: rowResult.row,
+    active: Array.from(activeById.values()),
+    activeSchedule,
+    evaluation,
+  };
 }
 
 function cloneShape(shape) {
@@ -359,7 +415,7 @@ export function buildSeamgrimTraceReactionRuntime({ traceReactions, observationT
   const sourceSpace2d = views?.space2d;
   if (!isObject(sourceSpace2d)) return null;
   const { tick_id: tickId, time } = readTickAndTime(observation ?? {});
-  const { row, active, activeSchedule } = resolveActivePredicates(traceReactions, tickId, time);
+  const { row, active, activeSchedule, evaluation } = resolveActivePredicates(traceReactions, tickId, time, observationTrace);
   const activePredicateIds = new Set(active.map((predicate) => predicate.predicate_id));
   const applied = applyActionsToSpace2d(sourceSpace2d, traceReactions.actions, activePredicateIds, viewPlanRuntime ?? {});
   const actionKinds = Array.from(new Set(applied.applied.map((action) => action.kind))).sort();
@@ -368,7 +424,10 @@ export function buildSeamgrimTraceReactionRuntime({ traceReactions, observationT
     ...active.map((predicate) => String(predicate.condition_kind ?? "").trim()).filter(Boolean),
     ...activeSchedule.map((scheduleRow) => String(scheduleRow.condition_kind ?? "").trim()).filter(Boolean),
   ])).sort();
-  const diagnostics = Array.isArray(applied.diagnostics) ? applied.diagnostics : [];
+  const diagnostics = [
+    ...(Array.isArray(evaluation?.diagnostics) ? evaluation.diagnostics : []),
+    ...(Array.isArray(applied.diagnostics) ? applied.diagnostics : []),
+  ];
   const resolvedSceneTrace = buildResolvedSceneTrace({
     traceReactions,
     activeSchedule,
@@ -380,6 +439,8 @@ export function buildSeamgrimTraceReactionRuntime({ traceReactions, observationT
   const frameHash = buildReactionHashCandidate({
     lesson_id: traceReactions.lesson_id,
     trace_hash: traceReactions.trace_hash,
+    observation_trace_hash_candidate: String(observationTrace?.trace_hash_candidate ?? ""),
+    predicate_event_hash_candidate: String(evaluation?.evaluation_hash_candidate ?? ""),
     row_id: row?.row_id ?? "",
     tick_id: tickId,
     active_predicates: active.map((predicate) => predicate.predicate_id),
@@ -407,6 +468,8 @@ export function buildSeamgrimTraceReactionRuntime({ traceReactions, observationT
     observation_trace_hash_candidate: String(observationTrace?.trace_hash_candidate ?? ""),
     trace_sample_count: Math.max(0, Number(observationTrace?.sample_count ?? 0) || 0),
     trace_provenance: isObject(observationTrace?.provenance) ? observationTrace.provenance : null,
+    predicate_events: isObject(evaluation) ? evaluation : null,
+    predicate_event_hash_candidate: String(evaluation?.evaluation_hash_candidate ?? ""),
     row_id: String(row?.row_id ?? ""),
     tick_id: tickId,
     time,

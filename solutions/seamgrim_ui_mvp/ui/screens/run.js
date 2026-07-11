@@ -13503,6 +13503,7 @@ runs: 0</pre>
       this.root.dataset.traceReactionStateHashParticipation = reaction ? (reaction.state_hash_participation === true ? "1" : "0") : "";
       this.root.dataset.traceReactionObservationTraceHash = String(reaction?.observation_trace_hash_candidate ?? "").trim();
       this.root.dataset.traceReactionObservationSampleCount = String(Math.max(0, Number(reaction?.trace_sample_count ?? 0) || 0));
+      this.root.dataset.traceReactionPredicateEventHash = String(reaction?.predicate_event_hash_candidate ?? "").trim();
       this.root.dataset.traceReactionActionKinds = Array.isArray(reaction?.action_kinds) ? reaction.action_kinds.join(",") : "";
       this.root.dataset.traceReactionPredicateKinds = Array.isArray(reaction?.predicate_kinds) ? reaction.predicate_kinds.join(",") : "";
       this.root.dataset.traceReactionConditionKinds = Array.isArray(reaction?.condition_kinds) ? reaction.condition_kinds.join(",") : "";

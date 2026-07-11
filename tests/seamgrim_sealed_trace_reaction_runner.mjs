@@ -166,7 +166,7 @@ async function main() {
       return root?.dataset?.traceReactionRuntime === "1"
         && root?.dataset?.mainVisualMode === "space2d"
         && reaction?.schema === "seamgrim.trace_reaction.runtime.v1"
-        && reaction?.tick_id >= 45;
+        && reaction?.tick_id >= 60;
     }, null, { timeout: 30_000 });
 
     const pause = page.locator("#btn-pause");
@@ -180,11 +180,14 @@ async function main() {
     assert(initial.root.traceReactionMode === "sealed_observation_trace", "trace reaction mode mismatch");
     assert(initial.root.traceReactionSealed === "1", "trace must be sealed");
     assert(initial.root.traceReactionLiveOnlineClaim === "0", "trace must not claim live online reaction");
-    assert(initial.root.traceReactionConditionEvaluationClaim === "0", "V1 must not claim condition evaluation");
-    assert(initial.root.traceReactionScheduleKind === "precomputed_sealed_schedule", "precomputed schedule boundary missing");
+    assert(initial.root.traceReactionConditionEvaluationClaim === "1", "sealed trace must claim offline condition evaluation");
+    assert(initial.root.traceReactionScheduleKind === "sealed_observation_trace_evaluator", "evaluator source boundary missing");
     assert(initial.root.traceReactionStateHashParticipation === "0", "trace reaction must stay outside state_hash");
-    assert(initial.root.traceReactionAppliedActions === "", "precomputed reactions must not be active before their recorded tick");
-    assert(initial.root.traceReactionConditionKinds === "", "condition labels must not be active before their recorded tick");
+    assert(Number(initial.root.traceReactionObservationSampleCount) >= 60, "sealed observation trace sample count too small");
+    assert(String(initial.root.traceReactionObservationTraceHash ?? "").startsWith("candidate:fnv1a32:sealed_observation_trace:"), "sealed observation trace hash missing");
+    assert(String(initial.root.traceReactionPredicateEventHash ?? "").startsWith("candidate:fnv1a32:trace_predicate_events:"), "predicate event hash missing");
+    assert(initial.root.traceReactionAppliedActions === "", "trace-derived reactions must not be active before an event tick");
+    assert(initial.root.traceReactionConditionKinds === "", "condition labels must not be active before an event tick");
     assert(initial.reaction?.resolved_scene_trace?.stage_plan_created === false, "StagePlan must not be created");
     assert(initial.reaction?.resolved_scene_trace?.implicit_lww_allowed === false, "implicit LWW must be false");
     assert(initial.viewPlan?.state_hash_participation === false, "view plan state hash boundary changed");
@@ -202,27 +205,33 @@ async function main() {
     );
     assert(fixed.root.traceReactionFrameHash === baseReactionHash, "reaction frame changed without a new trace tick");
 
-    const zero = await scrubToTick(page, 12);
-    assert(zero.root.traceReactionConditionKinds === "zero_crossing", `zero-crossing label missing: ${zero.root.traceReactionConditionKinds}`);
-    assert(zero.root.traceReactionAppliedActions === "highlight.theta_measure", `zero-crossing action mismatch: ${zero.root.traceReactionAppliedActions}`);
-    assert(zero.root.traceReactionUtteranceTicks === "12", `zero-crossing utterance tick mismatch: ${zero.root.traceReactionUtteranceTicks}`);
-    assert(zero.reaction?.highlighted_shape_ids?.includes("measure.angle.theta.arc"), "zero-crossing highlight did not touch angle arc");
-
-    const extremum = await scrubToTick(page, 25);
-    assert(extremum.root.traceReactionConditionKinds === "extremum,sign_change", `tick 25 labels mismatch: ${extremum.root.traceReactionConditionKinds}`);
-    assert(extremum.root.traceReactionAppliedActions === "camera_focus.bob,highlight.bob_motion", `tick 25 actions mismatch: ${extremum.root.traceReactionAppliedActions}`);
-    assert(extremum.root.traceReactionUtteranceTicks === "25", `tick 25 utterance mismatch: ${extremum.root.traceReactionUtteranceTicks}`);
-    assert(extremum.reaction?.highlighted_shape_ids?.includes("pendulum.bob"), "sign-change highlight did not touch bob");
-    assert(extremum.reaction?.camera_focuses?.some((row) => row.target_anchor === "obs.bob"), "camera focus target missing");
-
-    const tolerance = await scrubToTick(page, 38);
-    assert(tolerance.root.traceReactionConditionKinds === "tolerance_entry", `tolerance label mismatch: ${tolerance.root.traceReactionConditionKinds}`);
+    const tolerance = await scrubToTick(page, 25);
+    assert(tolerance.root.traceReactionConditionKinds === "tolerance_entry", `tolerance label mismatch: ${tolerance.root.traceReactionConditionKinds}; events=${JSON.stringify(tolerance.reaction?.predicate_events?.events?.slice(0, 8) ?? [])}`);
     assert(tolerance.root.traceReactionAppliedActions === "visibility.baseline_dim", `tolerance action mismatch: ${tolerance.root.traceReactionAppliedActions}`);
+    assert(tolerance.root.traceReactionUtteranceTicks === "25", `tolerance utterance tick mismatch: ${tolerance.root.traceReactionUtteranceTicks}`);
     assert(tolerance.reaction?.hidden_shape_ids?.includes("measure.angle.theta.baseline"), "tolerance action did not dim baseline");
 
-    const replayed = await scrubToTick(page, 25);
-    assert(replayed.root.traceReactionAppliedActions === extremum.root.traceReactionAppliedActions, "scrub replay action sequence changed");
-    assert(replayed.root.traceReactionFrameHash === extremum.root.traceReactionFrameHash, "scrub replay frame hash changed");
+    const zero = await scrubToTick(page, 26);
+    assert(zero.root.traceReactionConditionKinds === "zero_crossing", `zero-crossing label missing: ${zero.root.traceReactionConditionKinds}`);
+    assert(zero.root.traceReactionAppliedActions === "highlight.theta_measure", `zero-crossing action mismatch: ${zero.root.traceReactionAppliedActions}`);
+    assert(zero.root.traceReactionUtteranceTicks === "26", `zero-crossing utterance tick mismatch: ${zero.root.traceReactionUtteranceTicks}`);
+    assert(zero.reaction?.highlighted_shape_ids?.includes("measure.angle.theta.arc"), "zero-crossing highlight did not touch angle arc");
+
+    const extremum = await scrubToTick(page, 50);
+    assert(extremum.root.traceReactionConditionKinds === "extremum", `tick 50 labels mismatch: ${extremum.root.traceReactionConditionKinds}`);
+    assert(extremum.root.traceReactionAppliedActions === "camera_focus.bob", `tick 50 actions mismatch: ${extremum.root.traceReactionAppliedActions}`);
+    assert(extremum.root.traceReactionUtteranceTicks === "50", `tick 50 utterance mismatch: ${extremum.root.traceReactionUtteranceTicks}`);
+    assert(extremum.reaction?.camera_focuses?.some((row) => row.target_anchor === "obs.bob"), "camera focus target missing");
+
+    const sign = await scrubToTick(page, 51);
+    assert(sign.root.traceReactionConditionKinds === "sign_change", `tick 51 labels mismatch: ${sign.root.traceReactionConditionKinds}`);
+    assert(sign.root.traceReactionAppliedActions === "highlight.bob_motion", `tick 51 actions mismatch: ${sign.root.traceReactionAppliedActions}`);
+    assert(sign.root.traceReactionUtteranceTicks === "51", `tick 51 utterance mismatch: ${sign.root.traceReactionUtteranceTicks}`);
+    assert(sign.reaction?.highlighted_shape_ids?.includes("pendulum.bob"), "sign-change highlight did not touch bob");
+
+    const replayed = await scrubToTick(page, 51);
+    assert(replayed.root.traceReactionAppliedActions === sign.root.traceReactionAppliedActions, "scrub replay action sequence changed");
+    assert(replayed.root.traceReactionFrameHash === sign.root.traceReactionFrameHash, "scrub replay frame hash changed");
     assert(String(replayed.reaction?.reaction_frame_hash ?? "").startsWith("candidate:fnv1a32:trace_reaction_frame:"), "reaction frame hash missing");
 
     await page.setViewportSize({ width: 1440, height: 900 });

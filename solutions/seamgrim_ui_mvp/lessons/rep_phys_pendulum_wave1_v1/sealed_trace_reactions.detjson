@@ -7,13 +7,19 @@
   "runtime_semantics_claim": false,
   "state_hash_participation": false,
   "view_plan_hash_participation": false,
-  "trace_hash": "candidate:fnv1a32:sealed_trace_reactions:4c8b2a14",
+  "trace_hash": "candidate:fnv1a32:sealed_trace_reactions:evaluator_v1",
   "predicate_contract": {
     "supported_kinds": ["edge", "level"],
-    "precomputed_condition_labels": ["zero_crossing", "sign_change", "extremum", "tolerance_entry"],
-    "condition_evaluation_claim": false,
+    "condition_kinds": ["zero_crossing", "sign_change", "extremum", "tolerance_entry"],
+    "condition_evaluation_claim": true,
+    "required_values": ["tick_id", "t", "theta", "omega"],
+    "trace_rules": {
+      "epsilon": 0.001,
+      "tolerance_target": 0,
+      "tolerance": 0.005
+    },
     "supported_actions": ["highlight", "visibility", "camera_focus"],
-    "source": "precomputed_sealed_schedule",
+    "source": "sealed_observation_trace_evaluator",
     "implicit_lww_allowed": false,
     "conflict_diagnostic": "E_TRACE_REACTION_CONFLICT"
   },
@@ -35,74 +41,60 @@
       "kind": "edge",
       "condition_kind": "zero_crossing",
       "label": "각도 0 통과",
-      "source": "sealed_reaction_schedule"
+      "source": "sealed_observation_trace_evaluator"
     },
     {
       "predicate_id": "edge.omega_sign_change",
       "kind": "edge",
       "condition_kind": "sign_change",
       "label": "각속도 부호 변화",
-      "source": "sealed_reaction_schedule"
+      "source": "sealed_observation_trace_evaluator"
     },
     {
       "predicate_id": "edge.theta_extremum",
       "kind": "edge",
       "condition_kind": "extremum",
       "label": "각도 극값 도달",
-      "source": "sealed_reaction_schedule"
+      "source": "sealed_observation_trace_evaluator"
     },
     {
       "predicate_id": "level.theta_tolerance_entry",
       "kind": "level",
       "condition_kind": "tolerance_entry",
       "label": "각도 허용오차 진입",
-      "source": "sealed_reaction_schedule"
+      "source": "sealed_observation_trace_evaluator"
     }
   ],
-  "reaction_schedule": [
+  "condition_rules": [
     {
-      "schedule_id": "schedule.theta.zero_crossing",
+      "rule_id": "rule.theta.zero_crossing",
       "condition_kind": "zero_crossing",
       "predicate_id": "edge.theta_zero_crossing",
-      "utterance_tick": 12,
-      "tick_min": 12,
-      "tick_max": 12,
-      "time_min": 0,
-      "time_max": 8,
-      "source_row": "sealed.pendulum.visible_window"
+      "target_key": "theta",
+      "epsilon": 0.001
     },
     {
-      "schedule_id": "schedule.omega.sign_change",
+      "rule_id": "rule.omega.sign_change",
       "condition_kind": "sign_change",
       "predicate_id": "edge.omega_sign_change",
-      "utterance_tick": 25,
-      "tick_min": 25,
-      "tick_max": 25,
-      "time_min": 0,
-      "time_max": 8,
-      "source_row": "sealed.pendulum.visible_window"
+      "target_key": "omega",
+      "epsilon": 0.001
     },
     {
-      "schedule_id": "schedule.theta.extremum",
+      "rule_id": "rule.theta.extremum",
       "condition_kind": "extremum",
       "predicate_id": "edge.theta_extremum",
-      "utterance_tick": 25,
-      "tick_min": 25,
-      "tick_max": 25,
-      "time_min": 0,
-      "time_max": 8,
-      "source_row": "sealed.pendulum.visible_window"
+      "target_key": "theta",
+      "epsilon": 0.001
     },
     {
-      "schedule_id": "schedule.theta.tolerance_entry",
+      "rule_id": "rule.theta.tolerance_entry",
       "condition_kind": "tolerance_entry",
       "predicate_id": "level.theta_tolerance_entry",
-      "utterance_tick": 38,
-      "tick_min": 38,
-      "tick_max": 38,
-      "time_min": 0,
-      "time_max": 8,
-      "source_row": "sealed.pendulum.visible_window"
+      "target_key": "theta",
+      "target": 0,
+      "tolerance": 0.005,
+      "epsilon": 0.001
     }
   ],
   "trace_rows": [

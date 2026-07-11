@@ -12,6 +12,23 @@ Workspace: `i:\dev\ddonilang\codex`
 
 ## 최근 핵심 변경 (요약)
 
+### [SEAMGRIM][KOREAN-MANIM-WAVE1T] 봉인 관찰 trace 조건 평가기 (2026-07-11)
+
+- 변경:
+  - 진자 제품 WASM 실행의 `dotbogi` timeline에서 `seamgrim.sealed_observation_trace.v1` artifact를 생성한다.
+  - `tick_id/t/theta/omega` 샘플 기반 순수 evaluator로 `zero_crossing`, `sign_change`, `extremum`, `tolerance_entry`를 결정적으로 계산한다.
+  - 수동 `reaction_schedule` / `utterance_tick` truth를 제거하고, evaluator가 도출한 tick에서만 highlight/visibility/camera_focus view-only action을 적용한다.
+  - 실제 제품 trace 기준 도출 tick은 `tolerance_entry=25`, `zero_crossing=26`, `extremum=50`, `sign_change=51`이다.
+  - `state_hash` 산식, parser/runtime 의미론, `docs/ssot/**`는 변경하지 않았다.
+- 검증:
+  - `python tests/run_seamgrim_sealed_observation_trace_check.py` PASS.
+  - `python tests/run_seamgrim_trace_predicate_evaluator_check.py` PASS.
+  - `python tests/run_seamgrim_sealed_trace_reaction_check.py` PASS.
+- 진행률:
+  - `닫힘-동작`: sealed observation trace 기반 4종 조건 evaluator.
+  - `닫힘-동작`: 도출 event의 결정적 scrub/replay.
+  - live online reaction, 외부 trace import/authoring UI, 언어 표면 반응 규칙 문법: 미구현.
+
 ### [SEAMGRIM][KOREAN-MANIM-VERTICAL-AH] 제품 UI에서 한국어 Manim 최소 코어 수직화 (2026-07-11)
 
 - 변경:

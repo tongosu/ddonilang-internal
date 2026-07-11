@@ -54,8 +54,14 @@ def check_files_and_contract() -> int:
         return fail("E_SEAMGRIM_TRACE_REACTION_ACTIONS", repr(contract.get("action_kinds")))
     if contract.get("condition_kinds") != ["zero_crossing", "sign_change", "extremum", "tolerance_entry"]:
         return fail("E_SEAMGRIM_TRACE_REACTION_CONDITIONS", repr(contract.get("condition_kinds")))
-    if contract.get("condition_evaluation_claim") is not False or contract.get("schedule_kind") != "precomputed_sealed_schedule":
+    if contract.get("condition_evaluation_claim") is not True or contract.get("schedule_kind") != "sealed_observation_trace_evaluator":
         return fail("E_SEAMGRIM_TRACE_REACTION_SCHEDULE_BOUNDARY", repr(contract))
+    if contract.get("manual_utterance_tick_truth") is not False:
+        return fail("E_SEAMGRIM_TRACE_REACTION_MANUAL_TRUTH", repr(contract))
+    if contract.get("observation_trace_schema") != "seamgrim.sealed_observation_trace.v1":
+        return fail("E_SEAMGRIM_TRACE_REACTION_OBSERVATION_TRACE_SCHEMA", repr(contract.get("observation_trace_schema")))
+    if contract.get("predicate_event_schema") != "seamgrim.trace_predicate_events.v1":
+        return fail("E_SEAMGRIM_TRACE_REACTION_EVENT_SCHEMA", repr(contract.get("predicate_event_schema")))
     if contract.get("resolved_scene_trace_schema") != "seamgrim.resolved_scene_trace.v1":
         return fail("E_SEAMGRIM_TRACE_REACTION_RESOLVED_SCHEMA", repr(contract.get("resolved_scene_trace_schema")))
     for key in ("live_online_claim", "implicit_lww_allowed", "stage_plan_created", "state_hash_formula_change", "trace_reaction_state_hash_participation", "parser_change", "runtime_semantics_change", "docs_ssot_change"):
@@ -75,16 +81,20 @@ def check_product_sources() -> int:
     predicates = {str(row.get("kind")) for row in trace.get("predicates", []) if isinstance(row, dict)}
     if predicates != {"edge", "level"}:
         return fail("E_SEAMGRIM_TRACE_REACTION_PREDICATE_KIND", repr(predicates))
-    condition_kinds = {str(row.get("condition_kind")) for row in trace.get("reaction_schedule", []) if isinstance(row, dict)}
+    condition_kinds = {str(row.get("condition_kind")) for row in trace.get("condition_rules", []) if isinstance(row, dict)}
     if condition_kinds != {"zero_crossing", "sign_change", "extremum", "tolerance_entry"}:
         return fail("E_SEAMGRIM_TRACE_REACTION_CONDITION_KIND", repr(condition_kinds))
-    if len(trace.get("reaction_schedule", [])) != 4:
-        return fail("E_SEAMGRIM_TRACE_REACTION_SCHEDULE_ROWS", repr(trace.get("reaction_schedule")))
-    if trace.get("predicate_contract", {}).get("condition_evaluation_claim") is not False:
+    if len(trace.get("condition_rules", [])) != 4:
+        return fail("E_SEAMGRIM_TRACE_REACTION_RULE_ROWS", repr(trace.get("condition_rules")))
+    if trace.get("predicate_contract", {}).get("condition_evaluation_claim") is not True:
         return fail("E_SEAMGRIM_TRACE_REACTION_EVALUATION_OVERCLAIM", repr(trace.get("predicate_contract")))
-    for row in trace.get("reaction_schedule", []):
-        if row.get("tick_min") != row.get("utterance_tick") or row.get("tick_max") != row.get("utterance_tick"):
-            return fail("E_SEAMGRIM_TRACE_REACTION_EVENT_WINDOW", repr(row))
+    if trace.get("predicate_contract", {}).get("source") != "sealed_observation_trace_evaluator":
+        return fail("E_SEAMGRIM_TRACE_REACTION_EVALUATOR_SOURCE", repr(trace.get("predicate_contract")))
+    if trace.get("reaction_schedule"):
+        return fail("E_SEAMGRIM_TRACE_REACTION_MANUAL_SCHEDULE_PRESENT", repr(trace.get("reaction_schedule")))
+    for row in trace.get("condition_rules", []):
+        if "utterance_tick" in row or "tick_min" in row or "tick_max" in row:
+            return fail("E_SEAMGRIM_TRACE_REACTION_MANUAL_TICK_RULE", repr(row))
     policy = trace.get("resolved_scene_trace_policy", {})
     if policy.get("schema") != "seamgrim.resolved_scene_trace.v1" or policy.get("stage_plan_created") is not False:
         return fail("E_SEAMGRIM_TRACE_REACTION_RESOLVED_POLICY", repr(policy))
@@ -118,6 +128,9 @@ def check_product_sources() -> int:
         "condition_kinds",
         "state_hash_participation",
         "view_plan_hash_participation",
+        "evaluateSealedTracePredicates",
+        "predicate_events",
+        "observation_trace_hash_candidate",
     ]:
         if token not in runtime:
             return fail("E_SEAMGRIM_TRACE_REACTION_RUNTIME_JS", token)
@@ -191,7 +204,7 @@ def main() -> int:
     rc = check_docs_ssot_clean()
     if rc:
         return rc
-    print("[seamgrim-sealed-trace-reaction-product-v1] OK behavior-closed sealed-trace-only")
+    print("[seamgrim-sealed-trace-reaction-product-v1] OK behavior-closed sealed-trace-evaluator")
     return 0
 
 
