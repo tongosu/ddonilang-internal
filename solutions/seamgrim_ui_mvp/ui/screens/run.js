@@ -35,6 +35,7 @@ import {
 } from "../preview_result_contract.js";
 import { buildSeamgrimViewPlanRuntime } from "../view_plan_runtime.js";
 import { buildSeamgrimTraceReactionRuntime } from "../trace_reaction_runtime.js";
+import { buildSealedObservationTraceArtifact } from "../sealed_trace_evaluator.js";
 import {
   applyPreviewViewModelMetadata,
   buildPreviewViewModel,
@@ -3145,6 +3146,21 @@ export function synthesizeSpace2dFromObservation(observation) {
   const pendulum = synthesizePendulumSpace2dFromObservation(observation);
   if (pendulum) return pendulum;
   return synthesizePointSpace2dFromObservation(observation);
+}
+
+function readDotbogiTimelineSamples(dotbogi) {
+  const length = Math.max(0, Math.trunc(Number(dotbogi?.getTimelineLength?.() ?? 0) || 0));
+  const out = [];
+  for (let index = 0; index < length; index += 1) {
+    const sample = dotbogi?.getTimelineSampleAt?.(index);
+    if (sample && typeof sample === "object") {
+      out.push({
+        index,
+        values: sample.values && typeof sample.values === "object" ? { ...sample.values } : {},
+      });
+    }
+  }
+  return out;
 }
 
 function synthesizeTrajectorySpace2dFromObservation(observation, { prevSpace2d = null } = {}) {
@@ -13445,8 +13461,17 @@ runs: 0</pre>
     if (viewPlanRuntime?.views) {
       views = viewPlanRuntime.views;
     }
+    const sealedObservationTrace = this.lesson?.sealedTraceReactions
+      ? buildSealedObservationTraceArtifact({
+          lessonId: this.lesson?.id ?? "",
+          timelineSamples: readDotbogiTimelineSamples(this.dotbogi),
+          currentObservation: observation,
+          rules: this.lesson?.sealedTraceReactions?.predicate_contract?.trace_rules ?? null,
+        })
+      : null;
     const traceReactionRuntime = buildSeamgrimTraceReactionRuntime({
       traceReactions: this.lesson?.sealedTraceReactions ?? null,
+      observationTrace: sealedObservationTrace,
       observation,
       views,
       viewPlanRuntime,
@@ -13476,6 +13501,8 @@ runs: 0</pre>
       this.root.dataset.traceReactionConditionEvaluationClaim = reaction ? (reaction.condition_evaluation_claim === true ? "1" : "0") : "";
       this.root.dataset.traceReactionScheduleKind = String(reaction?.schedule_kind ?? "").trim();
       this.root.dataset.traceReactionStateHashParticipation = reaction ? (reaction.state_hash_participation === true ? "1" : "0") : "";
+      this.root.dataset.traceReactionObservationTraceHash = String(reaction?.observation_trace_hash_candidate ?? "").trim();
+      this.root.dataset.traceReactionObservationSampleCount = String(Math.max(0, Number(reaction?.trace_sample_count ?? 0) || 0));
       this.root.dataset.traceReactionActionKinds = Array.isArray(reaction?.action_kinds) ? reaction.action_kinds.join(",") : "";
       this.root.dataset.traceReactionPredicateKinds = Array.isArray(reaction?.predicate_kinds) ? reaction.predicate_kinds.join(",") : "";
       this.root.dataset.traceReactionConditionKinds = Array.isArray(reaction?.condition_kinds) ? reaction.condition_kinds.join(",") : "";
@@ -13592,6 +13619,7 @@ runs: 0</pre>
       observationContractRows,
       viewPlanRuntimeReport: this.lastViewPlanRuntimeReport ?? null,
       traceReactionRuntimeReport: this.lastTraceReactionRuntimeReport ?? null,
+      sealedObservationTrace,
     };
   }
 

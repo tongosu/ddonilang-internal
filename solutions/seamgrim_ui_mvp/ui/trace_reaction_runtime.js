@@ -352,7 +352,7 @@ function buildResolvedSceneTrace({ traceReactions, activeSchedule, applied, diag
   };
 }
 
-export function buildSeamgrimTraceReactionRuntime({ traceReactions, observation, views, viewPlanRuntime } = {}) {
+export function buildSeamgrimTraceReactionRuntime({ traceReactions, observationTrace = null, observation, views, viewPlanRuntime } = {}) {
   if (!isObject(traceReactions) || String(traceReactions.schema ?? "") !== "seamgrim.sealed_trace_reactions.v1") {
     return null;
   }
@@ -403,6 +403,10 @@ export function buildSeamgrimTraceReactionRuntime({ traceReactions, observation,
     state_hash_participation: traceReactions.state_hash_participation === true,
     view_plan_hash_participation: traceReactions.view_plan_hash_participation === true,
     trace_hash: String(traceReactions.trace_hash ?? ""),
+    observation_trace: isObject(observationTrace) ? observationTrace : null,
+    observation_trace_hash_candidate: String(observationTrace?.trace_hash_candidate ?? ""),
+    trace_sample_count: Math.max(0, Number(observationTrace?.sample_count ?? 0) || 0),
+    trace_provenance: isObject(observationTrace?.provenance) ? observationTrace.provenance : null,
     row_id: String(row?.row_id ?? ""),
     tick_id: tickId,
     time,
