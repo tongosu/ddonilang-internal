@@ -18,6 +18,14 @@
 | `publish/README_te.md` | README 텔루구어 버전 | README 변경 시 |
 | `publish/README_tr.md` | README 터키어 버전 | README 변경 시 |
 | `publish/QUICKSTART.md` | 설치/실행 요약 | 실행 방법 변경 시 |
+| `publish/LEARNING_PATH.md` | 0~5층 학습 순서와 문법 선행 관계 | 사용자 표면·학습 경로 변경 시 |
+| `publish/PRODUCT_SUPPORT_CURRENT.md` | 고정 SPEC·검증 후보·기본 제품 상태 분리 | 기본 계보 승격·제품 관문 변경 시 |
+| `publish/examples/00_first_result.ddn` | 10분 첫 실행 DDN 예제 | 기초 실행 표면 변경 시 |
+| `publish/spec/CURRENT.md` | 공개 Language SPEC current와 보존 계보 | 공개 스펙 승격·후보 생성 시 |
+| `publish/spec/v0.5.0/SPEC_MANIFEST_v0.5.0.md` | v24.24.1 RD-001~122 투영 공개 current | 공개 스펙 후속 승격 시 |
+| `publish/spec/v0.5.0-candidate-r3/SPEC_MANIFEST_v0.5.0.md` | 독립 검토 13/13 PASS 승격 입력 보존본 | 계보·감사 재검증 시 |
+| `publish/spec/v0.4.0/SPEC_MANIFEST_v0.4.0.md` | v24.22.1 RD-001~099 투영 이전 공개판 | 계보·이행 확인 시 |
+| `publish/spec/v0.4.0-candidate/SPEC_MANIFEST_v0.4.0.md` | v24.22.1 투영 공개 스펙 검토 후보 보존본 | 계보·감사 재검증 시 |
 | `publish/DOWNLOADS.md` | 바이너리 배포 안내 | 배포 대상/파일명 변경 시 |
 | `publish/ddonirang_grammar_summary.md` | 문법 요약(발표용) | 문법 요약 갱신 시 |
 | `publish/ddonirang_grammar_full.md` | 문법 총정리(정본 요약) | 문법 총정리 갱신 시 |
