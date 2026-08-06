@@ -1,0 +1,63 @@
+{
+  "decision_projection": [
+    {
+      "family": "v0.4.0-inherited",
+      "projection": "public-docs-first-product-open",
+      "rd_end": 99,
+      "rd_start": 1
+    },
+    {
+      "family": "knowledge-scene-learning-charter",
+      "projection": "public-direction-exact-contracts-open",
+      "rd_end": 105,
+      "rd_start": 100
+    },
+    {
+      "family": "standard-graph-view",
+      "projection": "public-docs-first-exact-export-accessibility-open",
+      "rd_end": 113,
+      "rd_start": 106
+    },
+    {
+      "family": "common-model-surface",
+      "projection": "public-syntax-docs-first-product-open",
+      "rd_end": 122,
+      "rd_start": 114
+    }
+  ],
+  "independent_review_sha256": "sha256:e5ce11613f0a4aeb2f728b1d08d18948640c1b8624e023dcaae57f1cf0c25c9a",
+  "manager_correction_sha256": "sha256:07ae4fdeea4ebaa1cf3716256c1289e9af8c98e4a2a17cda63ce772a34698ab2",
+  "open_gates": [
+    "P1 pack mixed/named loss, duplicate names, field-count loss NOT FIXED",
+    "C-02 exact 30 expressions",
+    "C-04 sigil readability corpus",
+    "C-05 eolgae migration and public/export table",
+    "C-06 five-layer exposure table",
+    "KS final syntax",
+    "exact wire and product gates",
+    "O-GA-06 curriculum tick policy DEFER",
+    "O-GA-11 exact graph module/export names OPEN",
+    "O-GA-13 intermediate-layer naming DEFER",
+    "exact accessibility, D8, relationship, and multi-run join OPEN",
+    "KSL exact grammar, schema, ABI, adapter, camera, interpolation, lifetime OPEN",
+    "native PDE, SDE, optimization, dynamic ECS OPEN",
+    "model parser, typed IR, solver, CLI/WASM/browser product vertical OPEN"
+  ],
+  "owner_direction_sha256": "sha256:fdbec6dd68e8e75487ca32494d4ffaf0f5158e4b2ec1089b407c657b114b6b3d",
+  "owner_final_promotion_sha256": "sha256:1d042ec2cc4531fa9150eadbc138141f1ed43556bd5856804f5a8f193c00e98d",
+  "predecessor_public_manifest_sha256": "sha256:738b2eea90add844d2b076179662399f4ba75c59b78a4ea2e6703648674f3107",
+  "predecessor_public_seal_sha256": "sha256:1e6472ed996fb4d7ddb8166db93c22ff97d6ceafd0d62b7c31c59dac2516ddac",
+  "predecessor_public_version": "v0.4.0",
+  "product_evidence": "separate; public docs current is not runtime landed",
+  "public_family": "v0.5.0",
+  "public_version": "v0.5.0",
+  "reviewed_candidate_manifest_sha256": "sha256:0455f162869a837d81d8683d543b92c27f063ee6423a7638a341209941de2ccb",
+  "reviewed_candidate_seal_sha256": "sha256:7fc6b41950659b067267bb2c573f145cba241dcd01f7a74c9711d3589267145f",
+  "schema": "ddonirang-language-spec-trace.v3",
+  "semantic_inheritance_correction_sha256": "sha256:5969afbf7ee589ff589cc01e95e86cfa61360bd5abbb8689a13714701979141a",
+  "source_ssot_manifest_sha256": "sha256:8ce07dd5c7ac60a84183771f78f965f3c886b12972a86626dae96bad58bcf37c",
+  "source_ssot_seal_sha256": "sha256:17e34ee59856528f6fb08e5743d45a09e10b35329ce1e64b27e7bfebbc889b35",
+  "source_ssot_status": "live-current-docs-first",
+  "source_ssot_version": "v24.24.1",
+  "status": "public current / owner-approved / independently reviewed / docs-first / product-open"
+}

@@ -1,0 +1,27 @@
+# 정본 예제 — Language SPEC v0.4.0 후보
+
+> 상태: `public candidate / not current / docs-first / product-open`
+> trace: Language SPEC `v0.4.0` candidate ← internal live SSOT `v24.22.1`
+> 현 공개판: Language SPEC `v0.3.0` (고정판, 불변)
+> 권위: 충돌하면 internal live SSOT가 우선한다.
+> 제품 경계: 문서 정본과 parser/runtime/default-product 지원을 분리한다.
+
+모든 예제 파일은 `docs-first / product-open`이다. 현재 기본 parser/runtime
+실행 성공을 주장하지 않는다.
+
+## 예제 목록
+
+- [`01_result_and_optional.ddn`](./examples/01_result_and_optional.ddn)
+- [`02_generic_static_header.ddn`](./examples/02_generic_static_header.ddn)
+- [`03_bytes_and_exact_number.ddn`](./examples/03_bytes_and_exact_number.ddn)
+- [`04_function_and_optional_map.ddn`](./examples/04_function_and_optional_map.ddn)
+- [`05_pack_kinds.ddn`](./examples/05_pack_kinds.ddn)
+- [`06_observation_and_mol.ddn`](./examples/06_observation_and_mol.ddn)
+
+## 읽는 순서
+
+맺음과 `없음`을 먼저 구분하고, `두고`로 정적 머리와 실행 입력을 나눈다.
+그 뒤 함수값·선택값 연산, 값꾸러미 두 종류, 공개 관찰과 단위를 읽는다.
+
+공개 model·event·solver, `얼개 {}`, 새 구실 짧은 syntax는 최종 표면 또는
+migration 관문이 OPEN이므로 예제 목록에 넣지 않는다.
