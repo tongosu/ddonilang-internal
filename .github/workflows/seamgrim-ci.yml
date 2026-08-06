@@ -21,6 +21,11 @@ jobs:
     name: seamgrim-gate
     runs-on: windows-latest
     timeout-minutes: 45
+    env:
+      # Override the developer-machine absolute target-dir from .cargo/config.toml.
+      # Keep the CI artifact path inside the checked-out repository so the
+      # cache and TEUL_CLI_BIN lookup below remain portable.
+      CARGO_TARGET_DIR: tools/teul-cli/target
 
     steps:
       - name: Checkout
