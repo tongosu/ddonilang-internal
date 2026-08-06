@@ -79,7 +79,14 @@ pub struct ParamPin {
 #[derive(Debug, Clone)]
 pub enum TypeRef {
     Named(String),
-    Applied { name: String, args: Vec<TypeRef> },
+    Applied {
+        name: String,
+        args: Vec<TypeRef>,
+    },
+    Function {
+        params: Vec<TypeRef>,
+        result: Box<TypeRef>,
+    },
     Infer,
 }
 

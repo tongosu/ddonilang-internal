@@ -142,6 +142,14 @@ fn type_ref_name(type_ref: &TypeRef) -> String {
             out.push_str(name);
             out
         }
+        TypeRef::Function { params, result } => {
+            let params = params
+                .iter()
+                .map(type_ref_name)
+                .collect::<Vec<_>>()
+                .join(", ");
+            format!("({params}) --> {}", type_ref_name(result))
+        }
         TypeRef::Infer => "infer".to_string(),
     }
 }
@@ -158,6 +166,12 @@ fn collect_type_names(type_ref: &TypeRef, types: &mut BTreeSet<String>) {
             for arg in args {
                 collect_type_names(arg, types);
             }
+        }
+        TypeRef::Function { params, result } => {
+            for param in params {
+                collect_type_names(param, types);
+            }
+            collect_type_names(result, types);
         }
         TypeRef::Infer => {}
     }

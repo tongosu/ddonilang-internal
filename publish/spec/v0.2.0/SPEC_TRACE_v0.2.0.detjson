@@ -1,0 +1,20 @@
+{
+  "owner_packet_sha256": "sha256:a5fb7dde37af48d5abd4be3a4123496efac26c102518a25dbd733aacd4ae2ffc",
+  "predecessor_public_trees": {
+    "v0.1.0": "sha256:08ea02e013c6312d0abd1a963c9b824fb1ec0a689e90f3fd5eb8c97bc8bb81c2",
+    "v0.1.1": "sha256:7b704192195b0d9f7dc70ffc3599106b7275a14c2c91acf8564f4d4ef6481c86"
+  },
+  "preserved_ssot_tree_sha256": "sha256:75d1914433ab7f6ba7fbf8ed376b1973d3fea5130d96eafa1536f32dac3e84ad",
+  "preserved_ssot_version": "v24.14.2",
+  "product_evidence": "K0-K7 and M3 W0-W4 pending",
+  "projection_generator_sha256": "sha256:417e25cb189b30647c9e3a2180d613162c9b5b34a7d2b764efa1f5a6ec90fbbb",
+  "public_version": "v0.2.0",
+  "repository_head": "143cf2e37bcf6031060fa4e7631544f1c0f87a3c",
+  "schema": "ddonirang-language-spec-trace.v1",
+  "source_ssot_manifest_sha256": "sha256:fd8afc77b259330be265ac929a18d5a61499de20a877d165de68372fdb946459",
+  "source_ssot_seal_sha256": "sha256:41c218799b3aa52a671b9d071c747c962a441afbfa82111d9704f9727abb425e",
+  "source_ssot_tree_sha256": "sha256:78212ebe8561e2dcf51f98b79b32e14d26c00665770184f603c01f02b90a3f7c",
+  "source_ssot_version": "v24.15.0",
+  "status": "owner-approved-projection-candidate",
+  "workspace_dirty_at_build": true
+}

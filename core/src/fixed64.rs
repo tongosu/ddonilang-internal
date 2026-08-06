@@ -42,6 +42,25 @@ impl Fixed64 {
         Self::from_i64(value as i64)
     }
 
+    /// 유리수 -> Fixed64. 몫은 0 방향으로 버리고 범위 밖은 포화한다.
+    #[inline]
+    pub fn from_ratio(num: i64, den: i64) -> Self {
+        if den == 0 {
+            return match num.cmp(&0) {
+                core::cmp::Ordering::Less => Self::MIN,
+                core::cmp::Ordering::Equal => Self::ZERO,
+                core::cmp::Ordering::Greater => Self::MAX,
+            };
+        }
+        let scaled = (num as i128) << Self::FRAC_BITS;
+        Self::from_raw_i64(clamp_i128_to_i64(scaled / den as i128))
+    }
+
+    /// 10진 문자열 -> Fixed64. 지수 표기를 포함하며 부동소수점 연산을 사용하지 않는다.
+    pub fn parse_decimal(input: &str) -> Option<Self> {
+        parse_decimal_raw(input).map(Self::from_raw_i64)
+    }
+
     /// 덧셈: SSOT 요구대로 포화(saturating)
     #[inline]
     pub fn saturating_add(self, rhs: Self) -> Self {
@@ -102,10 +121,6 @@ impl Fixed64 {
         self.raw = clamp_i128_to_i64(q);
     }
 
-    // 추가해야 할 상수
-    pub const SCALE_F64: f64 = 4294967296.0; // FIXED64_LINT_ALLOW
-
-    // 추가해야 할 메서드
     #[inline]
     pub const fn int_part(self) -> i64 {
         self.raw >> 32
@@ -120,11 +135,6 @@ impl Fixed64 {
 
     pub const fn to_raw(self) -> i64 {
         self.raw
-    }
-
-    pub fn from_f64_lossy(value: f64) -> Self {
-        // FIXED64_LINT_ALLOW
-        Self::from_raw_i64((value * Self::SCALE_F64) as i64)
     }
 
     // SSOT/Gate0 raw_i64 결정성 벡터 기준값(v1)
@@ -164,6 +174,120 @@ fn clamp_i128_to_i64(x: i128) -> i64 {
     } else {
         x as i64
     }
+}
+
+fn parse_decimal_raw(input: &str) -> Option<i64> {
+    let text = input.trim();
+    if text.is_empty() {
+        return None;
+    }
+    let (negative, unsigned) = if let Some(rest) = text.strip_prefix('-') {
+        (true, rest)
+    } else if let Some(rest) = text.strip_prefix('+') {
+        (false, rest)
+    } else {
+        (false, text)
+    };
+    if unsigned.is_empty() {
+        return None;
+    }
+
+    let mut exponent_index = None;
+    for (index, ch) in unsigned.char_indices() {
+        if matches!(ch, 'e' | 'E') {
+            if exponent_index.is_some() {
+                return None;
+            }
+            exponent_index = Some(index);
+        }
+    }
+    let (mantissa, exponent) = if let Some(index) = exponent_index {
+        let exponent_text = &unsigned[index + 1..];
+        if exponent_text.is_empty() {
+            return None;
+        }
+        (&unsigned[..index], exponent_text.parse::<i64>().ok()?)
+    } else {
+        (unsigned, 0)
+    };
+
+    let mut decimal_index = None;
+    for (index, ch) in mantissa.char_indices() {
+        if ch == '.' {
+            if decimal_index.is_some() {
+                return None;
+            }
+            decimal_index = Some(index);
+        } else if !ch.is_ascii_digit() {
+            return None;
+        }
+    }
+    let integer_digit_count = decimal_index.unwrap_or(mantissa.len());
+    let mut digits = mantissa
+        .bytes()
+        .filter(|byte| *byte != b'.')
+        .collect::<Vec<_>>();
+    if digits.is_empty() || digits.iter().any(|byte| !byte.is_ascii_digit()) {
+        return None;
+    }
+
+    let leading_zero_count = digits.iter().take_while(|byte| **byte == b'0').count();
+    if leading_zero_count == digits.len() {
+        return Some(0);
+    }
+    digits.drain(..leading_zero_count);
+    let decimal_point = (integer_digit_count as i128)
+        .saturating_add(exponent as i128)
+        .saturating_sub(leading_zero_count as i128);
+    if decimal_point >= 11 {
+        return Some(if negative { i64::MIN } else { i64::MAX });
+    }
+    if decimal_point < -9 {
+        return Some(0);
+    }
+
+    let mut integer_digits = Vec::new();
+    let mut fractional_digits = Vec::new();
+    if decimal_point <= 0 {
+        fractional_digits.resize((-decimal_point) as usize, b'0');
+        fractional_digits.extend_from_slice(&digits);
+    } else {
+        let point = decimal_point as usize;
+        if point >= digits.len() {
+            integer_digits.extend_from_slice(&digits);
+            integer_digits.resize(point, b'0');
+        } else {
+            integer_digits.extend_from_slice(&digits[..point]);
+            fractional_digits.extend_from_slice(&digits[point..]);
+        }
+    }
+
+    let mut integer_value = 0i128;
+    for digit in integer_digits {
+        integer_value = integer_value
+            .saturating_mul(10)
+            .saturating_add((digit - b'0') as i128);
+    }
+    let mut fractional_raw = 0u64;
+    for _ in 0..Fixed64::FRAC_BITS {
+        let mut carry = 0u8;
+        for digit in fractional_digits.iter_mut().rev() {
+            let product = (*digit - b'0') * 2 + carry;
+            *digit = b'0' + product % 10;
+            carry = product / 10;
+        }
+        fractional_raw = (fractional_raw << 1) | carry as u64;
+    }
+
+    let absolute_raw = integer_value
+        .saturating_mul(Fixed64::ONE_RAW as i128)
+        .saturating_add(fractional_raw as i128);
+    let signed_raw = if negative {
+        absolute_raw.saturating_neg()
+    } else {
+        absolute_raw
+    };
+    Some(clamp_i128_to_i64(signed_raw))
 }
 
 // ---- 연산자 오버로드: 덧/뺄/곱은 포화로 고정, 나눗셈은 try_div로만 ----
@@ -325,6 +449,47 @@ mod tests {
     }
 
     #[test]
+    fn ratio_conversion_is_integer_only_and_truncates_toward_zero() {
+        assert_eq!(Fixed64::from_ratio(1, 2).raw_i64(), 1i64 << 31);
+        assert_eq!(Fixed64::from_ratio(-5, 9).raw_i64(), -2_386_092_942);
+        assert_eq!(
+            Fixed64::from_ratio(27_315, 100).raw_i64(),
+            1_173_170_316_902
+        );
+        assert_eq!(Fixed64::from_ratio(1, 0), Fixed64::MAX);
+        assert_eq!(Fixed64::from_ratio(-1, 0), Fixed64::MIN);
+        assert_eq!(Fixed64::from_ratio(0, 0), Fixed64::ZERO);
+    }
+
+    #[test]
+    fn decimal_conversion_is_integer_only_and_exact_at_raw_precision() {
+        let cases = [
+            ("0.5", 1i64 << 31),
+            ("-0.8", -3_435_973_836),
+            ("1.25e2", 125i64 << 32),
+            ("3.14", 13_486_197_309),
+            ("0.00000000023283064365386962890625", 1),
+            ("1e-10", 0),
+        ];
+        for (text, expected_raw) in cases {
+            assert_eq!(
+                Fixed64::parse_decimal(text).map(Fixed64::raw_i64),
+                Some(expected_raw),
+                "decimal input: {text}"
+            );
+        }
+        assert_eq!(Fixed64::parse_decimal("2147483648"), Some(Fixed64::MAX));
+        assert_eq!(Fixed64::parse_decimal("-2147483648"), Some(Fixed64::MIN));
+        for invalid in ["", ".", "+", "1.2.3", "1e", "1e2e3", "nan"] {
+            assert_eq!(
+                Fixed64::parse_decimal(invalid),
+                None,
+                "invalid input: {invalid}"
+            );
+        }
+    }
+
+    #[test]
     fn test_addition() {
         let a = Fixed64::from_i64(3);
         let b = Fixed64::from_i64(7);
@@ -356,13 +521,7 @@ mod tests {
     fn test_display() {
         assert_eq!(format!("{}", Fixed64::from_i64(10)), "10");
 
-        let display_val = format!("{}", Fixed64::from_f64_lossy(3.14)); // FIXED64_LINT_ALLOW
-
-        // 이진법 오차로 인해 3.14 또는 3.139999로 출력될 수 있습니다.
-        assert!(
-            display_val == "3.14" || display_val == "3.139999",
-            "실제 출력값: '{}' (예상값과 다름)",
-            display_val
-        );
+        let display_val = format!("{}", Fixed64::parse_decimal("3.14").expect("valid decimal"));
+        assert_eq!(display_val, "3.139999");
     }
 }

@@ -1,0 +1,4 @@
+// Language SPEC v0.4.0 candidate: docs-first / product-open.
+위치형 <- (1, 3).
+이름형 <- (이름: "가람", 점수: 10).
+// (1, 이름: "가람")은 오류다.

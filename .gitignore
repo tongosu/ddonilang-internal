@@ -1,6 +1,11 @@
 build/
 out/
 docs/
+/work/
+/_archive/
+/_inbox/
+/90_프로젝트운영/
+/output/
 *.before_age3_promote.bak.ddn
 /AGENTS.md
 /README_*.md

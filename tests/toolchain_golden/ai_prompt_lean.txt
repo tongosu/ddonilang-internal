@@ -1,5 +1,4 @@
 [또니랑 코드 생성 규약]
-SSOT_VERSION = v20.6.33
 AUTHORITY = SSOT (정본)
 
 [근거]
@@ -18,97 +17,264 @@ AUTHORITY = SSOT (정본)
 - 가능하면 데모/예시는 SSOT_DEMOS의 스타일을 따른다.
 
 [컨텍스트]
-SSOT_VERSION = v24.12.9
+SSOT_VERSION = v24.15.1
 BUNDLE_KIND = dir
 PROFILE = lean
-BUNDLE_HASH = sha256:a8ce73b0710e716e478269a1e4ce54296e0a0db58d9bbee2974cde6600e4de55
+BUNDLE_HASH = sha256:239006311e84a187f2e0228c1b0ce6bf7353272b36f175b55ffa7562b1078738
 FILE_LIST =
-- SSOT_INDEX_v24.12.9.md
-- SSOT_TERMS_v24.12.9.md
-- SSOT_DECISIONS_v24.12.9.md
-- SSOT_LANG_v24.12.9.md
-- SSOT_DEMOS_v24.12.9.md
-- GATE0_IMPLEMENTATION_CHECKLIST_v24.12.9.md
-===== BEGIN SSOT_INDEX_v24.12.9.md =====
-**SSOT_ALL 기준:** v24.12.2 / `3bf47e5a083bc01719d890332840af8537a583430908a27a87bc4bbccf393dd0`
-**workspace_bundle 기준:** `ssot_context_bundle_ALL.md` / `0c758a0ca212e03a1c47430ecdef91b724f120561d6c4e971b8faf77ed6b9215`
-**문서 상태:** v24.12.9-candidate / integrated SSOT source revision / runtime landed claim 아님
-**원본 파일:** `docs/ssot/ssot/SSOT_INDEX_v24.12.2.md`
+- SSOT_INDEX_v24.15.1.md
+- SSOT_TERMS_v24.15.1.md
+- SSOT_DECISIONS_v24.15.1.md
+- SSOT_LANG_v24.15.1.md
+- SSOT_DEMOS_v24.15.1.md
+- GATE0_IMPLEMENTATION_CHECKLIST_v24.15.1.md
+===== BEGIN SSOT_INDEX_v24.15.1.md =====
+# SSOT_INDEX v24.15.1
 
+> 상태: current / administrator applied 2026-07-16 / consistency-cleaned 2026-07-17
+> 이전판 보존: `../releases/v24.15.0/`
 
-## v24.12.9-candidate integrated revision
+## 권위와 상태
 
-- 이번 후보는 `세움` 중심 선언형 모델링을 실제 pack으로 닫는 방향을 우선한다.
-- `위치'` / `위치''` 변화율 표기는 V1 후보로 proposal화하되 runtime landed claim은 금지한다.
-- 임자 안 `세움{}`과 endpoint `잇기` → `세움{}` lowering은 pack skeleton으로만 둔다.
-- `흐름(N)` / `흐름씨` 명사는 유지하고, connect flow는 명사 `흐름`이 아니라 속문장 `흐르게`로만 표현한다.
-- `실리게`는 V1 core 속문장으로 복귀하지 않고 carried-property follow-on으로 둔다.
-- 보개짜임터, Godot/LÖVE backend, 도구슬기는 world truth가 아니라 view/toolchain 층이다.
+- source family는 17 core + 2 normative reference appendix다.
+- `SSOT_ALL_MANIFEST_v24.15.1.md`만 유일한 내부 조립 권위다.
+- `SSOT_ALL_v24.15.1.md`는 결정적 generated context artifact다.
+- v24.15.0의 언어 의미를 변경하지 않았다.
+- G7-01~G7-07은 docs-first canonical design이며 제품 구현은 K0~K7 OPEN이다.
+- 외부 Language SPEC `v0.2.1`은 current public pre-release draft다.
 
+## source family
 
-### v24.12.9 index additions
+| order | file | role |
+|---:|---|---|
+| 1 | `GATE0_IMPLEMENTATION_CHECKLIST_v24.15.1.md` | core |
+| 2 | `README_v24.15.1.md` | core |
+| 3 | `SSOT_ALL_MANIFEST_v24.15.1.md` | core |
+| 4 | `SSOT_DECISIONS_v24.15.1.md` | core |
+| 5 | `SSOT_DEMOS_v24.15.1.md` | core |
+| 6 | `SSOT_INDEX_v24.15.1.md` | core |
+| 7 | `SSOT_LANG_v24.15.1.md` | core |
+| 8 | `SSOT_MASTER_v24.15.1.md` | core |
+| 9 | `SSOT_OPEN_ISSUES_v24.15.1.md` | core |
+| 10 | `SSOT_PENDING_v24.15.1.md` | core |
+| 11 | `SSOT_PLANS_v24.15.1.md` | core |
+| 12 | `SSOT_PLATFORM_v24.15.1.md` | core |
+| 13 | `SSOT_REVIEW_RESULT_20260430_v24.15.1.md` | core |
+| 14 | `SSOT_ROADMAP_CATALOG_v24.15.1.md` | core |
+| 15 | `SSOT_TERMS_v24.15.1.md` | core |
+| 16 | `SSOT_TOOLCHAIN_v24.15.1.md` | core |
+| 17 | `SSOT_UPDATE_NOTES_v24.15.1.md` | core |
+| 18 | `SSOT_BOOK_SYSTEM_AND_COMPENDIUM_POLICY_v24.15.1.md` | normative reference appendix |
+| 19 | `SSOT_PROGRAMMING_CONCEPT_LEDGER_v24.15.1.md` | normative reference appendix |
 
-New proposal families: derivative prime, seum imja examples, connect endpoint lowering, sim constraint boundary/reaction, jojo econ fixed64 equilibrium, alrim two-track boundary, tool agent devseulgi, bogae jjaimteo grid backend.
+## generated normative registries
 
-# SSOT_INDEX
+| file | schema |
+|---|---|
+| `registries/STDLIB_SURFACE_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/CLI_COMMAND_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/SCHEMA_EXISTENCE_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/SCHEMA_CONTRACT_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/DIAGNOSTIC_EXISTENCE_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/DIAGNOSTIC_CONTRACT_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/DECISION_INPUT_DISPOSITION_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/OI_FAMILY_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/TYPE_SURFACE_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/KUSIL_CONTRACT_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/BUILD_PROFILE_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+| `registries/DIAGNOSTIC_CODE_REGISTRY_v24.15.1.md` | inherited schema / consistency-cleaned |
+===== END SSOT_INDEX_v24.15.1.md =====
+===== BEGIN SSOT_TERMS_v24.15.1.md =====
+# SSOT_TERMS v24.15.1
 
-## v24.12.9-candidate integrated index additions
+> 문서 버전: v24.15.1
+> 상태: current / administrator applied 2026-07-16 / consistency-cleaned 2026-07-17
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.15.1.md`
+> 이전판 보존: `../releases/v24.15.0/`
 
-새로 색인되는 candidate/reference/proposal 묶음:
+## v24.15.1 우선 규칙
 
-- Core focus / deterministic notebook positioning.
-- Operator triad define/assign/relate.
-- Connect Korean inner-sentence endpoint model.
-- Seum vol3 relation surface.
-- Derivative surface open issue.
-- Complete grammar cheatsheet coverage.
-- Jojo econ ieum relation model.
-- Story-tech synthesis / narrative layer mapping.
-- Story-tech edu AI surface R3.
-- Bogae sim2d/grid2d/grid3d profile spec.
-- Godot adapter + skin manifest spec.
-- WASM UI event -> InputSnapshot golden smoke.
-# SSOT_INDEX_v24.12.2
+이 판은 v24.15.1의 언어 의미를 바꾸지 않고 적용 상태와 폐기된 이월 잔재만
+정리하는 consistency clean-cut이다. 아래 보존 이월 본문과 충돌하면 이 절과 이 판의
+generated registry가 우선한다.
 
-Current canonical source-family (mixed patch line; protected files carried forward unmodified):
+- G7-01~G7-07은 owner-approved canonical design이다.
+- 설계 확정과 parser/runtime/CLI/WASM 제품 구현 완료는 분리한다.
+- 사용자-facing 씨자리 이름은 한글만 정본이다. `T/U/V`는 입력 별칭이 아니며 영어 비교용 meta 표기다.
+- DetBin 실행 의미 ID는 BLAKE3-256, 승인·artifact·파일 bytes 봉인은 SHA-256이다.
+- M3-실험 0은 experimental toolchain 계획이며 stable 문법·runtime·artifact 지원이 아니다.
+- 함수 타입의 사용자-facing 정본 화살표는 `-->`다. 제품 함수값 전체 계약은 별도다.
+- `씨앗지음`과 `지음증거`는 연구 표시명이다. 하위 artifact wire/API 이름은 stable이 아니다.
 
-1. `GATE0_IMPLEMENTATION_CHECKLIST_v24.12.0.md`
-2. `README_v24.12.2.md`
-3. `SSOT_ALL_MANIFEST_v24.12.2.md`
-4. `SSOT_ALL_v24.12.2.md`
-5. `SSOT_DECISIONS_v24.12.0.md`
-6. `SSOT_DEMOS_v24.12.0.md`
-7. `SSOT_INDEX_v24.12.2.md`
-8. `SSOT_LANG_v24.12.0.md`
-9. `SSOT_MASTER_v24.12.0.md`
-10. `SSOT_OPEN_ISSUES_v24.12.2.md`
-11. `SSOT_PENDING_v24.12.2.md`
-12. `SSOT_PLANS_v24.12.2.md`
-13. `SSOT_PLATFORM_v24.12.0.md`
-14. `SSOT_ROADMAP_CATALOG_v24.12.2.md`
-15. `SSOT_TERMS_v24.12.0.md`
-16. `SSOT_TOOLCHAIN_v24.12.0.md`
+### 제네릭·구실 current 용어
 
-Patch-line note:
-- 이번 patch 는 사용자 지시에 따라 `README / ROADMAP_CATALOG / PLANS / OPEN_ISSUES / PENDING` + context/reference/status/pack pointer line 만 수정한다.
-- `SSOT_LANG / SSOT_PLATFORM / SSOT_DECISIONS / GATE0` 는 `v24.12.0` source 를 그대로 carry-forward 한다.
-- 외부 라이브러리 다리 운영표 본문은 `docs/context/roadmap/ROADMAP_V2_EXTERNAL_LIBRARY_BRIDGE_TRACK_V1_20260501.md` 에 두고, SSOT 본문에는 포인터와 체크 규칙만 둔다.
+| 용어 | current 뜻 |
+|---|---|
+| `씨자리` | 정의 머리에서 선언하는 한글 타입 매개변수 |
+| `씨맞춤` | 정본 타입 인자와 명시 구실 결합으로 만드는 정적 specialization |
+| `구실` | 입력·출력·효과·결정성·정본 함수 집합을 묶는 명시 capability 계약 |
+| `갖추어야함` | 구실 안의 요구 함수 종결 |
+| `맡음` | 구체 명목 타입·임자의 정적 구실 채택 종결 |
+| `맡아야함` | generic 머리의 씨자리 구실 요구 종결 |
+| `맡은씨` | 구실 요구문 안의 정적 자기 타입 |
+| `맡은이` | 구실 요구·구현의 첫 receiver 위치에서 문맥 예약되는 이름 |
+| `씨앗지음` | 메타프로그래밍 전체를 가리키는 docs-first 연구 표시명 |
+| `지음증거` | M2의 생성물·설명·근원·영수증 증거 묶음 |
+| `지음자취` | M2 실행 영수증 후보 표시명; stable wire/API 이름 아님 |
+| `지음풀이` | 사람이 읽는 생성 설명 후보 표시명; stable wire/API 이름 아님 |
+| `뿌리자취` | 원본 선언과 지은 선언의 근원 연결 후보 표시명; stable wire/API 이름 아님 |
+| `지은씨앗` | 생성된 선언의 우선 심사 이름 |
+| `덧지음셈씨` | 제한 사용자 생성기의 우선 심사 이름 |
 
+`맡은이`는 일반 함수에서는 특별한 의미가 없는 권장 이름이다. `갖춤{}`·`맡음{}`
+블록은 history이고 current 문장 표면이 아니다. `셈말지음`은 기존
+`셈말=프로그래밍 언어`와 의미가 충돌하므로 사용하지 않는다. `덧댐`은 기존 원본을
+고치는 변경이고 `덧지음`은 새 씨앗을 덧붙이는 일이다. 실험 schema의 `프로그램.*`은
+stable 명명 관문까지 유지한다. `바른꼴바꿈`은 기존 장부 ID·표시명의 일괄 이행 감사
+전에는 정본 용어로 추가하지 않는다.
 
-## v24.12.9-candidate index additions
+### v24.15.1 정합성 청소
 
-- Solver method catalog: `PROPOSAL_DETERMINISTIC_SOLVER_METHODS_V1_20260524.md`
-- D-ULTRA recorded contract: `PROPOSAL_DULTRA_SOLVER_STRATEGY_RECORDED_CONTRACT_V1_20260524.md`
-- Connect flow term conflict: `PROPOSAL_CONNECT_FLOW_TERM_CONFLICT_HEULEUGE_V1_20260524.md`
-- Open issues: `OI-SOLVER-VELOCITY-VERLET-FIXED64-ORDER-01`, `OI-DULTRA-SOLVER-STRATEGY-RECORDED-CONTRACT-01`, `OI-CONNECT-FLOW-TERM-CONFLICT-HEULEUGE-01`, `OI-CONNECT-FLOW-SIGN-CONVENTION-01`
+- v24.15.0의 언어 의미와 제품 비주장을 그대로 유지한다.
+- 적용 상태를 current로 교정하고 폐기된 이월 예시·별칭·화살표 설명만 정리한다.
+- v24.15.0 원문은 `../releases/v24.15.0/`에 byte-identical 보존한다.
 
-===== END SSOT_INDEX_v24.12.9.md =====
-===== BEGIN SSOT_TERMS_v24.12.9.md =====
-**SSOT_ALL 기준:** v24.12.2 / `3bf47e5a083bc01719d890332840af8537a583430908a27a87bc4bbccf393dd0`
-**workspace_bundle 기준:** `ssot_context_bundle_ALL.md` / `0c758a0ca212e03a1c47430ecdef91b724f120561d6c4e971b8faf77ed6b9215`
-**문서 상태:** v24.12.9-candidate / integrated SSOT source revision / runtime landed claim 아님
-**원본 파일:** `docs/ssot/ssot/SSOT_TERMS_v24.12.0.md`
+## v24.14.2 이월 본문
 
+> 아래 `SSOT_TERMS_v24.14.2.md` 원문은 계보·비충돌 계약 보존용이다. 위 v24.15.0 우선 규칙과 충돌하는 예시·별칭·상태는 superseded history다.
+
+# SSOT_TERMS v24.14.2
+
+> 문서 버전: v24.14.2
+> 상태: administrator candidate / owner decisions approved 2026-07-14 / not current until protected apply
+> 조립 권위 후보: `SSOT_ALL_MANIFEST_v24.14.2.md`
+> 이전 current: `v24.14.1`
+
+## v24.14.2 정정 우선 규칙
+
+이 판은 v24.14.1의 언어 동결 의미와 외부 stable surface를 바꾸지 않는 내부 관리자
+patch다. 아래에 byte-identical로 이월된 v24.14.1 본문보다 이 절의 lifecycle·용어·설정
+이행 판정이 우선한다.
+
+- 결정 입력 1,083건은 `반영 75 / 배제·역사 1,008`로 닫혔다.
+- decision-input `deferred`, `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified`는 모두 0건이다.
+- 방향·정책을 적용한 항목의 남은 제품 구현·증거는 OPEN_ISSUES/PLANS 관문이며 사용자 결정을 기다리는 proposal이 아니다.
+- 설계 확정과 제품 구현 완료는 분리한다. 이 판은 parser/runtime/CLI/WASM 완료 범위를 확대하지 않는다.
+- 외부 Language SPEC v0.1.1은 이 판의 사용자-facing 용어·settings 계약을 투영한 public patch다. v0.1.0은 byte-identical 보존한다.
+
+### v24.14.2 정본 용어 정정
+
+| 개념 | 사용자-facing 정본 | 내부/wire 또는 호환 |
+|---|---|---|
+| package | `가지` | package |
+| registry generic | `가지곳간` | registry |
+| official/community/private registry | `표준 가지곳간` / `나눔 가지곳간` / `내 가지곳간` | profile ids는 schema에서 별도 관리 |
+| registry browse UI | `가지 선반` | UI label |
+| seed concept/value/streams | `씨앗` / `씨앗값` / `씨앗묶음` | `시앗*`은 deprecated input alias |
+| config digests | `실행설정해시` / `보기설정해시` / `문서설정해시` / `설정해시` | `run_config_hash` / `view_config_hash` / `doc_config_hash` / `settings_hash` |
+
+`가지숲`은 superseded history term이다. 영어 digest 이름은 사용자 언어 표면을 영어로
+바꾸는 결정이 아니라 wire/schema의 안정 식별자다.
+
+## v24.14.1 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_TERMS_v24.14.1.md` 원문이다. 위 v24.14.2 우선 규칙과 충돌하는 lifecycle·용어·상태 문구만 supersede된다.
+
+# SSOT_TERMS v24.14.1
+
+> 문서 버전: v24.14.1
+> 상태: current canonical / owner approved 2026-07-13
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.1.md`
+> 이전판 snapshot: `../releases/v24.14.0/`
+
+## v24.14.1 관리자 정리 우선 규칙
+
+이 판은 언어 의미를 바꾸는 판이 아니다. v24.14.0의 동결 언어 계약을 그대로
+상속하면서, 모든 비정본 결정 입력의 생애주기와 내부·외부 버전 계보를
+닫는 관리자 clean-cut이다. 이 절은 아래에 byte-identical로 이월된 v24.14.0
+본문의 버전·상태 문구보다 우선한다.
+
+- 결정 입력 1,074건은 `반영 63 / 명시 보류 3 / 배제·역사 1,008`로 전건 처분했다.
+- `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified` 상태는 0건이다.
+- 내부 SSOT 버전은 `v24.14.1`, 외부 언어 스펙 버전은 `v0.1.0`이며 서로 다른 이름공간이다.
+- 외부 스펙은 SSOT의 stable surface를 사람이 읽도록 투영한 생성물이다. 충돌하면 내부 SSOT가 우선한다.
+- 과거 문서의 `v25` 출시는 새 언어 주버전이 아니라 개발 이정표 `M25-AI-PRODUCTION-PATH`로 읽는다.
+- 설계 확정과 제품 구현 완료는 계속 분리한다. 이 판은 parser/runtime/CLI/WASM 동작 완료 범위를 확대하지 않는다.
+
+## v24.14.0 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_TERMS_v24.14.0.md`의 원문이다. 위 v24.14.1 우선 규칙과 충돌하는 버전·상태 문구만 supersede된다.
+
+# SSOT_TERMS v24.14.0
+
+> 문서 버전: v24.14.0
+> 상태: current canonical / core
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.0.md`
+> 이전판 snapshot: `../releases/v24.13.0/`
+
+## v24.14.0 언어 동결 우선 규칙
+
+> 이 디렉터리의 산출물은 **2026-07-13 owner 승인으로 확정된 v24.14.0 current 정본**이다.
+> 이 절은 아래 v24.13.0 이월 본문의 충돌 문구보다 우선한다.
+
+- 상태는 `stable_contract / confirmed_design / product_evidence / compat_input / planned / research_history`로 분리한다.
+- 설계 확정은 제품 구현 완료가 아니다. 제품 완료는 제품 frontdoor와 관련 검증 증거가 있어야 한다.
+- stable parser surface는 hard freeze다. 새 문법은 owner evidence, 낭독, collision, parser/canon/CLI/WASM, 진단, golden, 교육 예제를 함께 검사하는 단일 gate로만 들어온다.
+- proposal/note/report/session delta는 그 자체로 current authority가 아니다.
+
+## v24.14.0 정본 용어
+
+| 정본 | 상태 | 뜻/호환 |
+|---|---|---|
+| `누리바꿈` | canonical | 세계 상태·`state_hash`를 바꾸며 `InputSnapshot`을 거치는 행동갈래. `세계영향`은 compat input, `world_affecting`은 wire/schema 식별자 |
+| `맺음<T>` | confirmed design | 잘됨 또는 안됨. `결과`는 compat input |
+| `씨자리` | docs-first canonical design | 컴파일 때 구체 타입으로 채우는 타입 매개변수 자리 |
+| `구실/갖춤/맡음` | docs-first canonical design | 계약/요구 서명/명시 채택 |
+| `막음/막기` | name stable | 시뮬 제약 family/동작. runtime closure는 별도 |
+| `턱` | closed subtype family | boundary/threshold/exit만 초기 목록 |
+
+## v24.13.0 이월 상세 기록 — current contract 아님
+
+아래 원문은 상세 규범과 제품 증거 계보를 잃지 않기 위해 이월했다. byte-identical 원문은 `../releases/v24.13.0/`에 따로 봉인한다. 이 절의 옛 상태어·정본 주장은 current contract가 아니며 위 v24.14.0 전면 절을 따른다. `결과/#성공/#실패`처럼 아직 제품에 남은 옛 표면은 compat product evidence이지 새 canonical 출력이 아니다.
+
+# SSOT_TERMS v24.13.0
+
+> 문서 버전: v24.13.0
+> 상태: current clean-cut / core normative source
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.13.0.md`
+> 이전판: `../releases/v24.12.9-candidate-snapshot/SSOT_TERMS_v24.12.9.md`
+
+## v24.13.0 clean-cut 공통 계약
+
+- 이 문서 묶음의 현재판은 `v24.13.0`이다.
+- 권위 집합은 core source 17개와 normative reference appendix 2개, 합계 19개다.
+- 조립 권위는 `SSOT_ALL_MANIFEST_v24.13.0.md` 하나다. `SSOT_ALL_v24.13.0.md`는 결정적으로 재생성되는 AI/사람 열람용 산출물이며 독립 권위가 아니다.
+- 아래 `v24.12.9 이월 원문`은 보존된 상세 규범이다. 이 절과 충돌하면 v24.13.0 절이 우선하며, 이월 원문의 과거 상태·버전·해시 머리말은 역사 기록으로만 읽는다.
+- 제품 상태는 `stable_canonical / experimental / internal_tooling / compat_alias / deprecated / review_required`로 구분한다. `review_required`는 공개 정본·기본 교재·AI 기본 출력에 사용할 수 없다.
+- 문서 설계는 제품 구현 완료가 아니다. `runtime landed`, `닫힘-동작`, `golden_closed`는 제품 경로와 검증 근거가 있을 때만 쓴다.
+
+## v24.13.0 용어 정리
+
+| 용어 | 뜻 | 상태 |
+|---|---|---|
+| 새김틀 | 사용자 정의 표기값 체계 전체 | 설계 확정·구현 보류 |
+| 특수값 | `(#태그) 값{...}` 리터럴 family | 설계 확정 |
+| 새김본 | 등록되는 개별 표기 명세 데이터 | 설계 확정 |
+| 새김 | 소스의 `(#태그) 값{...}` 사용 지점 | 설계 확정 |
+| 새김값 | 새김풀이 결과인 1급 값 | 설계 확정 |
+| 새김풀이 | 명세를 실행하는 단일 해석기 | 설계 확정·미구현 |
+| 결정적 프로젝트 작업대 | source revision과 run graph를 중심으로 편집·실행·관찰하는 셈그림 제품 | current target |
+| DDN 메인 / 보개 메인 / 보개 전체 | 독립 layout policy | current target |
+| stable_canonical | 정본 공개 표면 | registry 상태 |
+| experimental | 제품에 있으나 기본 교재·AI 출력에서 제외되는 실험 표면 | registry 상태 |
+| internal_tooling | 내부 도구 전용 | registry 상태 |
+| compat_alias | 하위 호환 입력이며 새 출력에 쓰지 않음 | registry 상태 |
+| deprecated | 제거 일정이 있는 표면 | registry 상태 |
+| review_required | 존재만 확인됐고 공개 지위를 결정하지 않음 | registry 상태 |
+
+## v24.12.9 이월 원문
+
+아래 원문은 상세 규범과 결정 계보 보존을 위해 이월했다. 과거 머리말과 addendum의 상태어는 v24.13.0 current 상태를 덮지 않는다.
 
 ## v24.12.9-candidate integrated revision
 
@@ -126,7 +292,164 @@ Patch-line note:
 - connect 포트 명사로 `흐름`을 등록하지 않는다. connect V1 속문장은 `Y은/는 흐르게`를 사용한다.
 - `보개짜임터`: 세계를 바꾸지 않고 보기를 짜는 view-design tool 후보.
 - `도구슬기`: SSOT/pack/code 보조 tool agent 후보. runtime world actor가 아니다.
-- 시뮬 제약 상위 이름은 open issue로 두며 후보는 `막음`, `경계`, `닿음`, `턱`이다.
+- 시뮬 제약 family/verb 후보 결정은 `막음`/`막기`다. 반응/runtime closure는 별도 pack을 기다린다.
+
+### v24.12.9-candidate 2026-07-08 settings/nuri/bogae/freeze terms
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| `run_config_hash` | proposal | 결과 영향 설정의 canonical digest 후보. replay/dataset/CI mismatch 근거. |
+| `view_config_hash` | proposal | 보개/거울/view/perf 설정 digest 후보. world truth가 아니다. |
+| `doc_config_hash` | proposal | 문서/제목/설명/말씨 metadata digest 후보. |
+| `settings_hash` | proposal | run/view/doc hash envelope digest 후보. `state_hash` 입력이 아니다. |
+| `씨앗묶음` | surface 후보 | root seed에서 named stream을 나누는 seed stream isolation 표면 후보. `시앗묶음`은 deprecated compat alias. |
+| 노출 4층 | proposal | L1 기본, L2 보개/교육, L3 연구/AI, L4 고급 설정 노출 모델. |
+| 큰마디 | current/candidate clarification | shared world commit 단위. 공식 state transition 기준. |
+| 속마디 | proposal clarification | local 진행/제안/trace 단위. shared commit 아님. |
+| `행동모음갈래` | 후보 우선명 | 행동 수집/병합 policy의 넓은 설정 이름. |
+| `차례모음` | 후보 값 | deterministic order 기반 action aggregation. |
+| `보탬모음` | 후보 값 | additive merge가 명시된 action aggregation. |
+| `앞선모음` | 예약 후보 | 우선순위 기반 action aggregation 후보. |
+| `다수결모음` | 예약 후보 | voting 기반 action aggregation 후보. |
+| `자리모음` | 예약 후보 | position/slot 기반 action aggregation 후보. |
+| `E_MADI_WRITE_CONFLICT` | 오류 후보 | 같은 마디 동일 위치/필드 쓰기 충돌의 fatal error 후보. |
+| `std_bogae_*` | pack 후보 | raw `모양` 대신 제공하는 표준 보기/그래프/장면/게임 팩 계열. |
+| `graph2d lowering` | proposal | 상태/series 요청을 deterministic axis/tick/label DrawList로 낮추는 보개 계약. |
+| `BETA_USER_BUNDLE` | QA 후보 | 닫힌 AI 베타에게 제공되는 공개 예정 자료 묶음. SSOT internals 제외. |
+| freeze sweep | release gate 후보 | 발표 전 reserved surface/schema/error/canon coverage를 훑는 감사 절차. |
+| reserved syntax | open issue | 나중에 문법화할 수 있도록 현재 조용한 식별자 허용을 막을지 검토하는 syntax space. |
+
+### v24.13.0-candidate declarative closure terms 2026-07-09
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| acausal-lite | candidate | full DAE가 아니라 컴파일 시점 결정적 인과화가 가능한 `세움{}` 부분집합. |
+| SolvePlan | candidate/artifact | relation rows를 어떤 순서와 방법으로 평가/풀이할지 기록하는 정의/계획 artifact. |
+| `plan_hash` | open issue | SolvePlan 정의 bytes를 digest하는 후보. 실제 `state_hash` 산식 변경이 아니다. |
+| S1 상한 `N <= 8` | candidate floor | Fixed64 선형 연립 V1에서 감사 가능한 피벗/rounding/golden을 먼저 닫기 위한 미지수 수 상한. |
+| prime derivative slot | candidate | `세움{}` 안 `위치'`, `위치''` 같은 시간 미분 자리. |
+| `다시놓기` | candidate verb | hook/event 문맥에서 prime 상태를 불연속 reset하는 전용 통로 후보. |
+| `E_HOOK_WRITE_CONFLICT` | error candidate | 같은 마디 같은 변수에 여러 hook/event가 암묵적으로 쓰는 경우의 기본 오류. |
+| `막음` | candidate family | 시뮬레이션 경계/접촉/제약 family 이름. |
+| `막기` | candidate verb | 특정 값을 범위/경계 안에 두는 constraint 문장 동사. |
+| `멈춤` | candidate reaction | 위반 시 속도/변화를 멈추는 constraint 반응. |
+| `튕김(e)` | candidate reaction | 위반 시 반대 방향으로 반발계수 `e`만큼 반사하는 constraint 반응. |
+| `조임` | candidate reaction | 값을 범위 안으로 clamp하는 constraint 반응. |
+| `감쌈` | candidate reaction | 값을 범위 안에서 wrap하는 constraint 반응. |
+| ASCII unit surface | candidate/current syntax reuse | `@` postfix와 caret exponent를 쓰는 단위 표면. 예: `9.8@m/s^2`. |
+
+### v24.13.0-candidate Korean Manim terms 2026-07-10
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| Korean Manim | goal/candidate | DDN-first로 결정적으로 재현되는 수학·물리 설명 애니메이션 목표. Manim 전체 clone이 아니다. |
+| `보개마당` | scene DSL candidate | tick range와 연출 동사로 scene/view-only track을 만드는 블록 후보. |
+| scene binding | open issue | `세움`, SolvePlan, 상태 변수, 관찰 채널, `수식{}` 값을 scene target으로 묶는 선언형 link. |
+| formula object | open issue | 장면에서 표시·강조·변형할 수 있는 수식 단위. |
+| formula transform | open issue | 수식 A의 항이 수식 B의 어느 항으로 대응되는지 보이며 변형되는 scene operation. |
+| object morph | open issue | scene object의 형태/위치/스타일이 다른 object state로 변형되는 view-only operation. |
+| scene player | pending | `seamgrim.scene.v0` timeline을 재생/scrub하는 view/toolchain component. |
+| frame export | pending | scene payload에서 deterministic frame sequence를 산출하는 toolchain artifact. |
+| mp4 export smoke | pending | host encoder/version을 기록하고 mp4 export 가능성을 검증하는 toolchain smoke. |
+
+### v24.13.0-candidate pre-release terminology audit 2026-07-10
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| `씨앗` | explanation/canonical description | seed의 자연어 설명어이자 로드맵/비유/`~씨` 계열 설명에 쓰는 말. RNG seed code key와 혼동하지 않는다. |
+| `씨앗값` | code-surface candidate | RNG seed 값 인자/key의 1순위 표면 후보. `씨앗` 설명어와 `~씨` 씨앗 종류를 피하기 위한 보정 후보. |
+| `시앗` | deprecated/compat candidate | 기존 RNG seed 전용 표기. migration 기간 입력 호환 또는 별칭으로만 검토한다. |
+| `씨앗묶음` | candidate | named seed stream isolation 표면 후보. stream 성격이 강해지면 `씨앗줄기`와 비교 검토한다. |
+| `원문` | canonical description | 또니랑 source text의 정본 설명어. `누리`나 `이야기`로 부르지 않는다. |
+| `봉인된 샘` | canonical description | 외부 입력을 재현 가능하게 고정한 InputSnapshot 설명어. |
+| `누리` | canonical | 실행되는 세계/진행/큰마디 commit 엔진. source text 자체가 아니다. |
+| `보개` | canonical | 보기/view 층. world truth를 소유하지 않는다. |
+| `거울` | canonical | 기록/재연/replay 층. view overlay와 구분한다. |
+| `슬기` | canonical | AI/도움/제안 층. sealed artifact 전까지 authoritative execution이 아니다. |
+| `뜻차이` | candidate | AI 시대 code review용 semantic diff의 한국어 후보. `규칙차이`는 세계 규칙 변경에 더 좁게 쓴다. |
+
+출시 전 재현 설명 기본식:
+
+```text
+원문 + 봉인된 샘 + 씨앗값 + 누리 규칙 = 같은 누리 진행
+```
+
+#### 출시 전 이상 용어 검토 후보
+
+| 후보 | 현재 판단 | 권장 처리 |
+|---|---|---|
+| `솎음줄` | 의미는 좋지만 초심자에게 낯설다. | 내부/참조층 후보로 두고, 초급 노출명은 `검토줄` 또는 `검토흐름`과 비교한다. |
+| `보개짜임터` | 역할은 맞지만 길고 무겁다. | 제품 UI에서는 `보개짜임` 또는 `보기짜임터`와 비교한다. |
+| `거울겹` | `거울`이 replay라서 overlay 의미와 섞일 수 있다. | 비교/오버레이 용도면 `비교겹`을 우선 검토한다. |
+| `씨앗묶음` | 묶음은 자연스럽지만 stream/branch 의미가 약하다. | 설정 표면은 유지 후보, stream 설명이 강하면 `씨앗줄기`를 비교한다. |
+| `이야기` | 매력적이지만 source/runtime/story를 모두 가리키면 위험하다. | source에는 `원문`, story/meta에는 `이야기`를 쓴다. |
+
+### v24.13.0-candidate AI-era language value terms 2026-07-10
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| 감사 인터페이스 | positioning | AI가 만든 코드를 사람이 읽고·판정하고·책임지는 언어의 역할. |
+| 유희로서의 프로그래밍 | positioning | 생산 효율과 별개로 사람이 만들고, 바꾸고, 공유하고, 겨루는 경험으로서의 프로그래밍. |
+| 의미 소유 장치 | positioning | 자연어가 흐릴 수 있는 의미를 언어/정본/pack/hash가 소유한다는 설명어. |
+| `world_diff.v1` | toolchain candidate | 텍스트 줄 diff가 아니라 세계 규칙 단위로 바뀐 것을 설명하는 diff artifact. |
+| `뜻차이` | candidate display | `world_diff.v1`의 사람이 읽는 한국어 후보. |
+| `규칙차이` | candidate display | 세계 규칙 변경에 초점을 좁힌 diff 표시 후보. |
+| `reading_exam.v1` | evidence/benchmark candidate | 코드를 읽고 실행 결과를 예측하게 한 뒤 replay 정답과 비교하는 이해도 측정 artifact. |
+| `remix_lineage.v1` | package/share candidate | `origin_hash`와 `delta_ref`로 원본과 변경 계보를 증명하는 리믹스 artifact. |
+| 첫 기쁨 5분 | product metric candidate | 첫 실행 -> 첫 바꿔보기 -> 첫 공유까지 걸리는 시간을 줄이는 온보딩 지표. |
+| 낭독 게이트 | design-review candidate | 새 표면이 소리 내어 읽었을 때 자연스러운지 검토하는 문법/교육 표면 review gate. |
+| 코드 백일장 | community candidate | 실행되는 코드와 replay를 작품으로 삼는 한국어 native 커뮤니티 행사 후보. |
+
+### v24.13.0-candidate future-prep / corpus / visual terms 2026-07-10
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| 미래 준비 | operating principle | 장기 방향, 금지선, 용어, 후보 OI, 구조를 미리 잡는 일. 완료 주장이나 구현 우선순위를 대체하지 않는다. |
+| 순차 개발 | operating principle | 현재 닫을 수 있는 좁은 제품 쐐기를 구현·검증하는 일. |
+| 정본말뭉치 100세계 | corpus goal candidate | 검증된 또니랑 세계 100개로 사람 교재, AI few-shot, 회귀 pack, 관용구 정의를 겸하는 목표. |
+| 온뭉치 | corpus name candidate | 정본말뭉치 100세계의 짧은 이름 후보. 이름은 `OI-CORPUS-NAME-01`에서 닫는다. |
+| `corpus_card.v1` | corpus schema candidate | 세계 id, 등급, 교과, 사용 표면, pack/golden, few-shot, 리믹스 손잡이, 낭독 확인, 계보를 담는 카드. |
+| 수록 5관문 | corpus gate candidate | pack PASS, 정본화 왕복, 낭독 게이트, 리믹스 손잡이, few-shot 짝. |
+| 가/나/다 등급 | corpus feasibility candidate | current-line / 11축 필요 / 후속 표준가지·MAXSET 필요를 나누는 실행 가능성 등급. |
+| 보개계획 | view-plan candidate | 자동 보개, 보개틀, 블록 보개 편집기, 텍스트 보개계획이 공유하는 결정적 화면 설계 중간 표현. |
+| 자동 보개 | view UX candidate | 사용자가 보개를 쓰지 않아도 타입/상태/관찰 채널을 보고 기본 보기를 선택하는 기능. |
+| 보개틀 | view template candidate | 물리 운동, 함수 그래프, 격자 게임, 경제 흐름, 수식 설명 같은 보기 템플릿. |
+| 블록 보개 | editor candidate | 드래그/블록으로 화면을 구성하고 내부적으로 보개계획을 생성하는 편집 surface. |
+| 앱보개 | view/profile candidate | 앱/Web UI용 표준 보개 profile 후보. |
+| 게임보개 | view/profile candidate | 게임 HUD, sprite, camera, input-map view를 다루는 표준 보개 profile 후보. |
+| `view_plan_hash` | view artifact candidate | renderer/pixel이 아니라 화면 설계 payload를 digest하는 후보. `state_hash`가 아니다. |
+
+### v24.13.0-candidate root intake / stdlib / AI tooling terms 2026-07-10
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| root `또니랑/` intake | operating note | 루트 `또니랑/` 폴더의 proposal/dayrun/handoff/draft를 SSOT 후보로 검토하는 작업대. 정본 SSOT가 아니다. |
+| STDLIB MAXSET | stdlib strategy candidate | core는 얇게 두고 `표준/` 가지를 풍부하게 준비하되 pack evidence와 계약 등급이 붙은 것만 편입하는 표준 라이브러리 운영 방향. |
+| L0 | stdlib boundary | parser/canon/hash truth, deterministic runtime primitive, 새 값 타입의 영속 상태 표현에 필요한 core/builtin 층. |
+| L1 | stdlib boundary | core 밖 `표준/` 가지. pack evidence, 계약 등급, 문서, 진단 fixture가 있어야 표준 편입 가능. |
+| 계약 등급 | stdlib metadata candidate | `D-STRICT/SEALED/APPROX/OPEN` 같은 결정성/봉인성 등급을 표준 항목 metadata에 붙이는 후보. |
+| 표준 편입 DoD 5종 | gate candidate | pack PASS, 진단 fixture, README/계약 등급, 다국어 alias, 교재/말뭉치 연결의 편입 기준 후보. |
+| `stdlib_l1_*` | pack family candidate | L1 표준가지별 증빙 pack family. 수/자료/글/통계/공간/도메인 도우미를 wave별로 닫는다. |
+| `ai_grammar_card.v1` | tooling artifact candidate | SSOT에서 자동 조립되는 AI 독자용 압축 문법/관용구 카드. pack PASS 예제만 수록한다. |
+| 말본카드 | display/candidate | `ai_grammar_card.v1`의 한국어 이름 후보. 최종 공개명은 별도 OI에서 닫는다. |
+| `diag_registry.v1` | tooling schema candidate | 오류/경고 code, beginner message, machine payload를 안정적으로 묶는 진단 레지스트리 후보. |
+| `teul-mcp` | toolchain candidate | Codex/Claude 같은 도구가 check/canon/run/pack/world_diff를 호출하는 MCP 도구 후보. world truth를 직접 쓰지 않는다. |
+| `agent_report.v1` | evidence artifact candidate | AI/도구가 어떤 카드와 세계에서 얼마나 맞췄는지 기록하는 성적표 후보. |
+| `seulgi_text_bridge.v1` | bridge schema candidate | 관측을 텍스트로 직렬화하고 텍스트 행동을 정규 intent로 파싱하는 결정적 bridge 후보. |
+| 누리시험 | benchmark candidate | 또니랑 세계를 읽고 만들고 예측하는 능력을 측정하는 공개/잠금 벤치마크 묶음 후보. |
+| `seulgi_channel.v1` | demo/channel candidate | LLM 두뇌와 슬기 intent/gatekeeper를 연결하는 실증 통로 후보. |
+| 도구슬기 권한 3단 | operating candidate | 읽기/제안/실행 보조는 허용하되 정본 반영은 사람 승인 뒤에만 하는 tool-agent 권한 모델 후보. |
+| 일거울 | work-ledger candidate | 업무 승인, 상태 전이, 감사 기록을 결정적 artifact로 남기는 work ledger 후보. 범용 업무 자동화 전체 claim은 아니다. |
+
+### v24.12.9-candidate evidence terms 2026-07-10
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| evidence seed | 운영 용어 | 설계 후보가 checker/pack/report로 반복 검증 가능해진 상태. 제품 동작 닫힘과 다르다. |
+| scoped behavior closure | 운영 용어 | 전체 목적이 아니라 특정 runner/workflow 범위에서만 `닫힘-동작`을 인정하는 것. |
+| promotion blocker | 운영 용어 | 개발 세션은 완료됐지만 공개/안정/훌륭 claim 전 반드시 닫아야 하는 OI 또는 evidence gate. |
+| public wedge | 운영 용어 | 첫 외부 사용자가 성공하도록 좁힌 공개 진입점. 현재 후보는 셈그림 물리 차시. |
+| WIP debt | 운영 용어 | 미병합 proposal, 열린 OI, 활성 목표 지시서가 늘어나 실행을 방해하는 문서/운영 부채. |
 
 # SSOT_TERMS
 
@@ -328,7 +651,7 @@ Patch-line note:
 | `exposure_level` | 노출 계층 | 사용자에게 어떤 난이도·설명층으로 surface 를 공개할지 정하는 문서/교재 축. `AGE`와 같은 뜻이 아니다. |
 | AGE ≠ 교육 단계 | AGE/exposure 분리 원칙 | AGE 는 구현 타임라인이고, `exposure_level` 은 사용자 노출 계층이다. 예를 들어 조건 훅은 runtime evidence 가 빨라도 교육 노출은 중급으로 둘 수 있다. |
 | 기본 / 중급 / 고급 / 전문 | textbook exposure levels | `채비+기본 훅`, 제어/흐름씨, 임자/계약/메시지, 슬기/capability/proof 쪽 노출을 가르는 교재 계층. 새 core keyword 는 아니다. |
-| flow-hook phase separation | 흐름씨-훅 위상 분리 | 한 마디 안에서 ordinary assignment → 흐름씨 fixed-point → tail-phase hook 순서를 고정하는 wording. hook body 는 같은 마디의 흐름씨를 재발화시키지 않는다. |
+| flow-hook phase separation | 흐름씨-훅 위상 분리 | 한 마디 안에서 ordinary assignment → 흐름씨 DAG 1-pass → tail-phase hook 순서를 고정하는 wording. hook body 는 같은 마디의 흐름씨 규칙을 같은 마디에 다시 실행하지 않는다. |
 | `채비` top-level-only (historical, superseded in v24.1.0) | 채비 최상위 전용 규칙 | `채비 {}` 를 파일 최상위 준비 블록으로만 허용( historical pre-v24.1.0 rule )하는 규칙. loop/hook body 에서는 ordinary 대입이나 다른 canonical 선언 surface 를 쓴다. |
 | bang token ledger | `!` 토큰 모호성 대장 | `!=`, query-negation(`!이름씨`, `!#태그`), unary bang reserved 를 한 장부에서 정리해 파서/문서 혼선을 줄이는 규칙. |
 | platform server adapter contract | 셈그림 server-adapter thin contract | request/response.v1, op 집합, not-ready 오류코드 매핑, opt-in snapshot slots 를 다루는 shell/server 계약. core runtime semantics 는 소유하지 않는다. |
@@ -383,7 +706,7 @@ Patch-line note:
 | 샘(Sam) | execution boundary | 외부개입을 `InputSnapshot`으로 정규화·봉인·재연하는 실행 경계층. |
 | `ui.event` | UI event | UI surface 에서 발생하는 사건. world 의미 반영은 직접 하지 않고 `InputSnapshot`으로 내려간다. |
 | `view_only` | 보기전용 | `state_hash` 밖의 view/tool 조작. |
-| `world_affecting` | 세계영향 | 이야기/누리 의미를 바꾸는 입력 사건. |
+| `world_affecting` | 누리바꿈 | 이야기/누리 의미를 바꾸는 입력 사건. |
 | capability gate 3장부 | three-ledger split | `det_tier/openness`, `open=deny|record|replay`, `runtime_status`를 서로 다른 장부로 읽는 원칙. |
 | capability checker split | checker 3모듈 분리 | contract checker / open-policy checker / grammar-ledger checker 로 운영을 나누는 원칙. |
 | `engine3d.godot.view_sync.v0` | engine3d Godot thin adapter seed | core canonical schema가 아니라 consumer-side adapter payload seed 로만 읽는 이름. |
@@ -428,7 +751,7 @@ Patch-line note:
 | 공통 바닥 closure | common floor closure | representative demo 이전에 먼저 닫아야 하는 공통 실행 바닥. v23.2.0 current line 에서는 `std_grid / std_input_map / ui.event -> InputSnapshot / resident :reset parity` 를 뜻한다. |
 | Stage 1 parity target | stage1 parity target | 이미 닫히기 시작한 runtime core 위에 올리는 **부분 parity 목표**. 완료 과장 없이 done/open 경계를 함께 적는다. |
 | `view_only` | 보기전용 조작 | `state_hash` 밖의 UI/보기 조작. world core 의미를 직접 바꾸지 않는다. |
-| `world_affecting` | 세계영향 입력 | world state 의미를 바꾸는 입력. 반드시 `InputSnapshot` 경유로 들어간다. |
+| `world_affecting` | 누리바꿈 입력 | world state 의미를 바꾸는 입력. 반드시 `InputSnapshot` 경유로 들어간다. |
 | parse-first skeleton | parse-only / designed | 문법/파일을 **수용하고 정렬은 하지만**, full runtime/module resolution/consumer closure 를 아직 주장하지 않는 단계. |
 
 ## v23.0.14 용어/예제 보강
@@ -460,6 +783,45 @@ Patch-line note:
 > 본 용어 정의는 AGE0 코어 의미를 기준으로 하며, AGE2+/AGE3+ 확장은 각 항목에 별도 라벨로 표기한다.
 ---
 
+## v24.12.9-candidate 배움길·한국어 문법 용어 addendum (2026-07-12)
+
+| 정본/후보 | 상태 | 뜻과 노출 원칙 |
+|---|---|---|
+| `씨자리` | canonical docs-first | 컴파일 때 구체 타입으로 채워지는 타입 매개변수 자리. 첫 설명은 `타입(값의 갈래)을 받을 자리`다. |
+| `가씨/나씨/다씨` | canonical short binders | 선언 순서형 짧은 씨자리 이름. 모든 씨자리 이름은 `씨`로 끝낸다. |
+| `담은씨/된씨/잘못씨` | canonical descriptive binders | 공개 정의에서 뜻을 드러내는 씨자리 이름. |
+| `두루쓰기` | canonical education term | generic programming의 사람용 한국어 설명. 첫 등장에는 `제네릭(두루쓰기)`을 병기할 수 있다. |
+| `씨맞춤` | canonical education term | specialization/instantiation의 사람용 설명. |
+| `구실` | grammar candidate | interface/trait 성격의 행동 계약. 일반 문맥의 `역할`과 구분한다. |
+| `갖춤` | grammar candidate | 구실이 요구하는 서명 묶음. |
+| `맡음` | grammar candidate | 이름씨·임자가 구실을 채택한다고 명시하는 블록. |
+| `배움.*` | canonical concept ID | `배움.<영역>.<개념>` 한글 3단 ID. `PL.*` 병존 금지. |
+| `셈말` | parenthetical display only | 널리 알려진 `프로그래밍 언어`를 설명 없이 대체하지 않는다. 학생책에서는 `프로그래밍 언어(셈말)`처럼만 쓴다. |
+| `뜻차이` | candidate display | `world_diff.v1` 사람 표시 후보. 확정 정본으로 가르치지 않는다. |
+| `으뜸보기` | canonical view-role term | 작품의 중심 역할을 맡는 보개. `주보기` 설정 key의 이행은 별도 schema OI로 추적한다. |
+| `곁보기` | canonical view-role term | 중심 보개 곁에서 설명·그래프·시험·조종 등을 지속 제공하는 역할. |
+| `겹보기` | canonical view-role term | 다른 보개·대상의 좌표와 의미에 묶여 얹히는 설명·강조·모양 역할. |
+| `돋보기` | canonical view-role term | 선택 대상·시점·개념을 더 깊이 탐색하는 역할. 새 창·modal·panel은 별도 UI 배치 방식이다. |
+| `패턴 맞춤` | education display | pattern matching의 학생용 병기. 정본 제어 표면은 `~에 따라`다. |
+| `글무늬 맞추기` | canonical text-pattern family | 사람이 읽는 글무늬로 전체 글을 결정적으로 맞추고 캡처한 `짝맞춤?`을 돌려주는 계열. |
+
+기존 정본 `바른꼴`, `겹차림`, `보람`, `할힘`, `밖일`, `톺아보기`를 재확인한다. `재연`은 사람용 정착어이며 `리플레이`를 대표 별칭으로 허용한다. 결과 실패 필드의 정본 관용 이름은 `이유`를 유지한다.
+
+`으뜸보기/곁보기/겹보기/돋보기`는 보개 family나 widget 종류가 아니라 역할이다. 모든 역할은 내용·모양·움직임·자료 묶임·상호작용·시간계획을 가질 수 있다.
+
+### 일반 독자 본책·총집서 투영 용어
+
+| 정본/후보 | 상태 | 뜻 |
+|---|---|---|
+| `일반 독자 본책` | canonical publication role | 교사 없이 자습 가능한 충분한 설명·예제·연습을 가진 기준 사람용 원고. |
+| `학생 활동책` | derived publication role | 본책의 개념 순서를 교실 활동·기록·빈칸·과제로 파생한 자료. |
+| `교사용 지도서` | derived publication role | 본책과 활동책의 목표·시간·오개념·루브릭·답안 운영·실패 대응을 제공하는 자료. |
+| `정답·완성 소스` | derived answer artifact | 연습·실습의 최소 정답, 완성 원문, 통과 기준. 본책 설명을 대체하지 않는다. |
+| `내부 근거 주석판` | evidence companion | pack/checker/hash/source anchor와 구현 상태를 본문보다 깊게 연결하는 내부 자료. |
+| `SSOT 사람용 투영` | canonical publication relation | SSOT 의미를 독자 순서와 설명으로 옮기되 경쟁 정본을 만들지 않는 관계. |
+| `ssot_compendium_coverage.v1` | canonical coverage ledger | 모든 SSOT heading/anchor의 총집서 위치·깊이·수록 방식·상태를 추적하는 장부. |
+| `미배치` | coverage blocking state | 총집서의 수록 위치나 명시적 제외 근거가 아직 없는 상태. 한 건이라도 있으면 완필 주장 금지. |
+
 
 
 > **v23.0.9 용어 상태:** 이번 round는 **문법 동결 경계 + 주변 시스템 아키텍처/개발계획 정렬 patch** 다.
@@ -481,7 +843,7 @@ Patch-line note:
 
 > **v23.0.3 용어 상태:** shared-env action pipeline status 정본은 `맞음 / 가만히 / 잘림 / 거부` 4종이다. `자르기`는 out-of-range 정책 이름이고, `잘림`은 그 결과 상태다. `seek`는 view-dock/playback cursor 이동을 뜻하는 toolchain 용어로만 쓰며, 새 언어 surface 키워드로 승격하지 않는다.
 
-> **v23.0.5 용어 상태:** 외부개입 축은 **`입력원천 / 주입방식 / 행동갈래`** 3축으로 읽는다. `입력원천` 6값은 `사람 / 슬기 / 밖일 / 일정 / 이어전달 / 펼침실행`, `주입방식` 2값은 `실주입 / 재연주입`, `행동갈래` 2값은 `보기만 / 세계영향` 이다. `이어전달`은 relay 자체가 canonical payload를 만들었거나 원래 provenance 를 보존하지 않는 전달에만 쓰고, relay-forwarded human/rollout 은 원래 provenance 를 유지한다.
+> **v23.0.5 용어 상태:** 외부개입 축은 **`입력원천 / 주입방식 / 행동갈래`** 3축으로 읽는다. `입력원천` 6값은 `사람 / 슬기 / 밖일 / 일정 / 이어전달 / 펼침실행`, `주입방식` 2값은 `실주입 / 재연주입`, `행동갈래` 2값은 `보기만 / 누리바꿈` 이다. `이어전달`은 relay 자체가 canonical payload를 만들었거나 원래 provenance 를 보존하지 않는 전달에만 쓰고, relay-forwarded human/rollout 은 원래 provenance 를 유지한다.
 
 
 > **v23.0.7 용어 상태:** 이번 round는 **reset 의미론 1건을 더 잠그는 patch** 다.
@@ -639,7 +1001,7 @@ Patch-line note:
 | **뿌리.ddn** | 프로젝트 구조 의미를 담는 canonical 루트 선언 파일 | project root file |
 | **프로젝트.ddn** | 제거된 legacy root alias. current canonical 입력/출력에서 사용하지 않는다 | legacy root alias |
 | **project.ddn** | 제거된 legacy ASCII root alias. current canonical 입력/출력에서 사용하지 않는다 | legacy root alias |
-| **Internal Canonical SSOT** | 내부 작업용 정본 17파일 묶음 | internal canonical ssot |
+| **Internal Canonical SSOT** | 내부 작업용 정본. current는 17개 핵심 source family + 2개 정본 참조 부록이며, 19-file 합본 조립 승격은 OPEN | internal canonical ssot |
 | **Export10 SSOT** | 외부 AI 업로드/공유용 10파일 합본. Internal Canonical에서 조립되는 파생본 | export10 ssot |
 | **배포꾸러미** | 가지를 묶어 배포/설치하는 아카이브(압축) 단위. *(주의: **값꾸러미**(tuple/record)와 다른 말)* | bundle, package distribution |
 | **꾸러미.toml** | (초안) 배포꾸러미 publish 메타. 파일명/포맷은 OI-501에서 후속 정리 | bundle manifest |
@@ -699,7 +1061,7 @@ Patch-line note:
 | **프로필** | 같은 backend 안에서 어떤 표현 프로필로 보여줄지 정하는 계층. `v23.x` 현행 정본이며 `운용꼴/보기꼴`은 차기 major 검토 후보로만 둔다. | profile |
 | **마당** | 여러 view와 control을 배치·도킹·세션화하는 상위 shell/workspace | madang, shell, workspace |
 | **보기만** | 세계 의미를 바꾸지 않는 view-only 전환/메타 조작 | view_only |
-| **세계영향** | 세계 규칙/상태 전이에 영향을 주는 입력 사건 | world_affecting |
+| **누리바꿈** | 세계 규칙/상태 전이에 영향을 주는 입력 사건 | world_affecting |
 
 정본 family 집합(AGE3 REFERENCE):
 - `space2d`
@@ -841,7 +1203,7 @@ v22.0.0 정리:
 
 - **행동갈래**
   - 외부개입이 세계 의미를 바꾸는지 가르는 축.
-  - canonical 값은 `보기만 / 세계영향` 이며, `입력원천` / `주입방식` 과 섞지 않는다.
+  - canonical 값은 `보기만 / 누리바꿈` 이며, `입력원천` / `주입방식` 과 섞지 않는다.
 
 - **외부개입경계**
   - 외부개입이 **샘·검문·기록·리플레이**와 만나는 표준 접점.
@@ -1339,7 +1701,7 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 | **낱낱에 대해** | 모든 원소에 대해 성립함을 말하는 전칭 양화 머릿말 | for all |
 | **중 하나가** | 적어도 하나의 원소가 존재함을 말하는 존재 양화 머릿말 | there exists |
 | **중 딱 하나가** | 정확히 하나의 원소만 성립함을 말하는 유일 양화 머릿말 | there exists unique |
-| **주사위씨** | 시앗 기반으로 결정적 난수열을 만드는 씨앗 종류 | deterministic RNG seed |
+| **주사위씨** | 씨앗값 기반으로 결정적 난수열을 만드는 씨앗 종류. `시앗`은 compat alias 후보. | deterministic RNG seed |
 | **사용자입력** | AGE2 Open 경계에서 record/replay로 봉인하는 입력 호출 | user input |
 | **덩이** | 예약된 상태 변화를 한 틱에 원자적으로 커밋하는 동기화 블록의 canonical 이름 | atomic commit block |
 | **미루기** | `덩이 {}` 안에서 즉시 확정 대신 경계 끝에서 적용하는 deferred apply 꼬리 | deferred assignment |
@@ -1365,7 +1727,7 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 | **실주입** | 지금 들어오는 live 주입 | live |
 | **재연주입** | 기록을 다시 흘리는 replay 주입 | replay |
 | **보기만** | 세계 의미는 없고 보기 상태만 바꾸는 action kind | view_only |
-| **세계영향** | 세계 상태/규칙에 영향을 주는 action kind | world_affecting |
+| **누리바꿈** | 세계 상태/규칙에 영향을 주는 action kind | world_affecting |
 | **확정** | commit 의미의 정본 설명어. `굳힘`은 차기 major 검토 후보로만 둔다. | commit |
 | **실행계** | runtime layer 를 가리키는 정본 설명어. `실행 / 실행층 / 움직임꼴`은 차기 major 검토 후보로만 둔다. | runtime layer |
 | **실행상태** | runtime state 를 가리키는 정본 설명어 | runtime state |
@@ -1456,13 +1818,300 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 
 
 ---
-===== END SSOT_TERMS_v24.12.9.md =====
-===== BEGIN SSOT_DECISIONS_v24.12.9.md =====
-**SSOT_ALL 기준:** v24.12.2 / `3bf47e5a083bc01719d890332840af8537a583430908a27a87bc4bbccf393dd0`
-**workspace_bundle 기준:** `ssot_context_bundle_ALL.md` / `0c758a0ca212e03a1c47430ecdef91b724f120561d6c4e971b8faf77ed6b9215`
-**문서 상태:** v24.12.9-candidate / integrated SSOT source revision / runtime landed claim 아님
-**원본 파일:** `docs/ssot/ssot/SSOT_DECISIONS_v24.12.0.md`
+===== END SSOT_TERMS_v24.15.1.md =====
+===== BEGIN SSOT_DECISIONS_v24.15.1.md =====
+# SSOT_DECISIONS v24.15.1
 
+> 문서 버전: v24.15.1
+> 상태: current / administrator applied 2026-07-16 / consistency-cleaned 2026-07-17
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.15.1.md`
+> 이전판 보존: `../releases/v24.15.0/`
+
+## v24.15.1 우선 규칙
+
+이 판은 v24.15.1의 언어 의미를 바꾸지 않고 적용 상태와 폐기된 이월 잔재만
+정리하는 consistency clean-cut이다. 아래 보존 이월 본문과 충돌하면 이 절과 이 판의
+generated registry가 우선한다.
+
+- G7-01~G7-07은 owner-approved canonical design이다.
+- 설계 확정과 parser/runtime/CLI/WASM 제품 구현 완료는 분리한다.
+- 사용자-facing 씨자리 이름은 한글만 정본이다. `T/U/V`는 입력 별칭이 아니며 영어 비교용 meta 표기다.
+- DetBin 실행 의미 ID는 BLAKE3-256, 승인·artifact·파일 bytes 봉인은 SHA-256이다.
+- M3-실험 0은 experimental toolchain 계획이며 stable 문법·runtime·artifact 지원이 아니다.
+- 함수 타입의 사용자-facing 정본 화살표는 `-->`다. 제품 함수값 전체 계약은 별도다.
+- `씨앗지음`과 `지음증거`는 연구 표시명이다. 하위 artifact wire/API 이름은 stable이 아니다.
+
+### G7-01~G7-07 결정 원장
+
+| ID | owner-approved 결정 |
+|---|---|
+| G7-01 | 채택 주체는 닫힌 구체 명목 타입 또는 정적으로 이름 붙은 임자 정의다. 대상·구실 한쪽 소유, 쌍당 활성 결합 하나, `~로 구현이름`은 정적 이름공간 접두다. |
+| G7-02 | 모든 구실 요구·구현은 생략 불가 첫 receiver `맡은이`를 갖는다. 구실 자기 타입은 `맡은씨`다. receiver 없는 요구는 V1 배제다. |
+| G7-03 | 필수 입력 핀 기반 1계 명목·불변 추론만 한다. 반환 문맥·구실 후보 추론, 명시 호출 타입 인자, output-only generic은 없다. |
+| G7-04 | 머리 순서는 씨자리 선언, `... 구실~을 맡아야함` 요구, 일반 값 핀이다. `~이라는/~라는`은 관계 parser 전용 꼬리다. |
+| G7-05 | 구실 결합 뒤 concrete member로 정적 lowering한다. runtime 구실 값·vtable·box·downcast·전역 구현 탐색은 없다. |
+| G7-06 | 모든 요구는 `보기만/누리바꿈` 상한을 명시하고 `open_kinds={}`·`D-STRICT`를 만족해야 한다. 최초 위반 call path를 오류로 낸다. |
+| G7-07 | 사용자 타입은 명목·불변이며 적용 타입·씨맞춤·구실 결합은 build/replay 정체성에 봉인한다. specialization manifest는 `state_hash` 밖이다. |
+
+### 계보와 독립 승인 단위
+
+- GP01~GP05와 KR01~KR09는 `applied_and_superseded_by_G7` history로 보존한다.
+- 한글 씨자리 전용과 `T/U/V` 비별칭을 독립 결정으로 확인한다.
+- BLAKE3 의미 ID와 SHA-256 승인·artifact·파일 봉인 분리를 독립 결정으로 확인한다.
+- M3-실험 0은 새 문법이나 stable M3 승격이 아닌 experimental toolchain 계획이다.
+- A1은 함수 타입 정본 화살표를 `-->`로 고정한다. `T -> U` 함수 타입 입력 별칭은 만들지 않는다.
+- A2는 `식 -> 자리.` 입력을 유지하되 대입 정본 출력을 `자리 <- 식.`으로 고정한다.
+- 연구 전체 표시명은 `씨앗지음`, M2 증거 묶음은 `지음증거`다. 하위 artifact와
+  generator wire/API 이름은 stable 명명 관문까지 실험 상태다.
+
+### v24.15.1 정합성 청소
+
+- v24.15.0의 언어 의미와 제품 비주장을 그대로 유지한다.
+- 적용 상태를 current로 교정하고 폐기된 이월 예시·별칭·화살표 설명만 정리한다.
+- v24.15.0 원문은 `../releases/v24.15.0/`에 byte-identical 보존한다.
+
+## v24.14.2 이월 본문
+
+> 아래 `SSOT_DECISIONS_v24.14.2.md` 원문은 계보·비충돌 계약 보존용이다. 위 v24.15.0 우선 규칙과 충돌하는 예시·별칭·상태는 superseded history다.
+
+# SSOT_DECISIONS v24.14.2
+
+> 문서 버전: v24.14.2
+> 상태: administrator candidate / owner decisions approved 2026-07-14 / not current until protected apply
+> 조립 권위 후보: `SSOT_ALL_MANIFEST_v24.14.2.md`
+> 이전 current: `v24.14.1`
+
+## v24.14.2 정정 우선 규칙
+
+이 판은 v24.14.1의 언어 동결 의미와 외부 stable surface를 바꾸지 않는 내부 관리자
+patch다. 아래에 byte-identical로 이월된 v24.14.1 본문보다 이 절의 lifecycle·용어·설정
+이행 판정이 우선한다.
+
+- 결정 입력 1,083건은 `반영 75 / 배제·역사 1,008`로 닫혔다.
+- decision-input `deferred`, `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified`는 모두 0건이다.
+- 방향·정책을 적용한 항목의 남은 제품 구현·증거는 OPEN_ISSUES/PLANS 관문이며 사용자 결정을 기다리는 proposal이 아니다.
+- 설계 확정과 제품 구현 완료는 분리한다. 이 판은 parser/runtime/CLI/WASM 완료 범위를 확대하지 않는다.
+- 외부 Language SPEC v0.1.1은 이 판의 사용자-facing 용어·settings 계약을 투영한 public patch다. v0.1.0은 byte-identical 보존한다.
+
+### CR01~CR13 보류→적용 정정 결정
+
+| ID | 결정 |
+|---|---|
+| CR01 | generic registry의 사용자-facing 정본명은 `가지곳간`이다. |
+| CR02 | profile은 `표준 가지곳간/나눔 가지곳간/내 가지곳간`, UI 탐색 metaphor는 `가지 선반`이다. |
+| CR03 | `가지숲`은 역사적·superseded 명칭이며 새 출력에 쓰지 않는다. |
+| CR04 | settings 설계 partition은 `문서/실행/이야기/누리/샘/거울/보개/슬기` 8개 중첩 절이다. |
+| CR05 | 닫힌 평면 호환 입력은 `제목/설명/마디수`이며 각각 `문서.제목/문서.설명/실행.마디수`로 정본화한다. |
+| CR06 | `title/name/desc/이름`은 guideblock 시험 별칭이며 settings public stable contract가 아니다. |
+| CR07 | 평면 `화면/기본관찰/기본관찰x`와 영어 settings alias는 legacy/test residue이며 no-new-output migration 대상이다. |
+| CR08 | settings 최대 surface V2는 개별 키 채택표가 아니라 L1~L4 evidence governance map이다. |
+| CR09 | 한국어 표시명 `실행설정해시/보기설정해시/문서설정해시/설정해시`와 영어 wire id를 분리한다. |
+| CR10 | seed 용어는 `씨앗/씨앗값/씨앗묶음`이다. |
+| CR11 | `시앗/시앗묶음`은 deprecated input compatibility alias이며 새 출력에 쓰지 않는다. |
+| CR12 | 이전 deferred 3건의 방향·정책은 applied이고 남은 구현 evidence gate는 OPEN_ISSUES/PLANS가 소유한다. |
+| CR13 | 사용자-facing seed/settings/hash/가지곳간 계약을 Language SPEC v0.1.1에 투영하고 v0.1.0은 byte-identical 보존한다. |
+
+## v24.14.1 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_DECISIONS_v24.14.1.md` 원문이다. 위 v24.14.2 우선 규칙과 충돌하는 lifecycle·용어·상태 문구만 supersede된다.
+
+# SSOT_DECISIONS v24.14.1
+
+> 문서 버전: v24.14.1
+> 상태: current canonical / owner approved 2026-07-13
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.1.md`
+> 이전판 snapshot: `../releases/v24.14.0/`
+
+## v24.14.1 관리자 정리 우선 규칙
+
+이 판은 언어 의미를 바꾸는 판이 아니다. v24.14.0의 동결 언어 계약을 그대로
+상속하면서, 모든 비정본 결정 입력의 생애주기와 내부·외부 버전 계보를
+닫는 관리자 clean-cut이다. 이 절은 아래에 byte-identical로 이월된 v24.14.0
+본문의 버전·상태 문구보다 우선한다.
+
+- 결정 입력 1,074건은 `반영 63 / 명시 보류 3 / 배제·역사 1,008`로 전건 처분했다.
+- `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified` 상태는 0건이다.
+- 내부 SSOT 버전은 `v24.14.1`, 외부 언어 스펙 버전은 `v0.1.0`이며 서로 다른 이름공간이다.
+- 외부 스펙은 SSOT의 stable surface를 사람이 읽도록 투영한 생성물이다. 충돌하면 내부 SSOT가 우선한다.
+- 과거 문서의 `v25` 출시는 새 언어 주버전이 아니라 개발 이정표 `M25-AI-PRODUCTION-PATH`로 읽는다.
+- 설계 확정과 제품 구현 완료는 계속 분리한다. 이 판은 parser/runtime/CLI/WASM 동작 완료 범위를 확대하지 않는다.
+
+### VS01~VS06 버전·공개 결정
+
+| ID | 결정 |
+|---|---|
+| VS01 | 내부 통치 계보는 SSOT v24.14.1로 이어 간다. |
+| VS02 | 최초 외부 공개 초안은 별도 계보인 Language SPEC v0.1.0이다. |
+| VS03 | v24.14.0은 원문·합본·registry·seal을 byte-identical snapshot으로 보존한다. |
+| VS04 | 과거 v25 예약은 `M25-AI-PRODUCTION-PATH` 개발 이정표로 재분류한다. |
+| VS05 | 언어 v1.0.0은 첫 호환성 약속 시점이며 현재 달성 주장이 아니다. |
+| VS06 | 공개 스펙 투영은 새 의미를 만들지 않으며 SSOT와 충돌할 수 없다. |
+
+## v24.14.0 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_DECISIONS_v24.14.0.md`의 원문이다. 위 v24.14.1 우선 규칙과 충돌하는 버전·상태 문구만 supersede된다.
+
+# SSOT_DECISIONS v24.14.0
+
+> 문서 버전: v24.14.0
+> 상태: current canonical / core
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.0.md`
+> 이전판 snapshot: `../releases/v24.13.0/`
+
+## v24.14.0 언어 동결 우선 규칙
+
+> 이 디렉터리의 산출물은 **2026-07-13 owner 승인으로 확정된 v24.14.0 current 정본**이다.
+> 이 절은 아래 v24.13.0 이월 본문의 충돌 문구보다 우선한다.
+
+- 상태는 `stable_contract / confirmed_design / product_evidence / compat_input / planned / research_history`로 분리한다.
+- 설계 확정은 제품 구현 완료가 아니다. 제품 완료는 제품 frontdoor와 관련 검증 증거가 있어야 한다.
+- stable parser surface는 hard freeze다. 새 문법은 owner evidence, 낭독, collision, parser/canon/CLI/WASM, 진단, golden, 교육 예제를 함께 검사하는 단일 gate로만 들어온다.
+- proposal/note/report/session delta는 그 자체로 current authority가 아니다.
+
+## v24.14.0 owner 결정 원장
+
+> owner 승인(2026-07-13): LF01~LF18 추천안 승인, 설계 확정과 제품 구현 완료의 분리 유지, Codex의 v24.13.0 보존 및 v24.14.0 관리자 적용 승인.
+
+| ID | 결정 |
+|---|---|
+| LF01 | active allowlist 밖 비정본 결정 입력은 파일을 보존한 채 history/sunset으로 전환한다. |
+| LF02 | 다음 판은 v24.14.0 language freeze clean-cut이다. |
+| LF03 | stable parser surface를 hard freeze하고 예외 입구를 단일 gate로 고정한다. |
+| LF04 | D1~D48은 최종 결정 계보를 추출하고, D51~D58은 제품 PASS 범위만 stable/evidence로 둔다. |
+| LF05 | `=`은 정의/초기 binding, `<-`는 상태 변화, `<<-`는 명시적 파생 흐름이다. |
+| LF06 | `T?`와 `맺음<T>`·`#잘됨/#안됨`을 canonical design으로 둔다. 옛 표기는 compat input이다. |
+| LF07 | `씨자리`, `구실/갖춤/맡음`은 docs-first canonical design이다. 암묵 capture와 일반 lambda는 포함하지 않는다. |
+| LF08 | S0~S2, prime, bounded connect/unit/init만 현재 product evidence로 둔다. |
+| LF09 | `막음`은 constraint family, `막기`는 동작, `턱`은 boundary/threshold/exit의 닫힌 subtype 목록이다. |
+| LF10 | phase order는 고정하고 같은 phase·같은 대상 쓰기는 기본 오류다. 명시 reducer만 허용한다. |
+| LF11 | 새김틀은 `(#태그) 값{...}` 사용과 `(#새김본) 값{...}` 등록 설계를 고정하고 구현은 보류한다. |
+| LF12 | `!!{}`는 tool-time hole이며 `슬기.의도{}`·슬기씨는 docs-first다. AI는 runtime authority가 아니다. |
+| LF13 | stdlib은 stable whitelist만 공개 계약이며 나머지는 상태를 분리한다. |
+| LF14 | CLI stable front door는 `run/check/canon/world-diff`다. |
+| LF15 | schema·diagnostic 이름 존재와 공개 안정 계약을 별도 registry로 둔다. |
+| LF16 | 보개·Manim은 consumer다. canonical bytes·migration 뒤에만 core 승격을 검토한다. |
+| LF17 | 이야기만 사용자 작성 결정론 로직 성역이다. 외부 bridge·consumer는 runtime truth를 소유하지 않는다. |
+| LF18 | 일반 macro/reflection/async/무제한 lambda/FFI/story-tech는 research/history다. raw OI는 9 family/history로 병합한다. |
+
+### D1~D48 최종 계보
+
+| ID | 상태 | 최종 결정 |
+|---|---|---|
+| D1 | confirmed_design | 고정 마디를 커널 시간 기준으로 두고 `마디사이`와 읽기 전용 시각을 제공한다. 손으로 시간 변수를 굴리는 교육 표면도 허용한다. |
+| D2 | confirmed_design | 결정적 내장 적분과 손 계산을 함께 허용하고, 내장 동작을 손 코드로 펼쳐 보는 교육 경로를 둔다. exact surface와 제품 범위는 별도 gate다. |
+| D3 | confirmed_design | 벡터→행렬→텐서로 이어지는 수학 타입 family를 설계 축으로 둔다. 개별 product stability는 registry에서 분리한다. |
+| D4 | confirmed_design | Fixed64의 범위·정밀도·초월함수 오차·overflow 동작을 수치 봉투와 검증 pack으로 관리한다. |
+| D5 | stable_contract | 지속 조건 `~인 동안`과 분기 `만약 ~이면 ... 아니면`을 구분한다. 과거 `{...}인것 일때`는 compat input이다. |
+| D6 | stable_contract | 문장 구조는 정형 한국어, 연산·수식은 보편 수학 표기를 쓴다. stdlib 점 호출을 수학 함수 표면으로 허용한다. |
+| D7 | confirmed_policy | 한국어 단일 canonical(L0)을 유지하고 L1 읽기 렌더를 가능하게 한다. 첫 L1 후보는 일본어, 영어는 입력 별칭이며 L2 동등 정본은 이월한다. |
+| D8 | confirmed_policy | 기본 제품은 오프라인 완전 동작하고 AI는 선택적 online/tool 모드다. 장기 전문 AI 가능성을 보존하되 runtime authority는 주지 않는다. |
+| D9 | confirmed_policy | 학생 모드는 설명·힌트 사다리 중심, 교사 모드는 생성까지 허용하는 학습 보호 경계를 둔다. |
+| D10 | confirmed_design | 별도 `모델{}`보다 임자에 끝(port) 노출과 결정적 다중 인스턴스를 더하는 모델 단위 방향을 택한다. |
+| D11 | confirmed_design_pending_impl | 비인과 `잇기`의 끝·관계·부호 규약은 설계 고정하고 일반 solver 구현은 H2/H3 이후로 둔다. |
+| D12 | confirmed_sequence | 셈그림 H1 polish 뒤 알림 기반 생태계 연결을 먼저 가르치고, 전기회로 이음 수업은 이음 구현과 함께 둔다. |
+| D13 | confirmed_curriculum | AI 이해를 네 번째 교과로 H2부터 추가한다. |
+| D14 | confirmed_policy | 에이전트 저작은 교실에서 DDN을 우선하고 심화 Python gateway는 H3로 둔다. |
+| D15 | confirmed_goal | record/replay와 state hash를 쓰는 재현 가능 학습 실행을 NuriGym 설계 목표로 둔다. |
+| D16 | confirmed_design | parser는 정형 한국어만 받는다. `!!{}`는 편집/도구 시점의 unresolved hole이며 runtime에서 AI를 호출하지 않는다. |
+| D17 | confirmed_design | 암묵 closure capture를 금지하고 외부 값은 명시 값꾸러미로 전달한다. |
+| D18 | confirmed_design | Option은 `T?`·있음/없음, Result는 `맺음<T>`·잘됨/안됨이다. `결과/#성공/#실패`는 compat input/product evidence다. |
+| D19 | confirmed_design_superseded_term | 사용자가 정의 가능한 interface 계약을 채택한다. 당시 `역할` 표면은 LF07의 `구실/갖춤/맡음`으로 supersede한다. |
+| D20 | confirmed_design_pending_impl | `쓰임`·`드러냄`·`프로젝트{}` 모듈 family를 예약하고 구현은 H2로 둔다. |
+| D21 | confirmed_contract | `~기`는 생산적 행동형이다. `~음/~ㅁ`은 생산 문법이 아니며 닫힌 커널 어휘 또는 사용자 명시 선언 이름만 허용한다. 형태소 추측을 하지 않는다. |
+| D22 | stable_contract | 고정 마디만 1급 시간이다. 연속 시간은 결정적 세분 근사이며 마디와 실초 관계는 명시한다. |
+| D23 | confirmed_design_pending_impl | 까닭 trace를 요청 시 재실행하는 state-hash 밖 진단 모드로 H2에 둔다. |
+| D24 | confirmed_sequence | H1은 CLI record/replay를 쓰고 `실험{}` 문법은 매김과 분리된 H2 확장 설계로 둔다. |
+| D25 | confirmed_boundary | 보상은 언어 커널이 아니라 NuriGym 확장 표준이다. |
+| D26 | confirmed_contract | 행동갈래는 `보기만/누리바꿈`, 열림은 바깥 원천 축이다. 누리바꿈은 `InputSnapshot`을 거친다. |
+| D27 | stable_governance | 표면 존재·실행 가능·제품 가능의 세 상태를 분리해 표기한다. |
+| D28 | confirmed_design_pending_impl | 포함절은 닫힌 한국어 관계절 pattern만 허용하는 값 질의 표면이다. 자유 자연어 filter는 허용하지 않는다. |
+| D29 | confirmed_contract | 새 알림의 기본 전파는 다음 마디다. 같은 마디는 명시 표지·깊이 한도·원인 trace를 요구한다. |
+| D30 | confirmed_contract | 알림 중복은 발생 순서대로 결정적으로 처리한다. 자동 합치기를 금지하고 합치기는 명시 연산으로만 한다. |
+| D31 | confirmed_design | V1 효과 표기는 manifest 경계에 두고 씨앗 서명 효과는 H2다. 효과 이름은 상태바꾸기/시간읽기/난수쓰기/바깥입력/바깥출력/파일읽기/파일쓰기/망쓰기/AI부르기/기록쓰기다. |
+| D32 | confirmed_design | `T?`·맺음·고름씨·알림·상태머신을 내부의 하나인 닫힌 갈래 모델로 통합하되 이론 용어는 표면에 강제하지 않는다. |
+| D33 | confirmed_boundary | 일반 Datalog/rule engine을 커널에 넣지 않는다. 필요하면 H3 제한 stdlib/pack으로 검토한다. |
+| D34 | confirmed_design | `하고/하면서/한채/하기위해/하면/마다`만 닫힌 행동 연결 의미로 다룬다. 자유 원인 추론과 `해서/때문에/덕분에`는 V1에서 제외한다. |
+| D35 | confirmed_contract | 실행 등급은 닫힘, 봉인된 열림(record/replay), 생열림(live)이다. 재현 근거는 deny/record/replay만 인정한다. |
+| D36 | confirmed_supersede | 한국어 정본 `세계영향`을 `누리바꿈`으로 교체한다. 옛 용어는 compat input, `world_affecting`은 wire/schema 식별자다. |
+| D37 | confirmed_positioning | 또니랑을 Scratch 다음·Python 전의 상태/시간/원인/실험 중심 첫 모델링 언어로 둔다. 대표 첫 경험은 셈그림 포물선 비교 탐구다. |
+| D38 | rejected_history | 품사 추정 기반 하다-동사화 규칙은 폐기한다. 기존 CALL-TAIL-EQUIV와 명시 어간 선언 규칙을 따른다. |
+| D39 | confirmed_contract | 이야기만 사용자·AI 작성 결정론 모델 로직 성역이다. 샘/누리/거울/보개와 외부 bridge는 고정 데이터 계약을 따르는 engine/consumer다. |
+| D40 | confirmed_contract | 보개·거울 소비자는 선언된 관찰만 읽고 누리에 쓰지 않으며 state/trace hash에 영향을 주지 않는 read-only observer다. |
+| D41 | confirmed_contract | 모든 새 입력원천과 슬기는 샘 정규화·InputSnapshot·거울 기록 가능 경계를 통과하며 특권 우회 경로를 갖지 않는다. |
+| D42 | absorbed | 옛 슬기 경계 결정은 D41의 입력원천 무특권 계약에 흡수한다. |
+| D43 | absorbed | 옛 거울 소비 결정은 D40 read-only observer 계약에 흡수한다. |
+| D44 | confirmed_design | 각 계층 커스텀을 A 선언 블록, B 결정론 DDN 씨 생성기, C 좁은 네이티브 접점의 3층으로 통일한다. |
+| D45 | confirmed_design_pending_impl | 샘씨는 원시 입력을 순수 변환하고 변환 후 값을 snapshot에 기록한다. 설계 고정, 구현은 AI Gym/game 수요 시점으로 보류한다. |
+| D46 | confirmed_design_pending_impl | `슬기.의도{}`와 슬기씨를 설계 고정한다. LLM 생성은 네이티브, 슬기씨는 결정론 필터이며 구현은 D40/D41 제품 경계 뒤다. |
+| D47 | confirmed_design_pending_impl | 거울씨는 기록을 읽는 순수 사후 요약이며 state hash 밖이다. 우선순위는 최하로 둔다. |
+| D48 | confirmed_contract_with_open_detail | 누리 patch 병합 알고리즘은 고정한다. `설정.누리`와 reset kind는 A 선언층이지만 exact 하위키는 별도 planned 항목이다. 누리씨는 두지 않는다. |
+
+근거 원장은 `PROPOSAL_LANG_KERNEL_V1_DIRECTION_20260704.md`, `PROPOSAL_ECOSYSTEM_LAYER_CONTRACT_V1_20260705.md`, `PROPOSAL_LAYER_CUSTOMIZATION_ARCHITECTURE_V1_20260706.md`다. D1~D48의 확정은 구현 완료를 뜻하지 않는다.
+
+### D51~D58 흐름 결정의 제품 증거 경계
+
+| ID | current 상태 | v24.14.0에서 인정하는 범위 |
+|---|---|---|
+| D51 | product_evidence | `<<-`가 제품 parser/runtime frontdoor에서 실행되고 runtime pack으로 검증된다. |
+| D52 | product_evidence | 별도 `Stmt::FlowAssign` AST와 runtime flow record가 제품 코드에 존재한다. |
+| D53 | confirmed_design_pending_impl | 정적 선언 위치 제한은 설계로 유지한다. 훅 본문 선언 금지의 독립 제품 진단 증거는 아직 없다. |
+| D54 | stable_contract + product_evidence | DAG 위상 1-pass, 같은 마디 재발화 없음, 다중 출처·순환 오류가 runtime pack에서 검증된다. 반복 수렴 의미는 폐기한다. |
+| D55 | docs_first_pending_impl | `이전값보기` 사용자 표면은 red conformance 상태이며 구현 완료가 아니다. |
+| D56 | partial_product_evidence | 다중 출처·순환 진단 코드는 제품에 있으나 canon-time 정적 진단 시점 전체는 아직 닫히지 않았다. |
+| D57 | confirmed_contract_needs_hash_gate | 상태 값은 `state_hash`에 포함하고 발화 메타만 제외한다. 이 정확 경계의 독립 회귀 증거는 후속 gate다. |
+| D58 | product_evidence | `lang_flow_hook_interaction_v1` 4사례가 제품 runtime pack으로 닫혔다. |
+
+근거는 제품의 `Stmt::FlowAssign`, `E_FLOW_MULTIPLE_SOURCE_CONFLICT`, `E_FLOW_CIRCULAR_REFERENCE`, `lang_flow_hook_interaction_v1`과 `must_gap_a03_previous_value_view_red_v1`이다. 위 표는 설계 확정을 제품 완료로 확대하지 않는다.
+
+### supersede
+
+- D26 최종 정본은 행동갈래 `보기만 / 누리바꿈`이다. `세계영향`은 과거 정본·입력 별칭, `world_affecting`은 wire/schema 호환 식별자다.
+- `=`을 매 마디 재평가하는 FRP 문구는 폐기한다.
+- 흐름 규칙의 반복 fixed-point 문구는 폐기한다. 정적 DAG 1-pass이며 순환은 오류다.
+- 암묵 last-write-wins는 current core 기본값이 아니다.
+
+## v24.13.0 이월 상세 기록 — current contract 아님
+
+아래 원문은 상세 규범과 제품 증거 계보를 잃지 않기 위해 이월했다. byte-identical 원문은 `../releases/v24.13.0/`에 따로 봉인한다. 이 절의 옛 상태어·정본 주장은 current contract가 아니며 위 v24.14.0 전면 절을 따른다. `결과/#성공/#실패`처럼 아직 제품에 남은 옛 표면은 compat product evidence이지 새 canonical 출력이 아니다.
+
+# SSOT_DECISIONS v24.13.0
+
+> 문서 버전: v24.13.0
+> 상태: current clean-cut / core normative source
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.13.0.md`
+> 이전판: `../releases/v24.12.9-candidate-snapshot/SSOT_DECISIONS_v24.12.9.md`
+
+## v24.13.0 clean-cut 공통 계약
+
+- 이 문서 묶음의 현재판은 `v24.13.0`이다.
+- 권위 집합은 core source 17개와 normative reference appendix 2개, 합계 19개다.
+- 조립 권위는 `SSOT_ALL_MANIFEST_v24.13.0.md` 하나다. `SSOT_ALL_v24.13.0.md`는 결정적으로 재생성되는 AI/사람 열람용 산출물이며 독립 권위가 아니다.
+- 아래 `v24.12.9 이월 원문`은 보존된 상세 규범이다. 이 절과 충돌하면 v24.13.0 절이 우선하며, 이월 원문의 과거 상태·버전·해시 머리말은 역사 기록으로만 읽는다.
+- 제품 상태는 `stable_canonical / experimental / internal_tooling / compat_alias / deprecated / review_required`로 구분한다. `review_required`는 공개 정본·기본 교재·AI 기본 출력에 사용할 수 없다.
+- 문서 설계는 제품 구현 완료가 아니다. `runtime landed`, `닫힘-동작`, `golden_closed`는 제품 경로와 검증 근거가 있을 때만 쓴다.
+
+## v24.13.0 통합 결정 D01–D14
+
+| ID | 결정 |
+|---|---|
+| D01 | 다음판은 patch가 아니라 `v24.13.0` clean-cut이다. |
+| D02 | 17 core + 2 normative appendix를 모두 manifest·검사 대상으로 둔다. |
+| D03 | manifest가 유일한 조립 권위다. 합본은 순서·구분자·인코딩이 고정된 생성물이다. |
+| D04 | 승인된 셈그림 작업대 brief를 current target으로 두고 옛 고정 UI 규칙을 supersede한다. |
+| D05 | 독립 workbench shell + adapter + G9 전환 승인을 쓴다. adapter 병존은 최대 2 Wave이며 구 셸 제거 게이트를 둔다. |
+| D06 | stdlib는 상태 registry로 관리하며 구현 이름을 일괄 stable로 동결하지 않는다. |
+| D07 | `이음관계.*` 등 connect drift는 experimental로 기록하고 사용자 façade 합리화 전 기본 교재·AI 출력에서 제외한다. |
+| D08 | `수치해.이분법 / 다항식.풀기 / 선형부등식.풀기`는 minimum experimental surface다. 범용 solver 완료를 뜻하지 않는다. |
+| D09 | 프로젝트/run의 불변 그래프 원칙만 고정하고 exact v1 schema는 checker·migration fixture 뒤에 잠근다. |
+| D10 | 현 artifact 이름·bytes·hash는 evidence이며 canonical 계약은 OPEN이다. |
+| D11 | 교육·선언 시뮬 6공백은 기존 stdlib/data/view OI family에 병합한다. |
+| D12 | 씨자리/구실 세로줄은 유지한다. 생략·수판·새김틀 구현 승격은 연구 보류다. 새김틀 R3 계보는 확인됐다. |
+| D13 | stdlib/CLI/schema/diagnostic registry는 코드에서 결정적으로 생성하고 손수정하지 않는다. 생성기·입력·출력 해시를 manifest에 봉인한다. |
+| D14 | SSOT PLATFORM에는 운영 원칙·공개 관문만 두고 IDC 장비값은 운영 문서에 둔다. |
+
+## v24.12.9 이월 원문
+
+아래 원문은 상세 규범과 결정 계보 보존을 위해 이월했다. 과거 머리말과 addendum의 상태어는 v24.13.0 current 상태를 덮지 않는다.
 
 ## v24.12.9-candidate integrated revision
 
@@ -1481,6 +2130,100 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 - `잇기`는 endpoint 문장형 sugar에서 `세움{}`으로 낮추는 후보이며 블록으로 승격하지 않는다.
 - 링버퍼 `흐름(N)`은 개명하지 않고 connect는 `흐르게` 속문장을 쓴다.
 - `의` access sugar, `-서` pipe sugar, `->` canonical assignment 전환은 반영하지 않는다.
+
+### v24.12.9-candidate decisions: settings/nuri/bogae/freeze 2026-07-08
+
+- 사용자 승인에 따라 이번 세션에서는 `docs/ssot/**` 직접 반영을 허용한다. 단, 본문 상태는 v24.12.9-candidate이며 runtime landed claim은 금지한다.
+- `설정 {}` canonical section은 `문서/실행/이야기/누리/샘/거울/보개/슬기` 8개로 유지한다.
+- 세부 설정 key map은 evidence-tier registry 후보로 둔다. 발표 전까지 parser hard-cut 또는 정본화기 출력 변경으로 읽지 않는다.
+- 설정 해시는 `run_config_hash`, `view_config_hash`, `doc_config_hash`, `settings_hash`로 나누는 V2 후보를 우선한다. 이들은 record/tooling artifact이며 `state_hash` 입력이 아니다.
+- `run_config_hash`는 result-affecting 설정 불일치의 replay/dataset/CI mismatch 근거 후보로 둔다.
+- `씨앗묶음`은 named seed stream isolation 후보로 둔다. `시앗묶음`은 deprecated compat alias다. root seed, stream name, 마디/agent/purpose 입력을 봉인한 뒤 InputSnapshot으로 이어지는 방향을 우선한다.
+- 누리 기본 실행 모델은 동기식 큰마디 commit 결정론 엔진이다. OS scheduler, realtime async, rollback engine을 기본 의미로 읽지 않는다.
+- 속마디는 local 진행/제안/trace다. shared world commit, 다른 actor tentative read, state_hash truth를 소유하지 않는다.
+- 슬기 지연은 `accepted_madi`와 `target_madi` metadata로 기록할 수 있으나 실행 정렬 key는 계속 `(agent_id, recv_seq)`다.
+- 행동 수집 설정 이름은 `합치기갈래`보다 넓은 `행동모음갈래`를 후보 우선명으로 둔다.
+- write conflict v1 default는 FATAL 후보(`E_MADI_WRITE_CONFLICT`)다. 명시 opt-in merge op 없이 암묵 병합하지 않는다.
+- 보개 표준팩은 core grammar가 아니라 pack/tooling/view layer다. raw `모양`은 escape hatch이고, graph/table/timeline/sim/game workflow는 `std_bogae_*` 팩으로 제공하는 방향을 우선한다.
+- 발표 전 동결은 breaking surface를 줄이는 release gate다. 예약어, 문법 공간, 오류 코드 네임스페이스, 스키마 버전 협상, 정본 golden coverage를 pre-release sweep 대상으로 둔다.
+- 자연어 직접 실행은 범위 밖이다. 자연어/AI 출력은 proposal 또는 sealed execution artifact 전까지 authoritative truth가 아니다.
+
+### v24.13.0-candidate decisions: declarative closure / hook conflict / units 2026-07-09
+
+- 사용자 승인에 따라 이번 세션에서는 `docs/ssot/**` 직접 반영을 허용한다. 단, 본문 상태는 v24.12.9-candidate이며 runtime landed claim은 금지한다.
+- `세움{}` 선언형은 결정적 인과화 가능 부분집합(acausal-lite)으로 읽는다. S0/S1/S2/S3 등급화는 candidate decision이며 full DAE/general nonlinear solve claim이 아니다.
+- S1 선형 연립 V1 상한은 `N <= 8` 미지수다. 상한의 목적은 Fixed64 고정 피벗, rounding, golden evidence를 먼저 닫는 것이다.
+- SolvePlan의 `state_hash_inputs`는 manifest field로 유지한다. 실제 `state_hash` 산식 편입은 `plan_hash` canonical bytes 결정 전까지 하지 않는다.
+- `위치'` / `위치''`는 `세움{}` 안 시간 미분 slot의 정본 surface 후보로 채택한다. `세움{}` 밖 prime suffix hard error 승격은 migration evidence 뒤에만 진행한다.
+- `잇기`의 `흐르게` 부호 규약은 "endpoint 안으로 들어오는 방향이 +"를 후보 결정으로 둔다. `거슬러 흐르게`는 follow-on sugar다.
+- hook 같은 마디 같은 변수 다중 쓰기 기본값은 `E_HOOK_WRITE_CONFLICT`다. 명시 병합, 명시 우선순위, 감사 가능한 낮은 등급 escape hatch 없이는 암묵 last-write-wins를 허용하지 않는다.
+- prime 상태 불연속 재설정 후보 동사는 `다시놓기`다. 이는 hook/event 문맥 reset 통로이며 일반 대입 충돌 완화가 아니다.
+- 시뮬 제약 family는 `막음`, verb는 `막기`로 둔다. V1 반응 어휘는 `멈춤`, `튕김(e)`, `조임`, `감쌈`이다.
+- 단위 표면의 ASCII 표기는 기존 `@` postfix와 caret exponent를 쓴다. 예: `9.8@m/s^2`. 명시 변환 없는 scalar/unit 혼합은 기본 금지 후보로 둔다.
+- 마루 줄기 반영은 follow-up intake로만 읽는다. 기존 ROADMAP_V2 닫힘-동작 진행률을 올리지 않는다.
+
+### v24.13.0-candidate decisions: Korean Manim / Bogae Madang gap 2026-07-10
+
+- 한국어 Manim은 완료된 목적이 아니다. `보개마당 {}` / `seamgrim.scene.v0` / pilot fixture는 최소 scene-track 후보이며 Manim급 전체 설계/구현 완료 claim으로 읽지 않는다.
+- 목표 수준은 "DDN-first deterministic educational scene layer"다. Manim 전체 API clone, arbitrary rendering script, pixel/frame imperative control은 current target이 아니다.
+- `보개마당`은 scene/view-only 연출 track이다. DDN 계산, 상태, 보개 payload, `state_hash` truth를 소유하지 않는다.
+- "훌륭" claim은 최소한 scene binding, formula transform, graph explain, scene player/timeline scrub, deterministic frame export, mp4 smoke evidence 뒤에만 가능하다.
+- 수식/장면 animation은 roadmap target으로 유지하되, 정본 설계는 formula object, term matching, graph/space2d target binding, layer/camera view policy를 별도 OI/pack으로 닫는다.
+
+### v24.12.9-candidate decisions: evidence closure boundary 2026-07-10
+
+- G0~G8 개발 결과는 v24.12.9-candidate addendum evidence로 인정한다.
+- G1/G2/G3/G4/G6/G7/G8은 `닫힘-문서`로만 판정한다.
+- G5의 `닫힘-동작`은 `run_seamgrim_wasm_web_smoke_contract_pack_check.py` PASS 범위, 즉 기존 Seamgrim WASM/browser delivery smoke에만 한정한다.
+- 교육 물리 vertical slice 전체, physics graph browser rendering, Nuri P0~P7 runtime phase, `step_record.v0.2` public schema, Gymnasium-compatible consumer, graph2d rendering, 자연어 직접 실행은 이번 evidence로 닫힌 것으로 주장하지 않는다.
+- "blocker 없음"은 G0~G8 개발 세션 blocker가 없다는 뜻이다. 공개/승격 blocker는 OI와 promotion gate로 계속 남는다.
+- 다음 실행 우선순위는 G9 공개 쐐기(셈그림 물리 차시)와 G10 WIP 부채 정리다.
+
+### v24.13.0-candidate decisions: pre-release terminology audit 2026-07-10
+
+- seed의 일반 설명어는 `씨앗`으로 둔다. 다만 `씨앗`은 `~씨` 계열의 "씨앗 종류"와 로드맵 비유에도 이미 쓰이므로, RNG seed **코드 표면 key**는 `씨앗값`을 1순위 후보로 보정한다.
+- `시앗` / `시앗묶음`은 migration 기간의 deprecated compat alias로만 둔다. 제품 parser/runtime/stdlib/golden 전면 전환은 `term_seed_alias_migration_v1` pack으로 닫는다.
+- 기존 "정본화 출력은 `씨앗`" 결정은 보류/정정한다. 출시 전 `씨앗값` vs `시앗` vs `씨앗` 표면을 TERMS 전수 대조 뒤 `OI-TERM-SEED-SIAT-COMPAT-01`에서 닫는다.
+- source의 정본 설명어는 `원문` 또는 `또니랑 원문`이다. source를 `누리`라고 부르지 않는다. `이야기`는 story/entry/meta 문맥에서만 조심해서 쓴다.
+- 재현 설명의 기본 대응은 `원문 + 봉인된 샘 + 씨앗값 + 누리 규칙 = 같은 누리 진행`이다. 초급 설명에서는 `씨앗`이라고 풀어 말할 수 있지만, 코드 key와 설명어를 혼동하지 않는다.
+- pre-release term audit의 원칙은 "초심자에게 자연스러운 말 우선, 이미 강한 의미를 가진 term은 재사용 금지, world truth/view/tooling boundary를 이름에 반영"이다.
+- 이상하거나 무거운 후보(`솎음줄`, `보개짜임터`, `거울겹`, `씨앗묶음`의 stream 의미)는 출시 전 exposure layer별로 재검토한다.
+
+### v24.13.0-candidate decisions: AI-era programming language two pillars 2026-07-10
+
+- AI 시대에도 프로그래밍 언어의 역할은 사라지지 않고 이동한다. 또니랑은 "사람이 AI 산출물을 읽고·판정하고·책임지는 감사 인터페이스"와 "AI가 대신 만들 수 있어도 사람이 만들고 싶게 하는 놀이/소유의 세계"라는 두 기둥으로 설명한다.
+- 결정성은 두 기둥의 공통 기반이다. 해시와 replay는 AI output 감사의 증거이자, 공유 가능한 창작 세계의 소유/리믹스 증거다.
+- `world_diff.v1`은 텍스트 줄 diff가 아니라 세계 규칙 diff 후보로 둔다. 정본 AST, 설정 header, SolvePlan/plan_hash 후보, replay hash divergence를 소비하는 toolchain artifact이며 world truth를 바꾸지 않는다.
+- `reading_exam.v1`은 코드 이해를 "실행 결과 예측 가능성"으로 측정하는 evidence/benchmark 후보로 둔다. 사람과 LLM 모두 같은 문항으로 평가할 수 있으나, 교육/연구 pack 전까지 claim하지 않는다.
+- `remix_lineage.v1`은 `origin_hash`와 `delta_ref`를 갖는 lineage/share 후보로 둔다. 리믹스 계보는 사회 규범만이 아니라 artifact 증거로 남기는 방향을 우선한다.
+- "첫 기쁨 5분"은 유희 기둥의 제품 지표 후보로 둔다. 첫 실행 -> 첫 바꿔보기 -> 첫 공유 시간을 측정하되, 제품 UI behavior closure는 별도 browser/playground evidence 뒤에만 주장한다.
+- 코드 백일장/낭독 게이트는 커뮤니티 및 표면 설계 검토 관행 후보로 둔다. 새 문법 표면은 "소리 내어 읽었을 때 자연스러운가"를 검토 항목에 포함할 수 있다.
+- 놀이 경로에서 pack PASS, hash, 닫힘 등급은 기본 노출하지 않는다. 규율은 "되감기와 재현이 항상 된다"는 신뢰감으로만 느껴져야 한다.
+
+### v24.13.0-candidate decisions: sufficiency / future-prep boundary 2026-07-10
+
+- 지금까지 notes/proposal/discussion을 SSOT에 반영하는 것은 목표 달성의 필요조건이지 충분조건이 아니다. SSOT는 지도/계약/금지선이고, 목표 달성은 제품 구현, 말뭉치, 검증, 사용자 경험, 외부 실증이 닫힐 때만 주장한다.
+- 최근 broad design 논의는 "과잉 설계"가 아니라 **미래 준비**로 분류한다. 다만 미래 준비가 현재 완료 주장이나 구현 우선순위를 밀어내면 위험하다.
+- 운영 원칙은 "미래 준비는 넓게, 개발은 좁게, 완료 주장은 엄격하게"로 둔다.
+- AI 시대 두 기둥에 완전히 합당하다는 claim은 아직 금지한다. 현 상태는 방향/정체성은 강하나, `WASM playground`, 정본말뭉치, `world_diff.v1`, 자동 보개/보개틀/블록 보개, `remix_lineage.v1`, `reading_exam.v1`, deterministic bridge evidence가 제품 경로로 닫혀야 한다.
+- 현대 범용 언어의 고급 기능을 모두 core에 직접 복제하지 않는다. 필요한 기능은 core / 표준가지 / deterministic bridge 3층으로 나누어 흡수한다.
+
+### v24.13.0-candidate decisions: corpus / Onmungchi plan 2026-07-10
+
+- 온뭉치(100세계 정본 말뭉치)는 AI 작성성, 사람 이해성, 교육자료, 말본카드 few-shot, 회귀 pack을 함께 먹여 살리는 docs-first/product-evidence 후보로 채택한다.
+- 공개 설명명은 `정본말뭉치 100세계`, 내부/브랜드 후보는 `온뭉치`로 둔다. 최종 이름은 `OI-CORPUS-NAME-01`에서 닫는다.
+- 수록 5관문은 pack PASS, 정본화 왕복, 낭독 게이트, 리믹스 손잡이, few-shot 짝이다. 단, 보개/UI/Manim 세계는 `state_hash`만이 아니라 deterministic view payload/hash 조건도 별도 검토한다.
+- 실행 가능성 등급은 가/나/다로 둔다. 가등급은 current-line 표면만, 나등급은 11축 표면, 다등급은 후속 표준가지/MAXSET/도메인 surface가 필요하다. 수록은 닫힘-동작 표면만 허용하고 미래 표면 사용분은 초안 창고에 둔다.
+- corpus lifecycle은 초안 -> 검증중 -> 잠김 -> 수록으로 둔다. AI 생성 초안은 정본이 아니며 사람 승인 전에는 corpus truth가 아니다.
+- 누리시험/읽기시험 평가용 잠금분과 공개 말뭉치는 처음부터 분리한다. 공개 corpus가 benchmark를 오염시키지 않게 한다.
+
+### v24.13.0-candidate decisions: Bogae plan / visual construction 2026-07-10
+
+- `모양{}`은 저수준 drawing primitive/escape hatch로 유지한다. 한국어 Manim, 웹 UI, 앱 UI, 게임 UI를 `모양{}`만으로 맡기지 않는다.
+- `보개계획`은 필요하지만 사용자가 항상 직접 작성하는 surface가 아니라 자동 보개, 보개틀, 블록 보개 편집기가 생성/소비하는 결정적 view-plan 중간 표현으로 둔다.
+- 최소 시각화 층은 자동 보개 -> 보개틀 -> 블록 보개 편집기 -> 텍스트 보개계획 -> `모양{}` escape hatch 순서로 둔다.
+- `보개계획`, 앱보개, 게임보개, 보개마당 고도화는 view/toolchain 층이며 `state_hash` truth를 소유하지 않는다. 필요하면 `view_plan_hash` / `bogae_hash` / deterministic payload hash로 관리한다.
+- 교육용 목표에서는 "코드를 조금 쓰면 바로 보이고, 보이는 것을 만지면 코드/계획이 바뀌는" 왕복이 핵심이다. 블록 방식은 대체 언어가 아니라 보개계획을 쉽게 만드는 편집 surface다.
 
 # SSOT_DECISIONS
 
@@ -1515,7 +2258,7 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 
 - `흐름`은 connect flow의 명사형 정본 용어로 등록하지 않는다.
 - connect V1 surface는 `Y은/는 흐르게` 속문장을 유지한다.
-- `흐르게`의 부호 규약은 open issue로 남긴다.
+- `흐르게`의 부호 규약은 2026-07-09 후보 결정으로 endpoint incoming-positive를 우선한다. Pack/golden closure는 남는다.
 - 속도 베를레는 D-STRICT 후보/권장 solver method로 proposal에 등록하되, pack 전까지 landed claim하지 않는다.
 - D-ULTRA는 solver strategy relaxation을 포함할 수 있으나, recorded replay contract가 필요하다.
 - `실리게`, `풀림길 {}`, DAE current-line solver claim은 이번 라운드에서 되살리지 않는다.
@@ -1684,7 +2427,7 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 - save/format 기본은 선택말씨 유지, 명시적 `canon export` 에서만 ko 정본 출력본을 만든다.
 
 ### DEC-20260419-TYPE-BRANCH-DOCS-FIRST
-- `§5.11 타입 자리표시자` 는 docs-first / AGE2+ target 으로 등록한다.
+- 이 결정 당시 `§5.11 타입 자리표시자`로 등록했던 항목은 current `§5.11 두루쓰기와 씨자리`로 개정되었고, parser/type-checker/runtime 착지는 AGE2+ target이다.
 - `OI-LAMBDA-CLOSURE-DETERMINISM-01` 은 AGE3 이월 OI 로 등록한다.
 - `[V18-03A]` 분기 family 안내표와 교재 family 관계 문장은 docs-first 로 채택한다.
 
@@ -1735,8 +2478,8 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 
 ## DEC-20260412-FLOW-HOOK-PHASE-SEPARATION
 
-- 한 마디 안의 canonical 순서는 `ordinary assignment -> 흐름씨 fixed-point -> tail-phase hook` 이다.
-- hook body 는 같은 마디의 흐름씨 fixed-point 를 다시 발화시키지 않는다.
+- 한 마디 안의 canonical 순서는 `ordinary assignment -> 흐름씨 DAG 1-pass -> tail-phase hook` 이다.
+- hook body 는 같은 마디의 흐름씨 DAG 1-pass를 다시 발화시키지 않는다.
 - 다중 출처 충돌과 흐름씨 cycle 은 각각 `E_FLOW_MULTIPLE_SOURCE_CONFLICT`, `E_FLOW_CIRCULAR_REFERENCE` 로 읽는다.
 
 ## DEC-20260412-CHAEVI-TOPLEVEL-ONLY (historical, superseded)
@@ -2001,7 +2744,7 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 
 ## DEC-20260409-AGGREGATE-SOURCE-OF-TRUTH-01
 
-- `docs/ssot/ssot/**` 17파일이 Internal Canonical SSOT다.
+- 이 결정 당시 Internal Canonical SSOT 조립 source family는 17파일이었다. current 권위 표기는 **17 core + 2 canonical reference appendices**이며, 19-file 합본 조립 승격은 OPEN이다.
 - `docs/context/all/**` 합본은 regenerated working/export artifact 이며 canonical SSOT가 아니다.
 - SSOT 업데이트는 항상 source-of-truth 경로를 기준으로 수행한다.
 
@@ -2027,16 +2770,332 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 
 ---
 
+## EDU-PL 결정 묶음 — 배움길과 세 교재 (2026-07-12)
+
+- `EDU-PL-01`: 또니랑은 한국어로 세계와 계산을 읽고 설명하게 하며, 사람이 AI 결과를 이해·수정·검증·승인하게 하는 공용 언어를 지향한다.
+- `EDU-PL-02`: 프로그래밍 개념의 유일한 안정 ID는 `배움.<영역>.<개념>`이다. `PL.*` 호환 ID는 만들지 않는다.
+- `EDU-PL-03`: 공식 교재는 문법 중심 입문서, 셈그림 체험서, 종합 참조서의 세 축이다. 학생 본문·활동책·교사용 지도서·정답소스·내부 근거를 분리한다.
+- `EDU-PL-04`: 현대 프로그래밍 개념 장부 `programming_concept_ledger.v1`을 교육 reference로 둔다. 각 행은 교육 판정과 제품 상태를 별도 단일값으로 갖는다.
+- `EDU-PL-05`: R0은 첫 출력 5분, 첫 한 줄 10분, 한 번에 한 곳 바꾸기, 결과→값→이름→문장→세계 설명 순서를 지킨다.
+- `EDU-PL-06`: 첫 언어 세로줄은 `고름씨 + ~에 따라 + T?/결과`다. §5.10.3 태그 규칙 정렬이 선행 조건이다.
+- `EDU-PL-07`: 깊은 클래스 상속, raw shared-memory thread, 무제한 역추적, runtime eval·자유 매크로, 임의 runtime reflection, 숨은 전역 typeclass 탐색, AI 직접 쓰기는 코어 비목표다. 대응 개념은 비교 교과에서 가르친다.
+
+교육 판정은 `먼저/다음/고급/비교/유보`, 제품 상태는 `현재_실행/부분_실행/정본_설계/제안/비교_전용` 중 각각 정확히 한 값이다. 먼저 가르친다는 사실은 구현 완료를 뜻하지 않는다.
+
+## EDU-VIEW 결정 묶음 — 교과 프로젝트·보개·패턴 (2026-07-12)
+
+- `EDU-VIEW-01`: `수업/시험/한국어 Manim/AI Gym`은 코어 문법 블록이 아니라 프로젝트 목적·콘텐츠 종류·응용 가지다.
+- `EDU-VIEW-02`: 보개 family, 보개 역할, UI 배치, 콘텐츠 목적을 직교 축으로 둔다. 같은 graph/text/space2d도 으뜸·곁·겹·돋보기 역할을 맡을 수 있다.
+- `EDU-VIEW-03`: 모든 보개는 내용·모양·움직임·자료 묶임·상호작용·시간계획을 가질 수 있다. `겹보기=켜기/끄기 전용`, `돋보기=새 창 전용`으로 제한하지 않는다.
+- `EDU-VIEW-04`: 보개마당/보개계획은 세계를 직접 쓰는 훅이 아니라 봉인된 원문·상태·관찰·풀이계획 artifact를 참조하는 view-only 계획이다.
+- `EDU-VIEW-05`: `~에 따라`는 닫힌 자료형을 분해하는 총망라 특수블록이다. `고르기:`의 조건 나열과 합치지 않는다.
+- `EDU-VIEW-06`: 문자열 맞춤은 `글무늬/맞추기`와 `정규식` 표준 API가 결과를 만들고, 그 `T?/짝맞춤/결과`를 `~에 따라`로 분해한다. 첫 버전에서 문자열·정규식 패턴을 match arm으로 직접 넣지 않는다.
+- `EDU-VIEW-07`: 프로젝트 구조의 현재 정본 루트는 `뿌리.ddn`이며 `프로젝트 {}`는 루트 전용이다. 과거 `프로젝트.ddn/project.ddn` 탐색 문장은 superseded다.
+
+이 결정 묶음은 소유층과 정본 방향을 고정하며 parser/runtime/renderer/CLI/WASM 완료를 주장하지 않는다.
+
+## EDU-BOOK 결정 묶음 — 일반 독자 본책과 총집서 (2026-07-12)
+
+- `EDU-BOOK-01`: 세 교재의 기준 독자는 교사 없이 자습하는 중학생 이상 일반 독자다. 프로그래밍 경험은 요구하지 않는다.
+- `EDU-BOOK-02`: 일반 독자 본책을 먼저 완성·검증하고 학생 활동책, 교사용 지도서, 정답·소스, 내부 근거판을 파생한다.
+- `EDU-BOOK-03`: 학생용·교사용 자료의 목표·빈칸·루브릭·운영표는 본책의 충분한 설명을 대신할 수 없다.
+- `EDU-BOOK-04`: 총집서는 SSOT의 사람용 설명 투영본이다. SSOT 정본을 대체하거나 독립 의미 정본을 만들지 않는다.
+- `EDU-BOOK-05`: 정본 규범·결정·문법·의미론·현재 상태는 100% 추적한다. Open Issues/Pending도 주제별 남은 문제로 전부 분류한다.
+- `EDU-BOOK-06`: 반복·역사 addendum은 최신 의미와 역사 요약으로 병합할 수 있고, raw machine schema는 본문 요약과 참조 부록으로 나눌 수 있다. 누락은 명시적 제외 근거 없이 허용하지 않는다.
+- `EDU-BOOK-07`: `ssot_compendium_coverage.v1`은 모든 SSOT heading/anchor를 총집서 위치와 수록 방식에 연결하는 단일 장부다. `미배치` 행이 있으면 총집서 완필을 주장하지 않는다.
+- `EDU-BOOK-08`: 일반 독자판의 장은 필요·예제·결과·줄별 설명·변형·오류·완성 원문·요약·연습을 갖춘다. pack/status 표는 설명 뒤의 근거층이다.
+- `EDU-BOOK-09`: 총집서의 깊이 층은 일반 설명, 실행, 깊이 보기, 내부 구현, 현재 상태, SSOT 근거다. 어느 층을 읽는지 독자가 알 수 있어야 한다.
+- `EDU-BOOK-10`: 목차·요약·페이지 수·조판 PASS만으로 책 완성을 주장하지 않는다. 독자 자습 가능성, 예제 실행, coverage ledger, 최신 SSOT sync가 함께 닫혀야 한다.
+
+세부 계약은 `SSOT_BOOK_SYSTEM_AND_COMPENDIUM_POLICY_v24.12.9.md`를 따른다.
+
+## DEC-20260710-ROOT-DDONIRANG-INTAKE-01
+
+- 루트 `또니랑/` 폴더는 SSOT 정본이 아니라 intake/workbench다.
+- proposal/opinion/dayrun/handoff/draft 문서는 그대로 정본 승격하지 않고, SSOT에 필요한 결정 후보, OI, pack, guardrail만 추출한다.
+- root 문서의 과거 표기(`시앗`, `시앗묶음` 등)는 historical proposal residue로 읽고, 현재 seed 용어 정책은 `씨앗` 설명어 + `씨앗값` code-key 후보 + `시앗` deprecated compat alias 후보를 따른다.
+
+## DEC-20260710-STDLIB-MAXSET-DETAIL-01
+
+- STDLIB MAXSET은 미래 준비 후보로 유지한다. 목표는 core를 비대하게 만드는 것이 아니라, `표준/` 스코프에 pack evidence가 붙은 풍부한 표준가지를 준비하는 것이다.
+- L0/L1 경계 후보는 3문 체크리스트로 둔다: parser/canon/hash truth에 필요한가, deterministic runtime primitive인가, 새 값 타입의 영속 상태 표현을 정의하는가. 하나라도 맞으면 L0 후보, 아니면 L1 표준가지 후보로 분리한다.
+- 표준 편입 DoD 후보는 5종 세트다: pack PASS, 진단/오용 fixture, README/계약 등급, 다국어 alias Stage 등록, 교재/말뭉치 연결.
+- W1~W5 MAXSET wave는 proposal-level plan이다. `CODEX_HANDOFF_DRAFT_STDLIB_WAVE1_*`는 승인 전 실행 초안이며 표준 편입 결정이나 runtime landed claim이 아니다.
+
+## DEC-20260710-AI-TOOLING-SIDECAR-01
+
+- AI 시대 "작성하기 쉽고 읽기 쉬운 언어" 목표는 말본카드, 진단 레지스트리, MCP/tooling, 성적표, 텍스트 브리지, 누리시험 같은 sidecar artifact로 증명한다.
+- `ai_grammar_card.v1`은 SSOT에서 자동 조립되는 후보 산출물이어야 하며, pack PASS evidence 없는 예제는 수록하지 않는다.
+- `diag_registry.v1`과 `teul check --diag-json` 후보는 AI 수리 루프용 안정 payload를 제공한다. 사람 메시지와 기계 payload를 분리한다.
+- `teul-mcp`와 도구슬기는 제안/검사/실행 보조까지만 하며, world truth나 SSOT 정본에 직접 쓰지 않는다.
+- `일거울`은 범용 업무 자동화 전체를 목표로 하지 않고, 승인/상태 전이/감사 기록을 남기는 work-ledger 후보로 둔다.
+
+---
+
 
 
 ---
-===== END SSOT_DECISIONS_v24.12.9.md =====
-===== BEGIN SSOT_LANG_v24.12.9.md =====
-**SSOT_ALL 기준:** v24.12.2 / `3bf47e5a083bc01719d890332840af8537a583430908a27a87bc4bbccf393dd0`
-**workspace_bundle 기준:** `ssot_context_bundle_ALL.md` / `0c758a0ca212e03a1c47430ecdef91b724f120561d6c4e971b8faf77ed6b9215`
-**문서 상태:** v24.12.9-candidate / integrated SSOT source revision / runtime landed claim 아님
-**원본 파일:** `docs/ssot/ssot/SSOT_LANG_v24.12.0.md`
+===== END SSOT_DECISIONS_v24.15.1.md =====
+===== BEGIN SSOT_LANG_v24.15.1.md =====
+# SSOT_LANG v24.15.1
 
+> 문서 버전: v24.15.1
+> 상태: current / administrator applied 2026-07-16 / consistency-cleaned 2026-07-17
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.15.1.md`
+> 이전판 보존: `../releases/v24.15.0/`
+
+## v24.15.1 우선 규칙
+
+이 판은 v24.15.1의 언어 의미를 바꾸지 않고 적용 상태와 폐기된 이월 잔재만
+정리하는 consistency clean-cut이다. 아래 보존 이월 본문과 충돌하면 이 절과 이 판의
+generated registry가 우선한다.
+
+- G7-01~G7-07은 owner-approved canonical design이다.
+- 설계 확정과 parser/runtime/CLI/WASM 제품 구현 완료는 분리한다.
+- 사용자-facing 씨자리 이름은 한글만 정본이다. `T/U/V`는 입력 별칭이 아니며 영어 비교용 meta 표기다.
+- DetBin 실행 의미 ID는 BLAKE3-256, 승인·artifact·파일 bytes 봉인은 SHA-256이다.
+- M3-실험 0은 experimental toolchain 계획이며 stable 문법·runtime·artifact 지원이 아니다.
+- 함수 타입의 사용자-facing 정본 화살표는 `-->`다. 제품 함수값 전체 계약은 별도다.
+- `씨앗지음`과 `지음증거`는 연구 표시명이다. 하위 artifact wire/API 이름은 stable이 아니다.
+
+### 제네릭 타입 표면
+
+```ddn
+(셈수)차림
+(글, 셈수)짝맞춤
+(된씨)맺음
+((셈수)차림)차림
+```
+
+- 타입 적용은 문맥으로 판별한다. 공백은 의미가 아니며 formatter는 타입 적용을 붙여 쓴다.
+- 씨자리 정본 이름은 `가씨/나씨/다씨` 또는 `담은씨/된씨` 같은 뜻 있는 한글 이름이다.
+- `T/U/V`, `갈래<T>`, `List<T>`, `Result<T>`는 사용자 입력·정본 출력이 아니다.
+- `(된씨)맺음`은 성공 타입 하나만 받는다. 가지는 `#잘됨/#안됨`, 실패 payload는 `이유:글`이다.
+
+### 함수 타입 화살표
+
+```ddn
+가씨 --> 나씨
+(가씨, 나씨) --> 다씨
+(가씨 --> 나씨) --> 다씨
+```
+
+- `-->`는 타입 위치에서만 허용하는 비결합 함수 타입 화살표다.
+- 고차 함수 타입은 괄호로 결합을 명시한다. 암묵 커링을 전제하지 않는다.
+- `T -> U`는 함수 타입 입력 별칭이 아니다. `->`는 오른쪽 대입 입력에만 남고 정본은 `<-`다.
+- 이 표면은 docs-first 설계다. 일반 함수값의 저장·반환·capture·효과·직렬화 제품 지원을 뜻하지 않는다.
+
+```ddn
+(왼씨:씨자리, 오른씨:씨자리)짝:이름씨 = {
+  왼:왼씨.
+  오른:오른씨.
+}.
+```
+
+### 구실 표면
+
+```ddn
+그려질수있음:구실 = {
+  (맡은이:맡은씨~을~를, 판:그림판~에)
+  그림명령만들:그림명령:셈씨~를
+  보기만~으로 갖추어야함.
+}.
+
+(맡은이:공~을~를, 판:그림판~에)
+표준원그리기.그림명령만들:그림명령:셈씨 = {
+  ...
+}.
+
+공~은 표준원그리기~로
+  그려질수있음~이라는 구실~을 맡음.
+
+(공값~을, 판~에) 그림명령만들기.
+
+(공값~을, 판~에)
+그려질수있음.그림명령만들기.
+```
+
+정의 줄기는 `그림명령만들`, 호출 표면은 인자 앞의 `그림명령만들기`다. 후위 호출과
+행동갈래 없는 요구문은 비정본이다.
+
+```ddn
+(
+  그릴씨:씨자리,
+  그릴씨~는 그려질수있음~이라는 구실~을 맡아야함,
+  맡은이:그릴씨~을~를,
+  판:그림판~에
+) 그리기:그림명령:셈씨 = {
+  ...
+}.
+```
+
+추론은 필수 입력 핀만 사용한다. output-only generic과 호출부 명시 타입 인자는 V1에
+없다. 사용자 직접·간접 재귀 값 배치, 다형 재귀, 제약만 다른 overload도 금지한다.
+
+### v24.15.1 정합성 청소
+
+- v24.15.0의 언어 의미와 제품 비주장을 그대로 유지한다.
+- 적용 상태를 current로 교정하고 폐기된 이월 예시·별칭·화살표 설명만 정리한다.
+- v24.15.0 원문은 `../releases/v24.15.0/`에 byte-identical 보존한다.
+
+## v24.14.2 이월 본문
+
+> 아래 `SSOT_LANG_v24.14.2.md` 원문은 계보·비충돌 계약 보존용이다. 위 v24.15.0 우선 규칙과 충돌하는 예시·별칭·상태는 superseded history다.
+
+# SSOT_LANG v24.14.2
+
+> 문서 버전: v24.14.2
+> 상태: administrator candidate / owner decisions approved 2026-07-14 / not current until protected apply
+> 조립 권위 후보: `SSOT_ALL_MANIFEST_v24.14.2.md`
+> 이전 current: `v24.14.1`
+
+## v24.14.2 정정 우선 규칙
+
+이 판은 v24.14.1의 언어 동결 의미와 외부 stable surface를 바꾸지 않는 내부 관리자
+patch다. 아래에 byte-identical로 이월된 v24.14.1 본문보다 이 절의 lifecycle·용어·설정
+이행 판정이 우선한다.
+
+- 결정 입력 1,083건은 `반영 75 / 배제·역사 1,008`로 닫혔다.
+- decision-input `deferred`, `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified`는 모두 0건이다.
+- 방향·정책을 적용한 항목의 남은 제품 구현·증거는 OPEN_ISSUES/PLANS 관문이며 사용자 결정을 기다리는 proposal이 아니다.
+- 설계 확정과 제품 구현 완료는 분리한다. 이 판은 parser/runtime/CLI/WASM 완료 범위를 확대하지 않는다.
+- 외부 Language SPEC v0.1.1은 이 판의 사용자-facing 용어·settings 계약을 투영한 public patch다. v0.1.0은 byte-identical 보존한다.
+
+### 설정 표면 폐쇄와 증거 경계
+
+- 정본 설계: `설정 { 문서 {}. 실행 {}. 이야기 {}. 누리 {}. 샘 {}. 거울 {}. 보개 {}. 슬기 {}. }.`
+- 현재 평면 호환 입력의 닫힌 집합: `제목`, `설명`, `마디수`.
+- 정본화: `제목 -> 문서.제목`, `설명 -> 문서.설명`, `마디수 -> 실행.마디수`.
+- 이 집합은 migration input policy이며 모든 키의 runtime 구현이나 public stable 승격을 뜻하지 않는다.
+- 임의의 새 평면 키는 허용하지 않는다. legacy/test residue는 no-new-output 원칙과 개별 제거 관문을 따른다.
+- hard cut은 migration fixture, 분류기/lint, 호환 진단, CLI/WASM parity 뒤 별도 결정한다.
+
+### 씨앗 표면
+
+- 일반 개념: `씨앗`.
+- 숫자 RNG 설정·code key: `씨앗값`.
+- 이름 있는 seed streams: `씨앗묶음`.
+- `시앗`, `시앗묶음`: deprecated input compatibility alias, no-new-output.
+
+## v24.14.1 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_LANG_v24.14.1.md` 원문이다. 위 v24.14.2 우선 규칙과 충돌하는 lifecycle·용어·상태 문구만 supersede된다.
+
+# SSOT_LANG v24.14.1
+
+> 문서 버전: v24.14.1
+> 상태: current canonical / owner approved 2026-07-13
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.1.md`
+> 이전판 snapshot: `../releases/v24.14.0/`
+
+## v24.14.1 관리자 정리 우선 규칙
+
+이 판은 언어 의미를 바꾸는 판이 아니다. v24.14.0의 동결 언어 계약을 그대로
+상속하면서, 모든 비정본 결정 입력의 생애주기와 내부·외부 버전 계보를
+닫는 관리자 clean-cut이다. 이 절은 아래에 byte-identical로 이월된 v24.14.0
+본문의 버전·상태 문구보다 우선한다.
+
+- 결정 입력 1,074건은 `반영 63 / 명시 보류 3 / 배제·역사 1,008`로 전건 처분했다.
+- `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified` 상태는 0건이다.
+- 내부 SSOT 버전은 `v24.14.1`, 외부 언어 스펙 버전은 `v0.1.0`이며 서로 다른 이름공간이다.
+- 외부 스펙은 SSOT의 stable surface를 사람이 읽도록 투영한 생성물이다. 충돌하면 내부 SSOT가 우선한다.
+- 과거 문서의 `v25` 출시는 새 언어 주버전이 아니라 개발 이정표 `M25-AI-PRODUCTION-PATH`로 읽는다.
+- 설계 확정과 제품 구현 완료는 계속 분리한다. 이 판은 parser/runtime/CLI/WASM 동작 완료 범위를 확대하지 않는다.
+
+### 언어 의미 상속
+
+`=`, `<-`, `<<-`, 마디·알림·결정론, 닫힌 갈래, 새김틀을 포함한 언어 의미는
+v24.14.0에서 변경하지 않았다. 공개 문법 요약은 이 문서의 stable/confirmed
+경계를 직접 투영하며 교재를 역으로 정본 근거로 삼지 않는다.
+
+## v24.14.0 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_LANG_v24.14.0.md`의 원문이다. 위 v24.14.1 우선 규칙과 충돌하는 버전·상태 문구만 supersede된다.
+
+# SSOT_LANG v24.14.0
+
+> 문서 버전: v24.14.0
+> 상태: current canonical / core
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.0.md`
+> 이전판 snapshot: `../releases/v24.13.0/`
+
+## v24.14.0 언어 동결 우선 규칙
+
+> 이 디렉터리의 산출물은 **2026-07-13 owner 승인으로 확정된 v24.14.0 current 정본**이다.
+> 이 절은 아래 v24.13.0 이월 본문의 충돌 문구보다 우선한다.
+
+- 상태는 `stable_contract / confirmed_design / product_evidence / compat_input / planned / research_history`로 분리한다.
+- 설계 확정은 제품 구현 완료가 아니다. 제품 완료는 제품 frontdoor와 관련 검증 증거가 있어야 한다.
+- stable parser surface는 hard freeze다. 새 문법은 owner evidence, 낭독, collision, parser/canon/CLI/WASM, 진단, golden, 교육 예제를 함께 검사하는 단일 gate로만 들어온다.
+- proposal/note/report/session delta는 그 자체로 current authority가 아니다.
+
+## v24.14.0 언어 표면
+
+### 대입·상태·흐름
+
+- `=`: 정의 또는 초기 binding.
+- `<-`: 명시적 상태 변화.
+- `<<-`: 정적으로 수집되는 파생 흐름. DAG 위상 순서로 한 번 실행하고 순환은 오류다.
+
+### 닫힌 갈래와 두루쓰기
+
+- `T?`, `맺음<T>`, `#잘됨/#안됨`, `있음/없음`은 canonical design이다.
+- `결과/#성공/#실패`는 compat input이다. 제품 출력 전환은 별도 이행 관문을 따른다.
+- `(가씨:씨자리)`와 `구실/갖춤/맡음`은 docs-first design이다. 제품 구현 완료를 주장하지 않는다.
+
+### phase·제약
+
+- 같은 phase·같은 대상에 여러 번 쓰면 기본 오류다. 명시 reducer만 병합한다.
+- `(N마디)마다`는 마디 번호로 판정한다.
+- `막음`/`막기`와 `턱 = boundary/threshold/exit`를 분리한다.
+
+### 제품 증거 경계
+
+- SolvePlan S0/S1/S2, prime `'`/`''`, bounded connect/unit/init, `<<-`는 확인된 제품 범위만 evidence다.
+- 일반 ODE/constraint solver 전체, 새김틀, 구실, 슬기씨를 구현 완료로 넓히지 않는다.
+
+## v24.13.0 이월 상세 기록 — current contract 아님
+
+아래 원문은 상세 규범과 제품 증거 계보를 잃지 않기 위해 이월했다. byte-identical 원문은 `../releases/v24.13.0/`에 따로 봉인한다. 이 절의 옛 상태어·정본 주장은 current contract가 아니며 위 v24.14.0 전면 절을 따른다. `결과/#성공/#실패`처럼 아직 제품에 남은 옛 표면은 compat product evidence이지 새 canonical 출력이 아니다.
+
+# SSOT_LANG v24.13.0
+
+> 문서 버전: v24.13.0
+> 상태: current clean-cut / core normative source
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.13.0.md`
+> 이전판: `../releases/v24.12.9-candidate-snapshot/SSOT_LANG_v24.12.9.md`
+
+## v24.13.0 clean-cut 공통 계약
+
+- 이 문서 묶음의 현재판은 `v24.13.0`이다.
+- 권위 집합은 core source 17개와 normative reference appendix 2개, 합계 19개다.
+- 조립 권위는 `SSOT_ALL_MANIFEST_v24.13.0.md` 하나다. `SSOT_ALL_v24.13.0.md`는 결정적으로 재생성되는 AI/사람 열람용 산출물이며 독립 권위가 아니다.
+- 아래 `v24.12.9 이월 원문`은 보존된 상세 규범이다. 이 절과 충돌하면 v24.13.0 절이 우선하며, 이월 원문의 과거 상태·버전·해시 머리말은 역사 기록으로만 읽는다.
+- 제품 상태는 `stable_canonical / experimental / internal_tooling / compat_alias / deprecated / review_required`로 구분한다. `review_required`는 공개 정본·기본 교재·AI 기본 출력에 사용할 수 없다.
+- 문서 설계는 제품 구현 완료가 아니다. `runtime landed`, `닫힘-동작`, `golden_closed`는 제품 경로와 검증 근거가 있을 때만 쓴다.
+
+## v24.13.0 언어 표면 정리
+
+### 새김틀 — 설계 확정, 구현 보류
+
+- 체계 이름은 `새김틀`, 고정 컨테이너 이름은 `값{}`이다.
+- 정본 사용 표면은 **`(#태그) 값{...}`**이며 태그 없는 `값{...}`은 허용하지 않는다.
+- 등록 표면은 **`(#새김본) 값{...}`**이다. 별도 `새김본{}` 블록은 만들지 않는다.
+- 파서는 `값{}`의 닫힌 raw 경계만 소유하고, 새김본은 데이터로 등록한다.
+- bare `화학식{...}` 같은 표면은 별도 4단 승격 결정 전에는 허용하지 않는다. 승격 뒤 내부 정규형도 `(#화학식) 값{...}`이다.
+- 현재 등급은 `docs_first / decided_pending_impl`이다. 제품 parser/runtime/frontdoor 구현 전에는 runtime landed가 아니다.
+- OPEN: 태그 공간 충돌, 명세 한도, import surface, 4단 승격, 자리끼움.
+
+### 실제 제품 표면과 안정성
+
+- `수치해.이분법`, `다항식.풀기`, `선형부등식.풀기`: `experimental` minimum surface.
+- `이음관계.*`: `experimental`; 공개 façade 합리화 전 개별 helper를 canonical API로 승격하지 않는다.
+- `거슬러 흐르게`, `실리게`, `세움씨{}`: `experimental_or_compat`로 취급하고 기본 교재·AI 출력에서 제외한다. 제거 또는 stable 승격은 별도 evidence/결정이 필요하다.
+- 그 밖의 등록 이름은 generated stdlib registry의 상태를 따른다. `review_required`는 public canonical이 아니다.
+
+## v24.12.9 이월 원문
+
+아래 원문은 상세 규범과 결정 계보 보존을 위해 이월했다. 과거 머리말과 addendum의 상태어는 v24.13.0 current 상태를 덮지 않는다.
 
 ## v24.12.9-candidate integrated revision
 
@@ -2055,6 +3114,66 @@ AGE0에서 **말(LANG)**이 반드시 다뤄야 하는 값타입 이름을 정�
 - endpoint `잇기` 최신 표면은 `전지.양극과 전구.왼핀을 (전압은 같게, 전류는 흐르게) 잇기.` 이다.
 - `옮기게`는 최신 connect core 표면이 아니다. `실리게`는 stream-like follow-on이다.
 - 알림씨 current-line은 `(양:수) 피해:알림씨 = { }`, `피해를 받으면`, `((양=10) 피해) ~~> 대상` 축을 우선한다.
+
+### v24.12.9-candidate language freeze/additive addendum 2026-07-08
+
+- `설정 {}`의 8 section은 current candidate registry다. 세부 key의 parser hard-cut은 별도 구현 증빙 전까지 금지한다.
+- flat settings compatibility, lower-section multilingual aliases, project-level inheritance는 open issue다.
+- 발표 전 예약 검토 후보: `여러속마디`, `고정박자`, `사건박자`, `앞선모음`, `다수결모음`, `자리모음`, `늦은제안다룸`, `씨앗묶음`, `경계다룸`, `가설`, `검산`, `단위 정의`, `말거리`, `설정해시`, `공간갈래`, `첫상태참조`, `규칙묶음`, `동점다룸`, `슬롯정의`, `입력틈`, `늦은입력다룸`, `제안한도`, `관찰범위`, `스냅틈`, `해시검사틈`. `시앗묶음`은 compat alias 후보로만 둔다.
+- `~이름(...)`, `~분포(...)` 계열은 syntax-space 예약 후보로 둔다. 현재 조용한 식별자 허용 여부는 freeze open issue다.
+- 자연어 직접 실행은 language surface가 아니다. 자연어는 proposal/review/input-generation 경유로만 다룬다.
+- 이번 부록은 정본화기 golden 변경을 요구하지 않는다. 발표 전 동결 때 coverage gap을 별도 산출한다.
+
+### v24.13.0-candidate declarative closure language addendum 2026-07-09
+
+#### `세움{}` acausal-lite 후보
+
+`세움{}`은 full Modelica/DAE가 아니라 결정적 인과화 가능 부분집합이다. 컴파일/정본화 시점에 평가 순서와 풀이 방법을 고정할 수 있는 관계만 받는다.
+
+| 등급 | 형태 | 후보 처리 |
+|---|---|---|
+| S0 | 명시적 대수 + 결정적 인과화 가능 관계 | 이분 매칭, 위상정렬, 소스 선언 순서 tie-break |
+| S1 | 소규모 Fixed64 선형 연립 | `N <= 8` V1 상한, 고정 피벗 가우스 소거 후보 |
+| S2 | 1계 ODE relation | 적분 catalog lowering 후보 |
+| S3 | 비선형 암시식, DAE, 반복 수렴 필요 관계 | `E_SEUM_UNSUPPORTED`류 진단 후 거부 |
+
+SolvePlan은 `schema/source_hash/stage/method/relations/unknowns/lowering/diagnostics/state_hash_inputs`를 가진 artifact 후보로 둔다. `state_hash_inputs`는 manifest field이며 실제 `state_hash` 산식 변경은 아니다. 별도 `plan_hash` canonical bytes가 결정되기 전까지 `state_hash` 편입을 주장하지 않는다.
+
+#### prime / unit / vector 후보
+
+- `위치'`와 `위치''`는 `세움{}` 안 시간 미분 slot의 정본 surface 후보다.
+- `세움{}` 밖 prime suffix는 migration evidence 전까지 hard error로 성급히 승격하지 않는다. `세움{}` 안 비상태 prime은 `E_PRIME_NOT_STATE` 후보 오류다.
+- 2차 prime은 1계 보조 상태로 낮추는 후보이며, 숨은 상태는 SolvePlan에 기록해야 한다.
+- 벡터 상태 prime은 component order를 고정한 성분별 lowering 후보로 둔다. 새 벡터 미분 연산자 표면은 만들지 않는다.
+- ASCII 단위 표면은 기존 `@` postfix와 caret exponent를 유지한다. 예: `3@m`, `9.8@m/s^2`.
+- 명시 변환 없는 scalar/unit 혼합은 기본 금지 후보다. 교육 예제 corpus 검증 전까지 OI는 닫지 않는다.
+
+#### hook 쓰기와 불연속 reset 후보
+
+`될때`는 edge, `인 동안`은 level 의미를 runtime이 소유하는 방향으로 둔다. 시뮬레이션 event의 `<-` 쓰기는 다음 마디 시작 상태에 적용되는 후보이며, 같은 마디 같은 변수 다중 쓰기는 기본 `E_HOOK_WRITE_CONFLICT`다.
+
+예외는 명시 surface가 있을 때만 허용한다.
+
+- additive/merge 성격은 명시 병합(`합치기`류)으로 표현한다.
+- exclusive mode/state 선택은 명시 우선순위로 표현한다.
+- 단순 last-write-wins는 낮은 등급 escape hatch이며, 선언 순서와 선택 근거가 SolvePlan/감사 artifact에 남아야 한다.
+
+prime 상태의 불연속 재설정 후보 동사는 `다시놓기`다. 이는 hook/event 문맥의 reset 통로이며, `세움` 파생값을 일반 대입으로 덮는 통로가 아니다.
+
+#### `막음` / `막기` constraint 후보
+
+시뮬 제약 family는 `막음`, verb는 `막기`로 둔다.
+
+```ddn
+공.위치를 (0 이상으로, 튕김 0.8) 막기.
+공.위치를 (0에서 100 사이로, 조임) 막기.
+```
+
+V1 반응 어휘는 `멈춤`, `튕김(e)`, `조임`, `감쌈`이다. 이는 별도 물리 엔진이 아니라 적분 후 tail-phase 검사/투영/반응 후보로 읽는다.
+
+#### 문법 설명서 노출층
+
+문법 설명서는 같은 의미론을 층별로 노출한다. 초급은 "같은 값을 여러 사건이 동시에 바꾸면 오류"로 설명하고, 중급은 명시 병합과 우선순위를, 전문/참조는 SolvePlan, `state_hash_inputs`, error payload, migration 정책을 다룬다.
 
 # SSOT_LANG
 
@@ -2205,14 +3324,14 @@ Modelica flow의 명사 번역으로 `흐름`을 새 포트 종류에 쓰지 않
 | 표현 | 판정 | 뜻 |
 |---|---|---|
 | `흐름` | 기존 의미 유지 | `흐름(N)` 값 타입 / 흐름 계열 |
-| `흐름씨` | 기존 의미 유지 | reactive/fixed-point 씨앗 |
+| `흐름씨` | 기존 의미 유지 | 정적 DAG 1-pass 흐름 규칙 |
 | `흐름뷰` | 보기 표현 가능 | 돈·재화·세금 등의 view role |
 | `흐름` 포트 | 금지/보류 | connect flow 명사로 등록하지 않음 |
 | `Y은/는 흐르게` | connect V1 속문장 후보 | endpoint flow/sum-zero lowering |
 
-### `흐르게` signed flow convention open issue
+### `흐르게` signed flow convention candidate
 
-`Y은/는 흐르게`를 `A.Y + B.Y =:= 0`으로 낮추려면 endpoint별 부호 규약이 필요하다. 이 규약은 아직 정본으로 닫지 않고 `OI-CONNECT-FLOW-SIGN-CONVENTION-01`로 둔다.
+`Y은/는 흐르게`를 `A.Y + B.Y =:= 0`으로 낮추려면 endpoint별 부호 규약이 필요하다. 2026-07-09 후보 결정은 endpoint 안으로 들어오는 방향을 `+`로 둔다. Pack/golden closure 전까지 runtime landed claim은 하지 않는다.
 
 `거슬러 흐르게`는 경제 예시에서 자연스러운 설명어지만, V1 core lowering은 아직 sugar/follow-on이다.
 
@@ -2280,7 +3399,7 @@ Modelica flow의 명사 번역으로 `흐름`을 새 포트 종류에 쓰지 않
 > - `바탕`, `#바탕숨김`, `#암묵살림`은 user-facing current surface 에서 제거한다. root state 접근은 top-level `채비 {}` 로 선언된 이름을 그대로 사용한다.
 > - `#이름:` / `#설명:` / `#말씨:` / `#그래프:` / `#조종:` / `#필수보기:` / `#required_views:` 같은 `#...:` 헤더형 메타는 금지한다. 파일 선두 메타는 `설정 {}`만 허용하며, canonical 위치는 `설정.문서`다. flat `설정 { 말씨: ... }` 역시 current canonical 이 아니다.
 > - semantic canonical 은 `ko`, always-on common symbolic layer 는 `sym3`, selectable dialect 는 `ko-common|en|ja|mn|tr|qu|ay|ne|ta|te|kn|eu` 중 1개다. save/format 기본은 선택말씨 유지, 별도 canon export 에서만 `ko` 정본 표기를 출력한다.
-> - `§5.11 타입 자리표시자`, `OI-LAMBDA-CLOSURE-DETERMINISM-01`, `[V18-03A] 분기 표면 선택 안내` 를 docs-first / DR-prep 로 반영한다.
+> - `§5.11 씨자리`, `OI-LAMBDA-CLOSURE-DETERMINISM-01`, `[V18-03A] 분기 표면 선택 안내` 를 docs-first / DR-prep 로 반영한다. 과거 `타입 자리표시자` 제목은 superseded다.
 
 > carry-forward note: 이 문서는 **v24.2.0 current line 위에 v24.3.1 hardcut/docs-first 정렬을 덧댄 파일**이다.
 
@@ -3967,7 +5086,7 @@ deprecated 경고 정책(legacy `// 범위(...)`) — MUST:
 ```
 
 충돌 회피(MUST):
-- `->`는 타입 시그니처(예: `T -> U`)에도 쓰이므로, **정본 출력에서는 대입용 `->`를 사용하지 않는다.**
+- 함수 타입은 `-->`를 사용한다. `->`는 오른쪽 대입 입력에만 남고 대입 정본은 `<-`다.
 - 말결/통신 화살표는 `~~>`로 예약한다. (DR-156, 문맥 판정 금지)
 
 
@@ -4714,36 +5833,35 @@ p에 따라 {
 > 규칙: **혼합 금지**(위치+이름), 이름 인자는 **정의된 ABI 순서로 정본화(재배치)** 되며 전송/해시는 항상 ABI 순서를 따릅니다.
 > (IDE는 위치 인자 입력 시에도 필드명을 Ghost Text로 표시하는 것을 권장)
 
-#### 5.10.3 전역 유일성 규칙 (v15, MUST)
+#### 5.10.3 문맥 유일성 규칙 — MUST
 
-v15에서는 `#태그` 변형 이름이 프로그램 전체에서 **전역 유일**해야 합니다.
-(서로 다른 고름씨에서 같은 `#대기`를 정의하면 컴파일 에러)
+서로 다른 `고름씨`에서 같은 `#태그` 이름을 정의할 수 있다. 컴파일러는 기대 타입, 대상 식의 타입, 패턴 문맥으로 고름씨를 하나로 확정해야 한다.
 
-- 목적: 태그 리터럴/패턴을 **모호성 없이** AOT로 숫자화하고 점프 테이블을 사전 계산하기 위함.
+- 문맥으로 하나의 고름씨가 확정되면 짧은 `#태그` 표기를 허용한다.
+- 둘 이상이 가능하면 모호성 오류를 내고 `고름씨이름.#태그` 명시를 요구한다.
+- 같은 고름씨 안의 중복 태그는 오류다.
+- AOT 숫자화와 점프 테이블은 `(고름씨ID, 변형Index)`를 사용한다. 전역 태그 이름 유일성에 기대지 않는다.
+- 태그 literal, 패턴, 알림 구독, 구실 기반 호출이 사용하는 구체성 판정은 하나의 판정기로 통일한다.
+
+정본화기는 불필요한 전역 이름을 새로 만들지 않는다. 모호성 해소에 필요한 경우에만 `고름씨이름.#태그`를 출력한다.
 
 #### 5.10.4 정본화 규칙 (MUST)
 
 - 정본화기는 `고름씨` 정의 내부의 변형 목록을 **정의 순서 그대로 유지**해야 합니다. (순서 변경 금지)
 - 컴파일러는 각 변형에 대해 `(고름씨ID, 변형Index)`를 부여하고, 런타임 표현은 이 정수쌍을 사용해야 합니다.
 
-#### 5.10.4A `결과` 관용구 — v23.2.0 canonical idiom
+#### 5.10.4A `맺음` 관용구 — v24.15.0 canonical design
 
 ```ddn
-결과:고름씨 = {
-  #성공(값:셈수)
-  #실패(이유:글)
-}.
-
-변환결과 <- "123a"~을 숫자로.
-변환결과에 따라 {
-  #성공(값)이면 { 값 보여주기. }
-  #실패(이유)이면 { 이유 보여주기. }
+(된씨)맺음:고름씨 = {
+  #잘됨(값:된씨)
+  #안됨(이유:글)
 }.
 ```
 
-- `고름씨`는 예외 흐름을 대신하는 **결정적 결과 패턴**에도 쓴다. (MUST)
+- `맺음`은 성공 타입 한 씨자리만 받으며 실패 payload는 `이유:글`로 고정한다. (MUST)
+- `결과/#성공/#실패`는 호환 입력 계보에서만 다루고 정본 예제·출력에 쓰지 않는다. (MUST)
 - `시도/붙잡기` 류 예외 키워드는 도입하지 않는다. (MUST)
-- `결과` idiom 은 먼저 stdlib/교재 current line 으로 올리고, generic result family 전체 closure 는 후속 단계로 둔다. (MUST)
 
 #### 5.10.5 표준 색 `#색(...)` 정본화 — SHOULD (Gate0)
 
@@ -4779,22 +5897,34 @@ v15에서는 `#태그` 변형 이름이 프로그램 전체에서 **전역 유�
 
 ## 6. 함수, 연산, 표현식
 
-### 5.11 타입 자리표시자 (Type Parameter) — docs-first / AGE2+ 구현 타겟
+### 5.11 씨자리 (Type Parameter) — docs-first / AGE2+ 구현 타겟
 
-`T`, `U`, `V` 같은 대문자 단일 글자는 셈씨/움직씨 정의 헤더에서 **타입 자리표시자**로 예약한다.
+`씨자리`는 정의 머리에서 선언하고 컴파일 때 구체 타입으로 채우는 타입 매개변수다. 정본 표면은 한글 이름과 `:씨자리` 명시 선언을 사용한다.
 
-규칙 (docs-first, 구현은 AGE2 타겟):
-- 자리표시자는 정의 헤더의 인자/반환 타입 자리에서만 허용한다.
-- 같은 헤더 안에서 같은 글자는 같은 타입을 뜻한다.
-- 클로저 캡처/반환형은 이 범위 밖이다. (→ `OI-LAMBDA-CLOSURE-DETERMINISM-01`)
-
-예시 (개념 예시 / 비정본 / 현재 파서 비지원):
 ```ddn
-(차림:(T)차림 ~을) (검사:(T→참거짓):일묶음씨 ~로) 내_거르기:(T)차림:셈씨
-(값:T ~을) (기본:T ~로) 없음이면:T:셈씨
+(담은씨:씨자리)상자:이름씨 = {
+  담은값:담은씨.
+}.
+
+(왼씨:씨자리, 오른씨:씨자리)짝:이름씨 = {
+  왼:왼씨.
+  오른:오른씨.
+}.
 ```
 
-현재 상태: `runtime_status = designed / docs-first`
+규칙:
+
+- 한 머리에서 `씨자리` 선언은 괄호 하나의 연속된 앞부분에만 온다. 그 뒤 일반 인자·필드가 온다.
+- 일반 항목 뒤에 씨자리 선언이 나오면 오류다.
+- 씨자리 범위는 뒤따르는 머리, 반환 타입, 본문 전체다.
+- 같은 머리의 중복 선언과 보이는 명목 타입·메타타입 이름 가림은 오류다.
+- 선언 뒤 쓰지 않은 씨자리는 경고다.
+- 짧은 순서 이름은 `가씨/나씨/다씨`, 공개 정의는 `담은씨/된씨/잘못씨`처럼 뜻 있는 이름을 권한다.
+- `T/U/V`는 영어 비교 설명용 meta 표기일 뿐 사용자 입력 별칭이나 정본 출력이 아니다.
+- `$가`는 말결·세기 표지, `%가`는 나머지·퍼센트, 맨몸 `나`는 자기참조와 충돌하므로 씨자리 표면으로 쓰지 않는다.
+- 런타임 임의 타입 reflection과 암묵 전역 typeclass 탐색은 도입하지 않는다.
+
+현재 상태: `runtime_status = designed / docs-first`. 이 절은 parser/runtime 착지를 주장하지 않는다.
 연결 OI: `OI-GENERIC-ITERABLE-FUNCTION-SURFACE-01`
 
 ---
@@ -5023,17 +6153,17 @@ A:수 +~더하기:수:이음씨 B:수 = {
 
 ```text
 [1단계] ordinary assignment (`<-`)
-[2단계] 흐름씨 fixed-point 수렴 (`<<-`)
+[2단계] 흐름씨 DAG 1-pass (`<<-`)
 [3단계] tail-phase 훅 실행 (`될때` / `인 동안` / `일때`)
 ```
 
 규칙:
-- **P1. 실행 순서 고정:** 훅은 흐름씨 fixed-point 이전에 실행되지 않는다.
-- **P2. same-madi 재발화 금지:** hook body 는 같은 마디의 흐름씨 fixed-point 를 다시 발화시키지 않는다. hook body 안에서 흐름 관련 값을 바꿔도 반영은 다음 마디의 [2단계]에서만 일어난다.
-- **P3. 다중 출처 단일 고정점:** 같은 마디에 같은 변수로 향하는 흐름씨 규칙이 2개 이상 충돌하면 `E_FLOW_MULTIPLE_SOURCE_CONFLICT` 로 실패한다.
+- **P1. 실행 순서 고정:** 훅은 흐름씨 DAG 1-pass 이전에 실행되지 않는다.
+- **P2. same-madi 재발화 금지:** hook body 는 같은 마디의 흐름씨 DAG 1-pass를 다시 발화시키지 않는다. hook body 안에서 흐름 관련 값을 바꿔도 반영은 다음 마디의 [2단계]에서만 일어난다.
+- **P3. 다중 출처 충돌 오류:** 같은 마디에 같은 변수로 향하는 흐름씨 규칙이 2개 이상 충돌하면 `E_FLOW_MULTIPLE_SOURCE_CONFLICT` 로 실패한다.
 - **P4. 순환 참조 FATAL:** 흐름씨 dependency cycle 은 `E_FLOW_CIRCULAR_REFERENCE` 로 즉시 중단한다.
 - **P5. ordinary assignment 우선:** 같은 마디에 ordinary assignment 와 흐름씨가 모두 같은 변수를 건드리면 ordinary assignment 를 먼저 적용하고, 흐름씨는 그 결과를 입력으로 [2단계]에서 다시 계산한다.
-- **P6. `state_hash` 경계:** 흐름씨 fixed-point 결과는 `state_hash` 에 포함된다. 훅이 발화되었는지 여부 자체는 trace/diag/debug 층에 둘 수 있지만 별도 event log 를 `state_hash` 입력으로 승격하지 않는다.
+- **P6. `state_hash` 경계:** 흐름씨 DAG 1-pass 결과는 `state_hash` 에 포함된다. 훅이 발화되었는지 여부 자체는 trace/diag/debug 층에 둘 수 있지만 별도 event log 를 `state_hash` 입력으로 승격하지 않는다.
 
 지원 진단:
 - `E_FLOW_MULTIPLE_SOURCE_CONFLICT`
@@ -5052,7 +6182,7 @@ A:수 +~더하기:수:이음씨 B:수 = {
 (HP < 30) 일때 { ... }
 ```
 
-**평가 시점:** 매 마디의 **커밋(Commit) 단계 직후**에만 평가됩니다. canonical pipeline 안에서는 ordinary assignment 와 흐름씨 fixed-point 수렴 뒤의 tail phase 로 읽습니다. (§7.3)
+**평가 시점:** 매 마디의 **커밋(Commit) 단계 직후**에만 평가됩니다. canonical pipeline 안에서는 ordinary assignment 와 흐름씨 DAG 1-pass 뒤의 tail phase 로 읽습니다. (§7.3)
 
 **최적화 (Dirty Bitset):**
 - 이번 마디에 값이 변경된 컴포넌트 ID를 비트셋으로 관리
@@ -5095,7 +6225,7 @@ A:수 +~더하기:수:이음씨 B:수 = {
     툴체인이 이를 **합집합(merge)** 으로 정본화한다. (레지스트리)
 - 각 `#알림태그`는 컴파일 시 내부 `SignalId`로 인턴되며, **정본화된 알림 레지스트리의 정렬 순서(태그 UTF-8 오름차순)**로 값이 결정된다. (결정적)
 - `#변형(필드...)`의 **필드 순서**는 ABI/해시/저장 순서다. (5.10 규칙)
-- 동일 프로젝트에서 `#태그` 이름은 전역 유일이어야 한다. (5.10.3)
+- 동일한 알림 레지스트리 안의 중복 `#태그`는 오류다. 다른 고름씨와 이름이 겹치면 §5.10.3의 기대 타입·명시 한정 규칙을 따른다.
 
 #### 8.2.2 알림 발생: `알리기`
 
@@ -7937,12 +9067,13 @@ y 가 정수 중 딱 하나가 {
 ### `주사위씨` — AGE2
 
 ```ddn
-운명:주사위씨 = (시앗=1234)인 주사위씨 만들기.
+운명:주사위씨 = (씨앗값=1234)인 주사위씨 만들기.
 피해1 <- 운명 에서 (최소=1, 최대=10)인 뽑기.
 아이템 <- 운명 에서 (후보=[검, 활, 창]) 골라뽑기.
 ```
 
-- `주사위씨`는 시앗 기반 **결정적 RNG 씨앗 종류**다.
+- `주사위씨`는 씨앗값 기반 **결정적 RNG 씨앗 종류**다.
+- `시앗` 인자는 migration 기간의 deprecated compat alias 후보로만 허용한다. `씨앗` 설명어와 `~씨` 씨앗 종류의 충돌을 피하기 위해 코드 표면 key는 `씨앗값`을 1순위 후보로 둔다.
 - 내부 RNG 상태는 영속 상태이며 `state_hash`에 포함한다.
 - `open.rand`처럼 비결정 경계로 취급하지 않는다.
 
@@ -9384,6 +10515,17 @@ UI 권장 동작:
 - `보개마당`은 `seamgrim.scene.v0.json`로 정본화된다.
 - scene.v0는 실행 의미를 바꾸지 않는 “연출 트랙”이며, Scene Summary(JSON)에 포함될 수 있다.
 
+2026-07-10 gap clarification:
+
+- `보개마당`은 한국어 Manim의 최소 scene DSL 후보지만, Manim급 완료 설계가 아니다.
+- 다음은 아직 정본 문법으로 닫히지 않았다.
+  - 수식 객체와 수식 변형: formula object, term matching, term highlight, formula A -> B transform.
+  - 객체 morph/transform: scene object A가 B로 형태/스타일/위치 변환되는 규칙.
+  - semantic binding: `세움` relation, SolvePlan row, 상태 변수, 관찰 채널, `수식{}` 값을 scene target으로 묶는 규칙.
+  - camera/transition/layer: zoom/pan/camera/layer order/transition payload. 모두 view-only여야 한다.
+  - export: web replay, deterministic frame sequence, mp4 smoke.
+- `보개마당` target은 world state를 직접 읽거나 쓰는 imperative hook이 아니다. scene target binding은 sealed source/state/observation/SolvePlan artifact를 참조하는 선언형 link로만 닫는다.
+
 ---
 
 ### [NARRATIVE-TRACK-01] 해설/자막 트랙 — SHOULD (교육/AI 연동)
@@ -9883,7 +11025,7 @@ v0 표준 목록:
 {
   "schema": "seulgi.intent.v1.detjson",
   "version": 1,
-  "행동갈래": "세계영향",
+  "행동갈래": "누리바꿈",
   "intent_kind": "move_to",
   "target_ref": "actor.guard_01",
   "payload": {
@@ -10107,7 +11249,7 @@ v0 표준 목록:
 - `보람주인갈래 = 없음보람` 이면 `보람때갈래`는 **`해당없음(N/A)`** 으로 읽고, `생략` 같은 모호한 표시는 쓰지 않는다.
 - `살핌내주기갈래` 의 문법 자리는 **`설정.거울`** 이다. `설정.실행` 축처럼 보이더라도 관찰 방출 계약은 보기/거울 층에 속한다.
 - `한걸음`은 v1 허용 값이며, 상태는 **`designed / STUB_ONLY`** 다. `v1 허용`과 `reserved / DO_NOT_IMPLEMENT`를 같은 항목에 함께 두지 않는다.
-- action kind 정본은 **`보기만 / 세계영향`** 이다.
+- action kind 정본은 **`보기만 / 누리바꿈`** 이다.
 - `매김 {}` 재사용 closure는 이번 round에서 **action/runtime 맥락만** 닫고, slider metadata / validator hint 재해석은 후속 설계로 이월한다.
 - `#모두필요 / #빈칸채움` 의 `#` 접두는 자유 식별자가 아니라 **닫힌 정책값(policy atom)** 을 뜻한다.
 
@@ -10126,7 +11268,7 @@ v0 표준 목록:
 | `없음보람` | `설정.실행` | AGE3~AGE4 | designed | STUB_ONLY | pedagogical/game default allowed |
 | `늘보람 / 사건보람 / 끝보람` | `설정.실행` | AGE3~AGE4 | designed | STUB_ONLY | only when reward owner exists |
 | `한걸음` | `설정.실행` | AGE3~AGE4 | designed | STUB_ONLY | no substep, v1 allowed |
-| `세계영향` | action kind / input meaning | AGE3 | partial | STUB_ONLY | canonical world-affecting kind |
+| `누리바꿈` | action kind / input meaning | AGE3 | partial | STUB_ONLY | canonical world-affecting kind |
 
 ---
 
@@ -10183,13 +11325,198 @@ T2 → T1 조건:
 
 
 ---
-===== END SSOT_LANG_v24.12.9.md =====
-===== BEGIN SSOT_DEMOS_v24.12.9.md =====
-**SSOT_ALL 기준:** v24.12.2 / `3bf47e5a083bc01719d890332840af8537a583430908a27a87bc4bbccf393dd0`
-**workspace_bundle 기준:** `ssot_context_bundle_ALL.md` / `0c758a0ca212e03a1c47430ecdef91b724f120561d6c4e971b8faf77ed6b9215`
-**문서 상태:** v24.12.9-candidate / integrated SSOT source revision / runtime landed claim 아님
-**원본 파일:** `docs/ssot/ssot/SSOT_DEMOS_v24.12.0.md`
 
+## v24.12.9-candidate 교과 저작·보개 합성·패턴 맞춤 명료화 (2026-07-12)
+
+### A. 교과 프로젝트 소유층
+
+- `수업 {}`, `시험 {}`, `Manim {}`, `AI Gym {}`을 새 코어 예약어로 도입하지 않는다.
+- 수업·시험·한국어 Manim·AI Gym은 프로젝트 목적, 콘텐츠 종류, 표준가지/틀로 표현한다.
+- `프로젝트 {}`는 `뿌리.ddn` 루트에서 구조와 연결만 소유한다. 실제 설명·보개계획·시험·정답해설 본문을 루트 블록에 넣지 않는다.
+- 학생이 주로 고치는 DDN과 설명·보개계획·시험·정답해설을 분리하고, 다른 층은 학생 원문의 사적 변수명이 아니라 `드러냄 {}` 또는 동등한 안정 공개 계약과 `보임 {}` 관찰 채널을 소비한다.
+- 초급 실험실은 한 파일·한 누리·암묵 판/마당·자동 보개를 제공할 수 있다. 암묵 기본은 정본 artifact 생성 시 명시 자료로 낮추며 숨은 world truth로 두지 않는다.
+
+현재 상태: docs-first ownership clarification. `프로젝트 {}`, `쓰임/드러냄`, 판/마당, renderer의 제품 착지를 주장하지 않는다.
+
+### B. 보개 직교 축과 공통 능력
+
+보개는 아래 축을 분리한다.
+
+1. family: `space2d / graph / table / text / structure`
+2. role: `으뜸보기 / 곁보기 / 겹보기 / 돋보기`
+3. UI 배치: dock/panel/modal/popover/window 등 도구 정책
+4. purpose/content: 세계, 설명, 시험, 수식, 표, 인벤토리, 상세 관찰 등
+5. action kind: `보기만 / 누리바꿈`
+
+같은 family가 어느 역할도 맡을 수 있다. 모든 역할의 보개는 내용·모양·움직임·자료 묶임·상호작용·시간계획을 가질 수 있다.
+
+- `겹보기`를 단순 on/off 층으로 제한하지 않는다. 대상 추종, 모양, 수식 변형, 강조, 이동, 등장·퇴장을 가질 수 있다.
+- `곁보기`는 그래프 누적, 설명 진행, 시험 입력, 조종과 비교를 수행할 수 있다.
+- `돋보기`는 상세 관찰 역할이며 새 창과 동의어가 아니다. 같은 누리·판·마당·마디와 관찰 자료를 공유하되 자체 layout/zoom/tab/scroll 같은 view state를 가질 수 있다.
+- 인벤토리 열기·확대·패널 이동은 `보기만`, 장착·답 제출·세계 조절은 `누리바꿈`이며 InputSnapshot 또는 동등 봉인 입력을 거친다.
+- `보개마당`/`보개계획`은 겹보기만이 아니라 여러 보개의 공통 능력을 시간에 따라 지휘한다.
+
+개념 역할의 정본어는 `으뜸보기`다. 현행 `설정.보개.주보기` schema key를 즉시 깨지 않으며, `주보기 -> 으뜸보기` 정본 출력 이행은 `OI-BOGAE-PRIMARY-ROLE-TERM-MIGRATION-01`에서 별도 결정한다.
+
+### C. `~에 따라` 패턴 맞춤 특수블록
+
+- `~에 따라`는 라이브러리 호출이 아니라 대상 1회 평가, 갈래 지역 묶임, 타입 호환, 중복·도달 불가 검사, 총망라성, 결과 타입 합류를 컴파일러가 검사하는 특수블록이다.
+- `고르기:`는 참거짓 조건을 순서대로 검사하고, `~에 따라`는 닫힌 값의 변형을 분해한다. 두 AST를 합치지 않는다.
+- 첫 제품 세로줄은 `T?`, `참거짓`, `고름씨`, 표준 `결과`의 닫힌 합 패턴이다.
+- 모든 변형을 명시하면 `아니면`을 요구하지 않는다. 일부만 다루면 마지막 `아니면` 또는 `_이면`이 필요하다.
+- 고름씨 payload의 필드 묶임은 첫 세로줄에 포함한다. 독립 묶음씨/이름씨 직접 분해, 중첩 패턴, pattern guard, 차림 head/tail은 follow-on이다.
+- §5.8.4의 독립 묶음씨 분해 예시는 follow-on designed surface로 읽으며 첫 세로줄 runtime claim이 아니다.
+
+### D. 문자열 패턴 맞춤 경계
+
+- 구조 패턴 맞춤과 문자열 내용 맞춤을 합치지 않는다.
+- 사람이 읽는 형식 분석은 `글무늬 + 맞추기`가 `짝맞춤?`을 만들고, 고급 검색·캡처·치환은 봉인된 `정규식` 값과 표준 API가 담당한다.
+- 성공·실패와 캡처 자료는 `T? / 짝맞춤 / 결과`로 반환하고 기존 `~에 따라`로 분해한다.
+- 첫 버전에서 `글무늬{...}이면` 또는 `정규식{...}이면`을 `~에 따라` arm으로 직접 넣지 않는다. 문자열 공간은 유한 합이 아니며 패턴 겹침과 총망라성을 같은 정적 규칙으로 판정할 수 없다.
+- 글무늬는 전체 일치·왼쪽부터 최소 캡처를 유지한다. 정규식 엔진·깃발·Unicode 처리·실행 예산은 버전과 pack으로 고정한다.
+- 일반 글과 외부 입력의 NFC/NFD, 코드포인트/문자소 기준은 `OI-STRING-MATCH-UNICODE-NORMALIZATION-01`이 닫히기 전까지 완료로 주장하지 않는다.
+
+이 절의 새 문장은 기존 표면의 소유층과 구현 순서를 명료화한다. 새 문자열 match arm이나 새 수업/시험 예약어를 승인하지 않는다.
+===== END SSOT_LANG_v24.15.1.md =====
+===== BEGIN SSOT_DEMOS_v24.15.1.md =====
+# SSOT_DEMOS v24.15.1
+
+> 문서 버전: v24.15.1
+> 상태: current / administrator applied 2026-07-16 / consistency-cleaned 2026-07-17
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.15.1.md`
+> 이전판 보존: `../releases/v24.15.0/`
+
+## v24.15.1 우선 규칙
+
+이 판은 v24.15.1의 언어 의미를 바꾸지 않고 적용 상태와 폐기된 이월 잔재만
+정리하는 consistency clean-cut이다. 아래 보존 이월 본문과 충돌하면 이 절과 이 판의
+generated registry가 우선한다.
+
+- G7-01~G7-07은 owner-approved canonical design이다.
+- 설계 확정과 parser/runtime/CLI/WASM 제품 구현 완료는 분리한다.
+- 사용자-facing 씨자리 이름은 한글만 정본이다. `T/U/V`는 입력 별칭이 아니며 영어 비교용 meta 표기다.
+- DetBin 실행 의미 ID는 BLAKE3-256, 승인·artifact·파일 bytes 봉인은 SHA-256이다.
+- M3-실험 0은 experimental toolchain 계획이며 stable 문법·runtime·artifact 지원이 아니다.
+- 함수 타입의 사용자-facing 정본 화살표는 `-->`다. 제품 함수값 전체 계약은 별도다.
+- `씨앗지음`과 `지음증거`는 연구 표시명이다. 하위 artifact wire/API 이름은 stable이 아니다.
+
+### G7 예제 상태
+
+이 판의 한글 씨자리·구실 코드는 docs-first canonical example이다. K0~K7 제품 경로
+증거 전에는 실행 가능한 데모나 stable runtime 표면으로 분류하지 않는다. 후위 호출,
+두 씨자리 `맺음`, 행동갈래 없는 구실 요구는 새 데모에 쓰지 않는다.
+
+### v24.15.1 정합성 청소
+
+- v24.15.0의 언어 의미와 제품 비주장을 그대로 유지한다.
+- 적용 상태를 current로 교정하고 폐기된 이월 예시·별칭·화살표 설명만 정리한다.
+- v24.15.0 원문은 `../releases/v24.15.0/`에 byte-identical 보존한다.
+
+## v24.14.2 이월 본문
+
+> 아래 `SSOT_DEMOS_v24.14.2.md` 원문은 계보·비충돌 계약 보존용이다. 위 v24.15.0 우선 규칙과 충돌하는 예시·별칭·상태는 superseded history다.
+
+# SSOT_DEMOS v24.14.2
+
+> 문서 버전: v24.14.2
+> 상태: administrator candidate / owner decisions approved 2026-07-14 / not current until protected apply
+> 조립 권위 후보: `SSOT_ALL_MANIFEST_v24.14.2.md`
+> 이전 current: `v24.14.1`
+
+## v24.14.2 정정 우선 규칙
+
+이 판은 v24.14.1의 언어 동결 의미와 외부 stable surface를 바꾸지 않는 내부 관리자
+patch다. 아래에 byte-identical로 이월된 v24.14.1 본문보다 이 절의 lifecycle·용어·설정
+이행 판정이 우선한다.
+
+- 결정 입력 1,083건은 `반영 75 / 배제·역사 1,008`로 닫혔다.
+- decision-input `deferred`, `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified`는 모두 0건이다.
+- 방향·정책을 적용한 항목의 남은 제품 구현·증거는 OPEN_ISSUES/PLANS 관문이며 사용자 결정을 기다리는 proposal이 아니다.
+- 설계 확정과 제품 구현 완료는 분리한다. 이 판은 parser/runtime/CLI/WASM 완료 범위를 확대하지 않는다.
+- 외부 Language SPEC v0.1.1은 이 판의 사용자-facing 용어·settings 계약을 투영한 public patch다. v0.1.0은 byte-identical 보존한다.
+
+## v24.14.1 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_DEMOS_v24.14.1.md` 원문이다. 위 v24.14.2 우선 규칙과 충돌하는 lifecycle·용어·상태 문구만 supersede된다.
+
+# SSOT_DEMOS v24.14.1
+
+> 문서 버전: v24.14.1
+> 상태: current canonical / owner approved 2026-07-13
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.1.md`
+> 이전판 snapshot: `../releases/v24.14.0/`
+
+## v24.14.1 관리자 정리 우선 규칙
+
+이 판은 언어 의미를 바꾸는 판이 아니다. v24.14.0의 동결 언어 계약을 그대로
+상속하면서, 모든 비정본 결정 입력의 생애주기와 내부·외부 버전 계보를
+닫는 관리자 clean-cut이다. 이 절은 아래에 byte-identical로 이월된 v24.14.0
+본문의 버전·상태 문구보다 우선한다.
+
+- 결정 입력 1,074건은 `반영 63 / 명시 보류 3 / 배제·역사 1,008`로 전건 처분했다.
+- `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified` 상태는 0건이다.
+- 내부 SSOT 버전은 `v24.14.1`, 외부 언어 스펙 버전은 `v0.1.0`이며 서로 다른 이름공간이다.
+- 외부 스펙은 SSOT의 stable surface를 사람이 읽도록 투영한 생성물이다. 충돌하면 내부 SSOT가 우선한다.
+- 과거 문서의 `v25` 출시는 새 언어 주버전이 아니라 개발 이정표 `M25-AI-PRODUCTION-PATH`로 읽는다.
+- 설계 확정과 제품 구현 완료는 계속 분리한다. 이 판은 parser/runtime/CLI/WASM 동작 완료 범위를 확대하지 않는다.
+
+## v24.14.0 byte-identical 이월 본문
+
+> 아래 블록은 `SSOT_DEMOS_v24.14.0.md`의 원문이다. 위 v24.14.1 우선 규칙과 충돌하는 버전·상태 문구만 supersede된다.
+
+# SSOT_DEMOS v24.14.0
+
+> 문서 버전: v24.14.0
+> 상태: current canonical / core
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.0.md`
+> 이전판 snapshot: `../releases/v24.13.0/`
+
+## v24.14.0 언어 동결 우선 규칙
+
+> 이 디렉터리의 산출물은 **2026-07-13 owner 승인으로 확정된 v24.14.0 current 정본**이다.
+> 이 절은 아래 v24.13.0 이월 본문의 충돌 문구보다 우선한다.
+
+- 상태는 `stable_contract / confirmed_design / product_evidence / compat_input / planned / research_history`로 분리한다.
+- 설계 확정은 제품 구현 완료가 아니다. 제품 완료는 제품 frontdoor와 관련 검증 증거가 있어야 한다.
+- stable parser surface는 hard freeze다. 새 문법은 owner evidence, 낭독, collision, parser/canon/CLI/WASM, 진단, golden, 교육 예제를 함께 검사하는 단일 gate로만 들어온다.
+- proposal/note/report/session delta는 그 자체로 current authority가 아니다.
+
+## v24.14.0 문서 역할
+
+- role: `core`
+- current 전면 계약은 `SSOT_DECISIONS/SSOT_LANG/SSOT_MASTER/SSOT_TERMS`의 freeze 절을 따른다.
+- 아래 이월 본문의 역사적 상태어는 제품 완료나 active pending을 자동 주장하지 않는다.
+
+## v24.13.0 이월 상세 기록 — current contract 아님
+
+아래 원문은 상세 규범과 제품 증거 계보를 잃지 않기 위해 이월했다. byte-identical 원문은 `../releases/v24.13.0/`에 따로 봉인한다. 이 절의 옛 상태어·정본 주장은 current contract가 아니며 위 v24.14.0 전면 절을 따른다. `결과/#성공/#실패`처럼 아직 제품에 남은 옛 표면은 compat product evidence이지 새 canonical 출력이 아니다.
+
+# SSOT_DEMOS v24.13.0
+
+> 문서 버전: v24.13.0
+> 상태: current clean-cut / core normative source
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.13.0.md`
+> 이전판: `../releases/v24.12.9-candidate-snapshot/SSOT_DEMOS_v24.12.9.md`
+
+## v24.13.0 clean-cut 공통 계약
+
+- 이 문서 묶음의 현재판은 `v24.13.0`이다.
+- 권위 집합은 core source 17개와 normative reference appendix 2개, 합계 19개다.
+- 조립 권위는 `SSOT_ALL_MANIFEST_v24.13.0.md` 하나다. `SSOT_ALL_v24.13.0.md`는 결정적으로 재생성되는 AI/사람 열람용 산출물이며 독립 권위가 아니다.
+- 아래 `v24.12.9 이월 원문`은 보존된 상세 규범이다. 이 절과 충돌하면 v24.13.0 절이 우선하며, 이월 원문의 과거 상태·버전·해시 머리말은 역사 기록으로만 읽는다.
+- 제품 상태는 `stable_canonical / experimental / internal_tooling / compat_alias / deprecated / review_required`로 구분한다. `review_required`는 공개 정본·기본 교재·AI 기본 출력에 사용할 수 없다.
+- 문서 설계는 제품 구현 완료가 아니다. `runtime landed`, `닫힘-동작`, `golden_closed`는 제품 경로와 검증 근거가 있을 때만 쓴다.
+
+## v24.13.0 데모 경계
+
+- 데모는 실제 제품 원문과 재현 가능한 좁은 closure만 사용한다.
+- runtime13/Foundation12 parity는 검증된 bounded case에 한해 표기한다.
+- 새김틀 예시 `(#주사위꼴) 값{ 2d6+3 }`, `(#화학식) 값{ H2O }`, `(#정간보_세로) 값{ ... }`는 설계 예시이며 실행 가능 데모로 표시하지 않는다.
+- dirty workbench UI와 외부 사용자 성공이 없는 흐름은 landed/release 데모가 아니다.
+
+## v24.12.9 이월 원문
+
+아래 원문은 상세 규범과 결정 계보 보존을 위해 이월했다. 과거 머리말과 addendum의 상태어는 v24.13.0 current 상태를 덮지 않는다.
 
 ## v24.12.9-candidate integrated revision
 
@@ -10220,6 +11547,63 @@ T2 → T1 조건:
 
 ```ddn
 전지.양극과 전구.왼핀을 (전압은 같게, 전류는 흐르게) 잇기.
+```
+
+```ddn
+// candidate only: S1 bounded linear relation. Runtime landed claim: no.
+세움 {
+  x + y =:= 5.
+  x - y =:= 1.
+}.
+```
+
+```ddn
+// candidate only: ASCII unit surface with caret exponent.
+채비 {
+  중력가속도 <- 9.8@m/s^2.
+}.
+```
+
+```ddn
+// candidate only: t=0 init solve inside top-level 채비.
+채비 {
+  세움 {
+    x + y =:= 5.
+    x - y =:= 1.
+  }.
+}.
+```
+
+```ddn
+// candidate only: event reset path for discontinuous prime-state update.
+(공.위치 <= 0)이 될때 {
+  공.속도 다시놓기(-공.속도 * 0.8).
+}.
+```
+
+```ddn
+// candidate only: constraint family/verb.
+공.위치를 (0 이상으로, 튕김 0.8) 막기.
+```
+
+```ddn
+// candidate only: Korean Manim scene binding. Runtime landed claim: no.
+보개마당 {
+  마디0 (tick=0~90): {
+    (대상=세움.관계("위치' =:= 속도"), 표시=#수식) 나타나기.
+    (대상=공.위치, 보개="space2d") 움직이기.
+    (대상=관찰("공.위치"), 보개="graph") 그려지기(방식="progress").
+  }.
+}.
+```
+
+```ddn
+// candidate only: formula transform. Runtime landed claim: no.
+보개마당 {
+  마디1 (tick=90~150): {
+    (#수식1, 식="F = m * a") 에서 (#수식2, 식="a = F / m") 으로 수식변형하기.
+  }.
+}.
 ```
 
 # SSOT_DEMOS
@@ -10398,13 +11782,149 @@ T2 → T1 조건:
 
 
 ---
-===== END SSOT_DEMOS_v24.12.9.md =====
-===== BEGIN GATE0_IMPLEMENTATION_CHECKLIST_v24.12.9.md =====
-**SSOT_ALL 기준:** v24.12.2 / `3bf47e5a083bc01719d890332840af8537a583430908a27a87bc4bbccf393dd0`
-**workspace_bundle 기준:** `ssot_context_bundle_ALL.md` / `0c758a0ca212e03a1c47430ecdef91b724f120561d6c4e971b8faf77ed6b9215`
-**문서 상태:** v24.12.9-candidate / integrated SSOT source revision / runtime landed claim 아님
-**원본 파일:** `docs/ssot/ssot/GATE0_IMPLEMENTATION_CHECKLIST_v24.12.0.md`
+===== END SSOT_DEMOS_v24.15.1.md =====
+===== BEGIN GATE0_IMPLEMENTATION_CHECKLIST_v24.15.1.md =====
+# GATE0_IMPLEMENTATION_CHECKLIST v24.15.1
 
+> 문서 버전: v24.15.1
+> 상태: current / administrator applied 2026-07-16 / consistency-cleaned 2026-07-17
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.15.1.md`
+> 이전판 보존: `../releases/v24.15.0/`
+
+## v24.15.1 우선 규칙
+
+이 판은 v24.15.1의 언어 의미를 바꾸지 않고 적용 상태와 폐기된 이월 잔재만
+정리하는 consistency clean-cut이다. 아래 보존 이월 본문과 충돌하면 이 절과 이 판의
+generated registry가 우선한다.
+
+- G7-01~G7-07은 owner-approved canonical design이다.
+- 설계 확정과 parser/runtime/CLI/WASM 제품 구현 완료는 분리한다.
+- 사용자-facing 씨자리 이름은 한글만 정본이다. `T/U/V`는 입력 별칭이 아니며 영어 비교용 meta 표기다.
+- DetBin 실행 의미 ID는 BLAKE3-256, 승인·artifact·파일 bytes 봉인은 SHA-256이다.
+- M3-실험 0은 experimental toolchain 계획이며 stable 문법·runtime·artifact 지원이 아니다.
+- 함수 타입의 사용자-facing 정본 화살표는 `-->`다. 제품 함수값 전체 계약은 별도다.
+- `씨앗지음`과 `지음증거`는 연구 표시명이다. 하위 artifact wire/API 이름은 stable이 아니다.
+
+### v24.15.1 후속 구현 관문
+
+- K0~K7을 각각 제품 경로와 golden/parity 증거로 닫는다.
+- profile 다섯 상한 모두 N-1/N/N+1 fixture를 CLI/WASM에서 비교한다.
+- current compile 충돌이 있는 동안 새 product PASS를 주장하지 않는다.
+- M3는 experimental W0~W4와 comment-canon parity를 통과하기 전 stable로 올리지 않는다.
+
+### v24.15.1 정합성 청소
+
+- v24.15.0의 언어 의미와 제품 비주장을 그대로 유지한다.
+- 적용 상태를 current로 교정하고 폐기된 이월 예시·별칭·화살표 설명만 정리한다.
+- v24.15.0 원문은 `../releases/v24.15.0/`에 byte-identical 보존한다.
+
+## v24.14.2 이월 본문
+
+> 아래 `GATE0_IMPLEMENTATION_CHECKLIST_v24.14.2.md` 원문은 계보·비충돌 계약 보존용이다. 위 v24.15.0 우선 규칙과 충돌하는 예시·별칭·상태는 superseded history다.
+
+# GATE0_IMPLEMENTATION_CHECKLIST v24.14.2
+
+> 문서 버전: v24.14.2
+> 상태: administrator candidate / owner decisions approved 2026-07-14 / not current until protected apply
+> 조립 권위 후보: `SSOT_ALL_MANIFEST_v24.14.2.md`
+> 이전 current: `v24.14.1`
+
+## v24.14.2 정정 우선 규칙
+
+이 판은 v24.14.1의 언어 동결 의미와 외부 stable surface를 바꾸지 않는 내부 관리자
+patch다. 아래에 byte-identical로 이월된 v24.14.1 본문보다 이 절의 lifecycle·용어·설정
+이행 판정이 우선한다.
+
+- 결정 입력 1,083건은 `반영 75 / 배제·역사 1,008`로 닫혔다.
+- decision-input `deferred`, `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified`는 모두 0건이다.
+- 방향·정책을 적용한 항목의 남은 제품 구현·증거는 OPEN_ISSUES/PLANS 관문이며 사용자 결정을 기다리는 proposal이 아니다.
+- 설계 확정과 제품 구현 완료는 분리한다. 이 판은 parser/runtime/CLI/WASM 완료 범위를 확대하지 않는다.
+- 외부 Language SPEC v0.1.1은 이 판의 사용자-facing 용어·settings 계약을 투영한 public patch다. v0.1.0은 byte-identical 보존한다.
+
+## v24.14.1 byte-identical 이월 본문
+
+> 아래 블록은 `GATE0_IMPLEMENTATION_CHECKLIST_v24.14.1.md` 원문이다. 위 v24.14.2 우선 규칙과 충돌하는 lifecycle·용어·상태 문구만 supersede된다.
+
+# GATE0_IMPLEMENTATION_CHECKLIST v24.14.1
+
+> 문서 버전: v24.14.1
+> 상태: current canonical / owner approved 2026-07-13
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.1.md`
+> 이전판 snapshot: `../releases/v24.14.0/`
+
+## v24.14.1 관리자 정리 우선 규칙
+
+이 판은 언어 의미를 바꾸는 판이 아니다. v24.14.0의 동결 언어 계약을 그대로
+상속하면서, 모든 비정본 결정 입력의 생애주기와 내부·외부 버전 계보를
+닫는 관리자 clean-cut이다. 이 절은 아래에 byte-identical로 이월된 v24.14.0
+본문의 버전·상태 문구보다 우선한다.
+
+- 결정 입력 1,074건은 `반영 63 / 명시 보류 3 / 배제·역사 1,008`로 전건 처분했다.
+- `active_review`, `extract_confirmed`, `sunset_candidate`, `unclassified` 상태는 0건이다.
+- 내부 SSOT 버전은 `v24.14.1`, 외부 언어 스펙 버전은 `v0.1.0`이며 서로 다른 이름공간이다.
+- 외부 스펙은 SSOT의 stable surface를 사람이 읽도록 투영한 생성물이다. 충돌하면 내부 SSOT가 우선한다.
+- 과거 문서의 `v25` 출시는 새 언어 주버전이 아니라 개발 이정표 `M25-AI-PRODUCTION-PATH`로 읽는다.
+- 설계 확정과 제품 구현 완료는 계속 분리한다. 이 판은 parser/runtime/CLI/WASM 동작 완료 범위를 확대하지 않는다.
+
+## v24.14.0 byte-identical 이월 본문
+
+> 아래 블록은 `GATE0_IMPLEMENTATION_CHECKLIST_v24.14.0.md`의 원문이다. 위 v24.14.1 우선 규칙과 충돌하는 버전·상태 문구만 supersede된다.
+
+# GATE0_IMPLEMENTATION_CHECKLIST v24.14.0
+
+> 문서 버전: v24.14.0
+> 상태: current canonical / core
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.14.0.md`
+> 이전판 snapshot: `../releases/v24.13.0/`
+
+## v24.14.0 언어 동결 우선 규칙
+
+> 이 디렉터리의 산출물은 **2026-07-13 owner 승인으로 확정된 v24.14.0 current 정본**이다.
+> 이 절은 아래 v24.13.0 이월 본문의 충돌 문구보다 우선한다.
+
+- 상태는 `stable_contract / confirmed_design / product_evidence / compat_input / planned / research_history`로 분리한다.
+- 설계 확정은 제품 구현 완료가 아니다. 제품 완료는 제품 frontdoor와 관련 검증 증거가 있어야 한다.
+- stable parser surface는 hard freeze다. 새 문법은 owner evidence, 낭독, collision, parser/canon/CLI/WASM, 진단, golden, 교육 예제를 함께 검사하는 단일 gate로만 들어온다.
+- proposal/note/report/session delta는 그 자체로 current authority가 아니다.
+
+## v24.14.0 문서 역할
+
+- role: `core`
+- current 전면 계약은 `SSOT_DECISIONS/SSOT_LANG/SSOT_MASTER/SSOT_TERMS`의 freeze 절을 따른다.
+- 아래 이월 본문의 역사적 상태어는 제품 완료나 active pending을 자동 주장하지 않는다.
+
+## v24.13.0 이월 상세 기록 — current contract 아님
+
+아래 원문은 상세 규범과 제품 증거 계보를 잃지 않기 위해 이월했다. byte-identical 원문은 `../releases/v24.13.0/`에 따로 봉인한다. 이 절의 옛 상태어·정본 주장은 current contract가 아니며 위 v24.14.0 전면 절을 따른다. `결과/#성공/#실패`처럼 아직 제품에 남은 옛 표면은 compat product evidence이지 새 canonical 출력이 아니다.
+
+# GATE0_IMPLEMENTATION_CHECKLIST v24.13.0
+
+> 문서 버전: v24.13.0
+> 상태: current clean-cut / core normative source
+> 조립 권위: `SSOT_ALL_MANIFEST_v24.13.0.md`
+> 이전판: `../releases/v24.12.9-candidate-snapshot/GATE0_IMPLEMENTATION_CHECKLIST_v24.12.9.md`
+
+## v24.13.0 clean-cut 공통 계약
+
+- 이 문서 묶음의 현재판은 `v24.13.0`이다.
+- 권위 집합은 core source 17개와 normative reference appendix 2개, 합계 19개다.
+- 조립 권위는 `SSOT_ALL_MANIFEST_v24.13.0.md` 하나다. `SSOT_ALL_v24.13.0.md`는 결정적으로 재생성되는 AI/사람 열람용 산출물이며 독립 권위가 아니다.
+- 아래 `v24.12.9 이월 원문`은 보존된 상세 규범이다. 이 절과 충돌하면 v24.13.0 절이 우선하며, 이월 원문의 과거 상태·버전·해시 머리말은 역사 기록으로만 읽는다.
+- 제품 상태는 `stable_canonical / experimental / internal_tooling / compat_alias / deprecated / review_required`로 구분한다. `review_required`는 공개 정본·기본 교재·AI 기본 출력에 사용할 수 없다.
+- 문서 설계는 제품 구현 완료가 아니다. `runtime landed`, `닫힘-동작`, `golden_closed`는 제품 경로와 검증 근거가 있을 때만 쓴다.
+
+## v24.13.0 SSOT·제품 관문
+
+- [ ] manifest의 19문서 경로와 sha256이 일치한다.
+- [ ] generated aggregate가 고정 순서·구분자·UTF-8 LF로 재생성된다.
+- [ ] 4개 registry의 생성기·입력·출력 hash가 일치한다.
+- [ ] `review_required`/`experimental` 표면이 stable 교재·AI 출력에 섞이지 않는다.
+- [ ] 새김틀은 제품 경로 구현 전 `docs_first / decided_pending_impl`로만 보고한다.
+- [ ] 셈그림 workbench 마루 2 이상은 browser runner/실브라우저 근거 없이 닫힘-동작으로 보고하지 않는다.
+
+## v24.12.9 이월 원문
+
+아래 원문은 상세 규범과 결정 계보 보존을 위해 이월했다. 과거 머리말과 addendum의 상태어는 v24.13.0 current 상태를 덮지 않는다.
 
 ## v24.12.9-candidate integrated revision
 
@@ -10492,8 +12012,8 @@ T2 → T1 조건:
 - `판/마당`, `기억 {}`, `갈림 {}` 는 docs-first exact contract 이며, runtime closure overclaim 으로 읽지 않는다.
 - symbolic/proof minimum 과 lambda snapshot subset 은 representative landed 범위만 current line 에 올리고, full theorem prover / mutable-live capture 는 계속 밖에 둔다.
 
-- `흐름씨 -> 훅` canonical 순서는 `ordinary assignment -> 흐름씨 fixed-point -> tail-phase hook` 이다.
-- hook body 는 같은 마디의 흐름씨 고정점을 다시 발화시키지 않는다.
+- `흐름씨 -> 훅` canonical 순서는 `ordinary assignment -> 흐름씨 DAG 1-pass -> tail-phase hook` 이다.
+- hook body 는 같은 마디의 흐름씨 규칙을 같은 마디에 다시 실행하지 않는다.
 - `채비 {}` 는 파일 최상위 준비 블록으로만 허용하고, loop/hook body 안 `채비 {}` 는 `E_CHAEBI_IN_LOOP` current line 으로 읽는다.
 - unary `!`는 Gate0 current line 정본이 아니다. `!=` 와 `임자들` query-negation(`!이름씨`, `!#태그`)만 예외다.
 - 교재/문서의 `exposure_level` 은 AGE 와 다른 축이다. AGE completion 과 입문 노출을 같은 뜻으로 읽지 않는다.
@@ -10504,7 +12024,7 @@ T2 → T1 조건:
 
 - story-tech 설명층 보강은 Gate0/AGE0 의미를 바꾸지 않는다. `state_hash`, replay, Sam/Seulgi/InputSnapshot 경계는 그대로다.
 - Seamgrim auth/save/project/package/registry planning은 shell/server/toolchain 층이며, Gate0 구현 체크리스트에 새 runtime 의무를 추가하지 않는다.
-- `gaji.toml`, `ddn.lock`, `프로젝트.ddn` 은 재현/의존성 metadata anchor 로만 읽고, lesson / package / published artifact 공유 정책은 runtime truth가 아니라 platform policy다.
+- `gaji.toml`, `ddn.lock`, `뿌리.ddn` 은 재현/의존성·프로젝트 구조 anchor 로 읽고, lesson / package / published artifact 공유 정책은 runtime truth가 아니라 platform policy다. `프로젝트.ddn/project.ddn`은 legacy root 이름이다.
 
 ## v24.0.6 carry-forward / non-goal separation memo
 
@@ -10541,7 +12061,7 @@ T2 → T1 조건:
 ## MUST
 - unary `!`는 `!=` / `임자들` query-negation 외에는 `E_BANG_UNARY_RESERVED` 로 처리
 - `채비 {}` 는 파일 최상위 준비 블록으로만 허용하고 loop/hook body 안에서는 `E_CHAEBI_IN_LOOP` 를 적용
-- `흐름씨`와 조건 훅은 `ordinary assignment -> 흐름씨 fixed-point -> tail-phase hook` 순서를 유지
+- `흐름씨`와 조건 훅은 `ordinary assignment -> 흐름씨 DAG 1-pass -> tail-phase hook` 순서를 유지
 - UTF-8 (무BOM) / LF 입력 처리
 - 정본 출력은 한국어 canonical 이름으로 수렴
 - 같은 입력이면 같은 `state_hash`
@@ -10582,5 +12102,4 @@ T2 → T1 조건:
 - [ ] D-ULTRA는 D-STRICT bit-perfect tier가 아니다.
 - [ ] `흐름` 명사형 connect term은 Gate0 parser/term registry에 추가하지 않는다.
 - [ ] `Y은/는 흐르게`는 proposal/pack skeleton 수준이며 flow sign convention은 open issue다.
-
-===== END GATE0_IMPLEMENTATION_CHECKLIST_v24.12.9.md =====
+===== END GATE0_IMPLEMENTATION_CHECKLIST_v24.15.1.md =====

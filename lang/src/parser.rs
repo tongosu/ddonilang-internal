@@ -23,6 +23,10 @@ struct ArgSuffix {
     binding_reason: BindingReason,
     fixed_pin: Option<String>,
 }
+enum ParsedTypeOperand {
+    Single(TypeRef),
+    FunctionParams(Vec<TypeRef>),
+}
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ParseMode {
     Strict,
@@ -278,30 +282,100 @@ impl Parser {
     }
 
     fn parse_type_ref(&mut self) -> Result<TypeRef, ParseError> {
+        let operand = self.parse_type_operand()?;
+        if self.check(&TokenKind::TypeArrow) {
+            self.advance();
+            let params = match operand {
+                ParsedTypeOperand::Single(param) => vec![param],
+                ParsedTypeOperand::FunctionParams(params) => params,
+            };
+            let result = match self.parse_type_operand()? {
+                ParsedTypeOperand::Single(result) => result,
+                ParsedTypeOperand::FunctionParams(_) => {
+                    return Err(ParseError {
+                        span: self.current_span(),
+                        message: "E_FUNCTION_TYPE_ARROW_NON_ASSOCIATIVE: 고차 함수 타입은 안쪽 함수 타입을 괄호로 묶어야 합니다".to_string(),
+                    });
+                }
+            };
+            if self.check(&TokenKind::TypeArrow) {
+                return Err(ParseError {
+                    span: self.current_span(),
+                    message: "E_FUNCTION_TYPE_ARROW_NON_ASSOCIATIVE: `-->`는 비결합입니다. 고차 함수 타입은 괄호로 묶으세요".to_string(),
+                });
+            }
+            if self.check(&TokenKind::RightArrow) {
+                return Err(ParseError {
+                    span: self.current_span(),
+                    message: "E_FUNCTION_TYPE_RIGHT_ARROW_FORBIDDEN: 함수 타입에는 `->`가 아니라 `-->`를 사용하세요".to_string(),
+                });
+            }
+            return Ok(TypeRef::Function {
+                params,
+                result: Box::new(result),
+            });
+        }
+        if self.check(&TokenKind::RightArrow) {
+            return Err(ParseError {
+                span: self.current_span(),
+                message: "E_FUNCTION_TYPE_RIGHT_ARROW_FORBIDDEN: 함수 타입에는 `->`가 아니라 `-->`를 사용하세요".to_string(),
+            });
+        }
+        match operand {
+            ParsedTypeOperand::Single(type_ref) => Ok(type_ref),
+            ParsedTypeOperand::FunctionParams(_) => Err(ParseError {
+                span: self.current_span(),
+                message: "E_FUNCTION_TYPE_ARROW_EXPECTED: 타입 목록 뒤에는 `-->`와 결과 타입이 필요합니다".to_string(),
+            }),
+        }
+    }
+
+    fn parse_type_operand(&mut self) -> Result<ParsedTypeOperand, ParseError> {
         if self.check(&TokenKind::LParen) {
             self.advance();
             let mut args = Vec::new();
             if self.check(&TokenKind::RParen) {
-                return Err(self.error("타입 인자"));
+                self.advance();
+                if self.check(&TokenKind::TypeArrow) {
+                    return Ok(ParsedTypeOperand::FunctionParams(args));
+                }
+                return Err(ParseError {
+                    span: self.current_span(),
+                    message: "E_FUNCTION_TYPE_ARROW_EXPECTED: 빈 타입 목록 뒤에는 `-->`와 결과 타입이 필요합니다".to_string(),
+                });
             }
-            while !self.check(&TokenKind::RParen) {
+            loop {
                 args.push(self.parse_type_ref()?);
                 if self.check(&TokenKind::Comma) {
                     self.advance();
+                    continue;
                 }
+                break;
             }
             self.expect(&TokenKind::RParen, ")")?;
-            let name = self.expect_ident("타입")?.raw.clone();
-            if name == "_" {
-                return Err(self.error("타입 이름"));
+            if self.check_ident() {
+                let name = self.expect_ident("타입")?.raw.clone();
+                if name == "_" {
+                    return Err(self.error("타입 이름"));
+                }
+                return Ok(ParsedTypeOperand::Single(TypeRef::Applied { name, args }));
             }
-            return Ok(TypeRef::Applied { name, args });
+            if self.check(&TokenKind::TypeArrow) {
+                return Ok(ParsedTypeOperand::FunctionParams(args));
+            }
+            if args.len() == 1 && matches!(args.first(), Some(TypeRef::Function { .. })) {
+                return Ok(ParsedTypeOperand::Single(args.pop().expect("grouped type")));
+            }
+            return Err(ParseError {
+                span: self.current_span(),
+                message: "E_FUNCTION_TYPE_GROUP_INVALID: 괄호 타입 목록에는 적용 타입 이름 또는 `-->`가 필요합니다".to_string(),
+            });
         }
         let name = self.expect_ident("타입")?.raw.clone();
         if name == "_" {
-            Ok(TypeRef::Infer)
+            Ok(ParsedTypeOperand::Single(TypeRef::Infer))
         } else {
-            Ok(TypeRef::Named(name))
+            Ok(ParsedTypeOperand::Single(TypeRef::Named(name)))
         }
     }
     fn parse_seed_kind(&mut self) -> Result<SeedKind, ParseError> {
@@ -447,6 +521,12 @@ impl Parser {
         }
 
         let e = self.parse_expr()?;
+        if self.check(&TokenKind::TypeArrow) {
+            return Err(ParseError {
+                span: self.current_span(),
+                message: "E_FUNCTION_TYPE_ARROW_VALUE_POSITION: `-->`는 타입 위치에서만 사용할 수 있습니다".to_string(),
+            });
+        }
         let mut sender = None;
         let mut payload = e;
 
@@ -1998,9 +2078,9 @@ impl Parser {
             TokenKind::Float(raw) => Expr::new(
                 self.next_id(),
                 self.to_ast_span(t.span),
-                ExprKind::Literal(Literal::Fixed64(Fixed64::from_f64_lossy(
-                    raw.parse::<f64>().unwrap_or(0.0),
-                ))),
+                ExprKind::Literal(Literal::Fixed64(
+                    Fixed64::parse_decimal(raw).unwrap_or(Fixed64::ZERO),
+                )),
             ),
             TokenKind::StringLit(s) => Expr::new(
                 self.next_id(),
@@ -2044,6 +2124,12 @@ impl Parser {
                     self.to_ast_span(t.span),
                     ExprKind::StateMachine(machine),
                 )
+            }
+            TokenKind::TypeArrow => {
+                return Err(ParseError {
+                    span: self.to_ast_span(t.span),
+                    message: "E_FUNCTION_TYPE_ARROW_VALUE_POSITION: `-->`는 타입 위치에서만 사용할 수 있습니다".to_string(),
+                });
             }
             TokenKind::Nuance(level) => {
                 let inner = self.parse_primary()?;

@@ -25,9 +25,16 @@ New-Item -ItemType Directory -Path $outDir -Force | Out-Null
 $wasmPack = Get-Command wasm-pack -ErrorAction SilentlyContinue
 if ($wasmPack) {
     Push-Location (Join-Path $repoRoot "tool")
-    $profileFlag = if ($Profile -eq "release") { "--release" } else { "" }
-    & $wasmPack.Path build . --target $Target $profileFlag --out-dir $outDir --out-name ddonirang_tool -- --features wasm
-    Pop-Location
+    try {
+        $profileFlag = if ($Profile -eq "release") { "--release" } else { "" }
+        & $wasmPack.Path build . --target $Target $profileFlag --out-dir $outDir --out-name ddonirang_tool -- --features wasm
+        $buildExitCode = $LASTEXITCODE
+    } finally {
+        Pop-Location
+    }
+    if ($buildExitCode -ne 0) {
+        throw "wasm-pack build failed with exit code $buildExitCode"
+    }
     if ($CopyToUi) {
         & (Join-Path $repoRoot "scripts\\copy_wasm_tool_to_ui.ps1") -SourceRoot $outDir
     }
@@ -43,6 +50,9 @@ if (-not $wasmBindgen) {
 
 $profileFlag = if ($Profile -eq "release") { "--release" } else { "" }
 & cargo build -p ddonirang-tool --target wasm32-unknown-unknown --features wasm $profileFlag
+if ($LASTEXITCODE -ne 0) {
+    throw "cargo wasm build failed with exit code $LASTEXITCODE"
+}
 
 $wasmIn = Join-Path $repoRoot ("target\\wasm32-unknown-unknown\\{0}\\ddonirang_tool.wasm" -f $Profile)
 if (-not (Test-Path $wasmIn)) {
@@ -51,6 +61,9 @@ if (-not (Test-Path $wasmIn)) {
 }
 
 & $wasmBindgen.Path $wasmIn --target $Target --out-dir $outDir --out-name ddonirang_tool --no-typescript
+if ($LASTEXITCODE -ne 0) {
+    throw "wasm-bindgen failed with exit code $LASTEXITCODE"
+}
 if ($CopyToUi) {
     & (Join-Path $repoRoot "scripts\\copy_wasm_tool_to_ui.ps1") -SourceRoot $outDir
 }

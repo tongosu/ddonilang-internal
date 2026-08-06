@@ -25,6 +25,8 @@ pub struct BanditStep {
     pub reward: Fixed64,
     pub next_observation: [Fixed64; 2],
     pub done: bool,
+    pub terminated: bool,
+    pub truncated: bool,
 }
 
 impl BanditConfig {
@@ -84,6 +86,8 @@ impl BanditEnv {
             reward,
             next_observation: next_obs,
             done: done_after,
+            terminated: false,
+            truncated: done_after,
         })
     }
 }

@@ -270,6 +270,7 @@ pub struct RunOptions {
     pub unsafe_open: bool,
     pub run_manifest: Option<PathBuf>,
     pub summary_json: Option<PathBuf>,
+    pub solveplan_out: Option<PathBuf>,
     pub artifact_pins: Vec<ArtifactPin>,
 }
 
@@ -3141,11 +3142,22 @@ pub fn run_file_with_emitter(
     let project_policy = load_project_policy(path)?;
     let parse_mode = resolve_lang_mode(options.lang_mode, &project_policy)?;
     let (program_for_gate, prepared_source) =
-        parse_program_for_runtime_with_mode(&source, parse_mode).map_err(|err| match err {
-            FrontdoorParseFailure::Guard(message) => message,
-            FrontdoorParseFailure::Lex(err) => RunError::Lex(err).format(&file_label),
-            FrontdoorParseFailure::Parse(err) => RunError::Parse(err).format(&file_label),
-        })?;
+        match parse_program_for_runtime_with_mode(&source, parse_mode) {
+            Ok(parsed) => parsed,
+            Err(err) => {
+                if let Some(solveplan_path) = options.solveplan_out.as_ref() {
+                    let _ = crate::cli::solveplan::write_connect_diagnostic_out_if_any(
+                        solveplan_path,
+                        &source,
+                    );
+                }
+                return Err(match err {
+                    FrontdoorParseFailure::Guard(message) => message,
+                    FrontdoorParseFailure::Lex(err) => RunError::Lex(err).format(&file_label),
+                    FrontdoorParseFailure::Parse(err) => RunError::Parse(err).format(&file_label),
+                });
+            }
+        };
     let parse_warnings = collect_lang_parse_warnings_for_run(&prepared_source);
     emit_lang_parse_warnings_for_run(&parse_warnings, emit);
     let exec_policy_extract = extract_exec_policy(&program_for_gate)?;
@@ -3853,6 +3865,9 @@ pub fn run_file_with_emitter(
     if let Some(trace_path) = options.trace_json.as_ref() {
         write_trace_json(trace_path, &output.trace, &state_hash, &trace_hash)?;
     }
+    if let Some(solveplan_path) = options.solveplan_out.as_ref() {
+        crate::cli::solveplan::write_solveplan_out(solveplan_path, &program_for_gate, &source)?;
+    }
 
     if let Some(mode) = options.bogae_mode {
         if matches!(mode, BogaeMode::Console) && !options.bogae_live {
@@ -4109,6 +4124,51 @@ fn write_run_summary_json(
         }
     };
     let resources_value_json = state_resources_value_json(&output.state);
+    let shared_runtime = match u32::try_from(ticks_run) {
+        Ok(requested_ticks) => match ddonirang_tool::runtime_surface::run_summary_from_source(
+            source,
+            "<teul-cli-run-summary>",
+            Some(requested_ticks),
+        ) {
+            Ok(summary) => match serde_json::from_str::<JsonValue>(&summary.to_string()) {
+                Ok(summary) => json!({
+                    "ok": true,
+                    "schema": summary.get("schema").cloned().unwrap_or(JsonValue::Null),
+                    "runtime_schema": summary.get("runtime_schema").cloned().unwrap_or(JsonValue::Null),
+                    "state_hash": summary.get("state_hash").cloned().unwrap_or(JsonValue::Null),
+                    "view_hash": summary.get("view_hash").cloned().unwrap_or(JsonValue::Null),
+                    "output_log_texts": summary.get("output_log_texts").cloned().unwrap_or(JsonValue::Array(Vec::new())),
+                    "output_rows": summary.get("output_rows").cloned().unwrap_or(JsonValue::Array(Vec::new())),
+                    "final_row": summary.get("final_row").cloned().unwrap_or(JsonValue::Object(Default::default())),
+                    "execution_envelope": summary.get("execution_envelope").cloned().unwrap_or(JsonValue::Null),
+                    "canonical_ddn": summary.get("canonical_ddn").cloned().unwrap_or(JsonValue::String(String::new())),
+                    "preprocessed_source": summary.get("preprocessed_source").cloned().unwrap_or(JsonValue::String(String::new())),
+                    "parity_surface": summary.get("parity_surface").cloned().unwrap_or(JsonValue::Null),
+                }),
+                Err(err) => json!({
+                    "ok": false,
+                    "diagnostic": {
+                        "code": "E_SHARED_RUNTIME_SUMMARY_JSON",
+                        "message": err.to_string(),
+                    },
+                }),
+            },
+            Err(err) => json!({
+                "ok": false,
+                "diagnostic": {
+                    "code": "E_SHARED_RUNTIME_SUMMARY",
+                    "message": err,
+                },
+            }),
+        },
+        Err(_) => json!({
+            "ok": false,
+            "diagnostic": {
+                "code": "E_SHARED_RUNTIME_TICK_RANGE",
+                "message": "ticks_run 값이 shared runtime summary의 u32 범위를 벗어났습니다",
+            },
+        }),
+    };
     let payload = json!({
         "schema": "ddn.teul_cli.run_summary.v1",
         "canonical_ddn": canonical_ddn,
@@ -4131,6 +4191,7 @@ fn write_run_summary_json(
         },
         "state_hash": state_hash,
         "trace_hash": trace_hash,
+        "shared_runtime": shared_runtime,
     });
     if let Some(parent) = path.parent() {
         if !parent.as_os_str().is_empty() {
@@ -7402,6 +7463,7 @@ mod tests {
             unsafe_open: false,
             run_manifest: None,
             summary_json: None,
+            solveplan_out: None,
             artifact_pins: Vec::new(),
         }
     }
@@ -7623,6 +7685,16 @@ mod tests {
         assert_eq!(doc["output_log_texts"], json!(["1", "2"]));
         assert_eq!(doc["final_row"]["t"], json!(2));
         assert_eq!(doc["resources"]["value_json"]["t"], json!(2));
+        assert_eq!(doc["shared_runtime"]["ok"], json!(true));
+        assert_eq!(
+            doc["shared_runtime"]["schema"],
+            json!("ddn.ddonirang_tool.shared_run_summary.v1")
+        );
+        assert_eq!(doc["shared_runtime"]["output_log_texts"], json!(["1", "2"]));
+        assert!(doc["shared_runtime"]["state_hash"]
+            .as_str()
+            .unwrap_or_default()
+            .starts_with("blake3:"));
         assert_eq!(
             doc["resources"]["value_json"]["보개_그래프_점목록_f"],
             json!([{ "x": 1, "y": 1 }, { "x": 2, "y": 2 }])

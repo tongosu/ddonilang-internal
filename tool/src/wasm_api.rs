@@ -6,7 +6,7 @@ use ddonirang_core::platform::{
 };
 use ddonirang_core::{Fixed64, Nuri, ResourceHandle, SeulgiIntent, SeulgiPacket};
 use ddonirang_lang::runtime::Value;
-use ddonirang_lang::ParseMode;
+use ddonirang_lang::{ExecutionModeDecision, ParseMode};
 use serde_json::{json, Map, Value as JsonValue};
 use wasm_bindgen::prelude::*;
 
@@ -14,10 +14,9 @@ use crate::canon;
 use crate::ddn_runtime::{
     formula_from_resource_value, formula_summary_parts, DdnParseWarning, DdnProgram, DdnRunner,
 };
-use crate::preprocess::{
-    preprocess_source_for_parse, split_file_meta, validate_no_legacy_boim_surface,
-    validate_no_legacy_header,
-};
+use crate::fixed64_boundary::Fixed64FloatBoundary;
+use crate::local_project;
+use crate::runtime_surface;
 
 const DEFAULT_UPDATE_NAME: &str = "매마디";
 const ENGINE_RESPONSE_SCHEMA: &str = "seamgrim.engine_response.v0";
@@ -52,27 +51,30 @@ fn parse_mode_from_str(mode: &str) -> Result<ParseMode, JsValue> {
 }
 
 fn canonicalize_for_wasm(source: &str) -> Result<canon::CanonOutput, JsValue> {
-    validate_no_legacy_header(source).map_err(|err| JsValue::from_str(&err))?;
-    validate_no_legacy_boim_surface(source).map_err(|err| JsValue::from_str(&err))?;
+    runtime_surface::canonicalize_shared_source(source)
+        .map_err(|err| JsValue::from_str(&format!("WASM canon 실패: {err}")))
+}
+
+fn canonicalize_flat_for_wasm(source: &str) -> Result<canon::CanonOutput, JsValue> {
     canon::canonicalize(source, false)
         .map_err(|err| JsValue::from_str(&format!("WASM canon 실패: {err}")))
 }
 
 fn preprocess_program_source_for_wasm(source: &str) -> Result<String, JsValue> {
-    validate_no_legacy_header(source).map_err(|err| JsValue::from_str(&err))?;
-    validate_no_legacy_boim_surface(source).map_err(|err| JsValue::from_str(&err))?;
-    let meta = split_file_meta(source);
-    let preprocessed = preprocess_source_for_parse(&meta.stripped)
-        .map_err(|err| JsValue::from_str(&format!("WASM preprocess 실패: {err}")))?;
-    Ok(ddonirang_lang::preprocess_frontdoor_source(&preprocessed))
+    runtime_surface::prepare_source_for_execution(source)
+        .map(|prepared| prepared.execution_source)
+        .map_err(|err| JsValue::from_str(&format!("WASM preprocess 실패: {err}")))
 }
 
-fn parse_program_for_wasm(source: &str, mode: ParseMode) -> Result<DdnProgram, JsValue> {
-    validate_no_legacy_header(source).map_err(|err| JsValue::from_str(&err))?;
-    validate_no_legacy_boim_surface(source).map_err(|err| JsValue::from_str(&err))?;
-    let prepared = preprocess_program_source_for_wasm(source)?;
-    DdnProgram::from_source_with_mode(&prepared, "<wasm>", mode)
-        .map_err(|err| JsValue::from_str(&err))
+fn parse_program_for_wasm(
+    source: &str,
+    mode: ParseMode,
+) -> Result<(DdnProgram, ExecutionModeDecision), JsValue> {
+    let prepared = runtime_surface::prepare_source_for_execution(source)
+        .map_err(|err| JsValue::from_str(&format!("WASM preprocess 실패: {err}")))?;
+    let program = DdnProgram::from_source_with_mode(&prepared.execution_source, "<wasm>", mode)
+        .map_err(|err| JsValue::from_str(&err))?;
+    Ok((program, prepared.execution_mode_decision))
 }
 
 #[wasm_bindgen]
@@ -92,8 +94,157 @@ pub fn wasm_preprocess_source(source: &str) -> Result<String, JsValue> {
 }
 
 #[wasm_bindgen]
+pub fn wasm_execution_envelope_json(source: &str, requested_ticks: i32) -> Result<String, JsValue> {
+    let requested = if requested_ticks < 0 {
+        None
+    } else {
+        Some(requested_ticks as u32)
+    };
+    runtime_surface::execution_envelope_from_source(source, requested)
+        .map(|envelope| envelope.to_string())
+        .map_err(|err| JsValue::from_str(&format!("WASM execution envelope 실패: {err}")))
+}
+
+#[wasm_bindgen]
+pub fn wasm_normalize_project_source_json(source_json: &str) -> Result<String, JsValue> {
+    local_project::normalize_virtual_project_source_json(source_json).map_err(|err| {
+        JsValue::from_str(&format!(
+            "{} {}",
+            err.code,
+            serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+        ))
+    })
+}
+
+#[wasm_bindgen]
+pub fn wasm_discover_project_root_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::discover_virtual_project_root_json(request_json).map_err(|err| {
+        JsValue::from_str(&format!(
+            "{} {}",
+            err.code,
+            serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+        ))
+    })
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_graph_json(source_json: &str) -> Result<String, JsValue> {
+    local_project::build_project_graph_json(source_json).map_err(|err| {
+        JsValue::from_str(&format!(
+            "{} {}",
+            err.code,
+            serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+        ))
+    })
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_edit_plan_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::build_project_edit_plan_json(request_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_gaji_extraction_plan_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::build_gaji_extraction_plan_json(request_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_local_gaji_artifact_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::build_local_gaji_artifact_json(request_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_verify_local_gaji_artifact_json(artifact_json: &str) -> Result<String, JsValue> {
+    local_project::verify_local_gaji_artifact_json(artifact_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_publish_local_gotgan_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::publish_local_gotgan_json(request_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_search_local_gotgan_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::search_local_gotgan_json(request_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_gaji_lifecycle_plan_json(request_json: &str) -> Result<String, JsValue> {
+    local_project::build_gaji_lifecycle_plan_json(request_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_source_sha256_json(source_json: &str) -> Result<String, JsValue> {
+    local_project::virtual_project_source_sha256_json(source_json)
+        .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_symbols_json(source_json: &str) -> Result<String, JsValue> {
+    local_project::build_project_symbol_boundary_json(source_json).map_err(|err| {
+        JsValue::from_str(&format!(
+            "{} {}",
+            err.code,
+            serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+        ))
+    })
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_gaji_lock_json(source_json: &str) -> Result<String, JsValue> {
+    local_project::build_project_gaji_lock_json(source_json).map_err(|err| {
+        JsValue::from_str(&format!(
+            "{} {}",
+            err.code,
+            serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+        ))
+    })
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_prepare_link_json(
+    source_json: &str,
+    target: &str,
+    inspect_graph: bool,
+    inspect_lock: bool,
+) -> Result<String, JsValue> {
+    local_project::build_project_prepare_link_json(source_json, target, inspect_graph, inspect_lock)
+        .map_err(|err| {
+            JsValue::from_str(&format!(
+                "{} {}",
+                err.code,
+                serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+            ))
+        })
+}
+
+#[wasm_bindgen]
+pub fn wasm_project_run_summary_json(
+    source_json: &str,
+    target: &str,
+    inspect_graph: bool,
+    inspect_lock: bool,
+) -> Result<String, JsValue> {
+    local_project::build_project_run_summary_json(source_json, target, inspect_graph, inspect_lock)
+        .map_err(|err| {
+            JsValue::from_str(&format!(
+                "{} {}",
+                err.code,
+                serde_json::to_string(&err.to_json_value()).unwrap_or_else(|_| err.message.clone())
+            ))
+        })
+}
+
+#[wasm_bindgen]
 pub fn wasm_canon_flat_json(source: &str) -> Result<String, JsValue> {
-    let output = canonicalize_for_wasm(source)?;
+    let output = canonicalize_flat_for_wasm(source)?;
     Ok(output.guseong_flat_json)
 }
 
@@ -105,13 +256,13 @@ pub fn wasm_canon_ddn(source: &str) -> Result<String, JsValue> {
 
 #[wasm_bindgen]
 pub fn wasm_canon_maegim_plan(source: &str) -> Result<String, JsValue> {
-    let output = canonicalize_for_wasm(source)?;
+    let output = canonicalize_flat_for_wasm(source)?;
     Ok(output.maegim_control_json)
 }
 
 #[wasm_bindgen]
 pub fn wasm_canon_alrim_plan(source: &str) -> Result<String, JsValue> {
-    let output = canonicalize_for_wasm(source)?;
+    let output = canonicalize_flat_for_wasm(source)?;
     Ok(output.alrim_plan_json)
 }
 
@@ -120,13 +271,13 @@ pub fn wasm_canon_exec_policy_map(source: &str) -> Result<String, JsValue> {
     if !canon::has_exec_policy_surface(source) {
         return Ok("{}\n".to_string());
     }
-    let output = canonicalize_for_wasm(source)?;
+    let output = canonicalize_flat_for_wasm(source)?;
     Ok(output.exec_policy_map_json)
 }
 
 #[wasm_bindgen]
 pub fn wasm_canon_block_editor_plan(source: &str) -> Result<String, JsValue> {
-    let output = canonicalize_for_wasm(source)?;
+    let output = canonicalize_flat_for_wasm(source)?;
     Ok(output.block_editor_plan_json)
 }
 
@@ -149,13 +300,14 @@ pub struct DdnWasmVm {
     lang_mode: ParseMode,
     parse_warnings: Vec<DdnParseWarning>,
     configured_madi: u64,
+    execution_mode_decision: ExecutionModeDecision,
 }
 
 #[wasm_bindgen]
 impl DdnWasmVm {
     #[wasm_bindgen(constructor)]
     pub fn new(source: &str) -> Result<DdnWasmVm, JsValue> {
-        let program = parse_program_for_wasm(source, ParseMode::Strict)?;
+        let (program, execution_mode_decision) = parse_program_for_wasm(source, ParseMode::Strict)?;
         let configured_madi = program.configured_madi().unwrap_or(0);
         let parse_warnings = program.parse_warnings().to_vec();
         let mut defaults = HashMap::new();
@@ -181,12 +333,13 @@ impl DdnWasmVm {
             lang_mode: ParseMode::Strict,
             parse_warnings,
             configured_madi,
+            execution_mode_decision,
         })
     }
 
     pub fn new_with_mode(source: &str, mode: &str) -> Result<DdnWasmVm, JsValue> {
         let mode = parse_mode_from_str(mode)?;
-        let program = parse_program_for_wasm(source, mode)?;
+        let (program, execution_mode_decision) = parse_program_for_wasm(source, mode)?;
         let configured_madi = program.configured_madi().unwrap_or(0);
         let parse_warnings = program.parse_warnings().to_vec();
         let mut defaults = HashMap::new();
@@ -212,12 +365,14 @@ impl DdnWasmVm {
             lang_mode: mode,
             parse_warnings,
             configured_madi,
+            execution_mode_decision,
         })
     }
 
     pub fn update_logic(&mut self, source: &str) -> Result<(), JsValue> {
-        let program = parse_program_for_wasm(source, self.lang_mode)?;
+        let (program, execution_mode_decision) = parse_program_for_wasm(source, self.lang_mode)?;
         self.configured_madi = program.configured_madi().unwrap_or(0);
+        self.execution_mode_decision = execution_mode_decision;
         self.parse_warnings = program.parse_warnings().to_vec();
         self.runner = DdnRunner::new(program, DEFAULT_UPDATE_NAME);
         Ok(())
@@ -227,10 +382,15 @@ impl DdnWasmVm {
         self.configured_madi
     }
 
+    pub fn get_execution_mode_decision_json(&self) -> String {
+        runtime_surface::execution_mode_decision_json(self.execution_mode_decision).to_string()
+    }
+
     pub fn update_logic_with_mode(&mut self, source: &str, mode: &str) -> Result<(), JsValue> {
         let mode = parse_mode_from_str(mode)?;
-        let program = parse_program_for_wasm(source, mode)?;
+        let (program, execution_mode_decision) = parse_program_for_wasm(source, mode)?;
         self.configured_madi = program.configured_madi().unwrap_or(0);
+        self.execution_mode_decision = execution_mode_decision;
         self.parse_warnings = program.parse_warnings().to_vec();
         self.runner = DdnRunner::new(program, DEFAULT_UPDATE_NAME);
         self.lang_mode = mode;
@@ -465,6 +625,7 @@ impl DdnWasmVm {
             "tick": self.tick_id,
             "columns": columns,
             "row": row,
+            "input": serialize_input_state(self),
             "observation_manifest": observation_manifest,
             "state_hash": current_state_hash(&self.world, &self.view_prefixes),
             "diag": [],
@@ -689,6 +850,10 @@ impl DdnWasmVm {
             "view_hash": view_hash,
         });
         JsValue::from_str(&payload.to_string())
+    }
+
+    pub fn get_input_state_json(&self) -> JsValue {
+        JsValue::from_str(&serialize_input_state(self).to_string())
     }
 
     pub fn restore_state(&mut self, state_json: &str) -> Result<JsValue, JsValue> {
@@ -1621,6 +1786,28 @@ a.기준점 <- b.꼭짓점.
     }
 
     #[test]
+    fn wasm_canon_block_editor_plan_preserves_authoring_hooks() {
+        let source = r#"
+채비 {
+  t:변수 <- 0.
+}.
+
+(시작)할때 {
+  t 보여주기.
+}.
+
+(매마디)마다 {
+  t <- t + 1.
+}.
+"#;
+        let block_json = wasm_canon_block_editor_plan(source).expect("wasm block plan");
+        assert!(block_json.contains("\"kind\": \"charim_block\""));
+        assert!(block_json.contains("\"kind\": \"hook_start\""));
+        assert!(block_json.contains("\"kind\": \"hook_tick\""));
+        assert!(!block_json.contains("\"kind\": \"seed_def\""));
+    }
+
+    #[test]
     fn parse_stream_sidecar_tag_supports_ascii_and_ko_suffix() {
         assert_eq!(
             parse_stream_sidecar_tag("energy_stream_head"),
@@ -2081,7 +2268,7 @@ fn restore_world_resources(
 fn json_to_fixed64(value: &JsonValue) -> Option<Fixed64> {
     match value {
         JsonValue::Number(n) => n.as_f64().map(fixed64_from_f64_checked),
-        JsonValue::String(s) => s.parse::<f64>().ok().map(fixed64_from_f64_checked),
+        JsonValue::String(s) => Fixed64::parse_decimal(s),
         _ => None,
     }
 }
@@ -2289,6 +2476,40 @@ fn resource_json_text_to_json(text: &str) -> JsonValue {
     serde_json::from_str::<JsonValue>(text).unwrap_or_else(|_| JsonValue::String(text.to_string()))
 }
 
+fn input_source_json(source: InputSource) -> JsonValue {
+    json!({
+        "label": source.label(),
+        "code": source.code_u8(),
+    })
+}
+
+fn seulgi_intent_json(intent: &SeulgiIntent) -> JsonValue {
+    match intent {
+        SeulgiIntent::None => json!({
+            "kind": "none",
+            "kind_code": intent.kind_u32(),
+        }),
+        SeulgiIntent::MoveTo { x, y } => json!({
+            "kind": "move_to",
+            "kind_code": intent.kind_u32(),
+            "x": x.to_string(),
+            "y": y.to_string(),
+            "x_raw_i64": x.raw_i64(),
+            "y_raw_i64": y.raw_i64(),
+        }),
+        SeulgiIntent::Attack { target_id } => json!({
+            "kind": "attack",
+            "kind_code": intent.kind_u32(),
+            "target_id": target_id,
+        }),
+        SeulgiIntent::Say { text } => json!({
+            "kind": "say",
+            "kind_code": intent.kind_u32(),
+            "text": text.as_str(),
+        }),
+    }
+}
+
 fn serialize_input_snapshot(input: &InputSnapshot, rng_base_seed: Option<u64>) -> JsonValue {
     let mut out = Map::new();
     out.insert("keys_pressed".to_string(), json!(input.keys_pressed));
@@ -2300,10 +2521,55 @@ fn serialize_input_snapshot(input: &InputSnapshot, rng_base_seed: Option<u64>) -
         "frame_source".to_string(),
         json!(input.frame_source.label()),
     );
+    out.insert(
+        "frame_source_code".to_string(),
+        json!(input.frame_source.code_u8()),
+    );
     out.insert("rng_seed".to_string(), json!(input.rng_seed));
     if let Some(base_seed) = rng_base_seed {
         out.insert("rng_base_seed".to_string(), json!(base_seed));
     }
+    out.insert(
+        "ai_injections".to_string(),
+        JsonValue::Array(
+            input
+                .ai_injections
+                .iter()
+                .map(|packet| {
+                    json!({
+                        "agent_id": packet.agent_id,
+                        "recv_seq": packet.recv_seq,
+                        "accepted_madi": packet.accepted_madi,
+                        "target_madi": packet.target_madi,
+                        "source": packet.source.label(),
+                        "source_code": packet.source.code_u8(),
+                        "source_meta": input_source_json(packet.source),
+                        "intent": seulgi_intent_json(&packet.intent),
+                    })
+                })
+                .collect(),
+        ),
+    );
+    out.insert(
+        "net_events".to_string(),
+        JsonValue::Array(
+            input
+                .net_events
+                .iter()
+                .map(|event| {
+                    json!({
+                        "sender": event.sender.as_str(),
+                        "seq": event.seq,
+                        "order_key": event.order_key.as_str(),
+                        "payload_detjson": event.payload_detjson.as_str(),
+                        "source": event.source.label(),
+                        "source_code": event.source.code_u8(),
+                        "source_meta": input_source_json(event.source),
+                    })
+                })
+                .collect(),
+        ),
+    );
     JsonValue::Object(out)
 }
 
@@ -2314,8 +2580,11 @@ fn serialize_input_state(vm: &DdnWasmVm) -> JsonValue {
         "pointer_x_i32": vm.input_pointer_x_i32,
         "pointer_y_i32": vm.input_pointer_y_i32,
         "dt": vm.input_dt.to_string(),
+        "frame_source": InputSource::Person.label(),
+        "frame_source_code": InputSource::Person.code_u8(),
         "rng_seed": vm.rng_seed,
         "rng_base_seed": vm.rng_seed,
+        "pending_ai_injection_count": vm.pending_ai_injections.len(),
     })
 }
 

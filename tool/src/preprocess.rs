@@ -90,19 +90,79 @@ pub fn validate_no_legacy_range_comment(source: &str) -> Result<(), String> {
 }
 
 pub fn preprocess_source_for_parse(source: &str) -> Result<String, String> {
+    let before_hook_rewrite = preprocess_source_before_hook_rewrite(source)?;
+    let rewritten_hooks = rewrite_hook_every_to_seed(&before_hook_rewrite);
+    let rewritten = rewrite_legacy_shorthand(&rewritten_hooks);
+    let expanded_colons = expand_colon_blocks(&rewritten);
+    let no_brace_dot = normalize_closing_brace_dot(&expanded_colons);
+    let no_unary = rewrite_unary_minus(&no_brace_dot);
+    let wrapped = wrap_if_no_seed_def(&no_unary);
+    Ok(wrapped)
+}
+
+pub fn execution_mode_decision_from_source(
+    source: &str,
+) -> Result<ddonirang_lang::ExecutionModeDecision, String> {
+    let before_hook_rewrite = preprocess_source_before_hook_rewrite(source)?;
+    let rewritten = rewrite_legacy_shorthand(&before_hook_rewrite);
+    let expanded_colons = expand_colon_blocks(&rewritten);
+    let no_brace_dot = normalize_closing_brace_dot(&expanded_colons);
+    let prepared = rewrite_unary_minus(&no_brace_dot);
+    let frontdoor = ddonirang_lang::preprocess_frontdoor_source(&prepared);
+    let direct = ddonirang_lang::parse_with_mode(
+        &frontdoor,
+        "<execution-mode-decision>",
+        ddonirang_lang::ParseMode::Strict,
+    );
+    let program = match direct {
+        Ok(program) => program,
+        Err(_) => {
+            let wrapped = top_level_execution_mode_probe_source(&frontdoor);
+            ddonirang_lang::parse_with_mode(
+                &wrapped,
+                "<execution-mode-decision>",
+                ddonirang_lang::ParseMode::Strict,
+            )
+            .map_err(|err| format!("실행 모드 판정 파싱 실패: {}", err.message))?
+        }
+    };
+    Ok(ddonirang_lang::decide_execution_mode(&program))
+}
+
+fn top_level_execution_mode_probe_source(source: &str) -> String {
+    let mut probe = String::from("실행모드판정:움직씨 = {\n");
+    for line in source.lines() {
+        let trimmed = line.trim_start();
+        if trimmed.len() != line.len() || !trimmed.starts_with('(') {
+            continue;
+        }
+        let Some(open_brace) = trimmed.find('{') else {
+            continue;
+        };
+        probe.push_str("  ");
+        probe.push_str(&trimmed[..=open_brace]);
+        probe.push_str(" 없음. }.\n");
+    }
+    probe.push_str("}\n");
+    probe
+}
+
+fn preprocess_source_before_hook_rewrite(source: &str) -> Result<String, String> {
     let stripped = strip_slgi_blocks(source)?;
-    validate_no_legacy_header(&stripped)?;
-    validate_no_legacy_boim_surface(&stripped)?;
-    validate_no_legacy_root_hide_directive(&stripped)?;
-    validate_no_legacy_root_surface(&stripped)?;
-    validate_no_legacy_range_comment(&stripped)?;
+    let without_guide_hash_comments = strip_guide_hash_comments(&stripped);
+    validate_no_legacy_header(&without_guide_hash_comments)?;
+    validate_no_legacy_boim_surface(&without_guide_hash_comments)?;
+    validate_no_legacy_root_hide_directive(&without_guide_hash_comments)?;
+    validate_no_legacy_root_surface(&without_guide_hash_comments)?;
+    validate_no_legacy_range_comment(&without_guide_hash_comments)?;
     if find_ai_call(&stripped).is_some() {
         return Err("AI_PREPROCESS_REQUIRED: `??()`/`??{}` 전처리가 필요합니다".to_string());
     }
-    let representative_lowered = lower_vol4_representative_raw_surface(&stripped);
-    let generic_lowered = if representative_lowered == stripped {
-        let colon_expanded = expand_colon_blocks(&stripped);
-        match crate::canon::lower_single_imja_event_subset(&stripped)
+    let representative_lowered =
+        lower_vol4_representative_raw_surface(&without_guide_hash_comments);
+    let generic_lowered = if representative_lowered == without_guide_hash_comments {
+        let colon_expanded = expand_colon_blocks(&without_guide_hash_comments);
+        match crate::canon::lower_single_imja_event_subset(&without_guide_hash_comments)
             .or_else(|_| crate::canon::lower_single_imja_event_subset(&colon_expanded))
         {
             Ok(Some(lowered)) => lowered,
@@ -117,13 +177,22 @@ pub fn preprocess_source_for_parse(source: &str) -> Result<String, String> {
     };
     let no_comments = strip_line_comments(&generic_lowered);
     let choose_lowered = lower_intro_choose_blocks(&no_comments);
-    let rewritten_hooks = rewrite_hook_every_to_seed(&choose_lowered);
-    let rewritten = rewrite_legacy_shorthand(&rewritten_hooks);
-    let expanded_colons = expand_colon_blocks(&rewritten);
-    let no_brace_dot = normalize_closing_brace_dot(&expanded_colons);
-    let no_unary = rewrite_unary_minus(&no_brace_dot);
-    let wrapped = wrap_if_no_seed_def(&no_unary);
-    Ok(wrapped)
+    Ok(choose_lowered)
+}
+
+fn strip_guide_hash_comments(source: &str) -> String {
+    let mut out = String::with_capacity(source.len());
+    for chunk in source.split_inclusive('\n') {
+        let (line, newline) = split_line(chunk);
+        let trimmed = line.trim_start();
+        if trimmed.starts_with("#기본관찰") {
+            out.push_str(newline);
+            continue;
+        }
+        out.push_str(line);
+        out.push_str(newline);
+    }
+    out
 }
 
 fn lower_vol4_representative_raw_surface(source: &str) -> String {
@@ -607,9 +676,14 @@ fn contains_hook(source: &str) -> bool {
 
 fn hook_line_rest_and_depth(line: &str) -> Option<(String, i32)> {
     let idx = line.find('{')?;
-    let rest = line[idx + 1..].to_string();
+    let mut rest = line[idx + 1..].to_string();
     let mut depth = 1;
     depth += brace_diff(&rest);
+    if depth <= 0 {
+        if let Some(close) = rest.rfind('}') {
+            rest.truncate(close);
+        }
+    }
     Some((rest, depth))
 }
 
@@ -1552,6 +1626,29 @@ fn read_policy_hash() -> Option<String> {
 mod tests {
     use super::*;
 
+    fn execution_mode(source: &str) -> &'static str {
+        execution_mode_decision_from_source(source)
+            .expect("execution mode decision")
+            .mode
+            .as_str()
+    }
+
+    #[test]
+    fn execution_mode_decision_uses_parsed_top_level_hooks() {
+        assert_eq!(execution_mode("값 <- 1."), "oneshot");
+        assert_eq!(execution_mode("(시작)할때 { 값 <- 1. }."), "oneshot");
+        assert_eq!(execution_mode("(값 > 0)이 될때 { 값 <- 1. }."), "oneshot");
+        assert_eq!(execution_mode("(매마디)마다 { 값 <- 값 + 1. }."), "live");
+        assert_eq!(execution_mode("(3마디)마다 { 값 <- 값 + 1. }."), "live");
+    }
+
+    #[test]
+    fn execution_mode_decision_is_alias_whitespace_comment_and_string_safe() {
+        assert_eq!(execution_mode("( 매틱 ) 마다 { 값 <- 값 + 1. }."), "live");
+        assert_eq!(execution_mode("\"(매마디)마다 { }\" 보여주기."), "oneshot");
+        assert_eq!(execution_mode("// (매마디)마다 { }\n값 <- 1."), "oneshot");
+    }
+
     #[test]
     fn strip_slgi_blocks_keeps_newlines() {
         let source = "a\n!!{\n#meta\n}\nB";
@@ -1628,6 +1725,28 @@ mod tests {
         let source = "x <- 5.   // 설명\n";
         let out = strip_line_comments(source);
         assert_eq!(out, "x <- 5.\n");
+    }
+
+    #[test]
+    fn preprocess_strips_guide_hash_comments_after_settings() {
+        let source = r#"
+설정 {
+  마디수: 2.
+}.
+
+#기본관찰x: t
+#기본관찰: theta
+채비 {
+  t: 수 <- 0.
+}.
+
+(매마디)마다 {
+  t <- t + 1.
+}.
+"#;
+        let out = preprocess_source_for_parse(source).expect("preprocess");
+        assert!(!out.contains("#기본관찰"));
+        assert!(out.contains("채비"));
     }
 
     // --- normalize_closing_brace_dot ---

@@ -1,15 +1,7 @@
-name: Seamgrim CI Gate
+name: Ddonilang Public CI Gate
 
 on:
   pull_request:
-    paths:
-      - ".github/workflows/seamgrim-ci.yml"
-      - ".github/branch-protection/**"
-      - "solutions/seamgrim_ui_mvp/**"
-      - "tests/**"
-      - "tools/**"
-      - "core/**"
-      - "lang/**"
   workflow_dispatch:
 
 concurrency:
@@ -21,6 +13,13 @@ jobs:
     name: seamgrim-gate
     runs-on: windows-latest
     timeout-minutes: 45
+    env:
+      # Override the developer-machine absolute target-dir from .cargo/config.toml.
+      # Keep the CI artifact path inside the checked-out repository so the
+      # cache and TEUL_CLI_BIN lookup below remain portable.
+      CARGO_TARGET_DIR: tools/teul-cli/target
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: "utf-8"
 
     steps:
       - name: Checkout
@@ -57,6 +56,27 @@ jobs:
           }
           "TEUL_CLI_BIN=$bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      - name: Test core
+        run: cargo test --manifest-path core/Cargo.toml
+
+      - name: Test numeric
+        run: cargo test --manifest-path numeric/Cargo.toml
+
+      - name: Test symbolic
+        run: cargo test --manifest-path symbolic/Cargo.toml
+
+      - name: Test proof
+        run: cargo test --manifest-path proof/Cargo.toml
+
+      - name: Test lang
+        run: cargo test --manifest-path lang/Cargo.toml
+
+      - name: Test tool
+        run: cargo test --manifest-path tool/Cargo.toml
+
+      - name: Test teul-cli
+        run: cargo test --manifest-path tools/teul-cli/Cargo.toml
+
       - name: Deploy Artifacts Check
         run: python tests/run_seamgrim_deploy_artifacts_check.py
 
@@ -84,8 +104,19 @@ jobs:
       - name: W107 Golden
         run: python tools/teul-cli/tests/run_golden.py --root tools/teul-cli/tests/golden --teul-cli "${{ env.TEUL_CLI_BIN }}" --walk 107
 
-      - name: Seamgrim CI Gate
-        env:
-          DDN_SEAMGRIM_CI_GATE_MAX_WORKERS: "14"
-          DDN_SEAMGRIM_CI_GATE_FAMILY_MAX_WORKERS: "10"
-        run: python tests/run_seamgrim_ci_gate.py --require-preview-synced --print-drilldown
+      - name: Public Language SPEC seal
+        run: python tools/check_public_language_spec.py
+
+      - name: Public first-run example
+        shell: pwsh
+        run: |
+          & $env:TEUL_CLI_BIN run publish/examples/00_first_result.ddn
+          if ($LASTEXITCODE -ne 0) {
+            throw "public first-run example failed"
+          }
+
+      # tests/run_seamgrim_ci_gate.py is the internal full-product gate. It
+      # depends on private docs/ssot walks, internal packs, and product/Human
+      # evidence that are deliberately excluded from this public repository.
+      # Run it in the Work custody environment; do not turn its OPEN results
+      # into a public-main build failure or a product-closure claim.

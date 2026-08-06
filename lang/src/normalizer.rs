@@ -146,7 +146,33 @@ impl Normalizer {
                 self.write(") ");
                 self.write(name);
             }
+            TypeRef::Function { params, result } => {
+                if params.len() == 1 {
+                    self.normalize_function_type_component(&params[0]);
+                } else {
+                    self.write("(");
+                    for (idx, param) in params.iter().enumerate() {
+                        if idx > 0 {
+                            self.write(", ");
+                        }
+                        self.normalize_type(param);
+                    }
+                    self.write(")");
+                }
+                self.write(" --> ");
+                self.normalize_function_type_component(result);
+            }
             TypeRef::Infer => self.write("_"),
+        }
+    }
+
+    fn normalize_function_type_component(&mut self, type_ref: &TypeRef) {
+        if matches!(type_ref, TypeRef::Function { .. }) {
+            self.write("(");
+            self.normalize_type(type_ref);
+            self.write(")");
+        } else {
+            self.normalize_type(type_ref);
         }
     }
 

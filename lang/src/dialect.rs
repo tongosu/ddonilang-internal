@@ -1,10 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::OnceLock;
 
-const DIALECT_TABLE_TSV: &str = include_str!(concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../docs/context/notes/dialect/DDONIRANG_dialect_keywords_full_v8_20260215.tsv"
-));
+const DIALECT_TABLE_TSV: &str = include_str!("dialect_keywords_v8.tsv");
 
 const TAG_COLUMNS_EXCLUDED: &[&str] = &["kind", "ko_canon", "ko_alias", "notes", "sym3"];
 

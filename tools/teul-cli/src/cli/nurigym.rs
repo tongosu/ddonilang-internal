@@ -3,9 +3,7 @@ use std::path::Path;
 
 use ddonirang_core::fixed64::Fixed64;
 use ddonirang_core::mix64;
-use ddonirang_core::nurigym::bandit::{
-    run_episode as run_bandit_episode, BanditConfig, BanditEnv,
-};
+use ddonirang_core::nurigym::bandit::{run_episode as run_bandit_episode, BanditConfig, BanditEnv};
 use ddonirang_core::nurigym::cartpole::{
     run_episode as run_cartpole_episode, CartPoleConfig, CartPoleEnv,
 };
@@ -41,6 +39,7 @@ struct NuriGymRunInput {
     gridmaze_layouts: Option<Vec<GridMazeLayoutInput>>,
     emit_action_pipeline: Option<bool>,
     out_of_range_policy: Option<String>,
+    step_record_version: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -94,6 +93,12 @@ enum OutOfRangeMode {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum StepRecordVersion {
+    V01,
+    V02,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum RewardMode {
     Individual,
     Shared,
@@ -123,6 +128,8 @@ struct StepRecord {
     reward: Fixed64,
     next_observation: Vec<Fixed64>,
     done: bool,
+    terminated: bool,
+    truncated: bool,
     action_pipeline: Option<ActionPipelineRecord>,
 }
 
@@ -208,6 +215,7 @@ pub fn run_episode_file(input_path: &Path, out_dir: &Path) -> Result<(), String>
     let reward_mode = parse_reward_mode(&input);
     let emit_action_pipeline = input.emit_action_pipeline.unwrap_or(false);
     let out_of_range_mode = parse_out_of_range_mode(&input, emit_action_pipeline);
+    let step_record_version = parse_step_record_version(&input)?;
 
     let agents = collect_agents(&input)?;
     let reward_weights = build_reward_weights(&input, &agents)?;
@@ -315,6 +323,7 @@ pub fn run_episode_file(input_path: &Path, out_dir: &Path) -> Result<(), String>
         reward_weights.hash.as_deref(),
         &input_hash,
         &input_file,
+        step_record_version,
     );
     let mut dataset_lines = Vec::with_capacity(step_records.len() + 1);
     dataset_lines.push(dataset_header);
@@ -326,6 +335,7 @@ pub fn run_episode_file(input_path: &Path, out_dir: &Path) -> Result<(), String>
             idx as u64,
             step,
             obs_slot_count,
+            step_record_version,
         );
         dataset_lines.push(line);
     }
@@ -527,6 +537,8 @@ fn run_cartpole(
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
             action_pipeline: None,
         })
         .collect())
@@ -547,6 +559,8 @@ fn run_bandit(
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
             action_pipeline: None,
         })
         .collect())
@@ -567,6 +581,8 @@ fn run_pendulum(
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
             action_pipeline: None,
         })
         .collect())
@@ -597,6 +613,8 @@ fn run_gridmaze_with_layout(
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
             action_pipeline: None,
         })
         .collect())
@@ -652,6 +670,8 @@ fn run_shared_bandit(
                     reward: step.reward,
                     next_observation: step.next_observation.to_vec(),
                     done: step.done,
+                    terminated: step.terminated,
+                    truncated: step.truncated,
                     action_pipeline: None,
                 });
             } else {
@@ -677,6 +697,8 @@ fn run_shared_bandit(
                         reward: rewards[idx],
                         next_observation: step.next_observation.to_vec(),
                         done: step.done,
+                        terminated: step.terminated,
+                        truncated: step.truncated,
                         action_pipeline: None,
                     });
                 }
@@ -740,6 +762,7 @@ fn run_shared_cartpole(
             let last_step = step_count + 1 >= config.max_steps;
             if last_step && !step.done {
                 step.done = true;
+                step.truncated = true;
                 step.reward = Fixed64::ZERO;
             }
             if reward_mode == RewardMode::Individual {
@@ -750,6 +773,8 @@ fn run_shared_cartpole(
                     reward: step.reward,
                     next_observation: step.next_observation.to_vec(),
                     done: step.done,
+                    terminated: step.terminated,
+                    truncated: step.truncated,
                     action_pipeline: None,
                 });
             } else {
@@ -775,6 +800,8 @@ fn run_shared_cartpole(
                         reward: rewards[idx],
                         next_observation: step.next_observation.to_vec(),
                         done: step.done,
+                        terminated: step.terminated,
+                        truncated: step.truncated,
                         action_pipeline: None,
                     });
                 }
@@ -838,6 +865,7 @@ fn run_shared_pendulum(
             let last_step = step_count + 1 >= config.max_steps;
             if last_step && !step.done {
                 step.done = true;
+                step.truncated = true;
                 step.reward = Fixed64::ZERO;
             }
             if reward_mode == RewardMode::Individual {
@@ -848,6 +876,8 @@ fn run_shared_pendulum(
                     reward: step.reward,
                     next_observation: step.next_observation.to_vec(),
                     done: step.done,
+                    terminated: step.terminated,
+                    truncated: step.truncated,
                     action_pipeline: None,
                 });
             } else {
@@ -873,6 +903,8 @@ fn run_shared_pendulum(
                         reward: rewards[idx],
                         next_observation: step.next_observation.to_vec(),
                         done: step.done,
+                        terminated: step.terminated,
+                        truncated: step.truncated,
                         action_pipeline: None,
                     });
                 }
@@ -941,6 +973,7 @@ fn run_shared_gridmaze(
             let last_step = step_count + 1 >= config.max_steps;
             if last_step && !step.done {
                 step.done = true;
+                step.truncated = true;
                 step.reward = Fixed64::ZERO;
             }
             if reward_mode == RewardMode::Individual {
@@ -951,6 +984,8 @@ fn run_shared_gridmaze(
                     reward: step.reward,
                     next_observation: step.next_observation.to_vec(),
                     done: step.done,
+                    terminated: step.terminated,
+                    truncated: step.truncated,
                     action_pipeline: None,
                 });
             } else {
@@ -976,6 +1011,8 @@ fn run_shared_gridmaze(
                         reward: rewards[idx],
                         next_observation: step.next_observation.to_vec(),
                         done: step.done,
+                        terminated: step.terminated,
+                        truncated: step.truncated,
                         action_pipeline: None,
                     });
                 }
@@ -1243,6 +1280,7 @@ fn build_dataset_header(
     reward_weights_hash: Option<&str>,
     input_hash: &str,
     input_file: &str,
+    step_record_version: StepRecordVersion,
 ) -> String {
     let mut out = String::new();
     out.push_str("{\"schema\":\"nurigym.dataset.v1\",\"env_id\":\"");
@@ -1273,6 +1311,9 @@ fn build_dataset_header(
     out.push_str(",\"source_hash\":\"");
     out.push_str(input_hash);
     out.push('"');
+    if step_record_version == StepRecordVersion::V02 {
+        out.push_str(",\"step_record_version\":\"v0.2\"");
+    }
     out.push_str(",\"source_provenance\":{\"schema\":\"nurigym.source_provenance.v1\",\"source_kind\":\"input_json\",\"input_file\":\"");
     out.push_str(input_file);
     out.push_str("\",\"input_hash\":\"");
@@ -1299,6 +1340,7 @@ fn build_step_record(
     madi: u64,
     step: &StepRecord,
     slot_count: u32,
+    step_record_version: StepRecordVersion,
 ) -> String {
     let (obs_text, _) = build_observation(&step.observation, slot_count);
     let (next_text, _) = build_observation(&step.next_observation, slot_count);
@@ -1320,37 +1362,99 @@ fn build_step_record(
     out.push_str(&next_text);
     out.push_str(",\"done\":");
     out.push_str(if step.done { "true" } else { "false" });
-    if let Some(pipeline) = &step.action_pipeline {
-        out.push_str(",\"raw_action\":");
-        out.push_str(&pipeline.raw_action.to_string());
-        out.push_str(",\"resolved_action\":");
-        out.push_str(&pipeline.resolved_action.to_string());
-        out.push_str(",\"normalized_action\":");
-        out.push_str(&pipeline.normalized_action.to_string());
-        out.push_str(",\"action_status\":\"");
-        out.push_str(pipeline.action_status);
-        out.push('"');
-        out.push_str(",\"merge_candidates\":[");
-        for (idx, value) in pipeline.merge_candidates.iter().enumerate() {
-            if idx > 0 {
-                out.push(',');
-            }
-            out.push_str(&value.to_string());
+    if step_record_version == StepRecordVersion::V02 {
+        out.push_str(",\"step_record_version\":\"v0.2\"");
+        out.push_str(",\"terminated\":");
+        out.push_str(if step.terminated { "true" } else { "false" });
+        out.push_str(",\"truncated\":");
+        out.push_str(if step.truncated { "true" } else { "false" });
+        out.push_str(",\"info\":{\"schema\":\"nurigym.step_info.v1\",\"done_reason\":\"");
+        out.push_str(done_reason(step));
+        out.push_str("\"}");
+        let default_pipeline;
+        let pipeline = if let Some(pipeline) = &step.action_pipeline {
+            pipeline
+        } else {
+            default_pipeline = default_action_pipeline(step.action);
+            &default_pipeline
+        };
+        append_action_pipeline_fields(&mut out, pipeline, true, agent_id, madi);
+    } else if let Some(pipeline) = &step.action_pipeline {
+        append_action_pipeline_fields(&mut out, pipeline, false, agent_id, madi);
+    }
+    out.push('}');
+    out
+}
+
+fn default_action_pipeline(action: i64) -> ActionPipelineRecord {
+    ActionPipelineRecord {
+        raw_action: action,
+        resolved_action: action,
+        normalized_action: action,
+        action_status: "맞음",
+        merge_candidates: vec![action],
+        merged_action: action,
+        applied_action: action,
+        missing_input: false,
+    }
+}
+
+fn append_action_pipeline_fields(
+    out: &mut String,
+    pipeline: &ActionPipelineRecord,
+    missing_input_as_array: bool,
+    agent_id: u64,
+    madi: u64,
+) {
+    out.push_str(",\"raw_action\":");
+    out.push_str(&pipeline.raw_action.to_string());
+    out.push_str(",\"resolved_action\":");
+    out.push_str(&pipeline.resolved_action.to_string());
+    out.push_str(",\"normalized_action\":");
+    out.push_str(&pipeline.normalized_action.to_string());
+    out.push_str(",\"action_status\":\"");
+    out.push_str(pipeline.action_status);
+    out.push('"');
+    out.push_str(",\"merge_candidates\":[");
+    for (idx, value) in pipeline.merge_candidates.iter().enumerate() {
+        if idx > 0 {
+            out.push(',');
         }
-        out.push(']');
-        out.push_str(",\"merged_action\":");
-        out.push_str(&pipeline.merged_action.to_string());
-        out.push_str(",\"applied_action\":");
-        out.push_str(&pipeline.applied_action.to_string());
-        out.push_str(",\"missing_input\":");
+        out.push_str(&value.to_string());
+    }
+    out.push(']');
+    out.push_str(",\"merged_action\":");
+    out.push_str(&pipeline.merged_action.to_string());
+    out.push_str(",\"applied_action\":");
+    out.push_str(&pipeline.applied_action.to_string());
+    out.push_str(",\"missing_input\":");
+    if missing_input_as_array {
+        if pipeline.missing_input {
+            out.push_str("[\"agents[");
+            out.push_str(&agent_id.to_string());
+            out.push_str("].actions[");
+            out.push_str(&madi.to_string());
+            out.push_str("]\"]");
+        } else {
+            out.push_str("[]");
+        }
+    } else {
         out.push_str(if pipeline.missing_input {
             "true"
         } else {
             "false"
         });
     }
-    out.push('}');
-    out
+}
+
+fn done_reason(step: &StepRecord) -> &'static str {
+    if step.terminated {
+        "terminated"
+    } else if step.truncated {
+        "truncated"
+    } else {
+        "none"
+    }
 }
 
 fn build_observation(values: &[Fixed64], slot_count: u32) -> (String, String) {
@@ -1415,6 +1519,17 @@ fn parse_out_of_range_mode(input: &NuriGymRunInput, emit_action_pipeline: bool) 
         "clip" => OutOfRangeMode::Clip,
         "strict_error" => OutOfRangeMode::StrictError,
         _ => OutOfRangeMode::Reject,
+    }
+}
+
+fn parse_step_record_version(input: &NuriGymRunInput) -> Result<StepRecordVersion, String> {
+    match input.step_record_version.as_deref().unwrap_or("v0.1") {
+        "v0.1" => Ok(StepRecordVersion::V01),
+        "v0.2" => Ok(StepRecordVersion::V02),
+        other => Err(format!(
+            "E_NURIGYM_INPUT unsupported step_record_version={}",
+            other
+        )),
     }
 }
 
@@ -1698,6 +1813,7 @@ where
         let last_tick = tick + 1 >= max_steps;
         if last_tick && !step.done {
             step.done = true;
+            step.truncated = true;
             step.reward = Fixed64::ZERO;
         }
         if allowed.contains(&merged_action) {
@@ -1748,6 +1864,8 @@ where
                 reward,
                 next_observation: step.next_observation.to_vec(),
                 done: step.done,
+                terminated: step.terminated,
+                truncated: step.truncated,
                 action_pipeline,
             });
         }
@@ -1769,6 +1887,8 @@ struct SyncStep {
     reward: Fixed64,
     next_observation: Vec<Fixed64>,
     done: bool,
+    terminated: bool,
+    truncated: bool,
 }
 
 impl SyncStepEnv for CartPoleEnv {
@@ -1783,6 +1903,8 @@ impl SyncStepEnv for CartPoleEnv {
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
         })
     }
 }
@@ -1799,6 +1921,8 @@ impl SyncStepEnv for BanditEnv {
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
         })
     }
 }
@@ -1815,6 +1939,8 @@ impl SyncStepEnv for PendulumEnv {
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
         })
     }
 }
@@ -1831,6 +1957,8 @@ impl SyncStepEnv for GridMazeEnv {
             reward: step.reward,
             next_observation: step.next_observation.to_vec(),
             done: step.done,
+            terminated: step.terminated,
+            truncated: step.truncated,
         })
     }
 }
@@ -1855,7 +1983,7 @@ fn build_reward_weights(
             let agent_id: u64 = key
                 .parse()
                 .map_err(|_| "E_NURIGYM_REWARD_WEIGHTS key must be u64".to_string())?;
-            let weight_fixed = Fixed64::from_f64_lossy(*value);
+            let weight_fixed = fixed64_from_reward_weight(*value);
             if weight_fixed.raw_i64() <= 0 {
                 return Err("E_NURIGYM_REWARD_WEIGHTS weight must be positive".to_string());
             }
@@ -1894,6 +2022,11 @@ fn build_reward_weights(
     };
 
     Ok(RewardWeights { map, sum, hash })
+}
+
+/// JSON 역직렬화가 제공한 이진 부동소수 보상 가중치를 결정 코어 값으로 옮긴다.
+fn fixed64_from_reward_weight(value: f64) -> Fixed64 {
+    Fixed64::from_raw_i64((value * Fixed64::ONE_RAW as f64) as i64)
 }
 
 fn distribute_rewards(
@@ -1949,7 +2082,7 @@ fn distribute_rewards(
 mod tests {
     use super::{
         build_step_record, evaluate_action, merge_actions, ActionPipelineRecord, AgentRun,
-        EvaluatedAction, OutOfRangeMode, SharedMerge, StepRecord,
+        EvaluatedAction, OutOfRangeMode, SharedMerge, StepRecord, StepRecordVersion,
     };
     use ddonirang_core::fixed64::Fixed64;
 
@@ -2115,6 +2248,8 @@ mod tests {
             reward: Fixed64::ZERO,
             next_observation: vec![Fixed64::ZERO],
             done: false,
+            terminated: false,
+            truncated: false,
             action_pipeline: Some(ActionPipelineRecord {
                 raw_action: 5,
                 resolved_action: 5,
@@ -2126,7 +2261,7 @@ mod tests {
                 missing_input: false,
             }),
         };
-        let text = build_step_record(1, row.agent_id, 0, &row, 1);
+        let text = build_step_record(1, row.agent_id, 0, &row, 1, StepRecordVersion::V01);
         assert!(text.contains("\"raw_action\":5"));
         assert!(text.contains("\"resolved_action\":5"));
         assert!(text.contains("\"normalized_action\":1"));
@@ -2135,5 +2270,35 @@ mod tests {
         assert!(text.contains("\"merged_action\":1"));
         assert!(text.contains("\"applied_action\":1"));
         assert!(text.contains("\"missing_input\":false"));
+    }
+
+    #[test]
+    fn nurigym_build_step_record_v02_emits_public_schema_fields() {
+        let row = StepRecord {
+            agent_id: 7,
+            observation: vec![Fixed64::ZERO],
+            action: 0,
+            reward: Fixed64::ZERO,
+            next_observation: vec![Fixed64::ZERO],
+            done: true,
+            terminated: false,
+            truncated: true,
+            action_pipeline: Some(ActionPipelineRecord {
+                raw_action: 0,
+                resolved_action: 0,
+                normalized_action: 0,
+                action_status: "가만히",
+                merge_candidates: vec![],
+                merged_action: 0,
+                applied_action: 0,
+                missing_input: true,
+            }),
+        };
+        let text = build_step_record(3, row.agent_id, 2, &row, 1, StepRecordVersion::V02);
+        assert!(text.contains("\"step_record_version\":\"v0.2\""));
+        assert!(text.contains("\"terminated\":false"));
+        assert!(text.contains("\"truncated\":true"));
+        assert!(text.contains("\"done_reason\":\"truncated\""));
+        assert!(text.contains("\"missing_input\":[\"agents[7].actions[2]\"]"));
     }
 }

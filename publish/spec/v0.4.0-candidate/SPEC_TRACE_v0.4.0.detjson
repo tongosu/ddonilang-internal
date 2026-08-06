@@ -1,0 +1,86 @@
+{
+  "decision_projection": [
+    {
+      "family": "v0.3.0-inherited",
+      "projection": "public-docs-first",
+      "rd_end": 42,
+      "rd_start": 1
+    },
+    {
+      "family": "domain-unit-evidence",
+      "projection": "public-semantics-product-open",
+      "rd_end": 53,
+      "rd_start": 43
+    },
+    {
+      "family": "declarative-model-foundation",
+      "projection": "internal-semantics-public-syntax-open",
+      "rd_end": 70,
+      "rd_start": 54
+    },
+    {
+      "family": "language-completeness",
+      "projection": "public-docs-first-product-open",
+      "rd_end": 80,
+      "rd_start": 71
+    },
+    {
+      "family": "external-solver-direction",
+      "projection": "roadmap-only-no-public-syntax",
+      "rd_end": 81,
+      "rd_start": 81
+    },
+    {
+      "family": "result-function-option-cycle",
+      "projection": "public-docs-first-product-open",
+      "rd_end": 89,
+      "rd_start": 82
+    },
+    {
+      "family": "pack-rounding-public-result-meta",
+      "projection": "public-semantics-product-open",
+      "rd_end": 95,
+      "rd_start": 90
+    },
+    {
+      "family": "kusil-corpus",
+      "projection": "corpus-authorized-final-syntax-open",
+      "rd_end": 96,
+      "rd_start": 96
+    },
+    {
+      "family": "module-lock",
+      "projection": "public-semantics-exact-wire-open",
+      "rd_end": 97,
+      "rd_start": 97
+    },
+    {
+      "family": "r2-gate-governance",
+      "projection": "nonclaim-and-entry-governance",
+      "rd_end": 99,
+      "rd_start": 98
+    }
+  ],
+  "open_gates": [
+    "P1 pack mixed/named loss, duplicate names, field-count loss NOT FIXED",
+    "C-02 exact 30 expressions",
+    "C-04 sigil readability corpus",
+    "C-05 eolgae migration and public/export table",
+    "C-06 five-layer exposure table",
+    "KS final syntax",
+    "exact wire and product gates"
+  ],
+  "owner_direction_sha256": "sha256:ecbfb9b2356a45fbc60eb509acb4169a762a55f6eaaeb1d7a6100f5f6ab97aac",
+  "predecessor_public_manifest_sha256": "sha256:3e0a2ecfc0b4d3ebbcbe014124395b5172778d0a3ba49237163d9b0bd6cbb53a",
+  "predecessor_public_seal_sha256": "sha256:f25af1dc447520e35a34f40a6125163d42235f42a6fa9d6981ec07f23b87b8bf",
+  "product_evidence": "separate; new surfaces remain product-open unless support table says otherwise",
+  "public_current_remains": "v0.3.0",
+  "public_family": "v0.4.0-candidate",
+  "public_version": "v0.4.0",
+  "schema": "ddonirang-language-spec-trace.v2",
+  "source_ssot_manifest_sha256": "sha256:10f71a250deb4ce76988cb3b93d1f34716d9f10be5e6a5caf86c12bf2a8204dc",
+  "source_ssot_seal_sha256": "sha256:1423660ea3aefc6336d0626082c1cc4137245e3dd1ebe8cae10c00e399e6e9ec",
+  "source_ssot_status": "live-current-docs-first",
+  "source_ssot_version": "v24.22.1",
+  "status": "public candidate / not current / docs-first / product-open"
+}
