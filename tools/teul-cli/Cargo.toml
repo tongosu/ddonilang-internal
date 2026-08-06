@@ -20,5 +20,6 @@ ddonirang-lang = { path = "../../lang" }
 ddonirang-numeric = { path = "../../numeric" }
 ddonirang-proof = { path = "../../proof" }
 ddonirang-symbolic = { path = "../../symbolic" }
+ddonirang-tool = { path = "../../tool" }
 
 [workspace]

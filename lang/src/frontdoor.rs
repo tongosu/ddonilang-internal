@@ -60,9 +60,12 @@ pub fn owner_inner_seum_canon_rows(source: &str) -> Option<Vec<String>> {
 
 pub fn owner_state_symbol_table_rows(source: &str) -> Option<Vec<String>> {
     let prepared = preprocess_frontdoor_source(source);
-    let program =
-        crate::parse_with_mode(&prepared, "<owner-state-symbol-table>", crate::ParseMode::Strict)
-            .ok()?;
+    let program = crate::parse_with_mode(
+        &prepared,
+        "<owner-state-symbol-table>",
+        crate::ParseMode::Strict,
+    )
+    .ok()?;
     let mut rows = Vec::new();
     for item in &program.items {
         let crate::TopLevelItem::SeedDef(seed) = item;
@@ -147,6 +150,14 @@ fn type_ref_label(type_ref: &crate::TypeRef) -> String {
                 .collect::<Vec<_>>()
                 .join(",");
             format!("{name}<{args}>")
+        }
+        crate::TypeRef::Function { params, result } => {
+            let params = params
+                .iter()
+                .map(type_ref_label)
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("({params})-->{}", type_ref_label(result))
         }
         crate::TypeRef::Infer => "_".to_string(),
     }

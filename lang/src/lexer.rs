@@ -61,6 +61,7 @@ pub enum TokenKind {
     Equals,
     Arrow,
     RightArrow,
+    TypeArrow,
     DoubleArrow,
     Dot,
     DotDot,
@@ -328,7 +329,11 @@ impl<'a> Lexer<'a> {
             }
             '-' => {
                 self.advance();
-                if self.peek_char() == Some('>') {
+                if self.peek_char() == Some('-') && self.peek_ahead(1) == Some('>') {
+                    self.advance();
+                    self.advance();
+                    TokenKind::TypeArrow
+                } else if self.peek_char() == Some('>') {
                     self.advance();
                     TokenKind::RightArrow
                 } else if self.peek_char() == Some('<') && self.peek_ahead(1) == Some('-') {
@@ -1307,6 +1312,20 @@ mod tests {
             .find(|token| matches!(token.kind, TokenKind::DoubleArrow))
             .expect("double arrow");
         assert_eq!(arrow.raw, "~~>");
+    }
+
+    #[test]
+    fn function_type_arrow_uses_longest_match() {
+        let mut lexer = Lexer::new("가씨 --> 나씨. 식 -> 자리.");
+        let tokens = lexer.tokenize().expect("tokenize");
+        let type_arrow = tokens
+            .iter()
+            .find(|token| matches!(token.kind, TokenKind::TypeArrow))
+            .expect("type arrow");
+        assert_eq!(type_arrow.raw, "-->");
+        assert!(tokens
+            .iter()
+            .any(|token| matches!(token.kind, TokenKind::RightArrow)));
     }
 
     #[test]

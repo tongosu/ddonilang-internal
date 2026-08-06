@@ -242,25 +242,27 @@ mod tests {
   }.
 }
 "#;
-        parse_program_for_runtime(source).expect("runtime frontdoor must accept owner-inner seum boundary");
-        validate_lang_frontdoor_parity(source).expect("lang parity must accept owner-inner seum boundary");
+        parse_program_for_runtime(source)
+            .expect("runtime frontdoor must accept owner-inner seum boundary");
+        validate_lang_frontdoor_parity(source)
+            .expect("lang parity must accept owner-inner seum boundary");
     }
 
     #[test]
     fn normalize_for_lang_parity_keeps_wave1_projectile_core_lines() {
         let source =
-            include_str!("../../../../docs/ssot/pack/edu_phys_p001_05_projectile_xy/lesson.ddn");
+            include_str!("../../../../pack/edu_seamgrim_rep_phys_projectile_xy_v1/lesson.ddn");
         let parity = normalize_for_lang_parity(source);
         let wrapped = wrap_lang_parity_source(&parity);
         assert!(wrapped.contains("채비 {"));
-        assert!(wrapped.contains("vx <- 초기속도 * cos_a."));
+        assert!(wrapped.contains("vx <- 초기속도x."));
         assert!(!wrapped.contains("매김 {"));
     }
 
     #[test]
     fn validate_lang_frontdoor_parity_accepts_wave1_projectile_wrapped_source() {
         let source =
-            include_str!("../../../../docs/ssot/pack/edu_phys_p001_05_projectile_xy/lesson.ddn");
+            include_str!("../../../../pack/edu_seamgrim_rep_phys_projectile_xy_v1/lesson.ddn");
         let parity = normalize_for_lang_parity(source);
         let wrapped = wrap_lang_parity_source(&parity);
         lang_parse_with_mode(&wrapped, "<wave1-projectile-parity>", LangParseMode::Strict)

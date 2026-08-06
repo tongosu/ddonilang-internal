@@ -1,3 +1,4 @@
+use std::fs;
 use std::path::PathBuf;
 
 use crate::cli::run::RunEmitSink;
@@ -74,6 +75,58 @@ pub(crate) struct Cli {
 
 #[derive(Subcommand)]
 pub(crate) enum Commands {
+    #[command(name = "project-normalize")]
+    ProjectNormalize {
+        input: PathBuf,
+        #[arg(long = "out")]
+        out: Option<PathBuf>,
+    },
+    #[command(name = "project-discover")]
+    ProjectDiscover {
+        start: Option<PathBuf>,
+        #[arg(long = "project")]
+        project: Option<PathBuf>,
+        #[arg(long = "virtual")]
+        virtual_request: Option<PathBuf>,
+        #[arg(long = "out")]
+        out: Option<PathBuf>,
+    },
+    #[command(name = "project-graph")]
+    ProjectGraph {
+        input: PathBuf,
+        #[arg(long = "out")]
+        out: Option<PathBuf>,
+    },
+    #[command(name = "project-symbols")]
+    ProjectSymbols {
+        input: PathBuf,
+        #[arg(long = "out")]
+        out: Option<PathBuf>,
+    },
+    #[command(name = "project-lock")]
+    ProjectLock {
+        input: PathBuf,
+        #[arg(long = "frozen")]
+        frozen: bool,
+        #[arg(long = "out")]
+        out: Option<PathBuf>,
+    },
+    #[command(name = "project-run")]
+    ProjectRun {
+        start: Option<PathBuf>,
+        #[arg(long = "project")]
+        project: Option<PathBuf>,
+        #[arg(long = "virtual")]
+        virtual_source: Option<PathBuf>,
+        #[arg(long = "target", default_value = "앱")]
+        target: String,
+        #[arg(long = "inspect-graph")]
+        inspect_graph: bool,
+        #[arg(long = "inspect-lock")]
+        inspect_lock: bool,
+        #[arg(long = "out")]
+        out: Option<PathBuf>,
+    },
     Run {
         file: PathBuf,
         #[arg(long, aliases = ["ticks", "max-madi"], value_name = "N|infinite")]
@@ -98,6 +151,8 @@ pub(crate) enum Commands {
         run_manifest: Option<PathBuf>,
         #[arg(long = "summary-json")]
         summary_json: Option<PathBuf>,
+        #[arg(long = "solveplan-out")]
+        solveplan_out: Option<PathBuf>,
         #[arg(long = "artifact")]
         artifact: Vec<String>,
         #[arg(long = "trace-json")]
@@ -265,6 +320,19 @@ pub(crate) enum Commands {
         bridge: Option<cli::canon::BridgeKind>,
         #[arg(long)]
         check: bool,
+    },
+    #[command(name = "world-diff")]
+    WorldDiff {
+        baseline: PathBuf,
+        candidate: PathBuf,
+        #[arg(long)]
+        out: Option<PathBuf>,
+        #[arg(long)]
+        madi: Option<u64>,
+        #[arg(long = "world-id", default_value = "world.unspecified")]
+        world_id: String,
+        #[arg(long = "candidate-origin", default_value = "unattributed_candidate")]
+        candidate_origin: String,
     },
     Asset {
         #[command(subcommand)]
@@ -638,6 +706,26 @@ enum EcoCommands {
 
 #[derive(Subcommand)]
 enum GajiCommands {
+    /// 현재 VirtualProjectSource에서 재사용 가지 추출 계획을 계산합니다.
+    Plan {
+        #[arg(long)]
+        input: PathBuf,
+        #[arg(long)]
+        out: Option<PathBuf>,
+    },
+    LifecyclePlan {
+        #[arg(long)]
+        input: PathBuf,
+        #[arg(long)]
+        out: Option<PathBuf>,
+    },
+    /// 추출 계획을 정식 gaji.toml + ddn/ 디렉터리로 원자 봉인합니다.
+    Seal {
+        #[arg(long)]
+        input: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+    },
     Lock {
         #[arg(long)]
         root: Option<PathBuf>,
@@ -1410,6 +1498,7 @@ pub(crate) struct RunCommandArgs {
     pub(crate) repro_json: Option<PathBuf>,
     pub(crate) run_manifest: Option<PathBuf>,
     pub(crate) summary_json: Option<PathBuf>,
+    pub(crate) solveplan_out: Option<PathBuf>,
     pub(crate) artifact: Vec<String>,
     pub(crate) trace_json: Option<PathBuf>,
     pub(crate) proof_out: Option<PathBuf>,
@@ -1464,6 +1553,7 @@ pub(crate) fn execute_run_command(
         repro_json,
         run_manifest,
         summary_json,
+        solveplan_out,
         artifact,
         trace_json,
         proof_out,
@@ -1614,6 +1704,7 @@ pub(crate) fn execute_run_command(
         unsafe_open,
         run_manifest,
         summary_json,
+        solveplan_out,
         artifact_pins,
         run_command,
         init_state: state,
@@ -1639,6 +1730,295 @@ fn main() {
     }
     let cli = Cli::parse_from(raw_args);
     match cli.command {
+        Commands::ProjectNormalize { input, out } => {
+            let source_json = match std::fs::read_to_string(&input) {
+                Ok(text) => text,
+                Err(err) => {
+                    eprintln!(
+                        "E_PROJECT_NORMALIZE_READ 입력 파일을 읽을 수 없습니다: {} ({err})",
+                        input.display()
+                    );
+                    exit_with_saturation(2);
+                }
+            };
+            match ddonirang_tool::local_project::normalize_virtual_project_source_json(&source_json)
+            {
+                Ok(output) => {
+                    if let Some(out_path) = out {
+                        if let Some(parent) = out_path.parent() {
+                            if let Err(err) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "E_PROJECT_NORMALIZE_WRITE 출력 폴더를 만들 수 없습니다: {} ({err})",
+                                    parent.display()
+                                );
+                                exit_with_saturation(2);
+                            }
+                        }
+                        if let Err(err) = std::fs::write(&out_path, output.as_bytes()) {
+                            eprintln!(
+                                "E_PROJECT_NORMALIZE_WRITE 출력 파일을 쓸 수 없습니다: {} ({err})",
+                                out_path.display()
+                            );
+                            exit_with_saturation(2);
+                        }
+                    } else {
+                        print!("{output}");
+                    }
+                }
+                Err(err) => {
+                    eprintln!("{}", err.to_json_value());
+                    exit_with_saturation(2);
+                }
+            }
+        }
+        Commands::ProjectDiscover {
+            start,
+            project,
+            virtual_request,
+            out,
+        } => {
+            let result = if let Some(request_path) = virtual_request {
+                let request_json = match std::fs::read_to_string(&request_path) {
+                    Ok(text) => text,
+                    Err(err) => {
+                        eprintln!(
+                            "E_PROJECT_DISCOVER_READ 입력 파일을 읽을 수 없습니다: {} ({err})",
+                            request_path.display()
+                        );
+                        exit_with_saturation(2);
+                    }
+                };
+                ddonirang_tool::local_project::discover_virtual_project_root_json(&request_json)
+            } else {
+                let start_path = start.unwrap_or_else(|| {
+                    std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
+                });
+                ddonirang_tool::local_project::discover_disk_project_root_json(
+                    &start_path,
+                    project.as_deref(),
+                )
+            };
+            match result {
+                Ok(output) => {
+                    if let Some(out_path) = out {
+                        if let Some(parent) = out_path.parent() {
+                            if let Err(err) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "E_PROJECT_DISCOVER_WRITE 출력 폴더를 만들 수 없습니다: {} ({err})",
+                                    parent.display()
+                                );
+                                exit_with_saturation(2);
+                            }
+                        }
+                        if let Err(err) = std::fs::write(&out_path, output.as_bytes()) {
+                            eprintln!(
+                                "E_PROJECT_DISCOVER_WRITE 출력 파일을 쓸 수 없습니다: {} ({err})",
+                                out_path.display()
+                            );
+                            exit_with_saturation(2);
+                        }
+                    } else {
+                        print!("{output}");
+                    }
+                }
+                Err(err) => {
+                    eprintln!("{}", err.to_json_value());
+                    exit_with_saturation(2);
+                }
+            }
+        }
+        Commands::ProjectGraph { input, out } => {
+            let source_json = match std::fs::read_to_string(&input) {
+                Ok(text) => text,
+                Err(err) => {
+                    eprintln!(
+                        "E_PROJECT_GRAPH_READ 입력 파일을 읽을 수 없습니다: {} ({err})",
+                        input.display()
+                    );
+                    exit_with_saturation(2);
+                }
+            };
+            match ddonirang_tool::local_project::build_project_graph_json(&source_json) {
+                Ok(output) => {
+                    if let Some(out_path) = out {
+                        if let Some(parent) = out_path.parent() {
+                            if let Err(err) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "E_PROJECT_GRAPH_WRITE 출력 폴더를 만들 수 없습니다: {} ({err})",
+                                    parent.display()
+                                );
+                                exit_with_saturation(2);
+                            }
+                        }
+                        if let Err(err) = std::fs::write(&out_path, output.as_bytes()) {
+                            eprintln!(
+                                "E_PROJECT_GRAPH_WRITE 출력 파일을 쓸 수 없습니다: {} ({err})",
+                                out_path.display()
+                            );
+                            exit_with_saturation(2);
+                        }
+                    } else {
+                        print!("{output}");
+                    }
+                }
+                Err(err) => {
+                    eprintln!("{}", err.to_json_value());
+                    exit_with_saturation(2);
+                }
+            }
+        }
+        Commands::ProjectSymbols { input, out } => {
+            let source_json = match std::fs::read_to_string(&input) {
+                Ok(text) => text,
+                Err(err) => {
+                    eprintln!(
+                        "E_PROJECT_SYMBOLS_READ 입력 파일을 읽을 수 없습니다: {} ({err})",
+                        input.display()
+                    );
+                    exit_with_saturation(2);
+                }
+            };
+            match ddonirang_tool::local_project::build_project_symbol_boundary_json(&source_json) {
+                Ok(output) => {
+                    if let Some(out_path) = out {
+                        if let Some(parent) = out_path.parent() {
+                            if let Err(err) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "E_PROJECT_SYMBOLS_WRITE 출력 폴더를 만들 수 없습니다: {} ({err})",
+                                    parent.display()
+                                );
+                                exit_with_saturation(2);
+                            }
+                        }
+                        if let Err(err) = std::fs::write(&out_path, output.as_bytes()) {
+                            eprintln!(
+                                "E_PROJECT_SYMBOLS_WRITE 출력 파일을 쓸 수 없습니다: {} ({err})",
+                                out_path.display()
+                            );
+                            exit_with_saturation(2);
+                        }
+                    } else {
+                        print!("{output}");
+                    }
+                }
+                Err(err) => {
+                    eprintln!("{}", err.to_json_value());
+                    exit_with_saturation(2);
+                }
+            }
+        }
+        Commands::ProjectLock { input, frozen, out } => {
+            let source_json = match std::fs::read_to_string(&input) {
+                Ok(text) => text,
+                Err(err) => {
+                    eprintln!(
+                        "E_PROJECT_LOCK_READ 입력 파일을 읽을 수 없습니다: {} ({err})",
+                        input.display()
+                    );
+                    exit_with_saturation(2);
+                }
+            };
+            let result = if frozen {
+                ddonirang_tool::local_project::verify_project_gaji_lock_json(&source_json)
+            } else {
+                ddonirang_tool::local_project::build_project_gaji_lock_json(&source_json)
+            };
+            match result {
+                Ok(output) => {
+                    if let Some(out_path) = out {
+                        if let Some(parent) = out_path.parent() {
+                            if let Err(err) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "E_PROJECT_LOCK_WRITE 출력 폴더를 만들 수 없습니다: {} ({err})",
+                                    parent.display()
+                                );
+                                exit_with_saturation(2);
+                            }
+                        }
+                        if let Err(err) = std::fs::write(&out_path, output.as_bytes()) {
+                            eprintln!(
+                                "E_PROJECT_LOCK_WRITE 출력 파일을 쓸 수 없습니다: {} ({err})",
+                                out_path.display()
+                            );
+                            exit_with_saturation(2);
+                        }
+                    } else {
+                        print!("{output}");
+                    }
+                }
+                Err(err) => {
+                    eprintln!("{}", err.to_json_value());
+                    exit_with_saturation(2);
+                }
+            }
+        }
+        Commands::ProjectRun {
+            start,
+            project,
+            virtual_source,
+            target,
+            inspect_graph,
+            inspect_lock,
+            out,
+        } => {
+            let result = if let Some(virtual_path) = virtual_source {
+                let source_json = match std::fs::read_to_string(&virtual_path) {
+                    Ok(text) => text,
+                    Err(err) => {
+                        eprintln!(
+                            "E_PROJECT_RUN_READ 입력 파일을 읽을 수 없습니다: {} ({err})",
+                            virtual_path.display()
+                        );
+                        exit_with_saturation(2);
+                    }
+                };
+                ddonirang_tool::local_project::build_project_run_summary_json(
+                    &source_json,
+                    &target,
+                    inspect_graph,
+                    inspect_lock,
+                )
+            } else {
+                let start_path = start.unwrap_or_else(|| {
+                    std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
+                });
+                ddonirang_tool::local_project::build_disk_project_run_summary_json(
+                    &start_path,
+                    project.as_deref(),
+                    &target,
+                    inspect_graph,
+                    inspect_lock,
+                )
+            };
+            match result {
+                Ok(output) => {
+                    if let Some(out_path) = out {
+                        if let Some(parent) = out_path.parent() {
+                            if let Err(err) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "E_PROJECT_RUN_WRITE 출력 폴더를 만들 수 없습니다: {} ({err})",
+                                    parent.display()
+                                );
+                                exit_with_saturation(2);
+                            }
+                        }
+                        if let Err(err) = std::fs::write(&out_path, output.as_bytes()) {
+                            eprintln!(
+                                "E_PROJECT_RUN_WRITE 출력 파일을 쓸 수 없습니다: {} ({err})",
+                                out_path.display()
+                            );
+                            exit_with_saturation(2);
+                        }
+                    } else {
+                        print!("{output}");
+                    }
+                }
+                Err(err) => {
+                    eprintln!("{}", err.to_json_value());
+                    exit_with_saturation(2);
+                }
+            }
+        }
         Commands::Run {
             file,
             madi,
@@ -1652,6 +2032,7 @@ fn main() {
             repro_json,
             run_manifest,
             summary_json,
+            solveplan_out,
             artifact,
             trace_json,
             proof_out,
@@ -1701,6 +2082,7 @@ fn main() {
                 repro_json,
                 run_manifest,
                 summary_json,
+                solveplan_out,
                 artifact,
                 trace_json,
                 proof_out,
@@ -1810,6 +2192,7 @@ fn main() {
                 repro_json: None,
                 run_manifest: None,
                 summary_json,
+                solveplan_out: None,
                 artifact: Vec::new(),
                 trace_json: None,
                 proof_out: None,
@@ -2083,6 +2466,26 @@ fn main() {
                 check,
             };
             if let Err(err) = cli::canon::run(&file, args) {
+                eprintln!("{}", err);
+                exit_with_saturation(1);
+            }
+        }
+        Commands::WorldDiff {
+            baseline,
+            candidate,
+            out,
+            madi,
+            world_id,
+            candidate_origin,
+        } => {
+            if let Err(err) = cli::world_diff::run(
+                &baseline,
+                &candidate,
+                out.as_deref(),
+                madi,
+                &world_id,
+                &candidate_origin,
+            ) {
                 eprintln!("{}", err);
                 exit_with_saturation(1);
             }
@@ -2778,11 +3181,7 @@ fn main() {
         },
         Commands::EvolvingUniverse { command } => match command {
             EvolvingUniverseCommands::Run { pack, seed, out } => {
-                let options = cli::evolving_universe::EvolvingUniverseOptions {
-                    pack,
-                    seed,
-                    out,
-                };
+                let options = cli::evolving_universe::EvolvingUniverseOptions { pack, seed, out };
                 if let Err(err) = cli::evolving_universe::run(options) {
                     eprintln!("{}", err);
                     exit_with_saturation(1);
@@ -2979,6 +3378,85 @@ fn parse_seed(input: &str) -> Result<u64, String> {
 
 fn run_gaji_command(command: GajiCommands) -> Result<(), String> {
     match command {
+        GajiCommands::Plan { input, out } => {
+            let request = fs::read_to_string(&input).map_err(|err| {
+                format!("E_GAJI_PLAN_READ 가지 추출 요청을 읽을 수 없습니다: {err}")
+            })?;
+            let plan = ddonirang_tool::local_project::build_gaji_extraction_plan_json(&request)
+                .map_err(|err| err.to_string())?;
+            if let Some(path) = out {
+                fs::write(&path, plan.as_bytes()).map_err(|err| {
+                    format!("E_GAJI_PLAN_WRITE 가지 추출 계획을 쓸 수 없습니다: {err}")
+                })?;
+            } else {
+                print!("{plan}");
+            }
+            Ok(())
+        }
+        GajiCommands::LifecyclePlan { input, out } => {
+            let request = fs::read_to_string(&input)
+                .map_err(|err| format!("E_GAJI_LIFECYCLE_READ 요청을 읽을 수 없습니다: {err}"))?;
+            let plan = ddonirang_tool::local_project::build_gaji_lifecycle_plan_json(&request)
+                .map_err(|err| err.to_string())?;
+            if let Some(path) = out {
+                fs::write(&path, plan.as_bytes())
+                    .map_err(|err| format!("E_GAJI_LIFECYCLE_WRITE {err}"))?;
+            } else {
+                print!("{plan}");
+            }
+            Ok(())
+        }
+        GajiCommands::Seal { input, out } => {
+            if out.exists() {
+                return Err(
+                    "E_GAJI_SEAL_IMMUTABLE 대상 가지 디렉터리가 이미 존재합니다".to_string()
+                );
+            }
+            let request = fs::read_to_string(&input).map_err(|err| {
+                format!("E_GAJI_SEAL_READ 가지 추출 요청을 읽을 수 없습니다: {err}")
+            })?;
+            let artifact_json =
+                ddonirang_tool::local_project::build_local_gaji_artifact_json(&request)
+                    .map_err(|err| err.to_string())?;
+            let artifact: ddonirang_tool::local_project::LocalGajiArtifact =
+                serde_json::from_str(&artifact_json).map_err(|err| {
+                    format!("E_GAJI_SEAL_ARTIFACT 공통 artifact를 읽을 수 없습니다: {err}")
+                })?;
+            let parent = out.parent().unwrap_or_else(|| std::path::Path::new("."));
+            fs::create_dir_all(parent)
+                .map_err(|err| format!("E_GAJI_SEAL_PARENT 출력 부모를 만들 수 없습니다: {err}"))?;
+            let leaf = out
+                .file_name()
+                .and_then(|value| value.to_str())
+                .unwrap_or("gaji");
+            let temp = parent.join(format!(".{leaf}.seal-{}", std::process::id()));
+            if temp.exists() {
+                return Err("E_GAJI_SEAL_TEMP 임시 봉인 디렉터리가 이미 존재합니다".to_string());
+            }
+            let materialize = (|| -> Result<(), String> {
+                fs::create_dir(&temp).map_err(|err| format!("E_GAJI_SEAL_TEMP_CREATE {err}"))?;
+                for file in &artifact.files {
+                    let target = temp.join(file.path.replace('/', std::path::MAIN_SEPARATOR_STR));
+                    if let Some(parent) = target.parent() {
+                        fs::create_dir_all(parent)
+                            .map_err(|err| format!("E_GAJI_SEAL_DIR {err}"))?;
+                    }
+                    fs::write(&target, file.utf8_text.as_bytes())
+                        .map_err(|err| format!("E_GAJI_SEAL_WRITE {err}"))?;
+                }
+                fs::write(temp.join("artifact.detjson"), artifact_json.as_bytes())
+                    .map_err(|err| format!("E_GAJI_SEAL_META {err}"))?;
+                fs::rename(&temp, &out).map_err(|err| format!("E_GAJI_SEAL_COMMIT {err}"))?;
+                Ok(())
+            })();
+            if materialize.is_err() && temp.exists() {
+                let _ = fs::remove_dir_all(&temp);
+            }
+            materialize?;
+            println!("gaji_sealed={}", out.display());
+            println!("gaji_package_sha256={}", artifact.package_sha256);
+            Ok(())
+        }
         GajiCommands::Lock {
             root,
             out,

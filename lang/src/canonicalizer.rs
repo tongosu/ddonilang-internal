@@ -458,6 +458,12 @@ fn canonicalize_type_ref(
                 canonicalize_type_ref(arg, span, warnings)?;
             }
         }
+        TypeRef::Function { params, result } => {
+            for param in params {
+                canonicalize_type_ref(param, span, warnings)?;
+            }
+            canonicalize_type_ref(result, span, warnings)?;
+        }
         TypeRef::Infer => {}
     }
     Ok(())

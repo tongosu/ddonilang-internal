@@ -340,9 +340,9 @@ pub fn string_to_number(value: &Value) -> Result<Value, RuntimeError> {
     if trimmed.is_empty() {
         return Ok(Value::None);
     }
-    match trimmed.parse::<f64>() {
-        Ok(parsed) => Ok(Value::Fixed64(Fixed64::from_f64_lossy(parsed))),
-        Err(_) => Ok(Value::None),
+    match Fixed64::parse_decimal(trimmed) {
+        Some(parsed) => Ok(Value::Fixed64(parsed)),
+        None => Ok(Value::None),
     }
 }
 
@@ -431,6 +431,18 @@ mod tests {
         let rejoin =
             string_join(&Value::List(items), &Value::String("a".to_string())).expect("join");
         assert_eq!(rejoin, joined);
+    }
+
+    #[test]
+    fn runtime_string_to_number_keeps_q32_32_raw_value() {
+        assert_eq!(
+            string_to_number(&Value::String(" 3.14 ".to_string())),
+            Ok(Value::Fixed64(Fixed64::from_raw_i64(13_486_197_309)))
+        );
+        assert_eq!(
+            string_to_number(&Value::String("not-a-number".to_string())),
+            Ok(Value::None)
+        );
     }
 
     #[test]

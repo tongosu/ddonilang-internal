@@ -2226,6 +2226,7 @@ impl Parser {
         let TokenKind::Ident(keyword) = &self.tokens[self.pos - 1].kind else {
             unreachable!("decl block keyword must be identifier")
         };
+        let keyword = keyword.clone();
         if keyword != "채비" && !(keyword == "성질" && self.in_imja_seed_body()) {
             return Err(ParseError::UnexpectedToken {
                 expected: "'채비 {' 또는 임자 내부 '성질 {'",
@@ -2251,6 +2252,7 @@ impl Parser {
         self.advance();
 
         let mut items = Vec::new();
+        let mut init_assertions = Vec::new();
         loop {
             self.skip_newlines();
             if self.peek_kind_is(|k| matches!(k, TokenKind::RBrace)) {
@@ -2260,6 +2262,16 @@ impl Parser {
                 return Err(ParseError::ExpectedRBrace {
                     span: self.peek().span,
                 });
+            }
+
+            if keyword == "채비" && self.peek_kind_is(|k| matches!(k, TokenKind::Assertion(_))) {
+                let token = self.advance();
+                let TokenKind::Assertion(raw) = token.kind else {
+                    unreachable!("checked assertion token")
+                };
+                init_assertions.push(self.parse_assertion_block(&raw, token.span)?);
+                self.consume_terminator()?;
+                continue;
             }
 
             let name_token = self.peek().clone();
@@ -2334,7 +2346,11 @@ impl Parser {
         let span = start_span.merge(end_span);
         self.consume_terminator()?;
 
-        Ok(Stmt::DeclBlock { items, span })
+        Ok(Stmt::DeclBlock {
+            items,
+            init_assertions,
+            span,
+        })
     }
 
     fn parse_decl_type_name(&mut self) -> Result<(String, crate::lang::span::Span), ParseError> {
@@ -6486,6 +6502,30 @@ mod tests {
         assert_eq!(items.len(), 2);
         assert!(matches!(items[0].kind, DeclKind::Gureut));
         assert!(matches!(items[1].kind, DeclKind::Butbak));
+    }
+
+    #[test]
+    fn parse_decl_block_inner_seum_init_assertion() {
+        let source = r#"
+채비 {
+  세움 {
+    위치 =:= 0.
+  }.
+}.
+"#;
+        let tokens = Lexer::tokenize(source).expect("tokenize");
+        let program = Parser::parse_with_default_root(tokens, "살림").expect("parse");
+        let Stmt::DeclBlock {
+            items,
+            init_assertions,
+            ..
+        } = &program.stmts[0]
+        else {
+            panic!("decl block expected");
+        };
+        assert!(items.is_empty());
+        assert_eq!(init_assertions.len(), 1);
+        assert_eq!(init_assertions[0].body_source.trim(), "위치 =:= 0.");
     }
 
     #[test]

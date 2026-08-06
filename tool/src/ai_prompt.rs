@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 use zip::ZipArchive;
 
 const SSOT_INDEX_PREFIX: &str = "SSOT_INDEX_";
+const SSOT_MANIFEST_PREFIX: &str = "SSOT_ALL_MANIFEST_";
 const SSOT_BUNDLE_PREFIX: &str = "SSOT_bundle_";
 const AI_PROMPT_TEMPLATE: &str = include_str!("../assets/ai_prompt_template_v20.0.3.txt");
 
@@ -219,31 +220,29 @@ fn resolve_ssot_version(source: &BundleSource) -> Result<String, String> {
 fn resolve_ssot_version_from_dir(path: &Path) -> Result<String, String> {
     let entries = fs::read_dir(path)
         .map_err(|e| format!("SSOT 디렉터리 읽기 실패: {} ({e})", path.display()))?;
-    let mut best: Option<String> = None;
+    let mut best_index: Option<String> = None;
+    let mut best_manifest: Option<String> = None;
     for entry in entries.flatten() {
         let name = entry.file_name();
         let Some(name) = name.to_str() else {
             continue;
         };
-        let Some(version) = extract_version_from_index_name(name) else {
-            continue;
-        };
-        if best
-            .as_ref()
-            .map(|current| compare_versions(&version, current).is_gt())
-            .unwrap_or(true)
-        {
-            best = Some(version);
+        if let Some(version) = extract_version_from_index_name(name) {
+            update_best_version(&mut best_index, version);
+        }
+        if let Some(version) = extract_version_from_manifest_name(name) {
+            update_best_version(&mut best_manifest, version);
         }
     }
-    best.ok_or_else(|| format!("SSOT_INDEX 파일을 찾을 수 없습니다: {}", path.display()))
+    require_matching_authority_versions(best_index, best_manifest, &path.display().to_string())
 }
 
 fn resolve_ssot_version_from_zip(path: &Path) -> Result<String, String> {
     let file = fs::File::open(path)
         .map_err(|e| format!("SSOT 번들 열기 실패: {} ({e})", path.display()))?;
     let mut archive = ZipArchive::new(file).map_err(|e| format!("SSOT 번들 읽기 실패: {e}"))?;
-    let mut best: Option<String> = None;
+    let mut best_index: Option<String> = None;
+    let mut best_manifest: Option<String> = None;
     for index in 0..archive.len() {
         let entry_name = archive
             .by_index(index)
@@ -251,23 +250,41 @@ fn resolve_ssot_version_from_zip(path: &Path) -> Result<String, String> {
             .name()
             .to_string();
         let basename = entry_name.rsplit('/').next().unwrap_or(&entry_name);
-        let Some(version) = extract_version_from_index_name(basename) else {
-            continue;
-        };
-        if best
-            .as_ref()
-            .map(|current| compare_versions(&version, current).is_gt())
-            .unwrap_or(true)
-        {
-            best = Some(version);
+        if let Some(version) = extract_version_from_index_name(basename) {
+            update_best_version(&mut best_index, version);
+        }
+        if let Some(version) = extract_version_from_manifest_name(basename) {
+            update_best_version(&mut best_manifest, version);
         }
     }
-    best.ok_or_else(|| {
-        format!(
-            "SSOT_INDEX 파일을 번들에서 찾을 수 없습니다: {}",
-            path.display()
-        )
-    })
+    require_matching_authority_versions(best_index, best_manifest, &path.display().to_string())
+}
+
+fn update_best_version(best: &mut Option<String>, version: String) {
+    if best
+        .as_ref()
+        .map(|current| compare_versions(&version, current).is_gt())
+        .unwrap_or(true)
+    {
+        *best = Some(version);
+    }
+}
+
+fn require_matching_authority_versions(
+    index_version: Option<String>,
+    manifest_version: Option<String>,
+    source_label: &str,
+) -> Result<String, String> {
+    let index_version = index_version
+        .ok_or_else(|| format!("SSOT_INDEX 파일을 찾을 수 없습니다: {source_label}"))?;
+    let manifest_version = manifest_version
+        .ok_or_else(|| format!("SSOT_ALL_MANIFEST 파일을 찾을 수 없습니다: {source_label}"))?;
+    if index_version != manifest_version {
+        return Err(format!(
+            "SSOT authority version mismatch: index={index_version}, manifest={manifest_version}, source={source_label}"
+        ));
+    }
+    Ok(index_version)
 }
 
 fn profile_file_names(profile: &str, version: &str) -> Result<Vec<String>, String> {
@@ -304,6 +321,14 @@ fn extract_version_from_index_name(name: &str) -> Option<String> {
         return None;
     }
     let version = &name[SSOT_INDEX_PREFIX.len()..name.len() - 3];
+    is_version_like(version).then_some(version.to_string())
+}
+
+fn extract_version_from_manifest_name(name: &str) -> Option<String> {
+    if !name.starts_with(SSOT_MANIFEST_PREFIX) || !name.ends_with(".md") {
+        return None;
+    }
+    let version = &name[SSOT_MANIFEST_PREFIX.len()..name.len() - 3];
     is_version_like(version).then_some(version.to_string())
 }
 
@@ -379,7 +404,7 @@ fn load_profile_files_from_dir(
         let path = base_dir.join(name);
         let bytes = fs::read(&path)
             .map_err(|e| format!("SSOT 파일 읽기 실패: {} ({e})", path.display()))?;
-        validate_prompt_bytes(name, &bytes)?;
+        let bytes = canonicalize_prompt_bytes(name, bytes)?;
         files.push(PromptFile {
             name: name.clone(),
             bytes,
@@ -438,7 +463,7 @@ fn load_profile_files_from_zip(
         entry
             .read_to_end(&mut bytes)
             .map_err(|e| format!("SSOT 번들 읽기 실패: {name} ({e})"))?;
-        validate_prompt_bytes(name, &bytes)?;
+        let bytes = canonicalize_prompt_bytes(name, bytes)?;
         files.push(PromptFile {
             name: name.clone(),
             bytes,
@@ -447,12 +472,14 @@ fn load_profile_files_from_zip(
     Ok(files)
 }
 
-fn validate_prompt_bytes(name: &str, bytes: &[u8]) -> Result<(), String> {
-    if bytes.contains(&b'\r') {
-        return Err(format!("SSOT 파일에 CRLF가 포함되어 있습니다: {name}"));
+fn canonicalize_prompt_bytes(name: &str, bytes: Vec<u8>) -> Result<Vec<u8>, String> {
+    let text =
+        String::from_utf8(bytes).map_err(|_| format!("SSOT 파일이 UTF-8이 아닙니다: {name}"))?;
+    let canonical = text.replace("\r\n", "\n");
+    if canonical.contains('\r') {
+        return Err(format!("SSOT 파일에 단독 CR이 포함되어 있습니다: {name}"));
     }
-    std::str::from_utf8(bytes).map_err(|_| format!("SSOT 파일이 UTF-8이 아닙니다: {name}"))?;
-    Ok(())
+    Ok(canonical.into_bytes())
 }
 
 fn compute_bundle_hash(files: &[PromptFile]) -> String {
@@ -468,11 +495,18 @@ fn compute_bundle_hash(files: &[PromptFile]) -> String {
 }
 
 fn append_template(out: &mut Vec<u8>) -> Result<(), String> {
-    if AI_PROMPT_TEMPLATE.contains('\r') {
-        return Err("ai prompt 템플릿에 CRLF가 포함되어 있습니다.".to_string());
+    let template = AI_PROMPT_TEMPLATE.replace("\r\n", "\n");
+    if template.contains('\r') {
+        return Err("ai prompt 템플릿에 단독 CR이 포함되어 있습니다.".to_string());
     }
-    out.extend_from_slice(AI_PROMPT_TEMPLATE.as_bytes());
-    if !AI_PROMPT_TEMPLATE.ends_with('\n') {
+    if template
+        .lines()
+        .any(|line| line.starts_with("SSOT_VERSION ="))
+    {
+        return Err("ai prompt 템플릿은 SSOT version을 소유할 수 없습니다.".to_string());
+    }
+    out.extend_from_slice(template.as_bytes());
+    if !template.ends_with('\n') {
         out.push(b'\n');
     }
     Ok(())
@@ -536,6 +570,55 @@ fn append_trimmed_trailing_ws_lines(out: &mut Vec<u8>, bytes: &[u8]) {
 mod tests {
     use super::*;
 
+    fn ssot_fixture_from_golden() -> (PathBuf, Vec<u8>) {
+        let golden_path = default_golden_prompt_path();
+        let golden = fs::read(&golden_path)
+            .map_err(|e| format!("golden 파일 읽기 실패: {} ({e})", golden_path.display()))
+            .expect("read golden");
+        let golden = canonicalize_prompt_bytes("ai_prompt_golden", golden)
+            .expect("canonicalize golden text");
+        let text = std::str::from_utf8(&golden).expect("golden utf8");
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("clock")
+            .as_nanos();
+        let fixture = std::env::temp_dir().join(format!(
+            "ddn-ai-prompt-public-golden-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&fixture).expect("create golden fixture");
+        let ssot_version = text
+            .lines()
+            .find_map(|line| line.strip_prefix("SSOT_VERSION = "))
+            .expect("golden SSOT version");
+        fs::write(
+            fixture.join(format!("SSOT_ALL_MANIFEST_{ssot_version}.md")),
+            b"# public golden fixture manifest\n",
+        )
+        .expect("write golden fixture manifest");
+
+        let mut cursor = text;
+        let mut file_count = 0usize;
+        while let Some(begin_pos) = cursor.find("===== BEGIN ") {
+            cursor = &cursor[begin_pos + "===== BEGIN ".len()..];
+            let name_end = cursor.find(" =====\n").expect("golden begin marker");
+            let name = &cursor[..name_end];
+            assert!(
+                Path::new(name).components().count() == 1,
+                "golden fixture name must be a basename: {name}"
+            );
+            cursor = &cursor[name_end + " =====\n".len()..];
+            let end_marker = format!("===== END {name} =====\n");
+            let body_end = cursor.find(&end_marker).expect("golden end marker");
+            fs::write(fixture.join(name), &cursor.as_bytes()[..body_end])
+                .expect("write golden fixture file");
+            cursor = &cursor[body_end + end_marker.len()..];
+            file_count += 1;
+        }
+        assert!(file_count > 0, "golden must contain SSOT file blocks");
+        (fixture, golden)
+    }
+
     #[test]
     fn ai_prompt_bundle_hash_vector_matches() {
         let files = vec![
@@ -557,17 +640,31 @@ mod tests {
 
     #[test]
     fn ai_prompt_output_invariants_hold() {
+        let (fixture, _) = ssot_fixture_from_golden();
+        let fixture_arg = fixture.to_string_lossy().into_owned();
         let args = AiPromptArgs {
             profile: "lean".to_string(),
             out_path: None,
-            bundle_path: None,
+            bundle_path: Some(fixture_arg.clone()),
         };
         let output = build_ai_prompt(&args).expect("build ai prompt");
-        let (bundle_kind, source) = resolve_bundle_source(None).expect("bundle source");
+        let (bundle_kind, source) =
+            resolve_bundle_source(Some(&fixture_arg)).expect("bundle source");
         let ssot_version = resolve_ssot_version(&source).expect("ssot version");
         assert!(!output.contains(&b'\r'));
         let output_str = String::from_utf8(output.clone()).expect("utf8");
         assert!(output_str.starts_with("[또니랑 코드 생성 규약]"));
+        assert!(!output_str.contains("v20.6.33"));
+        assert_eq!(
+            output_str
+                .lines()
+                .filter(|line| line.starts_with("SSOT_VERSION ="))
+                .count(),
+            1
+        );
+        assert!(!output_str
+            .lines()
+            .any(|line| line == "SSOT_VERSION = v0.2.1"));
         assert!(!output_str
             .lines()
             .any(|line| line.ends_with(' ') || line.ends_with('\t')));
@@ -615,21 +712,71 @@ mod tests {
             assert_eq!(body.as_bytes(), expected_body);
             cursor = &cursor[end_pos + end.len()..];
         }
+        fs::remove_dir_all(fixture).expect("remove golden fixture");
+    }
+
+    #[test]
+    fn ai_prompt_text_canonicalizes_crlf_and_rejects_lone_cr() {
+        assert_eq!(
+            canonicalize_prompt_bytes("fixture.md", b"A\r\nB\n".to_vec())
+                .expect("canonicalize CRLF"),
+            b"A\nB\n"
+        );
+        assert!(canonicalize_prompt_bytes("fixture.md", b"A\rB".to_vec())
+            .expect_err("lone CR must fail")
+            .contains("단독 CR"));
+    }
+
+    #[test]
+    fn ai_prompt_rejects_index_manifest_version_mismatch() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("clock")
+            .as_nanos();
+        let fixture = std::env::temp_dir().join(format!(
+            "ddn-ai-prompt-version-mismatch-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&fixture).expect("create mismatch fixture");
+        fs::write(fixture.join("SSOT_INDEX_v24.15.1.md"), "# index\n")
+            .expect("write mismatch index");
+        fs::write(
+            fixture.join("SSOT_ALL_MANIFEST_v24.15.0.md"),
+            "# manifest\n",
+        )
+        .expect("write mismatch manifest");
+        let error = resolve_ssot_version(&BundleSource::Dir(fixture.clone()))
+            .expect_err("mismatched authority versions must fail");
+        fs::remove_dir_all(&fixture).expect("remove mismatch fixture");
+        assert!(error.contains("SSOT authority version mismatch"));
+        assert!(error.contains("index=v24.15.1"));
+        assert!(error.contains("manifest=v24.15.0"));
     }
 
     #[test]
     fn ai_prompt_output_matches_golden() {
+        let (fixture, golden) = ssot_fixture_from_golden();
         let args = AiPromptArgs {
             profile: "lean".to_string(),
             out_path: None,
-            bundle_path: None,
+            bundle_path: Some(fixture.to_string_lossy().into_owned()),
         };
         let output = build_ai_prompt(&args).expect("build ai prompt");
-        let golden_path = default_golden_prompt_path();
-        let golden = fs::read(&golden_path)
-            .map_err(|e| format!("golden 파일 읽기 실패: {} ({e})", golden_path.display()))
-            .expect("read golden");
-        assert_eq!(output, golden);
+        fs::remove_dir_all(fixture).expect("remove golden fixture");
+        if output != golden {
+            let output_text = std::str::from_utf8(&output).expect("output utf8");
+            let golden_text = std::str::from_utf8(&golden).expect("golden utf8");
+            let first_diff = output_text
+                .lines()
+                .zip(golden_text.lines())
+                .enumerate()
+                .find(|(_, (actual, expected))| actual != expected);
+            panic!(
+                "ai prompt golden mismatch: output_len={}, golden_len={}, first_diff={first_diff:?}",
+                output.len(),
+                golden.len()
+            );
+        }
     }
 
     fn default_golden_prompt_path() -> PathBuf {

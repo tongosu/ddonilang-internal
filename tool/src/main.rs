@@ -3,6 +3,7 @@
 mod ai_prompt;
 mod ddn_runtime;
 mod detmath_assets;
+mod fixed64_boundary;
 mod gate0_registry;
 pub mod lsp;
 mod paths;
@@ -26,6 +27,7 @@ use ddonirang_lang::{canonicalize, normalize, parse_with_mode, NormalizationLeve
 use ddonirang_lang::{Expr, ExprKind, Literal, SeedDef, SeedKind, Stmt, TopLevelItem};
 use ddonirang_tool::canon as tool_canon;
 pub use ddonirang_tool::canon;
+use fixed64_boundary::Fixed64FloatBoundary;
 use preprocess::{
     format_file_meta, preprocess_ai_calls, preprocess_source_for_parse, split_file_meta,
     validate_no_legacy_boim_surface, validate_no_legacy_header, AiMeta,
@@ -1794,6 +1796,42 @@ fn run_ddn_file(path: &str) -> Result<(), String> {
     write_diag_if_any(&run.sink)?;
     Ok(())
 }
+
+fn run_ddn_summary_command(mut args: Vec<String>) -> Result<(), String> {
+    let summary_json = take_arg_value(&mut args, "--summary-json");
+    let requested_ticks = match take_arg_value(&mut args, "--madi").as_deref() {
+        Some("configured") | None => None,
+        Some(raw) => Some(
+            raw.parse::<u32>()
+                .map_err(|_| format!("--madi 값 파싱 실패: {raw}"))?,
+        ),
+    };
+    if args.len() != 1 {
+        return Err(
+            "사용법: cargo run -p ddonirang-tool -- run-summary <파일경로> [--madi N] [--summary-json PATH]"
+                .to_string(),
+        );
+    }
+    let path = args
+        .first()
+        .ok_or_else(|| "run-summary 입력 파일 누락".to_string())?;
+    let source = read_text_from_path(path)?;
+    let summary =
+        ddonirang_tool::runtime_surface::run_summary_from_source(&source, path, requested_ticks)?;
+    let text = serde_json::to_string_pretty(&summary)
+        .map_err(|err| format!("run-summary 직렬화 실패: {err}"))?;
+    if let Some(out_path) = summary_json {
+        std::fs::write(&out_path, format!("{text}\n").as_bytes())
+            .map_err(|err| format!("run-summary 쓰기 실패: {err}"))?;
+    } else {
+        let mut stdout = io::stdout();
+        stdout
+            .write_all(format!("{text}\n").as_bytes())
+            .map_err(|err| format!("run-summary 출력 실패: {err}"))?;
+    }
+    Ok(())
+}
+
 fn preprocess_ai_file(input_path: &str, output_path: Option<&str>) -> Result<(), String> {
     let source = read_text_from_path(input_path)?;
     let schema_hash = read_schema_hash();
@@ -2087,6 +2125,7 @@ fn read_net_events_detjson(path: &str) -> Result<Vec<ddonirang_core::platform::N
             seq: event.seq,
             order_key: event.order_key,
             payload_detjson,
+            source: InputSource::ExternalTask,
         });
     }
     events.sort();
@@ -3760,65 +3799,7 @@ fn parse_fixed64_decimal(input: &str) -> Result<Fixed64, String> {
     if text.is_empty() {
         return Err("빈 문자열".to_string());
     }
-    if text.contains('e') || text.contains('E') {
-        let parsed = text
-            .parse::<f64>()
-            .map_err(|_| format!("실수 파싱 실패: {}", text))?;
-        return Ok(Fixed64::from_f64_lossy(parsed));
-    }
-
-    let mut sign = 1i128;
-    let mut raw_text = text;
-    if let Some(rest) = raw_text.strip_prefix('-') {
-        sign = -1;
-        raw_text = rest;
-    } else if let Some(rest) = raw_text.strip_prefix('+') {
-        raw_text = rest;
-    }
-    let mut parts = raw_text.splitn(2, '.');
-    let int_part = parts.next().unwrap_or("");
-    let frac_part = parts.next().unwrap_or("");
-
-    let int_value = if int_part.is_empty() {
-        0i128
-    } else {
-        if !int_part.chars().all(|c| c.is_ascii_digit()) {
-            return Err(format!("정수부 형식 오류: {}", input));
-        }
-        int_part
-            .parse::<i128>()
-            .map_err(|_| format!("정수부 변환 실패: {}", input))?
-    };
-    let frac_value = if frac_part.is_empty() {
-        0i128
-    } else {
-        if !frac_part.chars().all(|c| c.is_ascii_digit()) {
-            return Err(format!("소수부 형식 오류: {}", input));
-        }
-        frac_part
-            .parse::<i128>()
-            .map_err(|_| format!("소수부 변환 실패: {}", input))?
-    };
-
-    let scale = 10i128.pow(frac_part.len() as u32);
-    let frac_raw = if frac_part.is_empty() {
-        0i128
-    } else {
-        (frac_value * (1i128 << 32)) / scale
-    };
-    let raw = (int_value << 32) + frac_raw;
-    let signed = raw.saturating_mul(sign);
-    Ok(Fixed64::from_raw_i64(clamp_i128_to_i64(signed)))
-}
-
-fn clamp_i128_to_i64(value: i128) -> i64 {
-    if value > i64::MAX as i128 {
-        i64::MAX
-    } else if value < i64::MIN as i128 {
-        i64::MIN
-    } else {
-        value as i64
-    }
+    Fixed64::parse_decimal(text).ok_or_else(|| format!("실수 파싱 실패: {text}"))
 }
 
 fn resolve_eco_reference(
@@ -4429,6 +4410,13 @@ fn main() {
                 std::process::exit(2);
             }
             if let Err(err) = run_ddn_file(path.as_deref().unwrap()) {
+                eprintln!("{err}");
+                std::process::exit(1);
+            }
+        }
+        Some("run-summary") => {
+            let rest: Vec<String> = args.collect();
+            if let Err(err) = run_ddn_summary_command(rest) {
                 eprintln!("{err}");
                 std::process::exit(1);
             }
@@ -5640,6 +5628,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events,
+            frame_source: InputSource::ExternalTask,
             rng_seed: 0,
         };
         let sam = ReplaySam::new(vec![snapshot]);
@@ -5706,10 +5695,10 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "개체수" | "개체수" => entity_count = Some(value),
-                "컴포넌트수" | "컴포넌트수" => component_count = Some(value),
-                "아키타입_이동" | "아키타입_이동" => archetype_moves = Some(value),
-                "성능_캡" | "성능_캡" => perf_cap = Some(value),
+                "개체수" => entity_count = Some(value),
+                "컴포넌트수" => component_count = Some(value),
+                "아키타입_이동" => archetype_moves = Some(value),
+                "성능_캡" => perf_cap = Some(value),
                 _ => {}
             }
         }
@@ -5743,9 +5732,9 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "쿼리_대상수" | "쿼리_대상수" => query_target_count = Some(value),
-                "쿼리_배치" | "쿼리_배치" => query_batch = Some(value),
-                "스냅샷_고정" | "스냅샷_고정" => snapshot_fixed = Some(value),
+                "쿼리_대상수" => query_target_count = Some(value),
+                "쿼리_배치" => query_batch = Some(value),
+                "스냅샷_고정" => snapshot_fixed = Some(value),
                 _ => {}
             }
         }
@@ -5778,12 +5767,12 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "임자수" | "임자수" => agent_count = Some(value),
-                "상품수" | "상품수" => item_count = Some(value),
-                "거래수" | "거래수" => trade_count = Some(value),
-                "초기_잔고" | "초기_잔고" => starting_balance = Some(value),
-                "초기_재고" | "초기_재고" => starting_inventory = Some(value),
-                "기본_가격" | "기본_가격" => base_price = Some(value),
+                "임자수" => agent_count = Some(value),
+                "상품수" => item_count = Some(value),
+                "거래수" => trade_count = Some(value),
+                "초기_잔고" => starting_balance = Some(value),
+                "초기_재고" => starting_inventory = Some(value),
+                "기본_가격" => base_price = Some(value),
                 _ => {}
             }
         }
@@ -5827,11 +5816,11 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "임자수" | "임자수" => agent_count = Some(value),
-                "거래수" | "거래수" => trade_count = Some(value),
-                "초기_잔고" | "초기_잔고" => starting_balance = Some(value),
-                "잔고_최소" | "잔고_최소" => min_balance = Some(value),
-                "거래_금액" | "거래_금액" => trade_amount = Some(value),
+                "임자수" => agent_count = Some(value),
+                "거래수" => trade_count = Some(value),
+                "초기_잔고" => starting_balance = Some(value),
+                "잔고_최소" => min_balance = Some(value),
+                "거래_금액" => trade_amount = Some(value),
                 _ => {}
             }
         }
@@ -5871,11 +5860,11 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "임자수" | "임자수" => agent_count = Some(value),
-                "상품수" | "상품수" => item_count = Some(value),
-                "거래수" | "거래수" => trade_count = Some(value),
-                "기본_가격" | "기본_가격" => base_price = Some(value),
-                "거래_금액" | "거래_금액" => trade_amount = Some(value),
+                "임자수" => agent_count = Some(value),
+                "상품수" => item_count = Some(value),
+                "거래수" => trade_count = Some(value),
+                "기본_가격" => base_price = Some(value),
+                "거래_금액" => trade_amount = Some(value),
                 _ => {}
             }
         }
@@ -5914,10 +5903,10 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "반응_패스_최대" | "반응_패스_최대" => reactive_max_pass = Some(value),
-                "알림_연쇄" | "알림_연쇄" => alert_chain = Some(value),
-                "반응_증분" | "반응_증분" => step_value = Some(value),
-                "초기_값" | "초기_값" => initial_value = Some(value),
+                "반응_패스_최대" => reactive_max_pass = Some(value),
+                "알림_연쇄" => alert_chain = Some(value),
+                "반응_증분" => step_value = Some(value),
+                "초기_값" => initial_value = Some(value),
                 _ => {}
             }
         }
@@ -5952,10 +5941,10 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "제안_수" | "제안_수" => proposal_count = Some(value),
-                "승인_토큰" | "승인_토큰" => approval_tokens = Some(value),
-                "적용_요청" | "적용_요청" => apply_requests = Some(value),
-                "승인_필수" | "승인_필수" => approval_required = Some(value),
+                "제안_수" => proposal_count = Some(value),
+                "승인_토큰" => approval_tokens = Some(value),
+                "적용_요청" => apply_requests = Some(value),
+                "승인_필수" => approval_required = Some(value),
                 _ => {}
             }
         }
@@ -5991,11 +5980,11 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "참가자수" | "참가자수" => participant_count = Some(value),
-                "호스트_입력" | "호스트_입력" => host_inputs = Some(value),
-                "손님_입력" | "손님_입력" => guest_inputs = Some(value),
-                "동기_라운드" | "동기_라운드" => sync_rounds = Some(value),
-                "시작_값" | "시작_값" => starting_value = Some(value),
+                "참가자수" => participant_count = Some(value),
+                "호스트_입력" => host_inputs = Some(value),
+                "손님_입력" => guest_inputs = Some(value),
+                "동기_라운드" => sync_rounds = Some(value),
+                "시작_값" => starting_value = Some(value),
                 _ => {}
             }
         }
@@ -6035,11 +6024,11 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "차분_개수" | "차분_개수" => diff_count = Some(value),
-                "코드_길이_전" | "코드_길이_전" => code_before_len = Some(value),
-                "코드_길이_후" | "코드_길이_후" => code_after_len = Some(value),
-                "상태_필드_수" | "상태_필드_수" => state_field_count = Some(value),
-                "요약_캡" | "요약_캡" => summary_cap = Some(value),
+                "차분_개수" => diff_count = Some(value),
+                "코드_길이_전" => code_before_len = Some(value),
+                "코드_길이_후" => code_after_len = Some(value),
+                "상태_필드_수" => state_field_count = Some(value),
+                "요약_캡" => summary_cap = Some(value),
                 _ => {}
             }
         }
@@ -6079,11 +6068,11 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
                 continue;
             };
             match key.as_str() {
-                "임자수" | "임자수" => agent_count = Some(value),
-                "상품수" | "상품수" => item_count = Some(value),
-                "거래수" | "거래수" => trade_count = Some(value),
-                "쿼리_배치" | "쿼리_배치" => query_batch = Some(value),
-                "반응_패스_최대" | "반응_패스_최대" => reactive_max_pass = Some(value),
+                "임자수" => agent_count = Some(value),
+                "상품수" => item_count = Some(value),
+                "거래수" => trade_count = Some(value),
+                "쿼리_배치" => query_batch = Some(value),
+                "반응_패스_최대" => reactive_max_pass = Some(value),
                 _ => {}
             }
         }
@@ -6392,6 +6381,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let mut defaults = HashMap::new();
@@ -6435,6 +6425,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let defaults = HashMap::new();
@@ -6507,6 +6498,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let mut defaults = HashMap::new();
@@ -6563,6 +6555,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let mut defaults = HashMap::new();
@@ -6614,6 +6607,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let mut defaults = HashMap::new();
@@ -6644,6 +6638,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let defaults = HashMap::new();
@@ -6673,6 +6668,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let defaults = HashMap::new();
@@ -6702,6 +6698,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let defaults = HashMap::new();
@@ -6730,6 +6727,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let defaults = HashMap::new();
@@ -6766,6 +6764,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let patch = iyagi.run_update(&ddonirang_core::NuriWorld::new(), &input);
@@ -6808,6 +6807,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let patch = iyagi.run_update(&ddonirang_core::NuriWorld::new(), &input);
@@ -6857,6 +6857,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let patch = iyagi.run_update(&ddonirang_core::NuriWorld::new(), &input);
@@ -6908,6 +6909,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Relay,
             rng_seed: 0,
         };
         let snapshot2 = InputSnapshot {
@@ -6919,6 +6921,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Relay,
             rng_seed: 0,
         };
         let mut sam = ReplaySam::new(vec![snapshot1.clone(), snapshot2.clone()]);
@@ -6986,6 +6989,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let patch = iyagi.run_update(&ddonirang_core::NuriWorld::new(), &input);
@@ -7027,6 +7031,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let patch = iyagi.run_update(&ddonirang_core::NuriWorld::new(), &input);
@@ -7061,6 +7066,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let patch = iyagi.run_update(&ddonirang_core::NuriWorld::new(), &input);
@@ -7093,6 +7099,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: InputSource::Person,
             rng_seed: 0,
         };
         let defaults = HashMap::new();
@@ -7180,7 +7187,7 @@ E_STATE_TRANSITION_ACTION_ARG_UNRESOLVED: 기록:다음상태",
             (
                 "map element mismatch",
                 r#"
-(표:(글 수)짝맞춤~을) 통과:셈씨 = {
+(표:(글, 수)짝맞춤~을) 통과:셈씨 = {
 }
 
 매틱:움직씨 = {

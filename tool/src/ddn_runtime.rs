@@ -3,6 +3,7 @@ use std::cell::Cell;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
+use crate::fixed64_boundary::Fixed64FloatBoundary;
 use crate::gate0_registry;
 use crate::preprocess::{
     preprocess_source_for_parse, split_file_meta, validate_no_legacy_boim_surface,
@@ -4719,10 +4720,8 @@ impl<'a> EvalContext<'a> {
             return Some(Value::Bool(false));
         }
         let compact_numeric: String = text.chars().filter(|ch| !ch.is_whitespace()).collect();
-        if let Ok(num) = compact_numeric.parse::<f64>() {
-            if num.is_finite() {
-                return Some(Value::Fixed64(Fixed64::from_f64_lossy(num)));
-            }
+        if let Some(num) = Fixed64::parse_decimal(&compact_numeric) {
+            return Some(Value::Fixed64(num));
         }
         if text.starts_with('#') {
             return Some(Value::String(text.to_string()));
@@ -8232,7 +8231,7 @@ fn boim_value_to_fixed64(value: &Value) -> Option<Fixed64> {
         Value::Fixed64(value) => Some(*value),
         Value::Unit(value) => Some(value.value),
         Value::Bool(value) => Some(Fixed64::from_i64(if *value { 1 } else { 0 })),
-        Value::String(value) => value.parse::<f64>().ok().map(Fixed64::from_f64_lossy),
+        Value::String(value) => Fixed64::parse_decimal(value),
         _ => None,
     }
 }
@@ -9447,7 +9446,8 @@ fn tighten_linear_lower(interval: &mut LinearInequalityInterval, value: Fixed64,
     match interval.lower {
         None => interval.lower = Some(next),
         Some(current)
-            if value > current.value || (value == current.value && !inclusive && current.inclusive) =>
+            if value > current.value
+                || (value == current.value && !inclusive && current.inclusive) =>
         {
             interval.lower = Some(next);
         }
@@ -9460,7 +9460,8 @@ fn tighten_linear_upper(interval: &mut LinearInequalityInterval, value: Fixed64,
     match interval.upper {
         None => interval.upper = Some(next),
         Some(current)
-            if value < current.value || (value == current.value && !inclusive && current.inclusive) =>
+            if value < current.value
+                || (value == current.value && !inclusive && current.inclusive) =>
         {
             interval.upper = Some(next);
         }
@@ -9491,9 +9492,9 @@ fn apply_linear_inequality_constraint(
         }
         return Ok(());
     }
-    let bound = rhs
-        .try_div(slope)
-        .map_err(|_| "E_LINEAR_INEQUALITY_DIV_ZERO: 선형부등식 경계 계산 중 0으로 나눌 수 없습니다".to_string())?;
+    let bound = rhs.try_div(slope).map_err(|_| {
+        "E_LINEAR_INEQUALITY_DIV_ZERO: 선형부등식 경계 계산 중 0으로 나눌 수 없습니다".to_string()
+    })?;
     let inclusive = matches!(compare, "<=" | ">=" | "이하" | "이상");
     let slope_positive = slope.to_raw() > 0;
     match (compare, slope_positive) {
@@ -9552,11 +9553,19 @@ fn eval_linear_inequality_solve(args: &[Value]) -> Result<Value, EvalError> {
     }
     let conditions = match &args[0] {
         Value::List(items) => items,
-        _ => return Err("선형부등식.풀기 첫 번째 인자는 조건 차림이어야 합니다".to_string().into()),
+        _ => {
+            return Err("선형부등식.풀기 첫 번째 인자는 조건 차림이어야 합니다"
+                .to_string()
+                .into())
+        }
     };
     let var_name = match &args[1] {
         Value::String(value) => value.trim().trim_start_matches('#').to_string(),
-        _ => return Err("선형부등식.풀기 두 번째 인자는 변수 글이어야 합니다".to_string().into()),
+        _ => {
+            return Err("선형부등식.풀기 두 번째 인자는 변수 글이어야 합니다"
+                .to_string()
+                .into())
+        }
     };
     if var_name.is_empty() {
         return Err("E_LINEAR_INEQUALITY_BAD_VAR: 변수 이름이 비어 있습니다"
@@ -9608,9 +9617,11 @@ fn eval_linear_inequality_solve(args: &[Value]) -> Result<Value, EvalError> {
         let slope01 = y1.value.saturating_sub(y0.value);
         let slope12 = y2.value.saturating_sub(y1.value);
         if slope01 != slope12 {
-            return Err("E_LINEAR_INEQUALITY_NONLINEAR: V1은 1변수 선형 부등식만 지원합니다"
-                .to_string()
-                .into());
+            return Err(
+                "E_LINEAR_INEQUALITY_NONLINEAR: V1은 1변수 선형 부등식만 지원합니다"
+                    .to_string()
+                    .into(),
+            );
         }
         let rhs = boundary.value.saturating_sub(y0.value);
         apply_linear_inequality_constraint(&mut interval, slope01, rhs, compare.trim())?;
@@ -9642,12 +9653,14 @@ fn eval_linear_inequality_solve(args: &[Value]) -> Result<Value, EvalError> {
     } else {
         fields.insert(
             "상태".to_string(),
-            Value::String(if interval.lower.is_none() && interval.upper.is_none() {
-                "전체"
-            } else {
-                "구간"
-            }
-            .to_string()),
+            Value::String(
+                if interval.lower.is_none() && interval.upper.is_none() {
+                    "전체"
+                } else {
+                    "구간"
+                }
+                .to_string(),
+            ),
         );
         if let Some(lower) = interval.lower {
             fields.insert(
@@ -9926,11 +9939,8 @@ fn value_to_fixed64_coerce(value: &Value) -> Result<Fixed64, EvalError> {
     match value {
         Value::Fixed64(v) => Ok(*v),
         Value::Unit(unit) if unit.is_dimensionless() => Ok(unit.value),
-        Value::String(text) => text
-            .trim()
-            .parse::<f64>()
-            .map(Fixed64::from_f64_lossy)
-            .map_err(|_| "수치 값이 필요합니다".to_string().into()),
+        Value::String(text) => Fixed64::parse_decimal(text)
+            .ok_or_else(|| EvalError::from("수치 값이 필요합니다".to_string())),
         _ => numeric_pack_approx(value)
             .ok_or_else(|| EvalError::from("수치 값이 필요합니다".to_string())),
     }
@@ -11561,9 +11571,8 @@ fn endpoint_case_suite_check_string_list(
     fields: &BTreeMap<String, Value>,
     name: &str,
 ) -> Result<Vec<Value>, EvalError> {
-    let list = endpoint_relation_list_field(fields, name).map_err(|_| {
-        endpoint_case_suite_error("connect_case_suite_check_malformed_summary")
-    })?;
+    let list = endpoint_relation_list_field(fields, name)
+        .map_err(|_| endpoint_case_suite_error("connect_case_suite_check_malformed_summary"))?;
     if list.iter().any(|item| !matches!(item, Value::String(_))) {
         return Err(endpoint_case_suite_error(
             "connect_case_suite_check_malformed_summary",
@@ -15587,10 +15596,9 @@ fn tokenize_formula(body: &str, dialect: &FormulaDialect) -> Result<Vec<FormulaT
                     }
                     break;
                 }
-                let value = raw
-                    .parse::<f64>()
-                    .map_err(|_| EvalError::Message("FATAL:FORMULA_TOKEN_INVALID".to_string()))?;
-                tokens.push(FormulaToken::Number(Fixed64::from_f64_lossy(value)));
+                let value = Fixed64::parse_decimal(&raw)
+                    .ok_or_else(|| EvalError::Message("FATAL:FORMULA_TOKEN_INVALID".to_string()))?;
+                tokens.push(FormulaToken::Number(value));
             }
             'a'..='z' | 'A'..='Z' => {
                 let ident = read_formula_ident(&mut chars, dialect)?;
@@ -16426,6 +16434,14 @@ fn format_type_ref(type_ref: &TypeRef) -> String {
             let args_out: Vec<String> = args.iter().map(format_type_ref).collect();
             format!("({}){}", args_out.join(", "), name)
         }
+        TypeRef::Function { params, result } => {
+            let params_out: Vec<String> = params.iter().map(format_type_ref).collect();
+            format!(
+                "({}) --> {}",
+                params_out.join(", "),
+                format_type_ref(result)
+            )
+        }
         TypeRef::Infer => "_".to_string(),
     }
 }
@@ -16439,6 +16455,7 @@ fn check_value_type(value: &Value, type_ref: &TypeRef) -> Result<(), TypeMismatc
         TypeRef::Infer => Ok(()),
         TypeRef::Named(name) => check_named_type(value, name),
         TypeRef::Applied { name, args } => check_applied_type(value, name, args),
+        TypeRef::Function { .. } => Err(type_mismatch_detail(&format_type_ref(type_ref), value)),
     }
 }
 
@@ -16809,6 +16826,7 @@ mod tests {
             pointer_y_i32: 0,
             ai_injections: Vec::new(),
             net_events: Vec::new(),
+            frame_source: ddonirang_core::InputSource::Person,
             rng_seed: 0,
         }
     }
@@ -16831,7 +16849,10 @@ mod tests {
                 explicit_tag: true,
             }),
         );
-        fields.insert("비교".to_string(), RuntimeValue::String(compare.to_string()));
+        fields.insert(
+            "비교".to_string(),
+            RuntimeValue::String(compare.to_string()),
+        );
         fields.insert(
             "경계".to_string(),
             RuntimeValue::Fixed64(Fixed64::from_i64(boundary)),
@@ -17610,8 +17631,8 @@ mod tests {
     방법 <- (r, 3) 차림.값.
 }
 "#;
-        let program = DdnProgram::from_source(script, "numeric_root_finding_v1.ddn")
-            .expect("parse");
+        let program =
+            DdnProgram::from_source(script, "numeric_root_finding_v1.ddn").expect("parse");
         let mut runner = DdnRunner::new(program, "매틱");
         let world = NuriWorld::new();
         let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
@@ -17625,7 +17646,10 @@ mod tests {
 
         assert_eq!(extract_fixed(&output.resources, "근"), Fixed64::from_i64(2));
         assert_eq!(extract_fixed(&output.resources, "잔차"), Fixed64::ZERO);
-        assert_eq!(extract_fixed(&output.resources, "반복값"), Fixed64::from_i64(1));
+        assert_eq!(
+            extract_fixed(&output.resources, "반복값"),
+            Fixed64::from_i64(1)
+        );
         match output.resources.get("방법") {
             Some(RuntimeValue::String(value)) => assert_eq!(value, "이분법"),
             other => panic!("방법 must be string, got {:?}", other),
@@ -17639,8 +17663,8 @@ mod tests {
     r <- (((#ascii) 수식{x^2 + 1}), "x", -1, 1, 8) 수치해.이분법.
 }
 "#;
-        let program = DdnProgram::from_source(script, "numeric_root_finding_v1_bad.ddn")
-            .expect("parse");
+        let program =
+            DdnProgram::from_source(script, "numeric_root_finding_v1_bad.ddn").expect("parse");
         let mut runner = DdnRunner::new(program, "매틱");
         let world = NuriWorld::new();
         let err = match runner.run_update(&world, &empty_input(), &HashMap::new()) {
@@ -17700,11 +17724,8 @@ mod tests {
     사유 <- 결과.사유.
 }
 "#;
-        let program = DdnProgram::from_source(
-            script,
-            "polynomial_solve_minimum_v1_non_unique.ddn",
-        )
-        .expect("parse");
+        let program = DdnProgram::from_source(script, "polynomial_solve_minimum_v1_non_unique.ddn")
+            .expect("parse");
         let mut runner = DdnRunner::new(program, "매틱");
         let world = NuriWorld::new();
         let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
@@ -17734,14 +17755,20 @@ mod tests {
             Some(RuntimeValue::String(value)) => assert_eq!(value, "구간"),
             other => panic!("상태 must be string, got {:?}", other),
         }
-        assert_eq!(output.get("하한"), Some(&unit_value_to_value(UnitValue {
-            value: Fixed64::from_i64(3),
-            dim: UnitDim::NONE,
-        })));
-        assert_eq!(output.get("상한"), Some(&unit_value_to_value(UnitValue {
-            value: Fixed64::from_i64(4),
-            dim: UnitDim::NONE,
-        })));
+        assert_eq!(
+            output.get("하한"),
+            Some(&unit_value_to_value(UnitValue {
+                value: Fixed64::from_i64(3),
+                dim: UnitDim::NONE,
+            }))
+        );
+        assert_eq!(
+            output.get("상한"),
+            Some(&unit_value_to_value(UnitValue {
+                value: Fixed64::from_i64(4),
+                dim: UnitDim::NONE,
+            }))
+        );
         assert_eq!(output.get("하한포함"), Some(&RuntimeValue::Bool(true)));
         assert_eq!(output.get("상한포함"), Some(&RuntimeValue::Bool(true)));
     }
@@ -21881,9 +21908,8 @@ mod tests {
             "아무것".to_string(),
             RuntimeValue::Fixed64(Fixed64::from_i64(1)),
         );
-        let err =
-            eval_endpoint_solve_range_case_suite_check(&[RuntimeValue::Pack(not_summary)])
-                .expect_err("non summary must fail");
+        let err = eval_endpoint_solve_range_case_suite_check(&[RuntimeValue::Pack(not_summary)])
+            .expect_err("non summary must fail");
         assert!(
             err.to_string()
                 .contains("connect_case_suite_check_expected_summary"),

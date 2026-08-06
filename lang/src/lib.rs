@@ -12,6 +12,7 @@ pub mod ast;
 pub mod canonicalizer;
 pub mod currentline;
 pub mod dialect;
+pub mod execution_mode;
 pub mod frontdoor;
 pub mod lexer;
 pub mod normalizer;
@@ -26,14 +27,14 @@ pub use ast::*;
 pub use canonicalizer::{canonicalize, CanonicalizeReport, LintWarning};
 pub use currentline::{apply_currentline_cell, CurrentLineResult};
 pub use dialect::DialectConfig;
+pub use execution_mode::{decide_execution_mode, ExecutionMode, ExecutionModeDecision};
 pub use frontdoor::{
     connect_endpoint_relation_seum_rows, find_legacy_header, find_legacy_range_comment,
     find_legacy_root_hide_directive, find_legacy_root_surface, has_legacy_boim_surface,
     normalize_for_lang_parity, owner_inner_seum_canon_rows, owner_state_symbol_table_rows,
     preprocess_frontdoor_source, validate_no_legacy_boim_surface, validate_no_legacy_header,
     validate_no_legacy_range_comment, validate_no_legacy_root_hide_directive,
-    validate_no_legacy_root_surface,
-    wrap_lang_parity_source,
+    validate_no_legacy_root_surface, wrap_lang_parity_source,
 };
 pub use lexer::{LexError, Lexer, Token, TokenKind};
 pub use normalizer::{normalize, NormalizationLevel, Normalizer};
@@ -152,6 +153,20 @@ mod integration_tests {
         let normalized = parse_and_normalize(source, "test.ddoni", NormalizationLevel::N1).unwrap();
 
         assert_eq!(normalized.trim(), "나이:수 = 10");
+    }
+
+    #[test]
+    fn decimal_literal_keeps_q32_32_raw_value() {
+        let program = parse("검사:셈씨 = { 3.14 돌려줘. }", "decimal.ddoni").expect("parse");
+        let TopLevelItem::SeedDef(seed) = &program.items[0];
+        let body = seed.body.as_ref().expect("body");
+        let Stmt::Return { value, .. } = &body.stmts[0] else {
+            panic!("return expected");
+        };
+        let ExprKind::Literal(Literal::Fixed64(value)) = &value.kind else {
+            panic!("fixed literal expected");
+        };
+        assert_eq!(value.raw_i64(), 13_486_197_309);
     }
 
     #[test]
@@ -2461,6 +2476,89 @@ Test:셈씨 = {
             other => panic!("unexpected type ref: {other:?}"),
         }
         assert_eq!(seed.params[0].josa_list, vec!["을".to_string()]);
+    }
+
+    #[test]
+    fn function_type_arrow_parses_simple_multi_and_higher_order_types() {
+        let source = r#"
+(영항:() --> 된씨, 단항:가씨 --> 나씨, 이항:(가씨, 나씨) --> 다씨, 고차:(가씨 --> 나씨) --> 다씨, 돌림:가씨 --> (나씨 --> 다씨))
+함수타입확인:셈씨 = { 0. }
+"#;
+        let program = parse(source, "function_type.ddn").expect("function type parse");
+        let TopLevelItem::SeedDef(seed) = &program.items[0];
+        assert_eq!(seed.params.len(), 5);
+
+        let TypeRef::Function { params, result } = &seed.params[0].type_ref else {
+            panic!("zero-parameter function type expected");
+        };
+        assert!(params.is_empty());
+        assert!(matches!(result.as_ref(), TypeRef::Named(name) if name == "된씨"));
+
+        let TypeRef::Function { params, result } = &seed.params[1].type_ref else {
+            panic!("simple function type expected");
+        };
+        assert_eq!(params.len(), 1);
+        assert!(matches!(&params[0], TypeRef::Named(name) if name == "가씨"));
+        assert!(matches!(result.as_ref(), TypeRef::Named(name) if name == "나씨"));
+
+        let TypeRef::Function { params, result } = &seed.params[2].type_ref else {
+            panic!("multi-parameter function type expected");
+        };
+        assert_eq!(params.len(), 2);
+        assert!(matches!(result.as_ref(), TypeRef::Named(name) if name == "다씨"));
+
+        let TypeRef::Function { params, result } = &seed.params[3].type_ref else {
+            panic!("higher-order function type expected");
+        };
+        assert!(matches!(&params[0], TypeRef::Function { .. }));
+        assert!(matches!(result.as_ref(), TypeRef::Named(name) if name == "다씨"));
+
+        let TypeRef::Function { params, result } = &seed.params[4].type_ref else {
+            panic!("function-returning function type expected");
+        };
+        assert_eq!(params.len(), 1);
+        assert!(matches!(result.as_ref(), TypeRef::Function { .. }));
+    }
+
+    #[test]
+    fn function_type_arrow_normalizes_and_roundtrips_canonically() {
+        let source = r#"
+(영항:()-->된씨, 단항:가씨-->나씨, 이항:(가씨,나씨)-->다씨, 고차:(가씨-->나씨)-->다씨, 돌림:가씨-->(나씨-->다씨))
+함수타입확인:셈씨 = { 0. }
+"#;
+        let canonical = parse_and_normalize(source, "function_type.ddn", NormalizationLevel::N1)
+            .expect("function type normalize");
+        assert!(canonical.contains("영항:() --> 된씨"));
+        assert!(canonical.contains("단항:가씨 --> 나씨"));
+        assert!(canonical.contains("이항:(가씨, 나씨) --> 다씨"));
+        assert!(canonical.contains("고차:(가씨 --> 나씨) --> 다씨"));
+        assert!(canonical.contains("돌림:가씨 --> (나씨 --> 다씨)"));
+        parse(&canonical, "function_type.canon.ddn").expect("canonical roundtrip parse");
+    }
+
+    #[test]
+    fn function_type_arrow_rejects_unparenthesized_chain() {
+        let source = "(함수:가씨 --> 나씨 --> 다씨) 확인:셈씨 = { 0. }";
+        let err = parse(source, "function_type_chain.ddn").expect_err("non-associative arrow");
+        assert!(err
+            .message
+            .contains("E_FUNCTION_TYPE_ARROW_NON_ASSOCIATIVE"));
+    }
+
+    #[test]
+    fn function_type_rejects_right_assignment_arrow_alias() {
+        let source = "(함수:가씨 -> 나씨) 확인:셈씨 = { 0. }";
+        let err = parse(source, "function_type_alias.ddn").expect_err("right arrow alias");
+        assert!(err
+            .message
+            .contains("E_FUNCTION_TYPE_RIGHT_ARROW_FORBIDDEN"));
+    }
+
+    #[test]
+    fn function_type_arrow_rejects_value_position() {
+        let source = "확인:셈씨 = { 값 --> 다른값. }";
+        let err = parse(source, "function_type_value.ddn").expect_err("value position");
+        assert!(err.message.contains("E_FUNCTION_TYPE_ARROW_VALUE_POSITION"));
     }
 
     #[test]

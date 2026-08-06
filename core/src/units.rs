@@ -491,13 +491,13 @@ impl Unit {
                 symbol: "C",
                 dim: UnitDim::TEMPERATURE,
                 scale: Fixed64::ONE,
-                offset: Fixed64::from_f64_lossy(273.15),
+                offset: Fixed64::from_ratio(27_315, 100),
             },
             Unit::Fahrenheit => UnitSpec {
                 symbol: "F",
                 dim: UnitDim::TEMPERATURE,
-                scale: Fixed64::from_f64_lossy(5.0 / 9.0),
-                offset: Fixed64::from_f64_lossy(459.67),
+                scale: Fixed64::from_ratio(5, 9),
+                offset: Fixed64::from_ratio(45_967, 100),
             },
             Unit::MeterPerSecond => UnitSpec {
                 symbol: "m/s",
@@ -675,13 +675,13 @@ pub fn resource_tag_with_unit(name: &str, unit: Unit) -> String {
 
 fn temperature_to_kelvin(value: Fixed64, symbol: &str) -> Fixed64 {
     match symbol {
-        "C" => value + Fixed64::from_f64_lossy(273.15),
+        "C" => value + Fixed64::from_ratio(27_315, 100),
         "F" => {
             let shifted = value - Fixed64::from_i64(32);
             let scaled = (shifted * Fixed64::from_i64(5))
                 .try_div(Fixed64::from_i64(9))
                 .unwrap_or(Fixed64::MAX);
-            scaled + Fixed64::from_f64_lossy(273.15)
+            scaled + Fixed64::from_ratio(27_315, 100)
         }
         _ => value,
     }
@@ -689,9 +689,9 @@ fn temperature_to_kelvin(value: Fixed64, symbol: &str) -> Fixed64 {
 
 fn kelvin_to_temperature(value: Fixed64, symbol: &str) -> Fixed64 {
     match symbol {
-        "C" => value - Fixed64::from_f64_lossy(273.15),
+        "C" => value - Fixed64::from_ratio(27_315, 100),
         "F" => {
-            let shifted = value - Fixed64::from_f64_lossy(273.15);
+            let shifted = value - Fixed64::from_ratio(27_315, 100);
             let scaled = (shifted * Fixed64::from_i64(9))
                 .try_div(Fixed64::from_i64(5))
                 .unwrap_or(Fixed64::MAX);
@@ -750,8 +750,8 @@ mod tests {
     fn temperature_units_normalize_to_kelvin() {
         let celsius = UnitValue::new(Fixed64::from_i64(25), Unit::Celsius);
         let fahrenheit = UnitValue::new(Fixed64::from_i64(77), Unit::Fahrenheit);
-        let kelvin = UnitValue::new(Fixed64::from_f64_lossy(298.15), Unit::Kelvin);
-        let expected = Fixed64::from_f64_lossy(298.15);
+        let kelvin = UnitValue::new(Fixed64::from_ratio(29_815, 100), Unit::Kelvin);
+        let expected = Fixed64::from_ratio(29_815, 100);
         assert_eq!(celsius.dim, UnitDim::TEMPERATURE);
         assert_eq!(fahrenheit.dim, UnitDim::TEMPERATURE);
         assert_eq!(kelvin.dim, UnitDim::TEMPERATURE);
@@ -762,7 +762,7 @@ mod tests {
 
     #[test]
     fn temperature_units_convert_back_to_surface_units() {
-        let kelvin = UnitValue::new(Fixed64::from_f64_lossy(298.15), Unit::Kelvin);
+        let kelvin = UnitValue::new(Fixed64::from_ratio(29_815, 100), Unit::Kelvin);
         let as_c = kelvin.to_unit(Unit::Celsius.spec()).expect("to celsius");
         let as_f = kelvin
             .to_unit(Unit::Fahrenheit.spec())
