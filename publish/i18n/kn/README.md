@@ -1,30 +1,35 @@
-# Ddonilang (kn)
+# Ddonilang (ಕನ್ನಡ)
 
-> ಇದು starter localization. Commands ಮತ್ತು file names canonical ಆಗಿಯೇ ಉಳಿಯುತ್ತವೆ.
+> ಪುನರುತ್ಪಾದಿಸಬಹುದಾದ programs, simulations ಮತ್ತು learning experiments ಗಾಗಿ Korean-first ಭಾಷೆ ಮತ್ತು tools.
 
-## ತ್ವರಿತ ಆರಂಭ
+Translation status: **Starter translation; Human review open**
 
-- source ನಿಂದ build: ಅವಶ್ಯಕತೆ: Rust + Cargo
-- Seamgrim workspace ಚಾಲನೆ: browser ನಲ್ಲಿ ತೆರೆಯಿರಿ: http://localhost:8787/
-- runtime principle: DDN runtime, packs, state hashes, mirror/replay records truth ಹೊಂದಿವೆ.
+## ಒಂದು ನಿಮಿಷದ ಮೊದಲ run
 
-## ಮುಖ್ಯ ದಾಖಲೆಗಳು
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+Output ನಲ್ಲಿ 23, 15 ಮತ್ತು 8 ಇವೆ ಎಂದು ಪರಿಶೀಲಿಸಿ.
 
-## ಪ್ರಸ್ತುತ examples
+## ಪ್ರಸ್ತುತ status
 
-- console-grid ಕನಿಷ್ಠ example
-- space2d pendulum ಮತ್ತು bounce probe
-- console-grid Tetris
-- ಸೂತ್ರ/proof/lambda examples
-- maze ಪರಿಶೀಲನೆ
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
-## translation status
+## ಮುಖ್ಯ documents
 
-ಇದು starter localization. Commands ಮತ್ತು file names canonical ಆಗಿಯೇ ಉಳಿಯುತ್ತವೆ.
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
+
+## Boundary
+
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

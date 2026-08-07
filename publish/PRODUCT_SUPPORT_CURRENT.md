@@ -1,6 +1,6 @@
 # 현재 제품 지원 상태
 
-> 확인일: 2026-08-06
+> 확인일: 2026-08-07
 > 이 문서는 고정된 Language SPEC과 별개의 제품 계보 안내다.
 
 ## 먼저 구분할 것
@@ -20,6 +20,19 @@
 - `검증 후보`는 격리 계보에서 제품 경로와 독립 검토를 통과했지만 기본 배포로
   승격되지 않은 것을 뜻한다.
 - `정본만`은 문법·의미가 정해졌지만 전체 제품 수직을 닫지 않은 것을 뜻한다.
+
+## GitHub 공개 기준선
+
+- 기본 분기: 보호된 `main`
+- 공개 기준 merge: `05b8c5e2e36f4a3a28fef04ddcdc2b7e7914ebd8`
+- 필수 검사: `seamgrim-gate` PASS
+- 공개 CI 범위: 공개 clone의 코드 테스트, 공개 golden, Language SPEC seal,
+  첫 실행 예제
+- 공개 CI 비범위: private SSOT·미공개 pack·실제 Workbench browser·Human 검토와
+  전체 제품 관문
+
+따라서 `main` 병합과 공개 CI PASS만으로 아래의 검증 후보·정본만 항목을 기본 제품
+지원으로 올리지 않는다.
 
 ## 사용자 표면
 
@@ -41,16 +54,17 @@
 | `모형 {}`·`모형값`·닫힌 `::` | v0.5.0 public docs-first | lexer/parser/typed AST/runtime OPEN | 정본만 / OPEN |
 | 초기화·`::구함`·사건·`잇기`·일반 `풀기` | v0.5.0 public docs-first | solver/canon/schema/CLI/WASM parity OPEN | 정본만 / OPEN |
 
-## 2026-07-31 계보 확인
+## 격리 제품 계보 참고
 
-- 현 기본 브랜치: `codex/queue-20260706` / `a000e262...`
 - `보임` 언어 수직 독립 검토 코드: `cf503ffd...`
 - 공개 관찰 Workbench 수직 독립 검토 코드: `4dece742...`
 - 위 두 계보와 이후 검증 기능을 함께 포함한 통합 후보:
   `codex/seamgrim-unified-product-shell-execution-controls-w1-20260731` / `df50fc49...`
 
-계보 포함은 기본 배포 승격이 아니다. 기본 제품 표시를 바꾸려면 통합 후보에서
-학습 예제·CLI/WASM·실제 Workbench 순환을 다시 검증하고, owner가 기본 계보로 승격해야 한다.
+위 commit과 분기 이름은 과거 격리 검증 근거를 식별하기 위한 값이다. GitHub의 현재
+개발 줄기는 `main` 하나다. 과거 계보에 기능이 존재한다는 사실은 기본 배포 승격이
+아니다. 기본 제품 표시를 바꾸려면 `main`에서 학습 예제·CLI/WASM·실제 Workbench
+순환을 다시 검증하고 owner가 제품 기준선으로 승인해야 한다.
 
 ## 공개 문서 갱신 규칙
 

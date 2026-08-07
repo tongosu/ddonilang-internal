@@ -1,38 +1,25 @@
-# Downloads (Aymara)
+# Downloads — Ddonilang
 
-> Aka qillqata qallta localización ukhamawa. Comandos ukat file sutinakax canonical qhiparaki.
+> Starter localization; Human review open
 
-## Kawkhans apayaña
+## Current distribution boundary
 
-- Public binaries ukax GitHub Releases ukankañapa.
-- git repository ukax user binary janiw imkiti.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## Target platforms
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## File sutininakaxa wali aski
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## Package layout aski
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## Checksums
+## Future release requirements
 
-Release ukar SHA256SUMS.txt churam. Atisaxa signature yapxatam.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## Source thakhi
-
-Jichha desarrollo uñjañatakix source build luram ukat Seamgrim local apayam. QUICKSTART.md uñjam.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

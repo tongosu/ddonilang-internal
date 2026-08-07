@@ -1,39 +1,27 @@
-# dev_structure (sym3)
+# Public development structure — ddonilang
 
-> compact localized set :: commands + file names stay canonical
+> compact starter; Human review open
 
-localized public summary; canonical detail = '../../DDONIRANG_DEV_STRUCTURE.md'.
-
-## core_layers
-
-| layer | path | role |
+| Layer | Path | Responsibility |
 | --- | --- | --- |
-| core | 'core/' | det_engine_core |
-| lang | 'lang/' | grammar/parser/canon |
-| tool | 'tool/' | runtime_tool_impl |
-| CLI | 'tools/teul-cli/' | CLI_run_checks |
-| packs | 'pack/' | runnable_pack_evidence |
-| Seamgrim | 'solutions/seamgrim_ui_mvp/' | web_workspace+Bogae_views |
-| tests | 'tests/' | integration_product_tests |
-| publish | 'publish/' | public_docs |
+| deterministic engine | `core/` | committed world-state transitions |
+| language | `lang/` | grammar, parser, canonicalization |
+| runtime and tool | `tool/` | execution front door and WASM API |
+| CLI | `tools/teul-cli/` | command-line execution and public checks |
+| numeric and proof | `numeric/`, `symbolic/`, `proof/` | bounded math and proof kernels |
+| Seamgrim | `solutions/seamgrim_ui_mvp/` | browser workspace and view layer |
+| public documents | `publish/` | guides and fixed public SPEC lineage |
 
-## Seamgrim_workspace_V2
+## Verification boundary
 
-- 'ui/index.html': single_entry
-- 'ui/screens/run.js': run_screen + current_line
-- 'ui/components/bogae.js': console/graph/space2d/grid render
-- 'ui/seamgrim_runtime_state.js': madi + runtime_state + mirror_summary
-- 'tools/ddn_exec_server.py': local_static_server + helper_API
+- GitHub public CI verifies public code tests, selected golden tests, the public SPEC seal, and the
+  first CLI example.
+- It does not prove full browser behavior, Human review, private SSOT gates, or every docs-first
+  surface.
+- Runtime truth belongs to committed DDN state and records. A renderer must not invent hidden
+  semantics from CSS, metadata, project titles, or file order.
+- Python and JavaScript may orchestrate tools and UI, but test-only lowering is not language
+  implementation evidence.
 
-## runtime_principle
-
-- DDN_runtime+packs+state_hash+mirror/replay own truth.
-- Bogae == view_layer; not runtime_truth.
-- Python/JS == orchestration/UI only; no test_only_lowering semantics.
-
-## current_evidence
-
-- CLI_WASM_runtime_parity
-- vol4_raw_currentline_parity
-- Seamgrim_product_smoke
-- Bogae_madi_graph_UI_checks
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md) ·
+[Public Language SPEC](../../spec/CURRENT.md)

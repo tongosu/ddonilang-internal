@@ -107,6 +107,11 @@ jobs:
       - name: Public Language SPEC seal
         run: python tools/check_public_language_spec.py
 
+      - name: Public introduction and localization
+        run: |
+          node tools/scripts/generate_public_intro_i18n.mjs --check
+          python tools/check_public_docs.py
+
       - name: Public first-run example
         shell: pwsh
         run: |

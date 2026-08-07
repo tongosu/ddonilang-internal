@@ -1,38 +1,25 @@
-# Downloads (Deutsch)
+# Downloads — Ddonilang
 
-> Starter-Lokalisierung. Befehle und Dateinamen bleiben canonical.
+> Starter-Übersetzung; Human review open
 
-## Distributionsort
+## Current distribution boundary
 
-- Öffentliche Binaries gehören in GitHub Releases.
-- Das git repository speichert keine Benutzer-Binaries.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## Zielplattformen
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## Empfohlene Dateinamen
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## Empfohlene Paketstruktur
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## Checksums
+## Future release requirements
 
-Mit Releases SHA256SUMS.txt bereitstellen. Wenn möglich eine Signatur hinzufügen.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## Quellpfad
-
-Für den aktuellen Entwicklungsstand aus den Quellen bauen und Seamgrim lokal starten. Siehe QUICKSTART.md.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

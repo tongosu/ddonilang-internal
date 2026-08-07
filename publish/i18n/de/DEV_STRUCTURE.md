@@ -1,39 +1,27 @@
-# Entwicklungsstruktur (Deutsch)
+# Public development structure — Ddonilang
 
-> Starter-Lokalisierung. Befehle und Dateinamen bleiben canonical.
+> Starter-Übersetzung; Human review open
 
-Dies ist eine lokalisierte öffentliche Zusammenfassung. Die detaillierte canonical Datei ist '../../DDONIRANG_DEV_STRUCTURE.md'.
-
-## Kernschichten
-
-| Schicht | Pfad | Rolle |
+| Layer | Path | Responsibility |
 | --- | --- | --- |
-| core | 'core/' | deterministischer Engine-Kern |
-| lang | 'lang/' | Grammatik, Parser, canonicalization |
-| tool | 'tool/' | runtime/tool Implementierung |
-| CLI | 'tools/teul-cli/' | CLI-Ausführung und Checks |
-| packs | 'pack/' | ausführbare pack evidence |
-| Seamgrim | 'solutions/seamgrim_ui_mvp/' | Web-workspace und Bogae views |
-| tests | 'tests/' | Integrations- und Produkttests |
-| publish | 'publish/' | öffentliche Dokumente |
+| deterministic engine | `core/` | committed world-state transitions |
+| language | `lang/` | grammar, parser, canonicalization |
+| runtime and tool | `tool/` | execution front door and WASM API |
+| CLI | `tools/teul-cli/` | command-line execution and public checks |
+| numeric and proof | `numeric/`, `symbolic/`, `proof/` | bounded math and proof kernels |
+| Seamgrim | `solutions/seamgrim_ui_mvp/` | browser workspace and view layer |
+| public documents | `publish/` | guides and fixed public SPEC lineage |
 
-## Seamgrim workspace V2
+## Verification boundary
 
-- 'ui/index.html': einziger Einstiegspunkt
-- 'ui/screens/run.js': Ausführungsansicht und current-line Ausführung
-- 'ui/components/bogae.js': Bogae-Rendering für console/graph/space2d/grid
-- 'ui/seamgrim_runtime_state.js': madi, runtime state und mirror summary
-- 'tools/ddn_exec_server.py': lokaler statischer Server und Hilfs-API
+- GitHub public CI verifies public code tests, selected golden tests, the public SPEC seal, and the
+  first CLI example.
+- It does not prove full browser behavior, Human review, private SSOT gates, or every docs-first
+  surface.
+- Runtime truth belongs to committed DDN state and records. A renderer must not invent hidden
+  semantics from CSS, metadata, project titles, or file order.
+- Python and JavaScript may orchestrate tools and UI, but test-only lowering is not language
+  implementation evidence.
 
-## Runtime-Prinzip
-
-- DDN runtime, packs, state hashes und mirror/replay records besitzen die truth.
-- Bogae ist eine view layer und besitzt keine runtime truth.
-- Python/JS dürfen Checks und UI orchestrieren, aber Sprachsemantik nicht durch test-only lowering ersetzen.
-
-## Aktuelle evidence
-
-- CLI/WASM runtime parity
-- Vol4 raw current-line bundle parity
-- Seamgrim product smoke
-- Bogae madi/graph UI checks
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md) ·
+[Public Language SPEC](../../spec/CURRENT.md)

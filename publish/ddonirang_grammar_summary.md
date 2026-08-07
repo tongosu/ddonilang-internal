@@ -1,5 +1,9 @@
 # 또니랑 문법 요약 (발표용, 주제별)
 
+> **역사적 참고 요약 / 현행 규범 아님.** 이 문서는 발표 흐름을 보존한 참고자료입니다.
+> 현재 공개 문법 계약은 [Language SPEC current](spec/CURRENT.md)를 따르며, 충돌하면 SPEC이
+> 우선합니다. 실제 구현 여부는 [제품 지원 현황](PRODUCT_SUPPORT_CURRENT.md)에서 확인하세요.
+
 > 목적: “언어 발표”에서 **문법의 핵심만** 빠르게 설명하기 위한 요약입니다.
 > 현재 제품 실행/예제 상태는 `README.md`, `QUICKSTART.md`, `DDONIRANG_DEV_STRUCTURE.md`를 함께 확인합니다.
 

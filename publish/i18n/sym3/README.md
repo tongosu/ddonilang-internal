@@ -1,30 +1,35 @@
-# Ddonilang (sym3)
+# ddonilang (sym3)
 
-> compact localized set :: commands + file names stay canonical
+> ko-first deterministic language + toolchain :: programs | simulations | learning_experiments
 
-## quick_start
+Translation status: **compact starter; Human review open**
 
-- build_from_source: requires: Rust + Cargo
-- run_Seamgrim_workspace: open_browser: http://localhost:8787/
-- runtime_principle: DDN_runtime+packs+state_hash+mirror/replay own truth.
+## first_run@1min
 
-## main_docs
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+assert output = [23, 15, 8]
 
-## current_examples
+## status_now
 
-- console_grid_min
-- space2d_pendulum+bounce_probe
-- console_grid_tetris
-- formula/proof/lambda
-- maze_probe
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
-## localization_status
+## docs_main
 
-compact localized set :: commands + file names stay canonical
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
+
+## Boundary
+
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

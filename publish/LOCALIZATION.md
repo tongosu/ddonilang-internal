@@ -1,53 +1,58 @@
 # 공개 문서 다국어 운영 기준
 
-## 현재 범위
+## 정본 위치
 
-현재 `publish/`의 다국어 공개 문서는 `publish/i18n/<lang>/` 묶음을 기준으로 둔다. 기존 `publish/README_<lang>.md` 파일은 기존 링크 호환을 위해 유지한다.
+다국어 공개 문서는 `publish/i18n/<언어 코드>/`를 단일 정본 위치로 사용합니다.
+기존 `publish/README_<언어>.md`는 과거 외부 링크를 깨지 않기 위한 짧은 안내만
+유지하며 번역 본문을 중복 보관하지 않습니다.
 
-| 언어/표기 | 파일 | 상태 |
+## 현재 언어
+
+| 코드 | 언어·표기 | 상태 |
 | --- | --- | --- |
-| 한국어 | `i18n/ko/` | 기준 문서 묶음 |
-| 영어 | `i18n/en/` | 현행화 |
-| 일본어 | `i18n/ja/` | starter 현행화 |
-| 터키어 | `i18n/tr/` | starter 현행화 |
-| 몽골어 | `i18n/mn/` | starter 현행화 |
-| 아이마라어 | `i18n/ay/` | starter 현행화 |
-| 바스크어 | `i18n/eu/` | starter 현행화 |
-| 칸나다어 | `i18n/kn/` | starter 현행화 |
-| 네팔어 | `i18n/ne/` | starter 현행화 |
-| 케추아어 | `i18n/qu/` | starter 현행화 |
-| sym3 | `i18n/sym3/` | compact 현행화 |
-| 타밀어 | `i18n/ta/` | starter 현행화 |
-| 텔루구어 | `i18n/te/` | starter 현행화 |
-| 중국어 | `i18n/zh/` | starter 신규 |
-| 스페인어 | `i18n/es/` | starter 신규 |
-| 프랑스어 | `i18n/fr/` | starter 신규 |
-| 독일어 | `i18n/de/` | starter 신규 |
+| ko | 한국어 | 기준 안내 |
+| en | English | starter / Human review open |
+| ja | 日本語 | starter / Human review open |
+| tr | Türkçe | starter / Human review open |
+| mn | Монгол | starter / Human review open |
+| ay | Aymara | starter / Human review open |
+| eu | Euskara | starter / Human review open |
+| kn | ಕನ್ನಡ | starter / Human review open |
+| ne | नेपाली | starter / Human review open |
+| qu | Runasimi | starter / Human review open |
+| sym3 | sym3 | compact starter |
+| ta | தமிழ் | starter / Human review open |
+| te | తెలుగు | starter / Human review open |
+| zh | 中文 | starter / Human review open |
+| es | Español | starter / Human review open |
+| fr | Français | starter / Human review open |
+| de | Deutsch | starter / Human review open |
 
-## 기준 문서
+## 각 묶음의 파일
 
-- 빠른 시작: `QUICKSTART.md`, 다국어 starter: `i18n/<lang>/QUICKSTART.md`
-- 개발 구조: `DDONIRANG_DEV_STRUCTURE.md`, 다국어 starter: `i18n/<lang>/DEV_STRUCTURE.md`
-- 다운로드: `DOWNLOADS.md`, 다국어 starter: `i18n/<lang>/DOWNLOADS.md`
-- 릴리즈 노트: `RELEASE_NOTES_20260211.md`, 다국어 starter: `i18n/<lang>/RELEASE_NOTES_20260211.md`
-- 문법 요약: `ddonirang_grammar_summary.md`
-- 문법 총정리: `ddonirang_grammar_full.md`
+- `README.md`: 프로젝트 소개와 상태 경계
+- `QUICKSTART.md`: 첫 CLI 실행과 선택적 작업실 실행
+- `DEV_STRUCTURE.md`: 공개 개발 구조 starter
+- `DOWNLOADS.md`: 배포 경계
+- `RELEASE_NOTES_20260211.md`: 역사적 릴리스 기록
 
-문법 요약/총정리는 아직 기준 문서 하나만 유지한다. 기능/명령/검증 경로가 자주 바뀌는 문서는 `tools/scripts/generate_publish_i18n_docs.ps1`로 starter 묶음을 재생성한다.
+## 생성과 검증
 
-## 다국어 확장 원칙
+`tools/scripts/generate_public_intro_i18n.mjs`가 17개 언어의 README와 QUICKSTART,
+기존 `README_<언어>.md` 호환 안내를 결정적으로 생성합니다.
 
-- README는 각 언어 사용자에게 프로젝트가 무엇인지 알려주는 입구다.
-- quickstart/dev structure/downloads/release notes는 `i18n/<lang>/`에 starter 묶음을 둔다.
-- 언어/runtime 의미는 번역 문서가 소유하지 않는다. 실행 의미는 DDN runtime, pack/checker, mirror/replay truth가 소유한다.
-- 다국어 이름/설명은 장기적으로 package/export symbol sidecar artifact에서 관리한다.
-- 자동 번역 초안은 starter로 표시하고, native review가 끝난 문서만 완성 번역으로 본다.
+```sh
+node tools/scripts/generate_public_intro_i18n.mjs
+python tools/check_public_docs.py
+```
 
-## 폴더 구조 판단
+생성기를 다시 실행했을 때 같은 바이트가 나와야 합니다.
 
-지금은 두 구조를 함께 유지한다.
+## 번역 경계
 
-- 기존 링크 호환: `publish/README_<lang>.md`
-- 새 다국어 문서 묶음: `publish/i18n/<lang>/`
-
-새 언어는 우선 `i18n/<lang>/`에만 추가한다. native review가 끝나고 GitHub 루트 링크가 필요할 때 `README_<lang>.md`를 추가한다.
+- DDN 코드, 명령, 파일 경로, schema와 오류 코드는 번역하지 않습니다.
+- 내부 SSOT와 공개 Language SPEC이 언어 의미를 소유합니다.
+- 자동·AI 번역은 starter이며 사람 검토를 통과하기 전 완성 번역으로 표시하지 않습니다.
+- 제품 지원 상태는 번역 문서가 독자적으로 올리지 않습니다.
+- 한국어 기준 문서가 바뀌면 모든 starter를 함께 재생성합니다.
+- 사람 검토 교정은 생성기 데이터에도 반영해 다음 재생성에서 사라지지 않게 합니다.

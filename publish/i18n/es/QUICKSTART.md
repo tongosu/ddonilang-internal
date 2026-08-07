@@ -1,50 +1,41 @@
-# Inicio rápido (Español)
+# Primera ejecución en un minuto — Ddonilang
 
-> Traducción starter. Los comandos y nombres de archivo se mantienen canonical.
+> Traducción inicial; Human review open
 
-## 1. Construir desde el código fuente
+## 1. Requirements
 
-Requisitos: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-Comprobar la CLI:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Ejecutar el workspace de Seamgrim
+## 3. Run the first DDN example
 
-Inicia el servidor local:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Confirma que la salida contiene 23, 15 y 8.
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-Abre en el navegador:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-El workspace puede abrir este inventario de ejemplos 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. Comprobaciones de regresión del producto
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. Ruta de publicación binaria
-
-Cuando haya binarios publicados, descárgalos desde GitHub Releases. Los binarios no se guardan en el repositorio git.
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: primero 'chmod +x ./ddonirang-tool', luego './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

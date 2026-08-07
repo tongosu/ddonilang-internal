@@ -1,39 +1,27 @@
-# Хөгжүүлэлтийн бүтэц (Монгол)
+# Public development structure — Ddonilang
 
-> Starter орчуулга. Команд ба файлын нэрс canonical хэвээр байна.
+> Starter орчуулга; Human review open
 
-Энэ бол олон хэлний нийтийн товч хураангуй. Дэлгэрэнгүй canonical файл нь '../../DDONIRANG_DEV_STRUCTURE.md'.
-
-## Үндсэн давхаргууд
-
-| Давхарга | Зам | Үүрэг |
+| Layer | Path | Responsibility |
 | --- | --- | --- |
-| core | 'core/' | детерминист engine core |
-| lang | 'lang/' | дүрэм, parser, canonicalization |
-| tool | 'tool/' | runtime/tool хэрэгжилт |
-| CLI | 'tools/teul-cli/' | CLI ажиллуулах ба шалгах |
-| packs | 'pack/' | ажиллах pack evidence |
-| Seamgrim | 'solutions/seamgrim_ui_mvp/' | web workspace ба Bogae view |
-| tests | 'tests/' | integration ба product tests |
-| publish | 'publish/' | нийтийн баримтууд |
+| deterministic engine | `core/` | committed world-state transitions |
+| language | `lang/` | grammar, parser, canonicalization |
+| runtime and tool | `tool/` | execution front door and WASM API |
+| CLI | `tools/teul-cli/` | command-line execution and public checks |
+| numeric and proof | `numeric/`, `symbolic/`, `proof/` | bounded math and proof kernels |
+| Seamgrim | `solutions/seamgrim_ui_mvp/` | browser workspace and view layer |
+| public documents | `publish/` | guides and fixed public SPEC lineage |
 
-## Seamgrim workspace V2
+## Verification boundary
 
-- 'ui/index.html': нэг орох цэг
-- 'ui/screens/run.js': ажиллуулах дэлгэц ба current-line execution
-- 'ui/components/bogae.js': console/graph/space2d/grid Bogae rendering
-- 'ui/seamgrim_runtime_state.js': madi, runtime state, mirror summary
-- 'tools/ddn_exec_server.py': локал static server ба helper API
+- GitHub public CI verifies public code tests, selected golden tests, the public SPEC seal, and the
+  first CLI example.
+- It does not prove full browser behavior, Human review, private SSOT gates, or every docs-first
+  surface.
+- Runtime truth belongs to committed DDN state and records. A renderer must not invent hidden
+  semantics from CSS, metadata, project titles, or file order.
+- Python and JavaScript may orchestrate tools and UI, but test-only lowering is not language
+  implementation evidence.
 
-## Runtime зарчим
-
-- DDN runtime, packs, state hashes, mirror/replay records truth-ийг эзэмшинэ.
-- Bogae нь view layer бөгөөд runtime truth эзэмшихгүй.
-- Python/JS orchestration ба UI хийж болно, харин хэлний утгыг test-only lowering-оор орлож болохгүй.
-
-## Одоогийн evidence
-
-- CLI/WASM runtime parity
-- Vol4 raw current-line bundle parity
-- Seamgrim product smoke
-- Bogae madi/graph UI checks
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md) ·
+[Public Language SPEC](../../spec/CURRENT.md)

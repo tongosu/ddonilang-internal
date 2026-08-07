@@ -1,50 +1,41 @@
-# Utqay qallariy (Runasimi)
+# Huk minuto qallariy — Ddonilang
 
-> Kay qillqa starter localizaciónmi. Comandos hinallataq file sutikuna canonical kachkan.
+> Starter localization; Human review open
 
-## 1. Source manta build ruray
+## 1. Requirements
 
-Munakun: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-CLI qhaway:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Seamgrim workspace purichiy
+## 3. Run the first DDN example
 
-Local server qallariy:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Lluqsisqapi 23, 15, 8 kasqanta qhaway.
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-Browserpi kichay:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-Workspace kay sample inventory kichanman 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. Product regression qhaway
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. Binary release ñan
-
-Release binaries lluqsiptin GitHub Releases manta uraykachiy. Binary filekunaqa git repositorypi mana churakunchu.
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: ñawpaq 'chmod +x ./ddonirang-tool', chaymanta './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

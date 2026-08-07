@@ -1,38 +1,25 @@
-# Татах (Монгол)
+# Downloads — Ddonilang
 
-> Starter орчуулга. Команд ба файлын нэрс canonical хэвээр байна.
+> Starter орчуулга; Human review open
 
-## Түгээлтийн байршил
+## Current distribution boundary
 
-- Хэрэглэгчийн binary нь GitHub Releases-д байрлана.
-- git repository хэрэглэгчийн binary хадгалахгүй.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## Зорилтот платформууд
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## Санал болгосон файлын нэр
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## Санал болгосон package бүтэц
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## Checksum
+## Future release requirements
 
-Release-д SHA256SUMS.txt хавсаргана. Боломжтой бол signature нэмнэ.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## Эх кодын зам
-
-Одоогийн хөгжүүлэлтийг эх кодоос build хийж Seamgrim-ийг локалаар ажиллуулж шалгана. QUICKSTART.md-г харна уу.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

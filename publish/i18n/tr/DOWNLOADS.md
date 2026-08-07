@@ -1,38 +1,25 @@
-# İndirmeler (Türkçe)
+# Downloads — Ddonilang
 
-> Başlangıç çevirisidir. Komutlar ve dosya adları canonical kalır.
+> Başlangıç çevirisi; Human review open
 
-## Dağıtım yeri
+## Current distribution boundary
 
-- Kullanıcıya açık binary'ler GitHub Releases içinde olmalıdır.
-- git deposu kullanıcı binary'lerini saklamaz.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## Hedef platformlar
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## Önerilen dosya adları
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## Önerilen paket yapısı
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## Checksum
+## Future release requirements
 
-Release ile SHA256SUMS.txt verin. Mümkünse imza ekleyin.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## Kaynak yolu
-
-Güncel geliştirme için kaynaktan derleyip Seamgrim'i yerelde çalıştırın. QUICKSTART.md dosyasına bakın.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

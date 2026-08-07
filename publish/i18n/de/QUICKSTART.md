@@ -1,50 +1,41 @@
-# Schnellstart (Deutsch)
+# Erster Lauf in einer Minute — Ddonilang
 
-> Starter-Lokalisierung. Befehle und Dateinamen bleiben canonical.
+> Starter-Übersetzung; Human review open
 
-## 1. Aus dem Quellcode bauen
+## 1. Requirements
 
-Voraussetzungen: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-CLI prüfen:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Seamgrim workspace starten
+## 3. Run the first DDN example
 
-Lokalen Server starten:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Prüfen Sie, dass die Ausgabe 23, 15 und 8 enthält.
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-Im Browser öffnen:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-Der workspace kann dieses Beispielinventar öffnen 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. Produkt-Regressionsprüfungen
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. Binary-Release-Pfad
-
-Wenn Release-Binaries veröffentlicht werden, lade sie aus GitHub Releases herunter. Binaries werden nicht im git repository gespeichert.
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: zuerst 'chmod +x ./ddonirang-tool', dann './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

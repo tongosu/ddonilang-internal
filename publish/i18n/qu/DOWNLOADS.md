@@ -1,38 +1,25 @@
-# Downloads (Runasimi)
+# Downloads — Ddonilang
 
-> Kay qillqa starter localizaciónmi. Comandos hinallataq file sutikuna canonical kachkan.
+> Starter localization; Human review open
 
-## Maypi rakiy
+## Current distribution boundary
 
-- Public binaries GitHub Releasespi kanan.
-- git repository user binarykunata mana waqaychan.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## Target platforms
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## File sutikuna allinchasqa
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## Package layout allinchasqa
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## Checksums
+## Future release requirements
 
-Releasewan SHA256SUMS.txt quy. Atikuptinqa signature yapay.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## Source ñan
-
-Kunan development qhawanapaq source build ruray chaymanta Seamgrim local purichiy. QUICKSTART.md qhaway.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

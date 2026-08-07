@@ -1,38 +1,25 @@
-# downloads (ಕನ್ನಡ)
+# Downloads — Ddonilang
 
-> ಇದು starter localization. Commands ಮತ್ತು file names canonical ಆಗಿಯೇ ಉಳಿಯುತ್ತವೆ.
+> Starter translation; Human review open
 
-## distribution location
+## Current distribution boundary
 
-- public binaries GitHub Releases ನಲ್ಲಿ ಇರಬೇಕು.
-- git repository user-facing binaries ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## target platforms
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## recommended file names
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## recommended package layout
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## checksums
+## Future release requirements
 
-release ಜೊತೆಗೆ SHA256SUMS.txt ನೀಡಿ. ಸಾಧ್ಯವಾದರೆ signature ಸೇರಿಸಿ.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## source path
-
-current development ಪರಿಶೀಲಿಸಲು source build ಮಾಡಿ Seamgrim local ಆಗಿ ಚಲಾಯಿಸಿ. QUICKSTART.md ನೋಡಿ.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

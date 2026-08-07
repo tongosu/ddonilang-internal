@@ -1,50 +1,41 @@
-# விரைவு தொடக்கம் (தமிழ்)
+# ஒரு நிமிட முதல் run — Ddonilang
 
-> இது starter localization. Commands மற்றும் file names canonical ஆகவே இருக்கும்.
+> Starter translation; Human review open
 
-## 1. source இலிருந்து build
+## 1. Requirements
 
-தேவை: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-CLI சரிபார்ப்பு:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Seamgrim workspace இயக்கவும்
+## 3. Run the first DDN example
 
-local server தொடங்கு:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Output இல் 23, 15, 8 இருப்பதை உறுதிப்படுத்தவும்.
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-browser இல் திற:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-workspace இந்த sample inventory திறக்க முடியும் 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. product regression checks
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. binary release பாதை
-
-release binaries வெளியானபின் GitHub Releases இலிருந்து பதிவிறக்கவும். binaries git repository இல் வைக்கப்படாது.
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: முதலில் 'chmod +x ./ddonirang-tool', பின்னர் './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

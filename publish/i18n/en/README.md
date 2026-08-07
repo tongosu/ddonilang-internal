@@ -1,30 +1,35 @@
-# Ddonilang (en)
+# Ddonilang (English)
 
-> English public document set.
+> A Korean-first language and toolchain for reproducible programs, simulations, and learning experiments.
 
-## Quick start
+Translation status: **Starter translation; Human review open**
 
-- Build from source: Requirements: Rust + Cargo
-- Run Seamgrim workspace: Open in the browser: http://localhost:8787/
-- Runtime principle: DDN runtime, packs, state hashes, and mirror/replay records own truth.
+## One-minute first run
+
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Confirm that the output contains 23, 15, and 8.
+
+## Current status
+
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
 ## Main documents
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
 
-## Current examples
+## Boundary
 
-- console-grid minimal example
-- space2d pendulum and bounce probe
-- console-grid Tetris
-- formula/proof/lambda examples
-- maze probe
-
-## Localization status
-
-English public document set.
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

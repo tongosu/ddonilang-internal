@@ -1,38 +1,25 @@
-# Deskargak (Euskara)
+# Downloads — Ddonilang
 
-> Hasierako lokalizazioa da. Komandoak eta fitxategi-izenak canonical geratzen dira.
+> Hasierako itzulpena; Human review open
 
-## Banaketa lekua
+## Current distribution boundary
 
-- Binary publikoak GitHub Releases-en egon behar dira.
-- git biltegiak ez ditu erabiltzaileentzako binaryak gordetzen.
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## Helburu plataformak
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## Gomendatutako fitxategi-izenak
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## Gomendatutako pakete egitura
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## Checksums
+## Future release requirements
 
-Release bakoitzarekin SHA256SUMS.txt eman. Ahal bada sinadura gehitu.
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## Iturburu bidea
-
-Uneko garapena ikusteko iturburutik eraiki eta Seamgrim lokalean exekutatu. Ikusi QUICKSTART.md.
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

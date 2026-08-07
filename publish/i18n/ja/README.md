@@ -1,30 +1,35 @@
-# Ddonilang (ja)
+# トニラン (Ddonilang) (日本語)
 
-> スターター翻訳です。コマンドとファイル名は canonical のまま維持します。
+> 韓国語を中心に、再現可能なプログラム・シミュレーション・学習実験を作る言語とツールです。
 
-## クイックスタート
+Translation status: **スターター翻訳・Human review open**
 
-- ソースからビルド: 必要: Rust + Cargo
-- 셈그림 作業室を実行: ブラウザで開く: http://localhost:8787/
-- ランタイム原則: DDN runtime、pack、state hash、鏡/replay 記録が truth を所有します。
+## 1分で最初の実行
 
-## 主要文書
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+出力に 23、15、8 が含まれることを確認してください。
 
-## 現在の例
+## 現在の状態
 
-- console-grid 最小例
-- space2d 振り子と反射 probe
-- console-grid Tetris
-- 数式/証明/ラムダ例
-- 迷路 probe
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
-## 翻訳状態
+## 主な文書
 
-スターター翻訳です。コマンドとファイル名は canonical のまま維持します。
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
+
+## Boundary
+
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

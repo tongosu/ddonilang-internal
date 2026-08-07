@@ -1,38 +1,25 @@
-# 下载 (中文)
+# Downloads — Ddonilang
 
-> 这是 starter 本地化文档。命令和文件名保持 canonical 写法。
+> 起始翻译；Human review open
 
-## 分发位置
+## Current distribution boundary
 
-- 公开二进制文件应放在 GitHub Releases。
-- git 仓库不保存面向用户的二进制文件。
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## 目标平台
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## 推荐文件名
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## 推荐包结构
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 校验和
+## Future release requirements
 
-发布时提供 SHA256SUMS.txt。可用时添加签名。
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## 源码路径
-
-当前开发状态请从源码构建并本地运行 Seamgrim。见 QUICKSTART.md。
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

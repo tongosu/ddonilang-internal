@@ -1,50 +1,41 @@
-# छिटो सुरु (नेपाली)
+# एक मिनेटको पहिलो run — Ddonilang
 
-> यो starter localization हो। Commands र file names canonical नै रहन्छन्।
+> Starter translation; Human review open
 
-## 1. source बाट build
+## 1. Requirements
 
-आवश्यक: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-CLI जाँच:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Seamgrim workspace चलाउने
+## 3. Run the first DDN example
 
-local server सुरु गर्नुहोस्:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Output मा 23, 15 र 8 भएको पुष्टि गर्नुहोस्।
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-browser मा खोल्नुहोस्:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-workspace ले यो sample inventory खोल्न सक्छ 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. product regression checks
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. binary release बाटो
-
-release binaries प्रकाशित भएपछि GitHub Releases बाट डाउनलोड गर्नुहोस्। binaries git repository मा राखिँदैन।
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: पहिले 'chmod +x ./ddonirang-tool', त्यसपछि './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

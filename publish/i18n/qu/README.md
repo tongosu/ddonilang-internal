@@ -1,30 +1,35 @@
-# Ddonilang (qu)
+# Ddonilang (Runasimi)
 
-> Kay qillqa starter localizaciónmi. Comandos hinallataq file sutikuna canonical kachkan.
+> Programakuna, simulacionkuna, yachay yant'aykunata kutichiyta atichiq coreano simipi qallariq rimaymi.
 
-## Utqay qallariy
+Translation status: **Starter localization; Human review open**
 
-- Source manta build ruray: Munakun: Rust + Cargo
-- Seamgrim workspace purichiy: Browserpi kichay: http://localhost:8787/
-- Runtime principio: DDN runtime, packs, state hashes, mirror/replay records truth hap'in.
+## Huk minuto qallariy
+
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Lluqsisqapi 23, 15, 8 kasqanta qhaway.
+
+## Kunan estado
+
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
 ## Hatun qillqakuna
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
 
-## Kunan rikuchiykuna
+## Boundary
 
-- console-grid uchuy rikuchiy
-- space2d pendulum chaymanta bounce probe
-- console-grid Tetris
-- formula/proof/lambda rikuchiykuna
-- chinkana probe
-
-## localización estado
-
-Kay qillqa starter localizaciónmi. Comandos hinallataq file sutikuna canonical kachkan.
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

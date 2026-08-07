@@ -1,39 +1,27 @@
-# Development structure (Aymara)
+# Public development structure — Ddonilang
 
-> Aka qillqata qallta localización ukhamawa. Comandos ukat file sutinakax canonical qhiparaki.
+> Starter localization; Human review open
 
-Aka qillqatax público localización resumen ukhamawa. Canonical detalle file '../../DDONIRANG_DEV_STRUCTURE.md' ukawa.
-
-## Core layers
-
-| Layer | Path | Lurawi |
+| Layer | Path | Responsibility |
 | --- | --- | --- |
-| core | 'core/' | deterministic engine core |
-| lang | 'lang/' | grammar, parser, canonicalization |
-| tool | 'tool/' | runtime/tool implementation |
-| CLI | 'tools/teul-cli/' | CLI apayaña ukat uñakipaña |
-| packs | 'pack/' | runnable pack evidence |
-| Seamgrim | 'solutions/seamgrim_ui_mvp/' | web workspace ukat Bogae views |
-| tests | 'tests/' | integration/product tests |
-| publish | 'publish/' | public documents |
+| deterministic engine | `core/` | committed world-state transitions |
+| language | `lang/` | grammar, parser, canonicalization |
+| runtime and tool | `tool/` | execution front door and WASM API |
+| CLI | `tools/teul-cli/` | command-line execution and public checks |
+| numeric and proof | `numeric/`, `symbolic/`, `proof/` | bounded math and proof kernels |
+| Seamgrim | `solutions/seamgrim_ui_mvp/` | browser workspace and view layer |
+| public documents | `publish/` | guides and fixed public SPEC lineage |
 
-## Seamgrim workspace V2
+## Verification boundary
 
-- 'ui/index.html': maya mantaña chiqapa
-- 'ui/screens/run.js': run screen ukat current-line execution
-- 'ui/components/bogae.js': console/graph/space2d/grid Bogae rendering
-- 'ui/seamgrim_runtime_state.js': madi, runtime state, mirror resumen
-- 'tools/ddn_exec_server.py': local static server ukat helper API
+- GitHub public CI verifies public code tests, selected golden tests, the public SPEC seal, and the
+  first CLI example.
+- It does not prove full browser behavior, Human review, private SSOT gates, or every docs-first
+  surface.
+- Runtime truth belongs to committed DDN state and records. A renderer must not invent hidden
+  semantics from CSS, metadata, project titles, or file order.
+- Python and JavaScript may orchestrate tools and UI, but test-only lowering is not language
+  implementation evidence.
 
-## Runtime principio
-
-- DDN runtime, packs, state hashes, mirror/replay records ukaw truth katuyi.
-- Bogae ukax view layer; runtime truth janiw katuykiti.
-- Python/JS orchestration ukat UI lurapxaspawa, ukampis language semantics test-only lowering ukamp jan lantintañawa.
-
-## Jichha evidence
-
-- CLI/WASM runtime parity
-- Vol4 raw current-line bundle parity
-- Seamgrim product smoke
-- Bogae madi/graph UI checks
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md) ·
+[Public Language SPEC](../../spec/CURRENT.md)

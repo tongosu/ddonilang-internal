@@ -1,38 +1,25 @@
-# ダウンロード (日本語)
+# Downloads — トニラン (Ddonilang)
 
-> スターター翻訳です。コマンドとファイル名は canonical のまま維持します。
+> スターター翻訳・Human review open
 
-## 配布場所
+## Current distribution boundary
 
-- ユーザー向けバイナリは GitHub Releases に置きます。
-- git リポジトリにはユーザー向けバイナリを入れません。
+- A stable end-user binary release is not claimed by this document.
+- Until a verified GitHub Release is published, build and run from source using
+  [QUICKSTART.md](QUICKSTART.md).
+- Do not treat planned platform names or archive examples as released products.
 
-## 対象プラットフォーム
+## Source build
 
-- Windows x64
-- macOS x64/arm64
-- Linux x64/arm64
-
-## 推奨ファイル名
-
-- 'ddonirang-tool-<version>-windows-x64.zip'
-- 'ddonirang-tool-<version>-macos-arm64.zip'
-- 'ddonirang-tool-<version>-linux-x64.tar.gz'
-
-## 推奨パッケージ構造
-
-~~~txt
-ddonirang-tool-<version>-<os>-<arch>/
-  ddonirang-tool(.exe)
-  LICENSE
-  NOTICE.txt
-  README.txt
+~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## チェックサム
+## Future release requirements
 
-リリースには SHA256SUMS.txt を添付します。可能なら署名も追加します。
+A public binary release should provide an OS/architecture label, a version, SHA-256 checksums,
+license and notice files, and verification notes. Repository source and release binaries have
+separate publication gates.
 
-## ソース実行
-
-現在の開発状態はソースビルドとローカル 셈그림 実行で確認します。QUICKSTART.md を見てください。
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)

@@ -1,50 +1,41 @@
-# Hızlı başlangıç (Türkçe)
+# Bir dakikalık ilk çalıştırma — Ddonilang
 
-> Başlangıç çevirisidir. Komutlar ve dosya adları canonical kalır.
+> Başlangıç çevirisi; Human review open
 
-## 1. Kaynaktan derleme
+## 1. Requirements
 
-Gereksinimler: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-CLI kontrolü:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Seamgrim çalışma alanını çalıştır
+## 3. Run the first DDN example
 
-Yerel sunucuyu başlat:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Çıktıda 23, 15 ve 8 değerlerini doğrulayın.
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-Tarayıcıda aç:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-Çalışma alanı bu örnek envanterini açabilir: 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. Ürün regresyon kontrolleri
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. Binary release yolu
-
-Release binary'leri yayımlandığında GitHub Releases üzerinden indirin. Binary dosyaları git deposunda saklanmaz.
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: önce 'chmod +x ./ddonirang-tool', sonra './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

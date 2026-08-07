@@ -1,30 +1,35 @@
-# Ddonilang (ay)
+# Ddonilang (Aymara)
 
-> Aka qillqata qallta localización ukhamawa. Comandos ukat file sutinakax canonical qhiparaki.
+> Programas, simulaciones ukat yatiqaña yant'awinaka mayamp lurasiñapataki coreano aruta qallta herramienta.
 
-## Jank'aki qallta
+Translation status: **Starter localization; Human review open**
 
-- Source ukat build luraña: Munasi: Rust + Cargo
-- Seamgrim workspace apayaña: Browser ukan jist'araña: http://localhost:8787/
-- Runtime principio: DDN runtime, packs, state hashes, mirror/replay records ukaw truth katuyi.
+## Maya minuto qallta
+
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Resultado ukan 23, 15 ukat 8 uñakipam.
+
+## Jichha estado
+
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
 ## Jach'a qillqatanaka
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
 
-## Jichha uñacht'awinaka
+## Boundary
 
-- console-grid jisk'a uñacht'awi
-- space2d pendulum ukat bounce probe
-- console-grid Tetris
-- formula/proof/lambda uñacht'awinaka
-- ch'iqhi thakhi probe
-
-## Localización estado
-
-Aka qillqata qallta localización ukhamawa. Comandos ukat file sutinakax canonical qhiparaki.
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

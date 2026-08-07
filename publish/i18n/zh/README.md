@@ -1,30 +1,35 @@
-# Ddonilang (zh)
+# Ddonilang (中文)
 
-> 这是 starter 本地化文档。命令和文件名保持 canonical 写法。
+> 一个以韩语为中心、用于可复现程序、模拟和学习实验的语言与工具链。
 
-## 快速开始
+Translation status: **起始翻译；Human review open**
 
-- 从源码构建: 需要: Rust + Cargo
-- 运行 Seamgrim 工作室: 在浏览器中打开: http://localhost:8787/
-- Runtime 原则: DDN runtime、packs、state hashes、mirror/replay records 拥有 truth。
+## 一分钟首次运行
+
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+确认输出包含 23、15 和 8。
+
+## 当前状态
+
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
 ## 主要文档
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
 
-## 当前示例
+## Boundary
 
-- console-grid 最小示例
-- space2d 摆和反弹 probe
-- console-grid Tetris
-- 公式/证明/lambda 示例
-- 迷宫 probe
-
-## 翻译状态
-
-这是 starter 本地化文档。命令和文件名保持 canonical 写法。
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

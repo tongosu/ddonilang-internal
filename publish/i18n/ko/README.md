@@ -1,30 +1,35 @@
-# Ddonilang (ko)
+# 또니랑 (한국어)
 
-> 한국어 기준 공개 문서 묶음입니다.
+> 한국어로 프로그램·시뮬레이션·교과 실험을 만들고 재현하는 언어와 도구입니다.
 
-## 빠른 시작
+Translation status: **한국어 기준 안내**
 
-- 소스 빌드: 필요: Rust + Cargo
-- 셈그림 작업실 실행: 브라우저에서 엽니다: http://localhost:8787/
-- 런타임 원칙: DDN 런타임, pack, state hash, 거울/replay 기록이 truth를 소유합니다.
+## 1분 첫 실행
+
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+출력에서 23, 15, 8을 확인하세요.
+
+## 현재 상태
+
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
 ## 주요 문서
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
 
-## 현재 예제
+## Boundary
 
-- console-grid 최소 예제
-- space2d 진자와 튕김 probe
-- console-grid 테트리스
-- 수식/증명/람다 예제
-- 미로 probe
-
-## 번역 상태
-
-한국어 기준 공개 문서 묶음입니다.
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

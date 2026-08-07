@@ -1,30 +1,35 @@
-# Ddonilang (fr)
+# Ddonilang (Français)
 
-> Traduction starter. Les commandes et noms de fichiers restent canonical.
+> Un langage et des outils centrés sur le coréen pour des programmes, simulations et expériences reproductibles.
 
-## Démarrage rapide
+Translation status: **Traduction initiale ; Human review open**
 
-- Construire depuis les sources: Pré-requis : Rust + Cargo
-- Lancer le workspace Seamgrim: Ouvrir dans le navigateur : http://localhost:8787/
-- Principe runtime: Le DDN runtime, les packs, state hashes et enregistrements mirror/replay possèdent la truth.
+## Première exécution en une minute
+
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Vérifiez que la sortie contient 23, 15 et 8.
+
+## État actuel
+
+- Public Language SPEC: **v0.5.0 / docs-first current**
+- GitHub development trunk: **protected main**
+- Public CI: code tests + public golden + SPEC seal + first example
+- Full browser product + Human review: **OPEN by feature**
+- Internal SSOT and public SPEC use separate version lineages.
 
 ## Documents principaux
 
-- QUICKSTART.md
-- DEV_STRUCTURE.md
-- DOWNLOADS.md
-- RELEASE_NOTES_20260211.md
-- ../../README.md
-- ../../README_en.md
+- [Quick start](QUICKSTART.md)
+- [Korean project introduction](../../../README.md)
+- [Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md)
+- [Public Language SPEC](../../spec/CURRENT.md)
+- [All languages](../INDEX.md)
 
-## Exemples actuels
+## Boundary
 
-- exemple minimal console-grid
-- pendule space2d et bounce probe
-- Tetris console-grid
-- exemples formule/preuve/lambda
-- sonde de labyrinthe
-
-## État de traduction
-
-Traduction starter. Les commandes et noms de fichiers restent canonical.
+This starter translation helps navigation. It does not define DDN language semantics or promote
+docs-first features to implemented product support. Keep DDN code, commands, paths, schema names,
+and error codes canonical.

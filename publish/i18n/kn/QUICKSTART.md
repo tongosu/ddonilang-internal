@@ -1,50 +1,41 @@
-# ತ್ವರಿತ ಆರಂಭ (ಕನ್ನಡ)
+# ಒಂದು ನಿಮಿಷದ ಮೊದಲ run — Ddonilang
 
-> ಇದು starter localization. Commands ಮತ್ತು file names canonical ಆಗಿಯೇ ಉಳಿಯುತ್ತವೆ.
+> Starter translation; Human review open
 
-## 1. source ನಿಂದ build
+## 1. Requirements
 
-ಅವಶ್ಯಕತೆ: Rust + Cargo
+- Rust + Cargo
+- Git
+- Optional for Seamgrim workspace: Python 3
 
-~~~sh
-cargo build --release
-~~~
-
-CLI ಪರಿಶೀಲನೆ:
+## 2. Build the CLI
 
 ~~~sh
+cargo build --manifest-path tools/teul-cli/Cargo.toml
 cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- --help
 ~~~
 
-## 2. Seamgrim workspace ಚಾಲನೆ
+## 3. Run the first DDN example
 
-local server ಆರಂಭಿಸಿ:
+~~~sh
+cargo run -q --manifest-path tools/teul-cli/Cargo.toml -- run publish/examples/00_first_result.ddn
+~~~
+
+Output ನಲ್ಲಿ 23, 15 ಮತ್ತು 8 ಇವೆ ಎಂದು ಪರಿಶೀಲಿಸಿ.
+
+## 4. Optional Seamgrim workspace
 
 ~~~sh
 python solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py
 ~~~
 
-browser ನಲ್ಲಿ ತೆರೆಯಿರಿ:
+Open: http://localhost:8787/
 
-~~~txt
-http://localhost:8787/
-~~~
+The workspace contains multiple examples, but not every docs-first language surface is implemented
+in the default browser product. Check the [product support matrix](../../PRODUCT_SUPPORT_CURRENT.md).
 
-workspace ಈ sample inventory ತೆರೆಯಬಹುದು 'solutions/seamgrim_ui_mvp/samples/index.json'.
+## 5. Next
 
-## 3. product regression checks
-
-~~~sh
-python tests/run_seamgrim_product_stabilization_smoke_check.py
-node tests/seamgrim_sample_grid_space_runner.mjs
-node tests/seamgrim_studio_layout_contract_runner.mjs
-node tests/seamgrim_run_toolbar_compact_runner.mjs
-python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py
-~~~
-
-## 4. binary release ಮಾರ್ಗ
-
-release binaries ಪ್ರಕಟವಾದಾಗ GitHub Releases ನಿಂದ ಪಡೆಯಿರಿ. binaries ಅನ್ನು git repository ನಲ್ಲಿ ಇರಿಸಲಾಗುವುದಿಲ್ಲ.
-
-- Windows: '.\ddonirang-tool.exe --help'
-- macOS/Linux: ಮೊದಲು 'chmod +x ./ddonirang-tool', ನಂತರ './ddonirang-tool --help'
+- [Localized introduction](README.md)
+- [Korean learning path](../../LEARNING_PATH.md)
+- [Public Language SPEC](../../spec/CURRENT.md)

@@ -1,39 +1,27 @@
-# 开发结构 (中文)
+# Public development structure — Ddonilang
 
-> 这是 starter 本地化文档。命令和文件名保持 canonical 写法。
+> 起始翻译；Human review open
 
-这是公开用本地化摘要。详细 canonical 文档是 '../../DDONIRANG_DEV_STRUCTURE.md'。
-
-## 核心层
-
-| 层 | 路径 | 角色 |
+| Layer | Path | Responsibility |
 | --- | --- | --- |
-| core | 'core/' | 确定性引擎核心 |
-| lang | 'lang/' | 语法、解析器、canonicalization |
-| tool | 'tool/' | runtime/tool 实现 |
-| CLI | 'tools/teul-cli/' | CLI 执行与检查 |
-| packs | 'pack/' | 可执行 pack evidence |
-| Seamgrim | 'solutions/seamgrim_ui_mvp/' | web 工作室与 Bogae 视图 |
-| tests | 'tests/' | 集成和产品测试 |
-| publish | 'publish/' | 公开文档 |
+| deterministic engine | `core/` | committed world-state transitions |
+| language | `lang/` | grammar, parser, canonicalization |
+| runtime and tool | `tool/` | execution front door and WASM API |
+| CLI | `tools/teul-cli/` | command-line execution and public checks |
+| numeric and proof | `numeric/`, `symbolic/`, `proof/` | bounded math and proof kernels |
+| Seamgrim | `solutions/seamgrim_ui_mvp/` | browser workspace and view layer |
+| public documents | `publish/` | guides and fixed public SPEC lineage |
 
-## Seamgrim workspace V2
+## Verification boundary
 
-- 'ui/index.html': 单一入口
-- 'ui/screens/run.js': 运行画面与 current-line 执行
-- 'ui/components/bogae.js': console/graph/space2d/grid Bogae 渲染
-- 'ui/seamgrim_runtime_state.js': madi、runtime state、mirror 摘要
-- 'tools/ddn_exec_server.py': 本地静态服务器与辅助 API
+- GitHub public CI verifies public code tests, selected golden tests, the public SPEC seal, and the
+  first CLI example.
+- It does not prove full browser behavior, Human review, private SSOT gates, or every docs-first
+  surface.
+- Runtime truth belongs to committed DDN state and records. A renderer must not invent hidden
+  semantics from CSS, metadata, project titles, or file order.
+- Python and JavaScript may orchestrate tools and UI, but test-only lowering is not language
+  implementation evidence.
 
-## Runtime 原则
-
-- DDN runtime、packs、state hashes、mirror/replay records 拥有 truth。
-- Bogae 是 view layer，不拥有 runtime truth。
-- Python/JS 可以做 orchestration 和 UI，但不能用 test-only lowering 取代语言语义。
-
-## 当前 evidence
-
-- CLI/WASM runtime parity
-- Vol4 raw current-line bundle parity
-- Seamgrim product smoke
-- Bogae madi/graph UI checks
+[Product support matrix](../../PRODUCT_SUPPORT_CURRENT.md) ·
+[Public Language SPEC](../../spec/CURRENT.md)
