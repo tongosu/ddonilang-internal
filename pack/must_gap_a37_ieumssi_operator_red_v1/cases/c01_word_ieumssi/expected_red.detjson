@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "WORD_IEUMSSI_OPERATOR",
+  "expected_future_diag": "E_IEUMSSI_OPERATOR_NOT_IMPLEMENTED",
+  "notes": [
+    "기호 이음씨/우선순위 registry는 A38-A40 보고서에서 같은 대표 pack에 연결한다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

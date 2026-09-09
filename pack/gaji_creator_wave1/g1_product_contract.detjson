@@ -1,0 +1,35 @@
+{
+  "schema": "ddn.creator_gaji_circulation.product_contract.v1",
+  "artifact_boundary": {
+    "project": "VirtualProjectSource plus durable revision and portable local_package_payload",
+    "gaji": "gaji.toml plus ddn/ selected dependency closure plus deterministic registry archive",
+    "forbidden_equivalence": "a whole project export is not a gaji artifact"
+  },
+  "reuse": {
+    "manifest": "gaji.toml",
+    "archive_and_index": "teul-cli gaji registry publish/download/verify",
+    "lock": "ddn.lock and ddn.local_gaji_lock.v1",
+    "provenance": "origin project ref, origin gaji id/version/content hash, extraction modules, derived relation",
+    "portable": "local_package_payload"
+  },
+  "profiles": {
+    "표준": "repository-bundled verified local assets",
+    "나눔": "locally imported portable gaji artifacts",
+    "내": "locally authored immutable publications"
+  },
+  "transitions": [
+    "project modules -> extraction plan -> confirmed immutable publication",
+    "publication -> install preview -> atomic project tree/alias/lock apply",
+    "installed version -> explicit diff/update -> rollback to retained version",
+    "unreferenced install -> atomic remove",
+    "installed publication -> independent remix identity preserving origin lineage"
+  ],
+  "atomic_invariants": [
+    "same profile/id/version with different bytes is rejected",
+    "stale project source or stale lock is rejected",
+    "failed publish/install/update/remove leaves registry, project tree, vendor and lock unchanged",
+    "run never downloads a package",
+    "view capability cannot mutate gaji state"
+  ],
+  "non_claims": ["new DDN syntax", "public remote registry", "verified author identity", "general semver SAT"]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "ddn.gaji_extraction_plan.v1",
+  "source": {
+    "schema": "ddn.virtual_project_source.v1",
+    "kind": "seamgrim.local_project_tree.v0",
+    "root_path": "뿌리.ddn",
+    "entry_path": "app/main.ddn",
+    "files": [
+      {"path":"뿌리.ddn","role":"root","utf8_text":"프로젝트 { 이름: \"추출검사\". 첫글: \"./app/main.ddn\". 목표 { 앱: \"./app/main.ddn\". } 모듈길 { 로컬: \"./lib\". } }."},
+      {"path":"app/main.ddn","role":"ddn_source","utf8_text":"쓰임 { 운동: \"./lib/운동\". }\n운동.속도 보여주기."},
+      {"path":"lib/운동.ddn","role":"ddn_source","utf8_text":"쓰임 { 수치: \"./lib/수치\". }\n드러냄 { 속도. }\n# 드러냄 { 가짜. }\n설명 <- \"드러냄 { 문자열가짜. }\".\n속도 <- 수치.기본값."},
+      {"path":"lib/수치.ddn","role":"ddn_source","utf8_text":"드러냄 { 기본값. }\n기본값 <- 7."}
+    ]
+  },
+  "selected_modules": ["lib/운동.ddn"],
+  "gaji_id": "운동",
+  "version": "1.0.0",
+  "description": "운동 helper",
+  "tags": ["물리", "재사용"],
+  "profile": "내",
+  "origin_project_ref": "project:g2-fixture"
+}

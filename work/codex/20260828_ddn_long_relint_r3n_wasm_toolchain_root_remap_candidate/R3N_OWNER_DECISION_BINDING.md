@@ -1,0 +1,64 @@
+# R3N WASM toolchain-root remap candidate Owner 결정 결속
+
+```text
+TASK: DDN-P-LONG-RELINT-R3N-WASM-TOOLCHAIN-ROOT-REMAP-CANDIDATE
+PARENT_PERSISTENT_GOAL: DDN-LONG-RELINT-PRODUCT-01
+GOAL_DISPOSITION: RESUME_EXISTING_WITH_OWNER_DECISION
+NEW_GOAL_CREATED: NO
+STARTING_PARENT: c177f5e9829c5d5d5baab8f1beb39718423e05e7
+R3M_PRODUCT_TEST_FIXED_HEAD: 1e55e4b2984e52cfcf1141f06ed0fcefa0c3a19e
+R3K_EXTERNAL_REVIEW_EVIDENCE: 9cdf474d917bb53085aa2e938b45d78cf32ee152
+RESUME_FROM: R3M_F2
+```
+
+## 권위 확인
+
+```text
+LIVE_INTERNAL_SSOT: v25.15.0
+LIVE_PUBLIC_LANGUAGE_SPEC: v0.6.0
+AUTHORITY_METADATA_DRIFT: docs/ssot current metadata still names public v0.5.0
+PUBLIC_SPEC_LIVE_POINTER_V0_6_0_CONTROLS: YES
+SSOT_DIRECT_EDIT_NOT_AUTHORIZED: YES
+PUBLIC_SPEC_EDIT_NOT_AUTHORIZED: YES
+```
+
+shared root의 `docs/ssot/CURRENT.md`, `docs/ssot/ssot/CURRENT.md`,
+`CURRENT_SHA256_v25.15.0.md`와 `publish/spec/CURRENT.md`,
+`publish/spec/v0.6.0/SPEC_MANIFEST_v0.6.0.md`를 읽기 전용으로 대조했다.
+
+## Owner 결정
+
+```text
+R3M_TRACKED_WASM_EMBEDDED_PATH_DECISION: OPTION_A_REMAP_TOOLCHAIN_ROOTS
+TRACKED_WASM_CANDIDATE_REFRESH_AUTHORIZED: YES_CANDIDATE_ONLY
+TRACKED_WASM_FILE_WRITE_AUTHORIZED: NO
+TRACKED_WASM_MANIFEST_WRITE_AUTHORIZED: NO
+PUBLIC_NON_BROWSER_WASM_MEMBERSHIP: OPEN_PENDING_ZERO_PATH_AND_INDEPENDENT_PASS
+VALIDATOR_BINARY_EXCEPTION_AUTHORIZED: NO
+EXACT_HASH_PROVENANCE_EXCEPTION_AUTHORIZED: NO
+OPTION_B_FALLBACK: ONLY_IF_OPTION_A_PROVEN_INFEASIBLE_BY_BOUNDED_EVIDENCE
+OPTION_C: REJECTED
+```
+
+Option A는 default official build를 변경하지 않는다. 명시적인 candidate-only mode에서만
+repository, Cargo registry/home, Rustup/toolchain/sysroot와 다른 required compile-time
+dependency root를 stable virtual root로 remap한다. unknown·missing·duplicate·overlapping
+required root는 build 전에 fail-closed한다. source bytes, tracked WASM family, tracked
+manifest와 validator security meaning은 변경하지 않는다.
+
+## 금지와 닫힘 경계
+
+```text
+SSOT_CHANGE: 0
+PUBLIC_SPEC_CHANGE: 0
+TRACKED_WASM_WRITE: 0
+TRACKED_MANIFEST_WRITE: 0
+PUBLIC_MEMBERSHIP_PROMOTION: 0
+PUBLIC_RELEASE: 0
+PUBLIC_PUSH: 0
+ACTIVATION: 0
+HUMAN_PASS: NOT_CLAIMED
+```
+
+Option A 성공은 `IMPLEMENTED_UNDER_REVIEW`까지만 허용한다. plain independent PASS 전에는
+tracked refresh, public membership 또는 publication readiness를 선언하지 않는다.

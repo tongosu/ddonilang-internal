@@ -1,0 +1,15 @@
+title = "일차함수 그래프"
+description = "기울기와 절편을 바꾸며 x-y 값이 어떻게 달라지는지 봅니다."
+grade = "middle"
+subject = "math"
+level = "intro"
+goals = ["기울기와 절편 변화가 y값에 주는 영향을 확인한다", "같은 간격 x에서 함수값을 비교한다"]
+required_views = ["graph", "table", "text"]
+first_delight_id = "linear-function"
+first_delight_controls = ["기울기", "절편", "간격"]
+first_delight_control_labels = {"기울기" = "기울기", "절편" = "y 절편", "간격" = "x 간격"}
+first_delight_graph_axes = ["x", "y"]
+view_roles = ["graph_series"]
+primary_view = "graph"
+primary_view_rules_path = "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+view_plan_path = "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/view_plan.detjson"

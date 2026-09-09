@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_teul_cli_frontdoor_parity",
+  "expected_rule": "HAEBOGO_GEUGEOT_FRONTDOOR_PARITY",
+  "expected_future_diag": "E_HAEBOGO_FRONTDOOR_NOT_IMPLEMENTED",
+  "notes": [
+    "root lang/legacy tool에는 구현 흔적이 있으므로 완전 미구현이 아니라 frontdoor parity red로 추적한다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

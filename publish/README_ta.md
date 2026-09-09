@@ -1,0 +1,67 @@
+# Ddonilang (또니랑) — தமிழ் (ta)
+
+> விளையாட்டு மற்றும் AI காலத்திற்கான கொரிய-நேட்டிவ் நிரலாக்க மொழி மற்றும் கருவிகள்.
+> Determinism (மீளுருவாக்கத் திறன்) இலக்கணத்திலேயே உறுதிசெய்யப்பட்டுள்ளது.
+
+![Ddonilang logo](assets/ddonirang_wordmark.png)
+
+---
+
+## அறிமுகம்
+
+- Ddonilang கொரிய சொற்றொடரை நேரடியாக code ஆக எழுத உதவுகிறது.
+- ஒரே inputக்கு ஒரே output கிடைக்குமென்ற நிர்ணயத்தைக் காப்பது இதன் மையம்.
+- AI கூட்டாண்மைக்கு pack test, canonicalization, replay/trace வழிமுறைகள் உள்ளது.
+
+## தற்போதைய நிலை
+
+- Rust `ddonirang-lang`, `ddonirang-tool`, `teul-cli` DDN syntax, hooks, formulas, observe rows, current-line execution ஆகியவற்றைச் சரிபார்க்கின்றன.
+- Seamgrim workspace WASM-first பாதையில் இயங்குகிறது; CLI/WASM parity checks ஒரே output-ஐ எதிர்பார்க்கின்றன.
+- Web workspace-இல் DDN examples திறந்து run, pause, reset, step-by-madi செய்யலாம்.
+- `solutions/seamgrim_ui_mvp/samples/` இல் console-grid, space2d pendulum, Tetris, formula/proof/lambda, maze, bounce-probe examples உள்ளன.
+
+## ஏன் இலக்கண-அடிப்படையிலான Determinism
+
+- `~` role-marker எல்லையை தெளிவாக்குகிறது.
+- `<-` ஒரே state assignment வடிவம்.
+- definition மற்றும் execution தெளிவாக பிரிக்கப்படுகின்றன.
+
+## சிறு எடுத்துக்காட்டு
+
+```ddn
+x <- 15.
+y <- 8.
+합 <- (x + y).
+
+"콘솔 보개 예제" 보여주기.
+합 보여주기.
+x 보여주기.
+y 보여주기.
+```
+
+## 6 அடிப்படை கூறுகள்
+
+| பெயர் | பங்கு |
+|---|---|
+| 샘 | Input snapshot |
+| 누리 | World state |
+| 이야기 | Rules/progression |
+| 보개 | Visual/sound output |
+| 거울 | Record/replay |
+| 슬기 | AI helper/guard |
+
+## Roadmap
+
+1. Console simulation.
+2. Web 2D creation tool.
+3. Semgrim + physics/economics labs + NuriGym.
+4. Multilingual expansion.
+
+## முழு ஆவணம்
+
+- Full reference: `README_en.md`
+- Quick start: `QUICKSTART.md`
+
+## License
+
+- Planned open-source license (to be announced).

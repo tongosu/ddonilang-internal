@@ -1,0 +1,61 @@
+{
+  "schema": "seamgrim.wave2e.durable_project_failures.baseline.v1",
+  "pack": "seamgrim_wave2e_durable_project_failures_v1",
+  "captured_from_head": "50972f3",
+  "docs_ssot_dirty_at_capture": false,
+  "baseline_checks": {
+    "wave2d_first_view_authoring": "PASS",
+    "platform_server_adapter_contract": "FAIL_existing_appState_studio_harness",
+    "platform_server_action_rail": "PASS",
+    "studio_local_package_export_action_v1": "PASS"
+  },
+  "browser_capture": {
+    "url_query": "?first_delight=pendulum&devSurfaces=1&tab=studio&lesson=rep_phys_pendulum_wave1_v1",
+    "durable_project_buttons": [
+      {
+        "selector": "#btn-save-server",
+        "text": "서버에 저장 (준비 중)",
+        "disabled": true,
+        "title": "준비 중",
+        "aria_label": ""
+      },
+      {
+        "selector": "#btn-share-link",
+        "text": "공유 링크 (준비 중)",
+        "disabled": true,
+        "title": "준비 중",
+        "aria_label": ""
+      },
+      {
+        "selector": "#btn-revision-history",
+        "text": "리비전 기록 (준비 중)",
+        "disabled": true,
+        "title": "준비 중",
+        "aria_label": ""
+      },
+      {
+        "selector": "#btn-share-clone",
+        "text": "복제해서 사용 (준비 중)",
+        "disabled": true,
+        "title": "준비 중",
+        "aria_label": ""
+      }
+    ],
+    "has_runtime_role_switch": false
+  },
+  "failure_vectors": {
+    "server_save_share_not_ready": true,
+    "capability_leak_guard_missing": true,
+    "stale_editor_save_guard_missing": true,
+    "conflict_overwrite_guard_missing": true,
+    "view_escalation_guard_missing": true,
+    "restart_persistence_missing": true,
+    "backup_restore_missing": true
+  },
+  "boundaries": {
+    "docs_ssot_change": false,
+    "new_ddn_syntax": false,
+    "state_hash_formula_change": false,
+    "login_cloud_claim": false
+  }
+}

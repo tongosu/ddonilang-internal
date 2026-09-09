@@ -1,0 +1,49 @@
+{
+  "schema": "ddn.declarative_closure.constraint_reaction.red.v1",
+  "pack": "sim_constraint_reaction_v1",
+  "goal": "G7",
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "reaction_vocabulary": [
+    "멈춤",
+    "튕김(e)",
+    "조임",
+    "감쌈"
+  ],
+  "runtime_claim": false,
+  "parser_landed_claim": false,
+  "state_hash_formula_change": false,
+  "surface_policy": {
+    "new_language_block": false,
+    "accepted_product_surface_count": 0,
+    "red_contract_only": true
+  },
+  "subpacks": [
+    {
+      "pack": "sim_mageum_floor_v1",
+      "purpose": "floor contact red fixture",
+      "reaction": "멈춤"
+    },
+    {
+      "pack": "sim_mageum_box_v1",
+      "purpose": "box boundary red fixture",
+      "reaction": "튕김(e)"
+    },
+    {
+      "pack": "sim_mageum_chain_v1",
+      "purpose": "chained constraint red fixture",
+      "reaction": "조임+감쌈"
+    },
+    {
+      "pack": "lang_mageum_diag_v1",
+      "purpose": "diagnostic code red fixture",
+      "reaction": "diagnostic_only"
+    }
+  ],
+  "non_claims": [
+    "no parser/frontdoor syntax landing",
+    "no runtime constraint solver landing",
+    "no state_hash formula change",
+    "no docs/ssot direct edit"
+  ]
+}

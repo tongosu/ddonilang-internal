@@ -1,0 +1,26 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:18f85d9b",
+  "content": null,
+  "contract_status": "product_local_candidate",
+  "diagnostic": {
+    "actual_schema": "seamgrim.text.v0",
+    "code": "E_CANONICAL_TEXT_INVALID_CANDIDATE",
+    "reason": "text_format_invalid"
+  },
+  "family": "text",
+  "identity": {
+    "observation_projection_identity": "observation:t5d:11",
+    "result_identity": "result:t5d:11",
+    "source_hash": "sha256:t5d-source",
+    "state_hash": "sha256:t5d-state-11",
+    "tick_id": 11,
+    "view_hash": "sha256:t5d-view-11"
+  },
+  "provenance": {
+    "classification": "AUTHORITATIVE_STRUCTURED",
+    "input_authority": "native_authoritative_structured_input",
+    "source": "structured_view_meta"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "invalid"
+}

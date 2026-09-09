@@ -1,0 +1,1 @@
+{"diagnostic":{"code":"E_RUNTIME_EXECUTION","offending_field":null,"phase":"runtime_execution","source_path":"pack/v1_core_control_flow_evidence_rebase_w1/fixtures/cf10_loop_failure_atomic.ddn","source_span":null},"ok":false}

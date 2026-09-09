@@ -1,0 +1,54 @@
+{
+  "schema": "seamgrim.state.v0",
+  "tick_id": 17,
+  "state_hash": "sha256:t5g-state-17",
+  "source_hash": "sha256:t5g-source",
+  "result_identity": "result:t5g:17",
+  "observation_projection_identity": "observation:t5g:17",
+  "view_hash": "sha256:t5g-view-17",
+  "channels": [],
+  "row": [],
+  "resources": {
+    "value": {},
+    "value_json": {
+      "graph.result": {
+        "schema": "seamgrim.graph.v0",
+        "graph_kind": "timeseries",
+        "x": { "kind": "time", "unit": "s", "channel_id": "time" },
+        "y": { "kind": "position", "unit": "m", "channel_id": "position.x" },
+        "series": [
+          {
+            "id": "position.x",
+            "label": "x 위치",
+            "points": [
+              { "x": 0, "y": 0 },
+              { "x": 1, "y": 8 },
+              { "x": 2, "y": 12.5 }
+            ]
+          }
+        ],
+        "meta": { "producer": "t5g.authoritative_fixture", "version": "v1" }
+      }
+    }
+  },
+  "view_meta": {
+    "table": {
+      "schema": "seamgrim.table.v0",
+      "columns": [
+        { "key": "time", "label": "시간", "type": "number" },
+        { "key": "position", "label": "위치", "type": "number" }
+      ],
+      "rows": [
+        { "time": 0, "position": 0 },
+        { "time": 1, "position": 8 }
+      ],
+      "meta": { "title": "위치 표", "source_input_hash": "sha256:t5g-input" }
+    },
+    "text": {
+      "schema": "seamgrim.text.v0",
+      "content": "# T5G 설명\n\n정본 그래프를 관찰합니다.",
+      "format": "markdown",
+      "meta": { "source_input_hash": "sha256:t5g-input" }
+    }
+  }
+}

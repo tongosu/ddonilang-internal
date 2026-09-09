@@ -1,0 +1,6 @@
+"GANADA_MA_ASSESSMENT_WORKFLOW_V1" 보여주기.
+"cell=마-2" 보여주기.
+"selector=assessment-panel,assessment-run,assessment-result,assessment-feedback" 보여주기.
+"lesson_run_result_source=seamgrim_lesson_run_preset_rail_v1" 보여주기.
+"matrix_upgrade_claim=false" 보여주기.
+"checker=tests/run_ganada_ma_assessment_workflow_check.py" 보여주기.

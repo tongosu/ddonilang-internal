@@ -1,0 +1,1 @@
+{"diagnostic":{"code":"E_V1_CORE_RECURSION_UNSUPPORTED","offending_field":null,"phase":"execution_parse","source_path":"pack/v1_core_named_callable_evidence_rebase_w1/fixtures/nc06_recursion_attempt.ddn","source_span":null},"ok":false}

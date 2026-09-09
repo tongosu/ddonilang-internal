@@ -1,0 +1,32 @@
+{
+  "drop_duplicates": true,
+  "events_deduped": 1,
+  "events_ordered": 3,
+  "events_total": 4,
+  "final_state_hashes": [
+    {
+      "realm_id": 0,
+      "state_hash": "sha256:0809935b6d7dddd31810a635916e2a918137c1c0aa8e3945377d2bb1a318dd34"
+    },
+    {
+      "realm_id": 1,
+      "state_hash": "sha256:7d73f510a495658acf459f9f0ea163a478478aa44fb932e771e5fecb716dc1a1"
+    }
+  ],
+  "input_format": "jsonl",
+  "input_path": "pack/gogae9_w90_meta_universe/inputs/input_002.jsonl",
+  "order_rule": "sender_seq",
+  "realms": 2,
+  "schema": "gateway.serve_report.v1",
+  "source_hash": "sha256:d5bb568a0e6cfa60cd0a75cce3a3309ec374157739a51415ad79fcb0630e5a0f",
+  "source_provenance": {
+    "input_file": "pack/gogae9_w90_meta_universe/inputs/input_002.jsonl",
+    "input_format": "jsonl",
+    "input_hash": "sha256:a4df35f6bfeec70b72c251c76d2367283dbcd97cb84535bdddfa55a15360c853",
+    "schema": "gateway.source_provenance.v1",
+    "source_kind": "gateway_serve_input.v1",
+    "world_file": "pack/gogae9_w90_meta_universe/world.ddn",
+    "world_hash": "sha256:5c16540ef410dd57bf1b4a1ff8b03798282c74c343be97f7cd4c1d915935e46a"
+  },
+  "ssot_version": "20.6.6"
+}

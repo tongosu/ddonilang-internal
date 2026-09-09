@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.ganada.remaining_stems.evidence.v1",
+  "pack": "ganada_a_nurigym_step_record_evidence_v1",
+  "pack_kind": "representative_evidence",
+  "branch": "아",
+  "tracked_cells": ["아-2", "아-5"],
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_a_nurigym_step_record_evidence_v1/manifest.detjson:1",
+    "tests/run_nurigym_step_record_v02_public_schema_check.py:1",
+    "tests/run_nurigym_shared_sync_action_pipeline_pack_check.py:1"
+  ],
+  "commands": [
+    {"id": "step_record_public_schema", "kind": "product_cli_or_runtime_pass", "command": ["python", "tests/run_nurigym_step_record_v02_public_schema_check.py"], "expect_stdout_contains": "nurigym_step_record_v02_public_schema_check: PASS"},
+    {"id": "step_record_roundtrip", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_nurigym_step_record_v02_roundtrip_check.py"], "expect_stdout_contains": "nurigym_step_record_v02_roundtrip_check: PASS"},
+    {"id": "shared_action_pipeline", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_nurigym_shared_sync_action_pipeline_pack_check.py"], "expect_stdout_contains": "[nurigym-shared-sync-action-pipeline-pack-check] ok"}
+  ]
+}

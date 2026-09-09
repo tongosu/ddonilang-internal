@@ -1,0 +1,1 @@
+{"id":"c01_seamgrim_lab_e1_minimal_marker","cmd":["run","pack/seamgrim_lab_e1_minimal_v1/input.ddn"],"stdout":["SEAMGRIM_LAB_E1_MINIMAL_V1","editable DDN control change and rerun verified by browser runner","origin_hash and delta_ref lineage UI verified","auto apply file write and AI authority claims stay false"],"exit_code":0}

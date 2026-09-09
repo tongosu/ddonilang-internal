@@ -1,0 +1,1 @@
+{"id":"c00_ganada_ka_public_registry_seed_marker","cmd":["run","pack/ganada_ka_public_registry_seed_v1/input.ddn"],"stdout":["GANADA_KA_PUBLIC_REGISTRY_SEED_V1","cell=카-4","surface=ttonimaru_public_registry_seed","local_dry_run_only=true","matrix_upgrade_claim=false"],"exit_code":0}

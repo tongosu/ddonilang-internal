@@ -1,0 +1,16 @@
+title = "감쇠 진동"
+description = "감쇠계수와 스프링 상수를 바꾸며 진폭이 줄어드는 x(t) 그래프를 봅니다."
+grade = "high"
+subject = "physics"
+level = "intro"
+goals = ["감쇠가 있는 진동에서 진폭이 감소하는 모습을 x(t) 그래프로 확인한다", "감쇠계수 변화가 진폭 감소 속도에 주는 영향을 비교한다"]
+required_views = ["graph", "text"]
+first_delight_controls = ["질량", "스프링상수", "감쇠계수", "dt", "t_max"]
+first_delight_control_labels = {"질량" = "질량", "스프링상수" = "스프링", "감쇠계수" = "감쇠", "dt" = "마디 간격", "t_max" = "시간 범위"}
+first_delight_graph_axes = ["t", "x"]
+view_roles = ["graph_series", "semantic_binding", "same_tick_graph_cursor"]
+primary_view = "graph"
+view_plan_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/view_plan.detjson"
+lineage_source_lesson_id = "ssot_edu_phys_p011_01_underdamped_xt"
+source = "representative_wave3a"
+ssot_pack = "edu_phys_p011_01_underdamped_xt"

@@ -1,0 +1,69 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:c8f1c23c",
+  "content": {
+    "family_contract_version": "scene_summary.v1_candidate",
+    "scene_summary": {
+      "primary_family": "graph",
+      "primary_payload": {
+        "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:f7c24540",
+        "content": {
+          "graph": {
+            "graph_kind": "timeseries",
+            "meta": { "producer": "t5g.authoritative_fixture", "version": "v1" },
+            "schema": "seamgrim.graph.v0",
+            "series": [
+              {
+                "id": "position.x",
+                "label": "x 위치",
+                "points": [
+                  { "x": 0, "y": 0 },
+                  { "x": 1, "y": 8 },
+                  { "x": 2, "y": 12.5 }
+                ]
+              }
+            ],
+            "x": { "channel_id": "time", "kind": "time", "unit": "s" },
+            "y": { "channel_id": "position.x", "kind": "position", "unit": "m" }
+          },
+          "series_identities": ["position.x"]
+        },
+        "contract_status": "product_local_candidate",
+        "diagnostic": null,
+        "family": "graph",
+        "identity": {
+          "observation_projection_identity": "observation:t5g:17",
+          "result_identity": "result:t5g:17",
+          "source_hash": "sha256:t5g-source",
+          "state_hash": "sha256:t5g-state-17",
+          "tick_id": 17,
+          "view_hash": "sha256:t5g-view-17"
+        },
+        "provenance": {
+          "input_authority": "native_authoritative_structured_input",
+          "source": "structured_resource_value_json"
+        },
+        "schema": "seamgrim.semantic_view_payload.v1_candidate",
+        "status": "available"
+      },
+      "required_families": ["graph", "table", "text"]
+    }
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "scene-summary",
+  "identity": {
+    "observation_projection_identity": "observation:t5g:17",
+    "result_identity": "result:t5g:17",
+    "source_hash": "sha256:t5g-source",
+    "state_hash": "sha256:t5g-state-17",
+    "tick_id": 17,
+    "view_hash": "sha256:t5g-view-17"
+  },
+  "provenance": {
+    "classification": "AUTHORITATIVE_STRUCTURED",
+    "input_authority": "canonical_view_payload_projection",
+    "source": "explicit_primary_view_contract"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

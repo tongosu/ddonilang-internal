@@ -1,0 +1,68 @@
+{
+  "schema": "ddn.seamgrim.representation_pair.v1",
+  "world_concept_id": "physics.projectile",
+  "equivalence_group_id": "physics.projectile.teaching.v1",
+  "equivalence_class": "teaching_pair",
+  "equivalence_status": "not_asserted",
+  "same_tickplan_claim": false,
+  "same_observables_claim": false,
+  "same_state_hash_claim": false,
+  "owner_decision_required_for_promotion": true,
+  "left": {
+    "representation_id": "physics.projectile.explicit_tick.v1",
+    "representation_kind": "explicit_tick",
+    "title": "마디별 계산",
+    "status": "behavior_closed",
+    "source_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn",
+    "runtime_execution": "landed",
+    "teaching_snippet": [
+      "x <- x + vx * dt.",
+      "y <- y + vy * dt.",
+      "vy <- vy - 중력가속도 * dt."
+    ]
+  },
+  "right": {
+    "representation_id": "physics.projectile.seum_s2.v1",
+    "representation_kind": "declarative_seum",
+    "title": "세움 선언",
+    "status": "solveplan_artifact_only",
+    "source_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/projectile_seum_s2.ddn",
+    "solveplan_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/projectile_seum_s2.solveplan.detjson",
+    "product_entrypoint": "teul-cli run --solveplan-out",
+    "runtime_execution": "not_landed",
+    "state_hash_integration": "manifest_field_only_pending_tonni_confirmation",
+    "teaching_snippet": [
+      "위치_x' =:= 속도_x.",
+      "위치_y' =:= 속도_y.",
+      "속도_x' =:= 0.",
+      "속도_y' =:= 중력_y."
+    ]
+  },
+  "symbol_map": [
+    {"explicit": "x", "declarative": "위치_x"},
+    {"explicit": "y", "declarative": "위치_y"},
+    {"explicit": "vx", "declarative": "속도_x"},
+    {"explicit": "vy", "declarative": "속도_y"},
+    {"explicit": "-중력가속도", "declarative": "중력_y"}
+  ],
+  "teaching_map": [
+    {"explicit_fragment": "x <- x + vx * dt", "declarative_relation": "위치_x' =:= 속도_x", "status": "concept_match"},
+    {"explicit_fragment": "y <- y + vy * dt", "declarative_relation": "위치_y' =:= 속도_y", "status": "concept_match"},
+    {"explicit_fragment": "vy <- vy - 중력가속도 * dt", "declarative_relation": "속도_y' =:= 중력_y", "status": "concept_match_with_symbol_map"}
+  ],
+  "solveplan_summary": {
+    "schema": "ddn.solveplan.v1",
+    "stage": "S2",
+    "method": "ode_explicit_euler_v1",
+    "relation_count": 4,
+    "state_slot_count": 4,
+    "vector_component_order": ["x", "y", "z"],
+    "diagnostic_count": 0
+  },
+  "review_boundary": {
+    "human_can_compare_meaning": true,
+    "declarative_runtime_can_execute_world": false,
+    "observable_equivalence_verified": false,
+    "automatic_promotion_forbidden": true
+  }
+}

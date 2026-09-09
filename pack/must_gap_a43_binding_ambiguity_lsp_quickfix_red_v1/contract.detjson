@@ -1,0 +1,24 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a43_binding_ambiguity_lsp_quickfix_red_v1",
+  "track": "A",
+  "item": "A43",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:3430",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER2_V1.md:42",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A43_binding_ambiguity_lsp_quickfix_V1.md",
+  "cases": [
+    {
+      "id": "c01_pin_ambiguous",
+      "input": "cases/c01_pin_ambiguous/input.ddn",
+      "expected_red": "cases/c01_pin_ambiguous/expected_red.detjson"
+    },
+    {
+      "id": "c02_at_misuse_pin_quickfix",
+      "input": "cases/c02_at_misuse_pin_quickfix/input.ddn",
+      "expected_red": "cases/c02_at_misuse_pin_quickfix/expected_red.detjson"
+    }
+  ]
+}

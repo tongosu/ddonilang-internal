@@ -1,0 +1,26 @@
+{
+  "schema": "ddn.ganada.ka.project_share_ui.v1",
+  "pack": "ganada_ka_project_share_ui_v1",
+  "cell_id": "카-3",
+  "status": "product_pass_gate",
+  "product_surface": "ttonimaru_project_share_ui",
+  "source_pack": "ttonimaru_registry_3_v1",
+  "product_runner": "tests/ganada_ka_project_share_ui_runner.mjs",
+  "local_share_only": true,
+  "public_registry_seed_claim": false,
+  "registry_publish_claim": false,
+  "cloud_sync_claim": false,
+  "account_permission_claim": false,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_ka_project_share_ui_v1/workflow.detjson:1",
+    "tests/ganada_ka_project_share_ui_runner.mjs:1",
+    "tests/ttonimaru_project_share_ui_runner.mjs:1"
+  ]
+}

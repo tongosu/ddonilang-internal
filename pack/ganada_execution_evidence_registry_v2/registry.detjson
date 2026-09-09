@@ -1,0 +1,224 @@
+{
+  "schema": "ddn.ganada.execution_evidence_registry.v2",
+  "pack": "ganada_execution_evidence_registry_v2",
+  "source_registry": "ganada_execution_evidence_registry_v1",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "scope": "Ganada Product Advancement Week2-3 touched cells",
+  "matrix_cells_total": 90,
+  "tracked_cells_count": 8,
+  "week23_workflow_gates_count": 6,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "docs_only_behavior_closure_allowed": false,
+  "strong_evidence_required_for_behavior_close": true,
+  "strong_evidence_kinds": [
+    "pack_golden_pass",
+    "product_cli_or_runtime_pass",
+    "browser_or_ui_runner_pass",
+    "tooling_runner_or_ci_pass"
+  ],
+  "weak_evidence_kinds": [
+    "doc_report",
+    "proposal",
+    "markdown_existence_checker_only",
+    "status_token_only"
+  ],
+  "tracked_cells": [
+    {
+      "cell_id": "마-0",
+      "branch": "마",
+      "maru": 0,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma0_closure_repair_gate",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_closure_repair_check.py"],
+          "expect_stdout_contains": "ganada_ma_closure_repair_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_closure_repair_v1/repair.detjson:1",
+        "tests/run_ganada_ma_closure_repair_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "마-1",
+      "branch": "마",
+      "maru": 1,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma1_closure_repair_gate",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_closure_repair_check.py"],
+          "expect_stdout_contains": "ganada_ma_closure_repair_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_closure_repair_v1/repair.detjson:1",
+        "tests/run_ganada_ma_closure_repair_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "마-2",
+      "branch": "마",
+      "maru": 2,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma2_assessment_workflow",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_assessment_workflow_check.py"],
+          "expect_stdout_contains": "ganada_ma_assessment_workflow_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_assessment_workflow_v1/workflow.detjson:1",
+        "tests/ganada_ma_assessment_workflow_runner.mjs:1",
+        "tests/run_ganada_ma_assessment_workflow_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "마-3",
+      "branch": "마",
+      "maru": 3,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma3_classroom_workflow",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_classroom_workflow_check.py"],
+          "expect_stdout_contains": "ganada_ma_classroom_workflow_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_classroom_workflow_v1/workflow.detjson:1",
+        "tests/ganada_ma_classroom_workflow_runner.mjs:1",
+        "tests/run_ganada_ma_classroom_workflow_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "마-4",
+      "branch": "마",
+      "maru": 4,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma4_publication_dryrun",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_publication_dryrun_check.py"],
+          "expect_stdout_contains": "ganada_ma_publication_dryrun_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_publication_dryrun_workflow_v1/workflow.detjson:1",
+        "tests/ganada_ma_publication_dryrun_runner.mjs:1",
+        "tests/run_ganada_ma_publication_dryrun_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "마-5",
+      "branch": "마",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma5_lts_readiness",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_lts_readiness_check.py"],
+          "expect_stdout_contains": "ganada_ma_lts_readiness_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_lts_readiness_workflow_v1/workflow.detjson:1",
+        "tests/ganada_ma_lts_readiness_runner.mjs:1",
+        "tests/run_ganada_ma_lts_readiness_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "자-3",
+      "branch": "자",
+      "maru": 3,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ja3_seulgi_context",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ja_seulgi_context_check.py"],
+          "expect_stdout_contains": "ganada_ja_seulgi_context_check: PASS"
+        },
+        {
+          "id": "ja3_seulgi_local_workflow",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ja_seulgi_local_workflow_check.py"],
+          "expect_stdout_contains": "ganada_ja_seulgi_local_workflow_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ja_seulgi_context_v1/context.detjson:1",
+        "pack/ganada_ja_seulgi_local_workflow_v1/receipt.detjson:1",
+        "tests/ganada_ja_seulgi_local_workflow_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "자-5",
+      "branch": "자",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ja5_seulgi_context",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ja_seulgi_context_check.py"],
+          "expect_stdout_contains": "ganada_ja_seulgi_context_check: PASS"
+        },
+        {
+          "id": "ja5_seulgi_local_workflow",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ja_seulgi_local_workflow_check.py"],
+          "expect_stdout_contains": "ganada_ja_seulgi_local_workflow_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ja_seulgi_context_v1/context.detjson:1",
+        "pack/ganada_ja_seulgi_local_workflow_v1/receipt.detjson:1",
+        "tests/ganada_ja_seulgi_context_runner.mjs:1"
+      ]
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "docs_only_behavior_close_block_v2",
+      "evidence_kinds": ["doc_report", "proposal", "markdown_existence_checker_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    },
+    {
+      "id": "status_token_only_behavior_close_block_v2",
+      "evidence_kinds": ["status_token_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    }
+  ]
+}

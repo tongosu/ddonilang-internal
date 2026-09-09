@@ -1,0 +1,18 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_local_content_exchange_quality_v1",
+  "gate": "G8",
+  "representative_case_count": 5,
+  "roundtrip_loss_zero": true,
+  "unknown_snapshot_field_preserved": true,
+  "edit_hash_inequality": true,
+  "portable_schema": "seamgrim.project_snapshot_artifact.v0",
+  "public_registry_claim": false,
+  "author_identity_claim": false,
+  "signed_package_claim": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "runner": "tests/seamgrim_local_content_exchange_quality_runner.mjs",
+  "checker": "tests/run_seamgrim_local_content_exchange_quality_check.py"
+}
+

@@ -1,0 +1,1 @@
+{"cmd":["run","pack/sim_agent_rng_stream_v1/input.ddn"],"stdout":["SIM_AGENT_RNG_STREAM_V1","derivation=(global_seed,agent_id,stream_name)","runtime_rng_change=false"],"exit_code":0}

@@ -1,0 +1,17 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "elem_science_daily_temperature",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "graph",
+  "required_anchor_ids": ["obs.time", "obs.target_temperature", "obs.current_temperature", "obs.delta"],
+  "anchors": [
+    {"anchor_id": "obs.time", "source_ref": {"kind": "observation", "key": "t"}, "value_type": "scalar", "unit": "tick", "label": "마디", "accessibility_name": "기온 관찰 마디", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_science_daily_temperature/lesson.ddn", "source_span": "t <- t + 1"}},
+    {"anchor_id": "obs.target_temperature", "source_ref": {"kind": "observation", "key": "목표기온"}, "value_type": "scalar", "unit": "degC", "label": "목표기온", "accessibility_name": "하루 주기의 목표 기온", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_science_daily_temperature/lesson.ddn", "source_span": "목표기온 <- 평균기온 + 일교차 * (각도) sin"}},
+    {"anchor_id": "obs.current_temperature", "source_ref": {"kind": "observation", "key": "현재기온"}, "value_type": "scalar", "unit": "degC", "label": "현재기온", "accessibility_name": "완충 뒤 현재 기온", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_science_daily_temperature/lesson.ddn", "source_span": "현재기온 <- 현재기온 + 변화량"}},
+    {"anchor_id": "obs.delta", "source_ref": {"kind": "observation", "key": "변화량"}, "value_type": "scalar", "unit": "degC/tick", "label": "변화량", "accessibility_name": "기온 변화량", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_science_daily_temperature/lesson.ddn", "source_span": "변화량 <- (목표기온 - 현재기온) * 완충계수"}}
+  ],
+  "measures": [],
+  "graph_cursor": {"cursor_id": "graph.current.temperature", "x_anchor": "obs.time", "y_anchor": "obs.current_temperature", "series_id": "현재기온", "label": "현재 기온"},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "seamgrim.state.v0",
+  "tick_id": 11,
+  "state_hash": "sha256:t5d-state-11",
+  "source_hash": "sha256:t5d-source",
+  "result_identity": "result:t5d:11",
+  "observation_projection_identity": "observation:t5d:11",
+  "view_hash": "sha256:t5d-view-11",
+  "channels": [],
+  "row": [],
+  "resources": {
+    "value": {},
+    "value_json": {}
+  },
+  "view_meta": {
+    "table": {
+      "schema": "seamgrim.table.v0",
+      "columns": [
+        { "key": "time", "label": "시간", "type": "number" },
+        { "key": "position", "label": "위치", "type": "number" }
+      ],
+      "rows": [
+        { "time": 0, "position": 0 },
+        { "time": 1, "position": 12 }
+      ],
+      "meta": { "title": "위치 표", "source_input_hash": "sha256:t5d-input" }
+    },
+    "text": {
+      "schema": "seamgrim.text.v0",
+      "content": "# 실행 설명\n\n위치는 12입니다.",
+      "format": "markdown",
+      "meta": { "source_input_hash": "sha256:t5d-input" }
+    },
+    "structure": {
+      "schema": "seamgrim.structure.v0",
+      "nodes": [
+        { "id": "source", "label": "시작", "x": 0, "y": 0 },
+        { "id": "result", "label": "결과", "x": 1, "y": 0 }
+      ],
+      "edges": [
+        { "from": "source", "to": "result", "label": "계산", "directed": true }
+      ],
+      "layout": { "type": "dag" },
+      "meta": { "title": "실행 구조", "source_input_hash": "sha256:t5d-input" }
+    }
+  }
+}

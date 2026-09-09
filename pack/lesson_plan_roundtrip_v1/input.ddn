@@ -1,0 +1,5 @@
+"LESSON_PLAN_ROUNDTRIP_V1" 보여주기.
+"lesson_plan.v0.toml parses to normalized product AST" 보여주기.
+"observe change compare explain activities are browser-runner verified" 보여주기.
+"list/code editor roundtrip is semantic-lossless" 보여주기.
+"DDN syntax and runtime state_hash are unchanged" 보여주기.

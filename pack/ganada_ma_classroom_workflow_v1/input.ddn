@@ -1,0 +1,6 @@
+"GANADA_MA_CLASSROOM_WORKFLOW_V1" 보여주기.
+"cell=마-3" 보여주기.
+"selectors=classroom-workflow-panel,classroom-teacher-mode,classroom-student-mode,classroom-roster,classroom-result-review,classroom-report-export" 보여주기.
+"report_export_policy=local_dry_run" 보여주기.
+"matrix_upgrade_claim=false" 보여주기.
+"checker=tests/run_ganada_ma_classroom_workflow_check.py" 보여주기.

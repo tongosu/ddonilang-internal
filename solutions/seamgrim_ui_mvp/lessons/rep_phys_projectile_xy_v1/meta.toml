@@ -1,0 +1,16 @@
+title = "포물선 운동"
+description = "초기 속도와 중력을 바꾸며 물체가 그리는 궤적을 봅니다."
+grade = "middle"
+subject = "physics"
+level = "intro"
+goals = ["시간에 따른 위치/속도 변화를 상태 전개로 확인한다", "중력 가속도 변화가 궤적에 주는 영향을 확인한다"]
+required_views = ["space2d", "graph", "text"]
+first_delight_id = "projectile"
+first_delight_controls = ["초기속도x", "초기속도y", "중력가속도"]
+first_delight_control_labels = {"초기속도x" = "가로 속도", "초기속도y" = "세로 속도", "중력가속도" = "중력"}
+view_roles = ["trajectory_trail"]
+primary_view = "space2d"
+primary_view_rules_path = "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+view_plan_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/view_plan.detjson"
+representation_pair_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/representation_pair.detjson"
+world_diff_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/world_diff_gravity_half.detjson"

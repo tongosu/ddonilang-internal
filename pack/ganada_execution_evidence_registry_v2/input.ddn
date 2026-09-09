@@ -1,0 +1,6 @@
+"GANADA_EXECUTION_EVIDENCE_REGISTRY_V2" 보여주기.
+"tracked_cells=8" 보여주기.
+"week23_workflow_gates=6" 보여주기.
+"docs_only_behavior_closure_allowed=false" 보여주기.
+"matrix_upgrade_claim=false" 보여주기.
+"checker=tests/run_ganada_execution_evidence_registry_v2_check.py" 보여주기.

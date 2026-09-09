@@ -1,0 +1,2 @@
+{"cmd":["run","pack/sim_init_equation_v1/source_init_s0.ddn","--solveplan-out","build/declarative_closure_g6/sim_init_equation_v1_s0.detjson"],"exit_code":0,"stdout":[]}
+{"cmd":["run","pack/sim_init_equation_v1/source_init_s2_reject.ddn","--solveplan-out","build/declarative_closure_g6/sim_init_equation_v1_s2_reject.detjson"],"exit_code":0,"stdout":[]}

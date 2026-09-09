@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "V18-00D_X_XHA_NAME_COLLISION_FORBIDDEN",
+  "expected_future_diag": "DECISION_REQUIRED",
+  "notes": [
+    "현재 제품 경로는 호출 시점 E_CALL_TAIL_AMBIGUOUS를 낼 수 있으나, SSOT 요구는 같은 스코프 정의 금지다.",
+    "오류 코드 이름은 아직 결정되지 않았다."
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "ddn.nuri_madi_phase_trace_g1.write_conflict_fatal.v1",
+  "pack_id": "nuri_madi_phase_trace_g1_v1",
+  "case_id": "same_madi_same_slot_two_writers",
+  "phase": "P4",
+  "conflict": {
+    "slot": "누리.entity.agent.alpha.position.x",
+    "writers": [
+      {
+        "agent_id": "agent.alpha",
+        "recv_seq": 1,
+        "write": {"value": 1}
+      },
+      {
+        "agent_id": "agent.beta",
+        "recv_seq": 2,
+        "write": {"value": -1}
+      }
+    ],
+    "opt_in_merge_policy_present": false
+  },
+  "expected": {
+    "error_code": "E_MADI_WRITE_CONFLICT",
+    "fatal": true,
+    "world_commit_allowed": false,
+    "partial_write_allowed": false,
+    "payload_shape_finalized": false
+  },
+  "decision_needed": [
+    "OI-NURI-WRITE-CONFLICT-ERROR-01"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_econ_market_v1",
+  "kind": "declarative_closure_g4_econ_relation_demo",
+  "product_entrypoint": "teul-cli run --solveplan-out",
+  "artifact_schema": "ddn.solveplan.v1",
+  "stage": "S1",
+  "method": "connect_desugar_to_seum_rows_v1",
+  "sign_convention": "incoming_positive_v1",
+  "reverse_flow_claim": false,
+  "full_econ_solver_claim": false
+}

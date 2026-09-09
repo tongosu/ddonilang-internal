@@ -1,0 +1,28 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_lab_e1_minimal_v1",
+  "kind": "seamgrim_lab_e1_product_behavior",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "product_behavior_claim": true,
+  "closed_by": "SEAMGRIM_LAB_E1_MINIMAL_V1",
+  "browser_runner": "tests/seamgrim_lab_e1_minimal_runner.mjs",
+  "product_url": "solutions/seamgrim_ui_mvp/ui/index.html?tab=studio&lesson=rep_math_function_line_v1",
+  "lineage_schema": "seamgrim.lab_e1_lineage.v1",
+  "covers": [
+    "l1_to_lab_editable_ddn",
+    "control_change_reexecutes_product_frontdoor",
+    "origin_hash_placeholder_landed",
+    "delta_ref_placeholder_landed",
+    "original_and_my_version_run_history",
+    "balanced_code_view_layout_controls"
+  ],
+  "auto_apply_claim": false,
+  "file_write_claim": false,
+  "ai_authority_claim": false,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false,
+  "requires_docs_ssot_clean": true
+}

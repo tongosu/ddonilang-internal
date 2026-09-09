@@ -1,0 +1,48 @@
+{
+  "schema": "ddn.seamgrim_workbench_recovery.g15_integrated_gate.v1",
+  "finished_at_utc": "2026-07-17T18:37:43Z",
+  "closure_claim": "behavior-closed for bounded G15 regression alignment only",
+  "scope": [
+    "approved workbench regression runners updated for post-G7 view instances and action gating",
+    "public physics wedge runners updated for committed-frame semantics and storage drawer UI",
+    "durable workflow runners updated for saved-snapshot waits, drawer UI, and archive fallback",
+    "multifile portable/workbench runners updated for pause-aware live semantics and source-stale contract",
+    "moyang render smoke fixtures changed from unsupported parameterized template call to supported direct shape surface",
+    "boundary/parity runner wasm path supports DDN_WASM_DIR for fresh artifact verification"
+  ],
+  "passes": [
+    "python tests/run_seamgrim_approved_workbench_shell_check.py",
+    "python tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+    "python tests/run_seamgrim_approved_workbench_semantic_verticals_check.py",
+    "python tests/run_seamgrim_approved_workbench_runtime_lineage_check.py",
+    "python tests/run_seamgrim_workbench_animation_oneshot_gate_check.py",
+    "python tests/run_seamgrim_workbench_four_viewport_recovery_gate_check.py",
+    "python tests/run_seamgrim_workbench_race_matrix_check.py",
+    "python tests/run_seamgrim_public_physics_wedge_quality_gate_check.py",
+    "python tests/run_seamgrim_workbench_durable_quality_gate_check.py",
+    "python tests/run_seamgrim_portable_project_workbench_check.py",
+    "python tests/run_seamgrim_portable_project_artifact_check.py",
+    "python tests/run_seamgrim_multifile_project_workbench_check.py",
+    "python tests/run_seamgrim_multifile_portable_roundtrip_check.py",
+    "python tests/run_ddn_project_workbench_boundary_matrix_check.py",
+    "python tests/run_ddn_cli_wasm_freshness_check.py",
+    "python tests/run_ddn_cli_wasm_true_parity_equality_check.py",
+    "python tests/run_ddn_cli_wasm_sync_gate_check.py",
+    "cargo check",
+    "cargo check --manifest-path tools/teul-cli/Cargo.toml",
+    "cargo test -p ddonirang-tool",
+    "python tests/run_ci_sanity_gate.py --profile core_lang",
+    "git diff --check",
+    "git status --short -- docs/ssot"
+  ],
+  "observations": [
+    "An initial core_lang sanity run failed in teul-cli compilation with a transient serde_core StableCrateId collision; direct cargo checks passed and the later full core_lang sanity rerun passed.",
+    "During long browser gate execution, unrelated source-root files changed in the dirty workspace. WASM freshness was therefore re-baselined locally before freshness-dependent gates.",
+    "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.manifest.detjson was kept out of the G15 commit because its current diff fingerprints unrelated dirty/untracked source-root files.",
+    "docs/ssot remained unchanged."
+  ],
+  "open_scope": [
+    "clean detached verification of G15 commit without unrelated dirty source-root changes",
+    "decision on whether unrelated source-root changes should produce a separate WASM manifest update"
+  ]
+}

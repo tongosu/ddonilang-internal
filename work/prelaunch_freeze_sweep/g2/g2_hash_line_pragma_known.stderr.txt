@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.40s
+     Running `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_hash_line_pragma_known.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_hash_line_pragma_known.summary.detjson`
+E_FRONTDOOR_LEGACY_HEADER_FORBIDDEN line=1 key=말씨 use=설정{}/매김{}/설정.보개
+error: process didn't exit successfully: `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_hash_line_pragma_known.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_hash_line_pragma_known.summary.detjson` (exit code: 1)

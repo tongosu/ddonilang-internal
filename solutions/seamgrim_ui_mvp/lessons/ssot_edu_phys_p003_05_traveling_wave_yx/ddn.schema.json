@@ -1,0 +1,15 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "A", "type": "수" },
+    { "name": "dx", "type": "수" },
+    { "name": "k", "type": "수" },
+    { "name": "lambda", "type": "수" },
+    { "name": "omega", "type": "수" },
+    { "name": "pi", "type": "수" },
+    { "name": "t0", "type": "수" },
+    { "name": "x", "type": "수" },
+    { "name": "x_max", "type": "수" },
+    { "name": "x_min", "type": "수" }
+  ]
+}

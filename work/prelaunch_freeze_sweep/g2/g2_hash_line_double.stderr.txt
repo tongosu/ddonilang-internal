@@ -1,0 +1,2 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.49s
+     Running `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_hash_line_double.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_hash_line_double.summary.detjson`

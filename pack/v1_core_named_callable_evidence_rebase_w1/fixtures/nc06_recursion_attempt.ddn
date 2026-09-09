@@ -1,0 +1,4 @@
+매마디:움직씨 := {
+  "PUBLISHED_BEFORE_FAILURE" 보여주기.
+  () 매마디하기.
+}

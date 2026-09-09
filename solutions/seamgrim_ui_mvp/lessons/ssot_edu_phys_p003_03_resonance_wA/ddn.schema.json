@@ -1,0 +1,15 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "F0", "type": "수" },
+    { "name": "beta", "type": "수" },
+    { "name": "dt", "type": "수" },
+    { "name": "dw", "type": "수" },
+    { "name": "omega0", "type": "수" },
+    { "name": "t_max", "type": "수" },
+    { "name": "t_warm", "type": "수" },
+    { "name": "w", "type": "수" },
+    { "name": "w_max", "type": "수" },
+    { "name": "w_min", "type": "수" }
+  ]
+}

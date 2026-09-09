@@ -1,0 +1,1 @@
+{"cmd":["run","pack/sim_ode_vector_v1/source_vector.ddn","--solveplan-out","build/declarative_closure_g3/sim_ode_vector_v1_solveplan.detjson"],"exit_code":0,"stdout":[]}

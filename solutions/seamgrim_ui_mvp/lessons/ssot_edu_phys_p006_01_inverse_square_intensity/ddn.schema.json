@@ -1,0 +1,10 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "dr", "type": "수" },
+    { "name": "k", "type": "수" },
+    { "name": "r_max", "type": "수" },
+    { "name": "r_min", "type": "수" },
+    { "name": "r목록", "type": "수" }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_multifile_portable_roundtrip_v1",
+  "kind": "seamgrim_multifile_portable_roundtrip_product_behavior",
+  "gate": "G11",
+  "runtime_state_hash_formula_change": false,
+  "parser_grammar_change": false,
+  "docs_ssot_change": false,
+  "product_code_change": true,
+  "product_behavior_claim": true,
+  "browser_runner": "tests/seamgrim_multifile_portable_roundtrip_runner.mjs",
+  "checker": "tests/run_seamgrim_multifile_portable_roundtrip_check.py",
+  "snapshot_wrapper_schema": "seamgrim.project_snapshot_artifact.v0",
+  "local_package_payload_kind": "seamgrim.local_project_tree.v0",
+  "frontdoor": "wasm_project_run_summary_json",
+  "accepted_frontdoors": [
+    "wasm_project_run_summary_json",
+    "wasm_project_prepare_link_json"
+  ],
+  "workbench_current_frontdoor": "wasm_project_prepare_link_json",
+  "covers": [
+    "editor_multifile_snapshot_payload",
+    "file_sha256_and_byte_length",
+    "server_save_reopen_preserves_project_tree",
+    "view_clone_preserves_project_tree",
+    "workbench_import_preview_preserves_current_project",
+    "workbench_open_preserves_project_tree",
+    "workbench_server_save_reopen_preserves_project_tree",
+    "server_restart_reopen_preserves_project_tree",
+    "run_lineage_preserved_across_export_import_reopen_clone",
+    "old_wrapper_rejected_without_state_loss",
+    "backup_recovery_smoke_same_data_dir",
+    "corrupt_import_rejected_without_state_loss",
+    "one_file_snapshot_wrapper_compatibility"
+  ],
+  "non_claims": [
+    "no_public_registry",
+    "no_git_resolver",
+    "no_remote_download",
+    "no_new_ddn_grammar",
+    "no_runtime_state_hash_formula_change"
+  ]
+}

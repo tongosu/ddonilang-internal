@@ -1,0 +1,80 @@
+{
+  "claims": {
+    "closure_tier": "behavior-closed",
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g10_status": "G10_DURABLE_LIVE_LINEAGE_COMPLETE",
+    "state_hash_formula_change": false
+  },
+  "lineage_invariants": {
+    "branch_parent_immutable_after_child_run": true,
+    "branch_parent_madi_and_state_hash_verified": true,
+    "checkpoint_hash_chain_contiguous": true,
+    "checkpoint_sequence_contiguous": true,
+    "committed_madi_monotonic": true,
+    "frame_ids_contiguous": true,
+    "pause_resume_preserved_local_run_id": true,
+    "renderer_pixels_stored_in_archive": false,
+    "view_change_appended_world_checkpoint": false,
+    "view_change_changed_world_state_hash": false
+  },
+  "terminal_archive_matrix": [
+    {
+      "case": "live_parent_stop",
+      "final_status": "stopped",
+      "finalize_attempt_count": 1
+    },
+    {
+      "case": "live_branch_stop",
+      "final_status": "stopped",
+      "finalize_attempt_count": 1
+    },
+    {
+      "case": "live_configured_madi_done",
+      "final_status": "completed",
+      "finalize_attempt_count": 1
+    },
+    {
+      "case": "wasm_prepare_failure_after_archive_create",
+      "final_status": "failed",
+      "finalize_attempt_count": 1
+    }
+  ],
+  "reopen_contract": {
+    "archive_count_observed": 4,
+    "checkpoint_frames_rendered_in_history_drawer": true,
+    "detail_loaded_from_server_archive_api": true,
+    "reopened_checkpoint_hash_chain_verified": true
+  },
+  "input_snapshot_boundary": {
+    "action_map_lineage_preserved": true,
+    "committed_input_id_preserved": true,
+    "live_reset_frame_records_queued_action": false,
+    "queued_action_committed_exactly_once": true,
+    "single_file_and_linked_project_paths_covered": true
+  },
+  "prerequisite_repair": {
+    "commit": "0d20be0",
+    "inline_closed_settings_preserve_runtime_body": true,
+    "js_python_guide_meta_parity_preserved": true,
+    "reason": "한 줄 설정 헤더가 뒤의 runtime body를 삼키던 제품 결함을 G10 실제 WASM 실패 fixture에서 발견해 별도 커밋으로 수리"
+  },
+  "verification": {
+    "execution_lifecycle_browser": "PASS",
+    "execution_lifecycle_unit": "PASS",
+    "guideblock_keys_pack": "PASS",
+    "live_step_pump": "PASS",
+    "native_one_file_browser": "PASS",
+    "progressive_disclosure_browser": "PASS",
+    "project_controls_browser_final": "PASS",
+    "project_controls_browser_three_way_stress": "PASS_3_OF_3",
+    "run_archive_lineage_behavior_gate": "PASS",
+    "run_archive_lineage_browser": "PASS",
+    "run_archive_store_behavior_gate": "PASS",
+    "semantic_view_payload_unit": "PASS",
+    "semantic_view_renderer_unit": "PASS",
+    "ui_common": "PASS",
+    "view_instances_browser": "PASS"
+  },
+  "schema": "seamgrim.workbench_recovery.g10_durable_live_lineage.v1"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "NUMERIC_LITERAL_SUFFIX_SPLIT",
+  "expected_future_diag": "E_NUMERIC_SUFFIX_SPLIT_NOT_IMPLEMENTED",
+  "notes": [
+    "SSOT example class: 100cm를 -> number literal + unit suffix + josa suffix.",
+    "현재 제품 lexer는 숫자 뒤 식별자 접미를 일반적으로 분리하지 않고 마디만 예외로 허용한다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

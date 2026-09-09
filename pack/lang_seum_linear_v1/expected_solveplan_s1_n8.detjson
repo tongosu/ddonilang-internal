@@ -1,0 +1,32 @@
+{
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:3b91d785b60532f2f9dbdc5d2fc86d96d16566b3053c335cc8e250bd2ace1178",
+  "stage": "S1",
+  "method": "linear_system_bounded_exact_v1",
+  "relations": [
+    {"id": "r1", "source_order": 0, "text": "x1 + x2 =:= 3", "kind": "linear", "depends_on": []},
+    {"id": "r2", "source_order": 1, "text": "x2 + x3 =:= 5", "kind": "linear", "depends_on": []},
+    {"id": "r3", "source_order": 2, "text": "x3 + x4 =:= 7", "kind": "linear", "depends_on": []},
+    {"id": "r4", "source_order": 3, "text": "x4 + x5 =:= 9", "kind": "linear", "depends_on": []},
+    {"id": "r5", "source_order": 4, "text": "x5 + x6 =:= 11", "kind": "linear", "depends_on": []},
+    {"id": "r6", "source_order": 5, "text": "x6 + x7 =:= 13", "kind": "linear", "depends_on": []},
+    {"id": "r7", "source_order": 6, "text": "x7 + x8 =:= 15", "kind": "linear", "depends_on": []},
+    {"id": "r8", "source_order": 7, "text": "x8 =:= 8", "kind": "linear", "depends_on": []}
+  ],
+  "unknowns": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8"],
+  "lowering": {
+    "bound": {"unknown_count_max": 8, "unknown_count": 8},
+    "causalization": "linear_system_source_order_tiebreak",
+    "causal_order": ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"],
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": ["state_read", "seum_solve", "state_write", "hook_next_segment"],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "diagnostics": [],
+  "state_hash_inputs": {
+    "include": ["schema", "source_hash", "stage", "method", "relations", "unknowns", "lowering"],
+    "exclude": ["diagnostics", "execution_results"]
+  }
+}

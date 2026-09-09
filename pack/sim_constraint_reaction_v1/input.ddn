@@ -1,0 +1,5 @@
+"SIM_CONSTRAINT_REACTION_V1" 보여주기.
+"family=막음" 보여주기.
+"verb=막기" 보여주기.
+"runtime_claim=false" 보여주기.
+"subpacks=sim_mageum_floor_v1,sim_mageum_box_v1,sim_mageum_chain_v1,lang_mageum_diag_v1" 보여주기.

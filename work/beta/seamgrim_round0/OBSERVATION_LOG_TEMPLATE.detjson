@@ -1,0 +1,33 @@
+{
+  "schema": "seamgrim.external_observation.v0",
+  "participant_id": "anonymous-001",
+  "participant_type": "novice|educator|programmer",
+  "prior_project_exposure": false,
+  "viewport": "390x844",
+  "browser": "",
+  "timestamps_ms": {
+    "start": 0,
+    "lesson_open": 0,
+    "first_run": 0,
+    "first_control_change": 0,
+    "first_named_save": 0,
+    "first_reopen": 0,
+    "retained_value_verified": 0,
+    "first_explanation": 0,
+    "ddn_open": 0
+  },
+  "wrong_targets": [],
+  "saved_project_ref": "",
+  "retention_scope": "same_device|downloaded_package|server_durable",
+  "retained_name": false,
+  "retained_control_change": false,
+  "view_link_opened_in_separate_context": false,
+  "clone_created": false,
+  "clone_origin_preserved": false,
+  "share_clone_elapsed_ms": 0,
+  "stalls": [],
+  "facilitator_help": [],
+  "participant_quotes": [],
+  "result": "success|partial|failed",
+  "notes": ""
+}

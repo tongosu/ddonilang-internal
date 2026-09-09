@@ -1,0 +1,25 @@
+{
+  "schema": "ddn.v1_core_text_byte_nfc_rebase_w1.evidence_gap_capture.v1",
+  "source_profile_identity": "v1-core-v25",
+  "fixed_product_baseline": "7921a4d7832f1e89b2380b9729b2072e4651d3cc",
+  "required_case_count": 11,
+  "deterministic_repeats": 3,
+  "cases": [
+    {"id":"T01_HANGUL_ESCAPE","path":"fixtures/t01_hangul_escape_v25.ddn","fixture_kind":"raw_utf8","fixture_sha256":"c0f201ec2c1b378047d888600e417a0033bbe00e9880e79046f2f3e32d4aae15","expected_class":"GREEN","canon_roundtrip":true,"expected_output_log_texts":["첫\n둘","A\tB","그는 \"안녕\"","C\\D"]},
+    {"id":"T02_COMPAT_ESCAPE","path":"fixtures/t02_compat_escape_v25.ddn","fixture_kind":"raw_utf8","fixture_sha256":"113b55eddfe3e0006a404fc37428421e4ca1f7ca1303e49ab46488039fc46fe1","expected_class":"GREEN","canon_roundtrip":true,"expected_output_log_texts":["첫\n둘","A\tB","그는 \"안녕\"","C\\D"]},
+    {"id":"T03_CARRIAGE_RETURN","path":"fixtures/t03_carriage_return_v25.ddn","fixture_kind":"raw_utf8","fixture_sha256":"518b69336bda72e78850a3721852a86c47e25540a4480e3c1da7c6355067cc76","expected_class":"GREEN","canon_roundtrip":true,"expected_output_log_texts":["왼쪽\r오른쪽"]},
+    {"id":"T04_RAW_TEXT_NFD_NFC","path":"fixtures/t04_raw_text_nfd_nfc_v25.ddn","fixture_kind":"raw_utf8","fixture_sha256":"2c33804fb60ed06a9f28103fa62eda1c75db2e7d670b6fa96d3d35cf1bc5b817","expected_class":"GREEN","canon_roundtrip":false,"expected_output_log_texts":["값","값"]},
+    {"id":"T05_DIRECT_LF","path":"fixtures/t05_direct_lf_transport.detjson","fixture_kind":"transport_json","fixture_sha256":"90667c7ffeb6a43f1548b93a41f654b51c0a3d5e0ecd76ae801628dc64749c72","expected_class":"GREEN","canon_roundtrip":false,"expected_output_log_texts":["줄끝"]},
+    {"id":"T06_DIRECT_CRLF","path":"fixtures/t06_direct_crlf_transport.detjson","fixture_kind":"transport_json","fixture_sha256":"313fcd323a9a3a0f8f259570c972c9f6ff0fa1f107d28c39fd4343c8bd936e5c","expected_class":"GREEN","canon_roundtrip":false,"expected_output_log_texts":["줄끝"]},
+    {"id":"T07_DIRECT_LONE_CR","path":"fixtures/t07_direct_lone_cr_transport.detjson","fixture_kind":"transport_json","fixture_sha256":"bcbd81b87deca40870278e93296728c85da88900960fc062bef845d5a23f541b","expected_class":"GREEN","canon_roundtrip":false,"expected_output_log_texts":["줄끝"]},
+    {"id":"T08_IDENTIFIER_NFD_NFC","path":"fixtures/t08_identifier_nfd_nfc_v25.ddn","fixture_kind":"raw_utf8","fixture_sha256":"bde2c12871884a10cb12643aa54b9afdf00dbed1be02f3cebf1f5421dcb5e43a","expected_class":"PRODUCT_GAP","canon_roundtrip":false,"expected_outcome":"REJECTED","expected_diagnostic":"E_EXECUTION_PARSE"},
+    {"id":"T09_BYTE_LITERAL","path":"fixtures/t09_byte_literal_v25.ddn","fixture_kind":"raw_utf8","fixture_sha256":"a825af830e8c86ee1062b9de7fd5025c4841f092926a51485d73d81c8d846bc4","expected_class":"PRODUCT_GAP","canon_roundtrip":false,"expected_outcome":"REJECTED","expected_diagnostic":"E_EXECUTION_PARSE"},
+    {"id":"T10_BOM_AS_DATA","path":"fixtures/t10_bom_transport.detjson","fixture_kind":"transport_json","fixture_sha256":"9915a18f991fdcc55e5d7342f776d9bdd35c888ce30dcc360c38db245f9b4975","expected_class":"PRODUCT_GAP","canon_roundtrip":false,"expected_outcome":"REJECTED","expected_diagnostic":"E_EXECUTION_PARSE"},
+    {"id":"T11_INVALID_UTF8","path":"fixtures/t11_invalid_utf8_transport.detjson","fixture_kind":"transport_json","fixture_sha256":"9826d27392a3a7abc232e7994bae6d796b7f2a50a5eae2f4498d6bf78d09b55a","expected_class":"PRODUCT_GAP","canon_roundtrip":false,"expected_outcome":"NO_TEXT_SURFACE","expected_diagnostic":"E_INVALID_UTF8_BEFORE_STRING_API"}
+  ],
+  "static_gap_rows": [
+    {"id":"G01_EXPLICIT_UTF8_CONVERSION","status":"PRODUCT_GAP","reason":"existing concrete byte-sequence conversion surface not found"},
+    {"id":"G02_LOCAL_PROJECT_RECEIPT","status":"PRODUCT_GAP","reason":"CRLF-to-LF helper exists but raw-byte/InputSnapshot receipt surface is not proven"},
+    {"id":"G03_PUBLIC_DIAGNOSTIC_SPELLING","status":"OPEN","reason":"E_SHARED_CANONICAL versus E_LEX_BAD_ESCAPE is not selected here"}
+  ]
+}

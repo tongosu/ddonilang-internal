@@ -1,0 +1,52 @@
+(매마디)마다 {
+  // 출력은 숫자만. (ω, A) 순서.
+  // NOTE:
+  // - sqrt 없이도, 마지막 구간의 x_max/x_min으로 A=(xmax-xmin)/2를 추정한다.
+  // - 각 ω마다 내부 시뮬을 돌리므로 (dw, t_max, dt)를 너무 촘촘히 하면 느려진다.
+
+  w_min <- 0.5.
+  w_max <- 3.0.
+  dw <- 0.1.
+
+  omega0 <- 1.5.
+  beta <- 0.05.
+  F0 <- 1.
+
+  dt <- 0.02.
+  t_max <- 30.
+  t_warm <- 15.
+
+  w <- w_min.
+
+  { w <= w_max }인것 동안: {
+    // 초기조건(각 ω마다)
+    x <- 0.
+    v <- 0.
+    t <- 0.
+
+    x_max <- -999999.
+    x_min <- 999999.
+
+    { t <= t_max }인것 동안: {
+      // warm-up 이후에만 max/min 누적
+      { t >= t_warm }인것 일때 {
+        { x > x_max }인것 일때 { x_max <- x }.
+        { x < x_min }인것 일때 { x_min <- x }.
+      }.
+
+      angle <- (w=w, t=t) (#ascii) 수식{ w*t }.
+      drive <- (angle) cos.
+
+      a <- (beta=beta, v=v, omega0=omega0, x=x, F0=F0, drive=drive) (#ascii) 수식{ -2*beta*v - (omega0^2)*x + F0*drive }.
+
+      v <- (v=v, a=a, dt=dt) (#ascii) 수식{ v + a*dt }.
+      x <- (x=x, v=v, dt=dt) (#ascii) 수식{ x + v*dt }.
+
+      t <- t + dt.
+    }.
+
+    A <- (xmax=x_max, xmin=x_min) (#ascii) 수식{ (xmax - xmin)/2 }.
+
+    w <- w + dw.
+  }.
+}.

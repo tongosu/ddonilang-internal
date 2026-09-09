@@ -1,0 +1,19 @@
+{
+  "owner_packet_sha256": "sha256:3abeee872919007610f2f75e430affc86e87a1b97237224b82475444d7247323",
+  "predecessor_public_trees": {
+    "v0.2.0": "sha256:002f98ed6a7ce81f1059aea8f04c3d3d0aae9b5afecb11308a0c4401ec854bda"
+  },
+  "preserved_ssot_tree_sha256": "sha256:78212ebe8561e2dcf51f98b79b32e14d26c00665770184f603c01f02b90a3f7c",
+  "preserved_ssot_version": "v24.15.0",
+  "product_evidence": "K0-K7 and M3 W0-W4 pending",
+  "projection_generator_sha256": "sha256:8fdb417f62de20069686c709e23aa966e5eeecfc08d735f2f63571f6f16e9fda",
+  "public_version": "v0.2.1",
+  "schema": "ddonirang-language-spec-trace.v1",
+  "semantic_change": "none",
+  "source_ssot_manifest_sha256": "sha256:4ae1f26b93f0cc307620f8c051446a8b0f59238d006533e64bf36cef1a1700f2",
+  "source_ssot_seal_sha256": "sha256:52691cf9a7b39c9f54336da8a060dc5a619789bb46b8c9dd6bb116f208b3576b",
+  "source_ssot_status": "installed-current-after-manager-apply",
+  "source_ssot_tree_sha256": "sha256:69a51b035e1fcd557c2ed8f9e8b8765e5551379bab2f3bbac20d21453d9c456d",
+  "source_ssot_version": "v24.15.1",
+  "status": "current-public-pre-release-draft"
+}

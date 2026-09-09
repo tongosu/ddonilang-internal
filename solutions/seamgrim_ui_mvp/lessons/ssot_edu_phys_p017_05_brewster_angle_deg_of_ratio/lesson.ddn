@@ -1,0 +1,37 @@
+// 출력은 숫자만. (r, θB_deg) 순서.
+
+pi <- 3.1415926535.
+
+r_min <- 1.00.
+r_max <- 2.00.
+dr <- 0.02.
+
+k목록 <- (1, 10, 1) 범위.
+
+(시작)할때 {
+  r <- r_min.
+}.
+
+(매마디)마다 {
+  { r <= r_max }인것 일때 {
+    theta <- 0.8 + 0.3*(r - 1).   // 초기값(라디안)
+
+    (k) k목록에 대해: {
+      s <- (theta) sin.
+      c <- (theta) cos.
+      tanv <- s / c.
+      f <- tanv - r.
+      // Newton: theta <- theta - f / (sec^2) = theta - f * cos^2
+      theta <- theta - f * c * c.
+    }.
+
+    deg <- theta * 180 / pi.
+
+    보임 {
+      r: r.
+      deg: deg.
+    }.
+
+    r <- r + dr.
+  }.
+}.

@@ -1,0 +1,1961 @@
+{
+  "claims_boundary": {
+    "behavior_closed_claim": false,
+    "g0_is_audit_only": true,
+    "high_math_derivative_used": true,
+    "high_physics_energy_substitution": false,
+    "matrix_state_rejudgement": false,
+    "new_ddn_syntax": false,
+    "ssot_edit": false,
+    "state_hash_formula_change": false
+  },
+  "counts": {
+    "allowlisted_targets": 5,
+    "cli_madi_2": {
+      "FAIL": 2,
+      "PASS": 10
+    },
+    "target_worlds": 12,
+    "with_lesson_plan_v0": 1,
+    "with_view_plan": 2
+  },
+  "dirty_snapshot": {
+    "docs_ssot_status": "",
+    "product_overlap_rows": [],
+    "status_row_count": 101,
+    "status_rows": [
+      {
+        "content_sha256": "sha256:6a3bd5873b3f98543872f16b7f68c69405b7f618c8b9ee5e2a1da6daca0a159f",
+        "kind": "file",
+        "path": "docs/context/all/DEV_SUMMARY.md",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:403de1595aefe238c768003622519ccc9f0f12401ed1b07bc4d6f8f5bf2ac483",
+        "kind": "file",
+        "path": "docs/context/proposals/PROPOSAL_SEAMGRIM_KOREAN_MANIM_WAVE1_TO_WAVE2B_SSOT_PROMOTION_PACKET_V1_20260711.md",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:8a74d5b971ac1b1126f90ddfe73c2c63bcb1fee4d34f8223f3fc8c0a9fe8ca75",
+        "kind": "file",
+        "path": "docs/context/reports/INDEX.md",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:83ef23ddab8c523b3f088936723dfce775d09077b85f49e14c9aa5ab7bea7a29",
+        "kind": "file",
+        "path": "docs/context/reports/SEAMGRIM_KOREAN_MANIM_DECISION_LEDGER_V1_20260711.detjson",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:aecc5e55d44fae77e4f4454e5e496ef26d10366ab946832ab510bea2dc825fb2",
+        "kind": "file",
+        "path": "docs/context/reports/SEAMGRIM_KOREAN_MANIM_PROMOTION_LEDGER_V2_20260711.detjson",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:c8d981f1697c2fd991a2cec3b0b3daa324d0ca94bfc22ae7fa4be4692eaec0e4",
+        "kind": "file",
+        "path": "docs/reports/audit/INDEX.md",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:a408e944889bbcf4edf9bc12bf134e78ca956b462c6c5700546975d055192a79",
+        "kind": "file",
+        "path": "docs/reports/impl/INDEX.md",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:c49ebbcfc45bab1568c4d10e16eb55478a47d5b288afac3c0975cc6f57d842af",
+        "kind": "file",
+        "path": "pack/seamgrim_exec_policy_effect_diag_v1/c09_exec_policy_record_file_read_success/open.log.jsonl",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "kind": "file",
+        "path": "pack/seamgrim_exec_policy_effect_diag_v1/c14_exec_policy_record_open_io_EXPECT_FAIL/open.log.jsonl",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:82f5501834c3a99a8473286f452cdbf573718ddeeebe2d11080639e0ddda47f8",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_seamgrim_next_superlong_goal.md",
+        "status": "M"
+      },
+      {
+        "content_sha256": "sha256:b9006759fb341c81533b57ec1f1e885d46d9c4e49e2efdf560f52fd0a8c81fba",
+        "kind": "file",
+        "path": "tests/ddonirang_complete_books_browser_runner.mjs",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:43f89ccc7fe77d47ed9d9fcfc29d2067e210eaab96bfda203cc227dc363564a9",
+        "kind": "file",
+        "path": "tests/run_ddonirang_complete_books_browser_check.py",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:569f0e8a2214820fed83629c637b089789e44eb4779c2668b4f6390104a59dda",
+        "kind": "file",
+        "path": "tests/run_ddonirang_complete_books_check.py",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:7e7fd70b35f4896de6c6e7f09429ab3e508f45704bdf8545af826b4a42926e7d",
+        "kind": "file",
+        "path": "work/_session_deltas/20260709_codex_recent_proposals_reflection.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:3c11c330d41277cdec937a812338764323acb7d7fd3208d690ad5b2f62038cef",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_ai_era_language_two_pillars_ssot.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:3df1d9a5ce961fb845047bb991d9c0fe9366040a584a104104af4be295412f95",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_gaji_forest_product_plan.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:e905a6813e8533b967bdfbc8ec36c7ffdfc1e7bc721d48493b075f55744f60fd",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_ganada_intake_audit.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:2838181ea738058d79e1255e59ea07f5184f0b069b49c507f7948c8925383088",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_korean_manim_ssot_reflection.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:233e2cb3fc65cd56ad81515248cb37a05b0406a1b42398b543a84cd31dac11ba",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_pre_release_term_audit_seed_rename.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:391b8513adf2294fc7ba750880120321ccc3e1be67eb25ed17a7c2e41579c6e4",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_recent_discussions_ssot_full_reflection.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:c962fd1dc588dc729d9a07145224489c10297486e47a7a20470f1b2a3e58cf3e",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_root_ddonirang_intake_stdlib_ai_tooling.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:c0b5ef730da06374adacfa5164b6fecb43ed16fe49bf755e75507d01c0a7b651",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_seamgrim_ui_v2_screen_plan.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:44c57969a72e50b39384313d455b0f29c4f0f3ccbf6c9619a140a321e286af71",
+        "kind": "file",
+        "path": "work/_session_deltas/20260710_codex_ssot_g0_g8_evidence_reflection.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:d4bce8545f95425d0a324787e00a78be4318739d72da2953bae9500cda31338b",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_claude_review_remediation.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:452f9a11c7314b27e03a5a5b85ffd9bb6f56afe611963468adebf89a55edc0a6",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_korean_manim_reactive_knowledge_scene_v2.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:522e81c4900cae3edf0bf1b19dcfcc9f177eceee6a10b4764d123a412b0df2f6",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_planning_work_portfolio.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:c315f2b629bf2df00ff74b7fa67dfc8fa0e7774516f6f2ecc1257a412634bf2f",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_repository_structure_p1.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:957c44003c745367b9a6bf33d38ba90ed01e388a820ce3b72c72e8998c725956",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_repository_wide_intake_baseline.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:8ed79e0728aca35e4aac6328fd08fd1201e71ec03be0ad20bd14d199ce73e384",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_seamgrim_manim_promotion_governance.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:267f0e6d1487fbca4811e1496ba6d6f7ac0f2c6366b2a375413fe2acc8107108",
+        "kind": "file",
+        "path": "work/_session_deltas/20260711_codex_wave2b_independent_completion_audit.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:345258c956474a3d0dcff9a17b8ab62c38fb4b0a8ee0097ad629fd16f2ec486b",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_ddonirang_programming_language_learning_path.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:3f7e3e410e6908d3ae2083e3d314edf736037603b3584ea4d6d5cfdbc6289472",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_ddonirang_two_complete_books.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:c815d5efe0e0121791fc60f18fb1ad6c649f5e21d30c28b229297710933624aa",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_seamgrim_stem_curriculum_masterplan.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:5a427771d12bce2316165b55addd1c4fb290268ab7093177c701376c58e94843",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_wave2e_to_wave3a_gate.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:4b380292b2024b42bfe846a0d0ac7a1d2c1343730f80e7714b38cff96d68ac13",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_wave3a_independent_review_remediation.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:076846b12adabe7c3ea095f9952895b44586dc4b7c2898a85092c2b2b420e9eb",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_wave3a_review_gate.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:8a59c5dc0a2b2e660af4dd829392c468d93cd8e7eaa57cbfa2055fdadf6e68fa",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_wave3a_viewport_repair.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:92333629896d34da9c8ddb11a49dd952bedd57705e73177ee34fd86564b9357f",
+        "kind": "file",
+        "path": "work/_session_deltas/20260712_codex_wave3b_foundation12_classroom_goal.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:fb7095a0d68ba50cd694ed7ae28a73293cd0ee7ad427be84dc4e257db1123d18",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/FIRST_EXTERNAL_SUCCESS_PROTOCOL_V1.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:7ba52d29dc6e52f1554688f1a6d5e7e0fa70905eaaaa974453c2ad4a44d289ac",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/MANIFEST.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:023ab5379a9b3fec21412f50fae79e6cc0848d1c00fd93a8eb3c4de02dd73b5e",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/MODERATOR_GUIDE.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:1907c7d0e78dedf432eee93c3b98ac9545d89cd50398520414b508982b933b09",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/OBSERVATION_LOG_TEMPLATE.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:5ed522144444151e8fc83556abbfc0a4dfb1adb29b552126e5520ec9adf53f70",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/PARTICIPANT_TASK_CARD.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:2936f4fb97e3c4135cc8c6c8d076e6280d519a7819f9da3f1ea76fa79ee55c11",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/RESULT_SUMMARY_TEMPLATE.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:0f81b9a0f18bd40b14001844a5c4105bbcbdb2ab4a2a97074f83ec63aff9f7d7",
+        "kind": "file",
+        "path": "work/beta/seamgrim_round0/SESSION_CHECKLIST.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:32b6564de6407cd5099e53eafd186c2b438b14c2447d8b82dbefcc060a3a8e04",
+        "kind": "file",
+        "path": "work/claude/20260711_repository_p2a_rereview/REVIEW_REQUEST.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:52ad8386cb63ffdb8c759c0b0a4cac0904d6a1e31ab1b005bd279449434fac06",
+        "kind": "file",
+        "path": "work/claude/20260711_repository_p2a_rereview/REVIEW_RESULT.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:ab507d23f479605ebb3cd4297158d55d2aa196b2190207f1faf1c418705747d8",
+        "kind": "file",
+        "path": "work/claude/20260711_repository_structure_review/REVIEW_REQUEST.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:d6fa250d1bfb33e99cfea94f30c978320d6e7aac5b2833cb77677e1abc70463a",
+        "kind": "file",
+        "path": "work/claude/20260711_seamgrim_promotion_and_p2_review/REVIEW_REQUEST.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:c228338ccde6259b582eacb68902809e6abeb864a30dc847efd9ac6ebc7c7ad9",
+        "kind": "file",
+        "path": "work/claude/20260711_seamgrim_promotion_and_p2_review/REVIEW_RESULT.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:7b1402217fbd166805aee5f6f666174f0185b9888673012c7a8a40bb2857c2c3",
+        "kind": "file",
+        "path": "work/claude/20260712_seamgrim_wave2e_independent_review/REVIEW_REQUEST.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:1d7dbd5466289db5ee3bfba081b4bef6b21030fdfcce6ca47aad2d9e2c95c88b",
+        "kind": "file",
+        "path": "work/claude/20260712_seamgrim_wave2e_independent_review/REVIEW_RESULT.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:55e12eb0cd02f980379b11777fd0f892745ed72ad8342651a65ac91f840a5c74",
+        "kind": "file",
+        "path": "work/claude/20260712_seamgrim_wave3a_independent_review/REVIEW_REQUEST.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:e370bd7390bb9a984d67b77360d1cf4f159df68cf62ace92b43371bebed1a65e",
+        "kind": "file",
+        "path": "work/claude/20260712_seamgrim_wave3a_independent_review/REVIEW_RESULT.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:25c0fba07caa6c63f5ab911e141459d8c71c63adbe67904b15895295b66480e6",
+        "kind": "file",
+        "path": "work/claude/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:aac7c35cf251da19b7159b4e601368732cb46d2b9a4b599e8bb4d5035f34c762",
+        "kind": "file",
+        "path": "work/codex/20260710_ganada_intake_audit/ganada_intake_judgements_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:e99e7bdf675afcdeda24e440c1138f829f1cfeedec029cd0f6d218a64e93fdc5",
+        "kind": "file",
+        "path": "work/codex/20260710_ganada_intake_audit/ganada_intake_ledger_v1.jsonl",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:717946adb33658538fc08444d996dbdfb7a71d4e27856c9ddb09652c22881dac",
+        "kind": "file",
+        "path": "work/codex/20260710_ganada_intake_audit/ganada_intake_summary_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:d2316bd8bbc2f7f8bfc2445d4b75ace32df685bf14901a918aba1cc7fe56eaf2",
+        "kind": "file",
+        "path": "work/codex/20260710_seamgrim_ui_v2_screen_plan/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:f49d6670edd93adb5b96d69aae627d47bf4090d4c25311e9424b1d2c73804cb5",
+        "kind": "file",
+        "path": "work/codex/20260710_seamgrim_ui_v2_screen_plan/app.js",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:0cd2c6569370cf610c51acc7481980ce0c67fd32f02c7bf031a3de85591de5b5",
+        "kind": "file",
+        "path": "work/codex/20260710_seamgrim_ui_v2_screen_plan/index.html",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:72e5d8f508357f306e4aec32a0b5757dff29cb6a35736781a255d92e755ad5fa",
+        "kind": "file",
+        "path": "work/codex/20260710_seamgrim_ui_v2_screen_plan/styles.css",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:cacb5cf1a899d7641a1b9bb8bdff69d05a2a0e6e469b62996f890785074d95d7",
+        "kind": "file",
+        "path": "work/codex/20260711_idc_deployment_intake/DEPLOYMENT_TOPOLOGY_V1.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:cd1b071c8fa1f75a424468171d6729f974a576596dd0e9e66135e4bb19b1a942",
+        "kind": "file",
+        "path": "work/codex/20260711_idc_deployment_intake/IDC_INPUT_SHEET.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:d722b99118fa2d6ab657f4f69257cb31b98cb7c00c082e169e25beff31e07aca",
+        "kind": "file",
+        "path": "work/codex/20260711_idc_pilot_readiness/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:5dee68a3622c372448ed9f2e83ad6c30ec250bc9e1f13f9978ccd8e9a0fdc39d",
+        "kind": "file",
+        "path": "work/codex/20260711_main_integration_readiness/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:d64909963af60ab7af4989316d00c340de16cc97edd39c9f07b1cb1cf64ab8f1",
+        "kind": "file",
+        "path": "work/codex/20260711_main_integration_readiness/branch_integration_readiness_snapshot_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:d67fcff591a8184c6632a311ed621b74a74f8a110e4edd8fa254a5750504289a",
+        "kind": "file",
+        "path": "work/codex/20260711_main_integration_readiness/public_projection_dryrun_v0.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:0325a49c17b00fa4d1f2bdd7ed0b3886fb9189a14e8438a14c62693cb365d089",
+        "kind": "file",
+        "path": "work/codex/20260711_pack_progress_claim_audit/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:2fedba5c55de7e68fa10e466ccfdf68078f68c92d88dd633d94695988ccc6654",
+        "kind": "file",
+        "path": "work/codex/20260711_pack_progress_claim_audit/pack_global_progress_inventory_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:2e3f841d7e3d89c374c82d46288252c3ff72b108199f0046b32fd7f740f17594",
+        "kind": "file",
+        "path": "work/codex/20260711_repository_structure_p2b/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:5a0c0f24f7a473c89822c5d7bae9e9091af7a7d58c44e52adda7e1ea21f37afc",
+        "kind": "file",
+        "path": "work/codex/20260711_repository_structure_p2b/repository_p2b_rewrite_inventory_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:5b7fae1d7bfb7589c98bc5692fcd4e3bfce24198e0fcb61f1857341668d4e363",
+        "kind": "file",
+        "path": "work/codex/20260711_repository_structure_registry/repository_source_registry_ledger_v1.jsonl",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:bd988164b5d601a8ae687592098ea12e7385fbfaadcb0f37fa1a0f574c230424",
+        "kind": "file",
+        "path": "work/codex/20260711_repository_structure_registry/repository_source_registry_summary_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:f29148a09fcf182d65ca8f078cf4c5471688207d593031a1eb3c2d8553fdd58d",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/OWNER_DECISION_SHEET_SEAMGRIM_V1_20260711.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:67a04c0f1b5073843a2521f957b312eb7b5f49ce3c576626d9bf0b6637f4642e",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/repository_duplicate_backrefs_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:ac7ddec98cb393f372cc232a44947c9758fd1b9f4e9b801c1bd201629147e012",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/repository_duplicate_p2_move_table_v1.csv",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:e5fff98ce0c89a012370da03c050c5e16ea47f5ee1a83bb25915d2b40c6d365c",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/repository_p2a_execution_manifest_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:31db176754054486521df8902d34ff3dd37cf416e4e8ae99c35df1b8904fa567",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/repository_p2a_execution_record_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:bc1c6ac45cc30f11e1e5a3c5ff03754a0ddbc1b6fa5240f07fcfd80a2b6b207c",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/seamgrim_ecosystem_priority_30_review_batch2_manifest_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:40c96862c86a3030a5d3bbf854260ae1a7653d940427d03624c5b9f6e74159f1",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_manim_promotion_governance/seamgrim_manim_priority_30_review_v1.detjson",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:8b2914f17f657f3586a4b2dc2cb87ff8cb76b4bbd741595f18d20cad54e08bd7",
+        "kind": "file",
+        "path": "work/codex/20260711_seamgrim_wave2e_independent_review/REVIEW_PLAN.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:5bb15013aa5ab8b49b2620184cdc57732f5d860f78e50e9e539e70d38dc4d0fd",
+        "kind": "file",
+        "path": "work/codex/20260711_user_creation_retention_priority/README.md",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:ac66d18ad262a2c4a3a6875253589559f80a30dce6f5c46994c3fedb35baed2b",
+        "kind": "file",
+        "path": "work/codex/20260712_ddonirang_complete_books/build_books.py",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:f1e0d9f2da4a783e427ef7d883aa5645fe26099e6f0a8ef42da16b7955fd220a",
+        "kind": "file",
+        "path": "work/codex/20260712_ddonirang_complete_books/build_pdfs.py",
+        "status": "??"
+      },
+      {
+        "content_sha256": "sha256:18b512a642615efe4d6d28d17e165789fcaef1d9c254e728a5150a3ae6a6f622",
+        "kind": "file",
+        "path": "work/codex/20260712_ddonirang_complete_books/make_pdf_contact_sheets.py",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDECODE_PROMPT_/354/247/200/354/213/234/353/254/27016_/354/204/244/352/263/204/354/240/225/352/265/220/355/231/224.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_OPINION_20260709_AI/354/271/234/355/231/224_/355/203/201/354/233/224/354/204/261_/354/204/244/352/263/204/354/235/230/352/262/254_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_OPINION_20260709_STDLIB_MAXSET_PART0_/354/264/235/352/264/204/354/247/200/353/217/204_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_OPINION_20260709_STDLIB_MAXSET_PART1_/354/210/230/355/225/231/354/236/220/353/243/214/352/270/200_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_OPINION_20260709_STDLIB_MAXSET_PART2_/355/206/265/352/263/204/352/263/265/352/260/204/353/217/204/353/251/224/354/235/270_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_OPINION_20260709_/352/265/220/354/234/241/354/204/240/354/226/270/354/213/234/353/256/254_/354/266/251/353/266/204/354/204/261/354/240/220/352/262/200_6/352/263/265/353/260/261_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_OPINION_20260710_/353/204/244/354/262/234/354/236/245_/355/225/264/354/206/214/354/204/244/352/263/204_/354/203/235/353/236/265/354/210/230/355/214/220/354/235/274/352/270/211/355/225/250/354/210/230/354/203/210/352/271/200/355/213/200_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_PLAN_20260710_/354/203/210/352/271/200/355/213/200_/354/203/201/354/204/270/352/270/260/355/232/215/354/225/210_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_PLAN_20260710_/354/203/210/352/271/200/355/213/200_/354/203/201/354/204/270/352/270/260/355/232/215/354/225/210_V2_/355/212/271/354/210/230/352/260/222/352/260/234/354/240/225.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_PLAN_20260711_/355/225/234/352/265/255/354/226/264Manim_/354/242/205/355/225/251/354/204/244/352/263/204_/353/210/210/352/270/270/352/263/274/353/260/230/354/235/221/354/227/260/354/266/234_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CLAUDE_REVIEW_20260712_/353/260/260/354/233/200/352/270/270/354/240/234/354/225/210V1_SSOT/353/214/200/354/241/260/352/262/200/354/246/235_/353/271/204/355/217/211_V1.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CODEX_DAYRUN_20260708_/353/252/251/355/221/234/354/247/200/354/213/234/354/204/234.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CODEX_DEVGOALS_20260709_DECLARATIVE_CLOSURE_11AXIS.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CODEX_HANDOFF_20260709_11AXIS_PROPOSAL_V2_AND_G1G3_RESUME.md\"",
+        "status": "??"
+      },
+      {
+        "content_sha256": "",
+        "kind": "missing_or_directory",
+        "path": "\"/353/230/220/353/213/210/353/236/221/CODEX_HANDOFF_DRAFT_STDLIB_WAVE1_/354/210/230/355/225/231/354/260/250/353/246/274_V1.md\"",
+        "status": "??"
+      }
+    ]
+  },
+  "git": {
+    "branch": "codex/queue-20260706",
+    "head": "7e9500b",
+    "head_subject": "docs(seamgrim): record wave3a independent pass",
+    "required_branch": "codex/queue-20260706",
+    "start_head": "7e9500b",
+    "start_head_is_ancestor": true,
+    "start_head_subject": "chore(seamgrim): record wave3a post-landing boundary"
+  },
+  "schema": "seamgrim.wave3b.foundation12.baseline.v1",
+  "source": {
+    "active_allowlist": "solutions/seamgrim_ui_mvp/lessons/active_allowlist.detjson",
+    "lesson_cards": "solutions/seamgrim_ui_mvp/lessons/lesson_cards.v0.detjson",
+    "lesson_index": "solutions/seamgrim_ui_mvp/lessons/index.json",
+    "lessons_root": "solutions/seamgrim_ui_mvp/lessons",
+    "roadmap": "docs/context/roadmap/CODEX_SUPERLONG_GOAL_SEAMGRIM_CURRICULUM_WAVE3B_FOUNDATION12_CLASSROOM_LOOP_V1_20260712.md"
+  },
+  "target_worlds": [
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [
+          "E_PARSE_UNEXPECTED_TOKEN"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "stderr_lines": [
+          "E_PARSE_UNEXPECTED_TOKEN solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn:51:40 예상: '.' or newline"
+        ],
+        "stdout_lines": []
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn",
+          "preset_2.ddn",
+          "preset_3.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": false,
+        "view_plan": false
+      },
+      "lesson_id": "elem_math_number_line",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "수직선에서 수의 위치를 이해한다"
+        ],
+        "grade": "elementary",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph"
+        ],
+        "semantic_name": "수직선과 수",
+        "subject": "math",
+        "title": "수직선과 수",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "E1",
+      "source_hashes": {
+        "lesson_ddn": "sha256:f08d2cc2e88405dd4ee9f39934c0849526e6edf76e016d862e21a4c8f79ad905",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:e9ff483de96792356a682e55f701271d76c4076c5cca164b26eaaaa3e823cc9c",
+        "text_md": "",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "목표값",
+          "시작위치",
+          "이동량",
+          "최대값",
+          "최대마디",
+          "최소값"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: t",
+          "#기본관찰: 위치"
+        ],
+        "education_question_match": false,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [
+            "최대마디 }인것 일때 {",
+            "최대마디: 수 <- (60"
+          ],
+          "risk_signals": []
+        },
+        "observations": [
+          "t",
+          "거리",
+          "목표값",
+          "방향",
+          "시작위치",
+          "위치",
+          "이동량",
+          "최대값",
+          "최대마디",
+          "최소값"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/elem_math_fraction_line/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:daa2ce0f403dc0000f68c5258a8cb3f9b34259712b77e4f0ca609e163663d18c",
+          "trace_hash=blake3:820d349b4903093c6ef8882e98fe2b6aff1e278e3182c3fc67e0cc5376627222"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn",
+          "preset_2.ddn",
+          "preset_3.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": false,
+        "view_plan": false
+      },
+      "lesson_id": "elem_math_fraction_line",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "분수와 소수의 관계를 이해한다"
+        ],
+        "grade": "elementary",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph"
+        ],
+        "semantic_name": "분수와 소수",
+        "subject": "math",
+        "title": "분수와 소수",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "E2",
+      "source_hashes": {
+        "lesson_ddn": "sha256:961553d8cc979df580757298208b922a3e21eaf5a706c463aeeb4b3a1e6b715c",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:060ede58ca8cdc96e5402a2320b771b2eb2dd023cce36454f7a389f2572dd0a4",
+        "text_md": "",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "분모",
+          "시작x",
+          "증가량",
+          "최대x",
+          "최대마디"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: x",
+          "#기본관찰: 분수값"
+        ],
+        "education_question_match": false,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [
+            "최대마디) 그리고 (x <= 최대x) }인것 일때 {",
+            "최대마디: 수 <- (40"
+          ],
+          "risk_signals": []
+        },
+        "observations": [
+          "t",
+          "x",
+          "복원값",
+          "분모",
+          "분수값",
+          "시작x",
+          "증가량",
+          "차이",
+          "최대x",
+          "최대마디"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/elem_math_rectangle_area/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:e76a0809c21d106ffbfb3a7c88c3f0dfb170832e6967181f86d72d66fca9186f",
+          "trace_hash=blake3:51d03a8a4d6bf2e68d76c08293b34c33c50e7eee3b08955969c42e9bc4c93897"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn",
+          "preset_2.ddn",
+          "preset_3.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": false,
+        "view_plan": false
+      },
+      "lesson_id": "elem_math_rectangle_area",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "넓이가 길이에 비례함을 이해한다"
+        ],
+        "grade": "elementary",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph"
+        ],
+        "semantic_name": "직사각형 넓이",
+        "subject": "math",
+        "title": "직사각형 넓이",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "E3",
+      "source_hashes": {
+        "lesson_ddn": "sha256:1eb002bd8c822367cdcad11fe94f580230aa7c6dec329b828e8a059749d0a412",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:e80aeb550e1f477dc662a7f939bca9599f2ef72123d267bd502bf931db4616db",
+        "text_md": "",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "고정가로",
+          "증가폭",
+          "초기세로",
+          "최대마디",
+          "최대세로"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: t",
+          "#기본관찰: 넓이"
+        ],
+        "education_question_match": false,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [
+            "최대마디 }인것 일때 {",
+            "최대마디: 수 <- (13"
+          ],
+          "risk_signals": []
+        },
+        "observations": [
+          "t",
+          "가로",
+          "고정가로",
+          "넓이",
+          "둘레",
+          "세로",
+          "증가폭",
+          "초기세로",
+          "최대마디",
+          "최대세로"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/elem_science_daily_temperature/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:c33b6b707158f0a63f99f795e88013d82cf2684c53e33eaf257ed7f67a2c00a6",
+          "trace_hash=blake3:dbe02c00be35debb45b210abb249cc147f540f72dddcb5b210e17cbf20c65724"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn",
+          "preset_2.ddn",
+          "preset_3.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": false,
+        "view_plan": false
+      },
+      "lesson_id": "elem_science_daily_temperature",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "하루 동안 기온이 변함을 이해한다"
+        ],
+        "grade": "elementary",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph"
+        ],
+        "semantic_name": "하루 기온",
+        "subject": "physics",
+        "title": "하루 기온",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "E4",
+      "source_hashes": {
+        "lesson_ddn": "sha256:4f7e35cc6492ee6ba25ef56b7b518fdb449ebbd8b5ad521942daa0153cac8981",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:ce03c19f1a6d5fc3ec6b8f9e2b02975b6a4bb6d5f06cf4332047bb7c12609609",
+        "text_md": "",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "완충계수",
+          "일교차",
+          "최대마디",
+          "평균기온",
+          "하루주기마디"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: t",
+          "#기본관찰: 현재기온"
+        ],
+        "education_question_match": false,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [
+            "최대마디 }인것 일때 {",
+            "최대마디: 수 <- (48"
+          ],
+          "risk_signals": []
+        },
+        "observations": [
+          "t",
+          "목표기온",
+          "변화량",
+          "완충계수",
+          "일교차",
+          "최대마디",
+          "평균기온",
+          "하루주기마디",
+          "현재기온"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/elem_econ_allowance_budget/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:f2cb7ec537770a3a1ca3056cbef29f6c3ff34a83dd168eafa44c507567c40668",
+          "trace_hash=blake3:eb78e970a4c2b7a4c03fde35815f8f1d11590be8e5e73396a5d55330c0b6e82c"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn",
+          "preset_2.ddn",
+          "preset_3.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": false,
+        "view_plan": false
+      },
+      "lesson_id": "elem_econ_allowance_budget",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "수입/지출에 따른 잔액 변화를 이해한다"
+        ],
+        "grade": "elementary",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph"
+        ],
+        "semantic_name": "용돈과 지출",
+        "subject": "econ",
+        "title": "용돈과 지출",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "E5",
+      "source_hashes": {
+        "lesson_ddn": "sha256:c21fd2799196360ee5cea653710ab9a635e313df13708c8be097aff21bd3471a",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:7e69f9ff8f6ff83cf67ea39fece43efc85a2dae9fa0a5cd29807f609f53c9668",
+        "text_md": "",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "기본지출",
+          "월용돈",
+          "저축목표",
+          "지출증가",
+          "최대마디",
+          "추가지출",
+          "추가지출시작"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: t",
+          "#기본관찰: 잔액"
+        ],
+        "education_question_match": false,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [
+            "최대마디 }인것 일때 {",
+            "최대마디: 수 <- (24"
+          ],
+          "risk_signals": []
+        },
+        "observations": [
+          "t",
+          "기본지출",
+          "누적저축",
+          "누적지출",
+          "목표달성",
+          "순증감",
+          "용돈",
+          "월용돈",
+          "잔액",
+          "저축목표",
+          "지출",
+          "지출증가",
+          "최대마디",
+          "추가지출",
+          "추가지출시작"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/elem_econ_store_stock/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:c80054ceb6d735ac2955c9ac767c49dd6940c9d9c520b62befe3a8eda07c9a93",
+          "trace_hash=blake3:5287dad9356d2c90662af6658e54f34941a1c8207ef87d6dc45f7f2cfee0cbc5"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn",
+          "preset_2.ddn",
+          "preset_3.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": false,
+        "view_plan": false
+      },
+      "lesson_id": "elem_econ_store_stock",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "재고가 줄어드는 추세를 이해한다"
+        ],
+        "grade": "elementary",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph"
+        ],
+        "semantic_name": "상점 재고",
+        "subject": "econ",
+        "title": "상점 재고",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "E6",
+      "source_hashes": {
+        "lesson_ddn": "sha256:7d9c6c472157cdf2da6a66d2896b287e7005249114e175eddfc58bd43d257e19",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:fb45c09fe2999b92832e4ff3340018f451f4b32555445e22f871b13b32d6ff91",
+        "text_md": "",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "기본수요",
+          "리드마디",
+          "보충량",
+          "수요증가",
+          "주문점",
+          "초기재고",
+          "최대마디"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: t",
+          "#기본관찰: 재고"
+        ],
+        "education_question_match": false,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [
+            "최대마디 }인것 일때 {",
+            "최대마디: 수 <- (30"
+          ],
+          "risk_signals": []
+        },
+        "observations": [
+          "t",
+          "기본수요",
+          "리드마디",
+          "발주",
+          "보충",
+          "보충량",
+          "수요",
+          "수요증가",
+          "재고",
+          "주문남은",
+          "주문점",
+          "초기재고",
+          "최대마디",
+          "판매"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": true,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:6dc378fa18c8cdb4f5109ec4396715887bd133b0150e08ca6b88f992fd0fb546",
+          "trace_hash=blake3:04c8531e468b7c272a9938d7834916dbaf3ab394d25402bd76ff123a59935842",
+          "bogae_hash=blake3:46356cd030f74fa13a0fcbfb1de09e372c21aa7408031c06fb3199aabbaa8bde"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": true,
+        "view_plan": false
+      },
+      "lesson_id": "rep_math_function_line_v1",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "기울기와 절편 변화가 y값에 주는 영향을 확인한다",
+          "같은 간격 x에서 함수값을 비교한다"
+        ],
+        "grade": "middle",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "graph",
+        "required_views": [
+          "graph",
+          "table",
+          "text"
+        ],
+        "semantic_name": "linear-function",
+        "subject": "math",
+        "title": "일차함수 그래프",
+        "units": [],
+        "view_roles": [
+          "graph_series"
+        ]
+      },
+      "slot": "M1",
+      "source_hashes": {
+        "lesson_ddn": "sha256:f6249f0d7cf6cb8f926b65e7da7c52db2dfef06f1037f5823500d3624219c86b",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:286862e2180aefcd9d29dda6f1efb2e05b41030fb7ed99148f951e0ffb2e9d7e",
+        "text_md": "sha256:a20e1ded0db6395f6c9c4f92cc85f70a693cfa94c510e1a2e997f8abdebdaf19",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "간격",
+          "기울기",
+          "끝x",
+          "시작x",
+          "절편"
+        ],
+        "ddn_comments": [],
+        "education_question_match": true,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [],
+          "risk_signals": []
+        },
+        "observations": [
+          "간격",
+          "기울기",
+          "끝x",
+          "마디수",
+          "설명",
+          "시작x",
+          "절편",
+          "제목"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": true,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "space2d",
+          "space2d.shape",
+          "line",
+          "x1",
+          "0",
+          "y1",
+          "0",
+          "x2",
+          "0.4777754098",
+          "y2",
+          "-0.8784820197",
+          "stroke"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [],
+        "deployment_profile_candidates": [],
+        "inputs": [],
+        "lesson_ddn": true,
+        "lesson_plan_v0": true,
+        "meta_toml": true,
+        "text_md": true,
+        "view_plan": true
+      },
+      "lesson_id": "rep_phys_pendulum_wave1_v1",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "줄 길이와 중력이 각도 변화에 주는 영향을 관찰한다",
+          "진자 추 위치와 각도 눈금을 같은 틱에서 비교한다"
+        ],
+        "grade": "middle",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "space2d",
+        "required_views": [
+          "space2d",
+          "graph",
+          "text"
+        ],
+        "semantic_name": "pendulum",
+        "subject": "physics",
+        "title": "진자 보기 코어",
+        "units": [],
+        "view_roles": [
+          "semantic_binding",
+          "angle_measure",
+          "same_tick_graph_cursor"
+        ]
+      },
+      "slot": "M2",
+      "source_hashes": {
+        "lesson_ddn": "sha256:0acf055425b2bf6c982b6190aece31a6223736fe1fc915cada388c5c06c8d66e",
+        "lesson_plan_v0": "sha256:2a9ba7972edfe38db6d0a05c4e8a2293f087fe2d4dad22d51a22c6ad0bbfe6ef",
+        "meta_toml": "sha256:9908be1c382479f20cc63c70b01d674b27c42a01d0dc7d064afcdf6777f913e6",
+        "text_md": "sha256:3c9672bd1441b5ab57e2aad790b6b42dcfcdb748394f7f3cec1153a6e5aaf85e",
+        "view_plan": "sha256:8c17b50837dc707b631ebb7475df23efb7a8e309df4f40ad72f3b45918bf904f"
+      },
+      "surface_extraction": {
+        "controls": [
+          "L",
+          "damp",
+          "dt",
+          "g",
+          "omega0",
+          "t_max",
+          "theta0"
+        ],
+        "ddn_comments": [
+          "#기본관찰x: t",
+          "#기본관찰: theta"
+        ],
+        "education_question_match": true,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [],
+          "risk_signals": []
+        },
+        "observations": [
+          "L",
+          "damp",
+          "dt",
+          "g",
+          "omega0",
+          "t",
+          "t_max",
+          "theta",
+          "theta0",
+          "마디수",
+          "설명",
+          "제목"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [
+            "provenance",
+            "view_plan"
+          ],
+          "has_explicit_view_plan": true,
+          "has_lesson_plan": true
+        }
+      }
+    },
+    {
+      "allowlisted": true,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:92f61a71e53cde7dcadcb965e2a6a6c750d9bba7321906cc602cc4135441df8c",
+          "trace_hash=blake3:413e82e90869b94631c74caa033c5dfa69c2196e479d70640ae166f19ff01825",
+          "bogae_hash=blake3:46356cd030f74fa13a0fcbfb1de09e372c21aa7408031c06fb3199aabbaa8bde"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": true,
+        "view_plan": false
+      },
+      "lesson_id": "rep_phys_projectile_xy_v1",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "시간에 따른 위치/속도 변화를 상태 전개로 확인한다",
+          "중력 가속도 변화가 궤적에 주는 영향을 확인한다"
+        ],
+        "grade": "middle",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "space2d",
+        "required_views": [
+          "space2d",
+          "graph",
+          "text"
+        ],
+        "semantic_name": "projectile",
+        "subject": "physics",
+        "title": "포물선 운동",
+        "units": [],
+        "view_roles": [
+          "trajectory_trail"
+        ]
+      },
+      "slot": "M3",
+      "source_hashes": {
+        "lesson_ddn": "sha256:a479974cbfa65afc4c815092495f5f1ff0e8103a1a02bcb1741b235e6af0bd14",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:e99e654b3ab8394dd3018e13fe64a2e60914294e8e499c8aa41a0c575790e299",
+        "text_md": "sha256:3effd4688311336ed8c6abf2f9412ef2bb652f1a1d463668fa3b68fd0886de05",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "dt",
+          "마디수",
+          "중력가속도",
+          "초기속도x",
+          "초기속도y"
+        ],
+        "ddn_comments": [],
+        "education_question_match": true,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [],
+          "risk_signals": []
+        },
+        "observations": [
+          "dt",
+          "마디수",
+          "설명",
+          "제목",
+          "중력가속도",
+          "초기속도x",
+          "초기속도y"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": true,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/rep_econ_supply_demand_tax_v1/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:13b0ca59a92729727a9a2bbde6c52c67aa936a3e8505d78499f7cca416c9552f",
+          "trace_hash=blake3:82bf4f88300a7c14392878bdf3052451218d7a6ad12a03442b85b23dbac6b150",
+          "bogae_hash=blake3:46356cd030f74fa13a0fcbfb1de09e372c21aa7408031c06fb3199aabbaa8bde"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": true,
+        "view_plan": false
+      },
+      "lesson_id": "rep_econ_supply_demand_tax_v1",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "시장 가격과 거래량의 변화를 단계별로 본다",
+          "세금 변화가 거래량에 미치는 영향을 확인한다"
+        ],
+        "grade": "middle",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "graph",
+        "required_views": [
+          "graph",
+          "text"
+        ],
+        "semantic_name": "market-tax",
+        "subject": "econ",
+        "title": "수요·공급과 세금",
+        "units": [],
+        "view_roles": [
+          "graph_series"
+        ]
+      },
+      "slot": "M4",
+      "source_hashes": {
+        "lesson_ddn": "sha256:9ac96501d1bf9e2c1e4b9ae2df6b11336da9e04725a467d73253b2c535e73bb7",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:f8cfd1e77277b5e9c08a70f47cd2be3302d9604028793fd90c3f9a19b83d40df",
+        "text_md": "sha256:65efb2ba5b49542c62a071971602d5650064e243020f1b26a66533906f3e9d8a",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [
+          "공급기울기",
+          "마디수",
+          "세금",
+          "수요기울기",
+          "시작가격"
+        ],
+        "ddn_comments": [],
+        "education_question_match": true,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [],
+          "risk_signals": []
+        },
+        "observations": [
+          "공급기울기",
+          "마디수",
+          "설명",
+          "세금",
+          "수요기울기",
+          "시작가격",
+          "제목"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": true,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [],
+        "exit_code": 0,
+        "status": "PASS",
+        "stderr_lines": [],
+        "stdout_lines": [
+          "state_hash=blake3:866fecdfada2d9a4cf2aac5a2979745e58dba3258a614bea8fdcc9b6b4af912b",
+          "trace_hash=blake3:60054b935a34b357de825bec179c19408549b6f67f373917a5da1ec53e103c70"
+        ]
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": true,
+        "view_plan": true
+      },
+      "lesson_id": "rep_phys_damped_oscillation_v1",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "감쇠가 있는 진동에서 진폭이 감소하는 모습을 x(t) 그래프로 확인한다",
+          "감쇠계수 변화가 진폭 감소 속도에 주는 영향을 비교한다"
+        ],
+        "grade": "high",
+        "level": "intro",
+        "madi_cap": "",
+        "primary_view": "graph",
+        "required_views": [
+          "graph",
+          "text"
+        ],
+        "semantic_name": "감쇠 진동",
+        "subject": "physics",
+        "title": "감쇠 진동",
+        "units": [],
+        "view_roles": [
+          "graph_series",
+          "semantic_binding",
+          "same_tick_graph_cursor"
+        ]
+      },
+      "slot": "H1",
+      "source_hashes": {
+        "lesson_ddn": "sha256:dab0af60597677eb9c35b52abf989bf3e61cc5e0e98d29dd764044d111543f68",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:c2e65b98953586d3875d8426921004232f591905f964229522088138a6e52891",
+        "text_md": "sha256:f27b0c1eb1db22c84cef445ebdcfebfb0eab4bfeb5d3736911aac4bd1fe55f49",
+        "view_plan": "sha256:5d31be4ff77fc20d92e83cfc5321b82758118953929a4be10d79cb5775cb4c33"
+      },
+      "surface_extraction": {
+        "controls": [
+          "dt",
+          "t_max",
+          "감쇠계수",
+          "스프링상수",
+          "질량"
+        ],
+        "ddn_comments": [],
+        "education_question_match": true,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [],
+          "risk_signals": []
+        },
+        "observations": [
+          "dt",
+          "t",
+          "t_max",
+          "v",
+          "x",
+          "감쇠계수",
+          "마디수",
+          "설명",
+          "스프링상수",
+          "에너지손실",
+          "제목",
+          "질량",
+          "총에너지"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [
+            "provenance",
+            "view_plan"
+          ],
+          "has_explicit_view_plan": true,
+          "has_lesson_plan": false
+        }
+      }
+    },
+    {
+      "allowlisted": false,
+      "cli_madi_2": {
+        "command": [
+          "cargo",
+          "run",
+          "--quiet",
+          "--manifest-path",
+          "tools/teul-cli/Cargo.toml",
+          "--",
+          "run",
+          "solutions/seamgrim_ui_mvp/lessons/high_math_derivative/lesson.ddn",
+          "--madi",
+          "2",
+          "--no-open"
+        ],
+        "diagnostics": [
+          "E_PARSE_COMPAT_EQUAL_DISABLED"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "stderr_lines": [
+          "E_PARSE_COMPAT_EQUAL_DISABLED solutions/seamgrim_ui_mvp/lessons/high_math_derivative/lesson.ddn:8:6 strict 모드에서는 '=' 대입이 허용되지 않습니다"
+        ],
+        "stdout_lines": []
+      },
+      "exists": true,
+      "files": {
+        "checks": [
+          "CHECKLIST.md"
+        ],
+        "deployment_profile_candidates": [],
+        "inputs": [
+          "preset_1.ddn"
+        ],
+        "lesson_ddn": true,
+        "lesson_plan_v0": false,
+        "meta_toml": true,
+        "text_md": true,
+        "view_plan": false
+      },
+      "lesson_id": "high_math_derivative",
+      "meta_parse_error": "",
+      "metadata": {
+        "goals": [
+          "그래프 해석",
+          "함수 이해"
+        ],
+        "grade": "high",
+        "level": "intermediate",
+        "madi_cap": "",
+        "primary_view": "",
+        "required_views": [
+          "graph",
+          "text"
+        ],
+        "semantic_name": "고등 · 도함수",
+        "subject": "math",
+        "title": "고등 · 도함수",
+        "units": [],
+        "view_roles": []
+      },
+      "slot": "H2",
+      "source_hashes": {
+        "lesson_ddn": "sha256:d89d512aabead12b4ed07e893fb3fc2f806705ac69925d9005e97f1a3839e739",
+        "lesson_plan_v0": "",
+        "meta_toml": "sha256:d4089ccba235b814a44a9828bb112e8b8bddb377e9023df1aad61f1bb9ccf49e",
+        "text_md": "sha256:1fcbc4f75b1c5a02fdd6003810e4677d04fce17ebba2b2a4aa3935965169c4b6",
+        "view_plan": ""
+      },
+      "surface_extraction": {
+        "controls": [],
+        "ddn_comments": [],
+        "education_question_match": true,
+        "numeric_stability": {
+          "bounded_by_madi_2_audit": true,
+          "madi_cap_mentions": [],
+          "risk_signals": []
+        },
+        "observations": [
+          "x",
+          "y"
+        ],
+        "wave3a_explicit_view_plan_difference": {
+          "anchor_or_provenance_tokens": [],
+          "has_explicit_view_plan": false,
+          "has_lesson_plan": false
+        }
+      }
+    }
+  ]
+}

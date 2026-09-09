@@ -1,0 +1,3 @@
+{"input_path": "c01_channel_mismatch.ddn", "stdout": [], "exit_code": 0}
+{"input_path": "c02_unsupported_rule.ddn", "stdout": [], "exit_code": 0}
+{"input_path": "c03_no_port.ddn", "expected_error_code": "E_PARSE_UNEXPECTED_TOKEN", "exit_code": 1}

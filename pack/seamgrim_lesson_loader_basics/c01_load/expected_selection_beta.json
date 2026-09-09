@@ -1,0 +1,10 @@
+{
+  "lesson_id": "econ_supply_header_sample",
+  "title": "경제 · 수요공급",
+  "required_views": ["space2d", "graph"],
+  "ddn_meta": {
+    "name": "",
+    "desc": ""
+  }
+}
+

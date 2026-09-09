@@ -1,0 +1,6 @@
+"GANADA_MA_PUBLICATION_DRYRUN_WORKFLOW_V1" 보여주기.
+"cell=마-4" 보여주기.
+"selectors=publication-review-panel,publication-dryrun,publication-artifact-preview,publication-boundary-warning" 보여주기.
+"publication_dry_run_policy=local_only" 보여주기.
+"public_upload_claim=false" 보여주기.
+"checker=tests/run_ganada_ma_publication_dryrun_check.py" 보여주기.

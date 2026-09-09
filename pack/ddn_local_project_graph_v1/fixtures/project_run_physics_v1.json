@@ -1,0 +1,43 @@
+{
+    "schema":  "ddn.virtual_project_source.v1",
+    "kind":  "seamgrim.local_project_tree.v0",
+    "root_path":  "뿌리.ddn",
+    "entry_path":  "app/main.ddn",
+    "files":  [
+                  {
+                      "path":  "뿌리.ddn",
+                      "role":  "root",
+                      "utf8_text":  "프로젝트 {\n  이름: \"앞문실행\".\n  첫글: \"./app/main.ddn\".\n\n  목표 {\n    앱: \"./app/main.ddn\".\n  }\n\n  모듈길 {\n    로컬: \"./lib\".\n  }\n\n  가지 {\n    물리: \"vendor/edu.physics\".\n  }\n}.\n"
+                  },
+                  {
+                      "path":  "ddn.lock",
+                      "role":  "lock",
+                      "utf8_text":  "{\"schema\":\"ddn.local_gaji_lock.v1\",\"lock_format\":\"ddn.lock.v0-local\",\"root_path\":\"뿌리.ddn\",\"entry_path\":\"app/main.ddn\",\"project_graph_sha256\":\"28df8b2b91923fe4d5b292842d024cb5a893d8b972974bcb2ad16a540411ca17\",\"packages\":[{\"id\":\"edu.physics\",\"version\":\"0.1.0\",\"path\":\"vendor/edu.physics\",\"direct\":true,\"dependency_of\":[],\"dependencies\":{\"edu.units\":\"0.1.0\"},\"manifest_path\":\"vendor/edu.physics/gaji.toml\",\"manifest_sha256\":\"a2f650885499d14f227fc4226f5809cd03573d94a12d579bf9e33d2c12068e26\",\"package_sha256\":\"d9878f827142c8accf0cce3695206c73c5329351d8e90c447baf55f5e7a44c7f\"},{\"id\":\"edu.units\",\"version\":\"0.1.0\",\"path\":\"vendor/edu.units\",\"direct\":false,\"dependency_of\":[\"edu.physics\"],\"dependencies\":{},\"manifest_path\":\"vendor/edu.units/gaji.toml\",\"manifest_sha256\":\"958f25f99852aeb09cecb8f19143d774f7d17566feff91e26d4ec2ce2c258fdc\",\"package_sha256\":\"1b47ddc6ad8215921f53f246051ddb7eb758eeb9730ed9f9e324d7c75bad51e3\"}],\"lock_sha256\":\"fbbae6dd9f48c9da6a2c2be2d42b3c37df1de912d015b686d4649a392d8dfc05\",\"diagnostics\":[]}\n"
+                  },
+                  {
+                      "path":  "app/main.ddn",
+                      "role":  "ddn_source",
+                      "utf8_text":  "쓰임 {\n  운동: \"./lib/운동\".\n  물리: \"./vendor/edu.physics/ddn/constants\".\n}\n운동.속도구하기 보여주기.\n물리.중력 보여주기.\n"
+                  },
+                  {
+                      "path":  "lib/운동.ddn",
+                      "role":  "ddn_source",
+                      "utf8_text":  "드러냄 {\n  속도구하기.\n}\n속도구하기 \u003c- 7.\n"
+                  },
+                  {
+                      "path":  "vendor/edu.physics/gaji.toml",
+                      "role":  "gaji_manifest",
+                      "utf8_text":  "id = \"edu.physics\"\nversion = \"0.1.0\"\ndependencies = { \"edu.units\" = \"0.1.0\" }\n"
+                  },
+                  {
+                      "path":  "vendor/edu.physics/ddn/constants.ddn",
+                      "role":  "ddn_source",
+                      "utf8_text":  "드러냄 {\n  중력.\n}\n중력 \u003c- 10.\n"
+                  },
+                  {
+                      "path":  "vendor/edu.units/gaji.toml",
+                      "role":  "gaji_manifest",
+                      "utf8_text":  "id = \"edu.units\"\nversion = \"0.1.0\"\n"
+                  }
+              ]
+}

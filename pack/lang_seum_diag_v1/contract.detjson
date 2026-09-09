@@ -1,0 +1,26 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "lang_seum_diag_v1",
+  "kind": "declarative_closure_seum_diag_product",
+  "goal": "G2",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "ssot_edit_claim": false,
+  "artifact_schema": "ddn.solveplan.v1",
+  "product_entrypoint": "teul-cli run --solveplan-out",
+  "diagnostic_codes": [
+    "E_SEUM_UNDERDETERMINED",
+    "E_SEUM_OVERDETERMINED",
+    "E_SEUM_CYCLE",
+    "E_SEUM_ASSIGN_CONFLICT",
+    "E_SEUM_UNSUPPORTED"
+  ],
+  "expected_artifacts": [
+    "expected_cycle.detjson",
+    "expected_assign_conflict.detjson",
+    "expected_underdetermined.detjson",
+    "expected_overdetermined.detjson",
+    "expected_unsupported_n9.detjson"
+  ],
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation"
+}

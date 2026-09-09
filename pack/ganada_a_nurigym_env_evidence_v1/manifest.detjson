@@ -1,0 +1,26 @@
+{
+  "schema": "ddn.ganada.remaining_stems.evidence.v1",
+  "pack": "ganada_a_nurigym_env_evidence_v1",
+  "pack_kind": "representative_evidence",
+  "branch": "아",
+  "tracked_cells": ["아-0", "아-1", "아-3"],
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_a_nurigym_env_evidence_v1/manifest.detjson:1",
+    "tests/run_nuri_gym_contract_check.py:1",
+    "tests/nurigym_python_web_parity_runner.mjs:1"
+  ],
+  "commands": [
+    {"id": "nuri_gym_contract", "kind": "product_cli_or_runtime_pass", "command": ["python", "tests/run_nuri_gym_contract_check.py"], "expect_stdout_contains": "nuri_gym_contract: PASS", "timeout_seconds": 1200},
+    {"id": "python_web_parity_runner", "kind": "tooling_runner_or_ci_pass", "command": ["node", "tests/nurigym_python_web_parity_runner.mjs"], "expect_stdout_contains": "\"ok\": true"}
+  ]
+}

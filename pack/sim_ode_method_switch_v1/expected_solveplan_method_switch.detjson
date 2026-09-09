@@ -1,0 +1,62 @@
+{
+  "diagnostics": [],
+  "lowering": {
+    "derivative_lowering": "prime_slot_to_stdlib_integrator_v1",
+    "integrator": {
+      "stdlib_reference": "적분.반암시적오일러",
+      "surface": "적분.반암시적오일러"
+    },
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    },
+    "state_slots": [
+      {
+        "derivative_order": 2,
+        "rhs": "가속도",
+        "slot": "위치''",
+        "source_order": 0,
+        "state": "위치"
+      }
+    ]
+  },
+  "method": "ode_semi_implicit_euler_v1",
+  "relations": [
+    {
+      "depends_on": [
+        "가속도"
+      ],
+      "id": "r1",
+      "kind": "linear",
+      "source_order": 0,
+      "text": "위치'' =:= 가속도"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:596b89f90889b3f62e4942d6d8cd913f89da9f98644d91cbf05d60e42ad107e2",
+  "stage": "S2",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "위치"
+  ]
+}

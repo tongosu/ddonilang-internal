@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.38s
+     Running `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_at_missing_unit.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_at_missing_unit.summary.detjson`
+E_PARSE_EXPECTED_UNIT work\prelaunch_freeze_sweep\g2\g2_at_missing_unit.ddn:1:8 단위가 필요합니다
+error: process didn't exit successfully: `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_at_missing_unit.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_at_missing_unit.summary.detjson` (exit code: 1)

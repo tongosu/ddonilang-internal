@@ -1,0 +1,82 @@
+{
+  "schema": "ddn.nuri_madi_phase_trace_g1.phase_trace.v1",
+  "pack_id": "nuri_madi_phase_trace_g1_v1",
+  "madi_id": 42,
+  "trace": [
+    {
+      "phase": "P0",
+      "name": "마디 열기",
+      "input": "previous_committed_world",
+      "output": "madi_context_opened",
+      "shared_world_commit": false
+    },
+    {
+      "phase": "P1",
+      "name": "입력 봉인",
+      "input": "sam_inputs_and_accepted_seulgi_intents",
+      "output": "input_snapshot_candidate",
+      "shared_world_commit": false
+    },
+    {
+      "phase": "P2",
+      "name": "전처리/제안",
+      "input": "input_snapshot_candidate",
+      "output": "raw_action_records",
+      "shared_world_commit": false,
+      "owner_finalized": false
+    },
+    {
+      "phase": "P3",
+      "name": "action pipeline",
+      "input": "raw_action_records",
+      "output": "merged_action_records",
+      "shared_world_commit": false
+    },
+    {
+      "phase": "P4",
+      "name": "세움/흐름/매마디 적용",
+      "input": "merged_action_records",
+      "output": "world_write_set",
+      "shared_world_commit": false,
+      "same_madi_fixpoint_allowed": false
+    },
+    {
+      "phase": "P5",
+      "name": "훅/알림 예약",
+      "input": "world_write_set",
+      "output": "next_madi_notifications",
+      "shared_world_commit": false
+    },
+    {
+      "phase": "P6",
+      "name": "commit/거울 기록",
+      "input": "world_write_set",
+      "output": "committed_world_and_record",
+      "shared_world_commit": true
+    },
+    {
+      "phase": "P7",
+      "name": "방출",
+      "input": "committed_world_and_record",
+      "output": "bogae_geoul_consumer_notification",
+      "shared_world_commit": false
+    }
+  ],
+  "invariants": [
+    {
+      "id": "phase_order_exact",
+      "ok": true,
+      "expected": ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7"]
+    },
+    {
+      "id": "single_shared_commit_phase",
+      "ok": true,
+      "commit_phase": "P6"
+    },
+    {
+      "id": "submadi_is_local_trace_only",
+      "ok": true,
+      "shared_world_commit_before_P6": false
+    }
+  ]
+}

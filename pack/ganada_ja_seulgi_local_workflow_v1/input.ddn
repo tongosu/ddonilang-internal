@@ -1,0 +1,7 @@
+"GANADA_JA_SEULGI_LOCAL_WORKFLOW_V1" 보여주기.
+"cells=자-3,자-5" 보여주기.
+"fixture_proposal_import=true" 보여주기.
+"receipt_policy=approve_reject_local" 보여주기.
+"receipt_replay_policy=local_append_only" 보여주기.
+"ai_call_claim=false" 보여주기.
+"checker=tests/run_ganada_ja_seulgi_local_workflow_check.py" 보여주기.

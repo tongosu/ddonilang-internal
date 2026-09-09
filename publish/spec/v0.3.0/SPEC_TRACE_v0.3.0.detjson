@@ -1,0 +1,12 @@
+{
+  "owner_decision_sha256": "sha256:b74b019463f074b7ad3f37e3523b1cb14367d1ae9178de0accf5b675f5868bd8",
+  "predecessor_public_version": "v0.2.1",
+  "product_evidence": "parser/runtime/renderer successor OPEN",
+  "public_version": "v0.3.0",
+  "source_ssot_manifest_sha256": "sha256:c03c960b10d79511c2acff3d6a4efffbd20b46746eec6cc2084c10aa06c7b334",
+  "source_ssot_seal_sha256": "sha256:ee0af259205eb8ece8dfa45040b0be94bbc32df08b66398bb36cd88a1f63e7d8",
+  "source_ssot_status": "live-current-docs-first",
+  "source_ssot_tree_sha256": "sha256:246f571ba1f61d20c6c997ed7de6752d74986fe793d98311f12c09b94a725f47",
+  "source_ssot_version": "v24.17.1",
+  "status": "current-public-pre-release-draft"
+}

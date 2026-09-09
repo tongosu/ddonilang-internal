@@ -1,0 +1,9 @@
+id = "gaji/std_physics_1d"
+name = "표준 1D 물리 가지"
+version = "0.1.0"
+ssot_requires = ">=20.2.26"
+
+det_tier = "D-STRICT"
+openness = "closed"
+
+description = "1차원 운동/충돌 helper"

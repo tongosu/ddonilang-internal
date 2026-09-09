@@ -1,0 +1,30 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "ast_project_visual_workbench_gate_v1",
+  "kind": "ast_project_visual_workbench_integrated_gate",
+  "gate": "G14",
+  "runtime_state_hash_formula_change": false,
+  "parser_grammar_change": false,
+  "docs_ssot_change": false,
+  "product_behavior_claim": true,
+  "checker": "tests/run_ast_project_visual_workbench_gate_check.py",
+  "direct_evidence": [
+    "normal_vs_whitespace_alias_raw_wasm_project_summary",
+    "linked_source_hash_equality",
+    "runtime_state_hash_equality",
+    "project_observation_trace_equality",
+    "source_graph_hash_negative_control",
+    "workbench_imported_canvas_differs_from_static_preview",
+    "workbench_module_value_change_updates_trace",
+    "workbench_module_value_change_updates_canvas_signature",
+    "workbench_module_value_change_updates_canvas_pixels",
+    "workbench_four_viewport_evidence"
+  ],
+  "non_claims": [
+    "no_new_ddn_grammar",
+    "no_runtime_state_hash_formula_change",
+    "no_public_registry",
+    "no_git_resolver",
+    "no_remote_download"
+  ]
+}

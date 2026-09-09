@@ -1,0 +1,10 @@
+{"input_path":"c01_meter_literal.ddn","stdout":["3@m"],"exit_code":0}
+{"input_path":"c02_second_literal.ddn","stdout":["2@s"],"exit_code":0}
+{"input_path":"c03_speed_literal.ddn","stdout":["4@m/s"],"exit_code":0}
+{"input_path":"c04_acceleration_literal.ddn","stdout":["9.7999999998@m/s^2"],"exit_code":0}
+{"input_path":"c05_temperature_existing.ddn","stdout":["참"],"exit_code":0}
+{"input_path":"c06_add_mismatch.ddn","expected_error_code":"E_UNIT_MISMATCH","exit_code":1}
+{"input_path":"c07_sub_mismatch.ddn","expected_error_code":"E_UNIT_MISMATCH","exit_code":1}
+{"input_path":"c08_compare_mismatch.ddn","expected_error_code":"E_UNIT_MISMATCH","exit_code":1}
+{"input_path":"c09_scalar_unit_add.ddn","expected_error_code":"E_UNIT_MISMATCH","exit_code":1}
+{"input_path":"c10_unknown_unit.ddn","expected_error_code":"E_UNIT_UNKNOWN","exit_code":1}

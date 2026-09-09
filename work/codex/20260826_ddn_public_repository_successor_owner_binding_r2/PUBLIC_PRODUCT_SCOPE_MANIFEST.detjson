@@ -1,0 +1,21 @@
+{
+  "schema": "ddn.public_product_scope.owner_bound.v1",
+  "status": "OWNER_BOUND_SCOPE_NOT_PUBLICATION_READY",
+  "expected_public_spec": {
+    "entrypoint": "publish/spec/CURRENT.md",
+    "marker": "v0.5.0",
+    "required_manifest": "publish/spec/v0.5.0/SPEC_MANIFEST_v0.5.0.md"
+  },
+  "roles": [
+    {"role": "LANGUAGE_RUNTIME", "required_trees": ["core", "lang", "numeric", "proof", "symbolic", "tool"]},
+    {"role": "CLI", "required_paths": ["tools/teul-cli/Cargo.toml", "tools/teul-cli/src/main.rs"]},
+    {"role": "WORKBENCH", "required_paths": ["solutions/seamgrim_ui_mvp/ui/workbench/index.html", "solutions/seamgrim_ui_mvp/ui/workbench/workbench.css", "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js"]},
+    {"role": "REQUIRED_WASM", "required_paths": ["solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm", "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js"]},
+    {"role": "WORKBENCH_RUNTIME", "required_paths": ["solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py", "solutions/seamgrim_ui_mvp/tools/project_store.py", "solutions/seamgrim_ui_mvp/ui/wasm_ddn_wrapper.js"]},
+    {"role": "PUBLIC_SPEC", "required_paths": ["publish/spec/CURRENT.md"]},
+    {"role": "SELECTED_EXAMPLES", "required_trees": ["solutions/seamgrim_ui_mvp/samples", "pack/seamgrim_public_physics_wedge_v1"]},
+    {"role": "PUBLIC_CONFORMANCE_SUBSET", "required_paths": ["tests/run_seamgrim_public_default_route_check.py", "tests/run_seamgrim_public_physics_first_run_check.py", "tests/run_seamgrim_one_file_ddn_create_run_check.py", "tests/run_seamgrim_public_physics_change_storyboard_check.py", "tests/run_seamgrim_public_share_clone_reopen_check.py", "tests/run_seamgrim_legacy_deeplink_compat_check.py", "tests/run_seamgrim_public_single_node_serving_check.py", "tests/run_seamgrim_public_four_viewport_quality_check.py", "tests/run_seamgrim_workbench_durable_quality_gate_check.py", "tests/run_ddn_cli_wasm_freshness_check.py", "tests/run_ddn_cli_wasm_true_parity_equality_check.py", "tests/run_ddn_cli_wasm_sync_gate_check.py", "tests/run_seamgrim_view_only_state_hash_invariant_check.py"]}
+  ],
+  "required_public_facade": ["README.md", "QUICKSTART.md", "LICENSE", "NOTICE", "SECURITY.md", "CONTRIBUTING.md", "SUPPORT.md"],
+  "forbidden_internal_path_markers": ["I:/home/urihanl/ddn/codex", "I:\\home\\urihanl\\ddn\\codex", "docs/ssot/ssot", "work/claude", "work/codex", "official-store"]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_publish_screen_isolation_v1",
+  "kind": "seamgrim_publish_screen_isolation",
+  "product_behavior_claim": true,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false,
+  "public_upload_claim": false,
+  "browser_runner": "tests/seamgrim_publish_screen_isolation_runner.mjs",
+  "covers": [
+    "independent_screen_publish",
+    "open_paste_copy_download_actions",
+    "desktop_tablet_mobile_smoke",
+    "no_browse_space_publish_state"
+  ],
+  "requires_docs_ssot_clean": true
+}

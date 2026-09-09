@@ -1,0 +1,1 @@
+{"id":"adapter_boundary","cmd":["run","pack/seamgrim_workbench_durable_persistence_adapters_v1/input.ddn"],"stdout":["G1 persistence adapter boundary"],"exit_code":0}

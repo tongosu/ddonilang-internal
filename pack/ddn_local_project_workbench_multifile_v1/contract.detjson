@@ -1,0 +1,30 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "ddn_local_project_workbench_multifile_v1",
+  "kind": "seamgrim_local_project_workbench_product_behavior",
+  "gate": "G9",
+  "runtime_state_hash_formula_change": false,
+  "parser_grammar_change": false,
+  "docs_ssot_change": false,
+  "product_code_change": true,
+  "product_behavior_claim": true,
+  "browser_runner": "tests/ddn_local_project_workbench_multifile_runner.mjs",
+  "checker": "tests/run_ddn_local_project_workbench_multifile_check.py",
+  "cli_frontdoor": "ddn.project-run.v1",
+  "covers": [
+    "conditional_file_navigator",
+    "create_rename_delete_open_virtual_files",
+    "root_entry_guard",
+    "lock_vendor_readonly",
+    "current_file_vs_entry_indicator",
+    "wasm_project_run_summary",
+    "compact_dependency_status",
+    "single_file_editor_non_regression"
+  ],
+  "non_claims": [
+    "no_real_filesystem_write",
+    "no_public_package_publish",
+    "no_new_ddn_grammar",
+    "no_runtime_state_hash_formula_change"
+  ]
+}

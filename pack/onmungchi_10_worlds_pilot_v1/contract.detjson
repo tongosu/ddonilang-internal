@@ -1,0 +1,22 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "onmungchi_10_worlds_pilot_v1",
+  "kind": "canonical_corpus_ten_world_pilot",
+  "runtime_claim": false,
+  "product_code_change": false,
+  "tooling_code_change": true,
+  "corpus_inclusion_claim": false,
+  "closed_by": "ONMUNGCHI_10_WORLDS_PILOT_V1",
+  "pilot_manifest": "pack/onmungchi_10_worlds_pilot_v1/pilot.detjson",
+  "card_schema": "pack/onmungchi_10_worlds_pilot_v1/corpus_card.schema.json",
+  "checker": "tests/run_onmungchi_10_worlds_pilot_check.py",
+  "world_count": 10,
+  "feasibility_grade": "ga",
+  "machine_gate_count": 4,
+  "human_gate_count": 1,
+  "owner_decision_required": true,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "docs_ssot_change": false,
+  "requires_docs_ssot_clean": true
+}

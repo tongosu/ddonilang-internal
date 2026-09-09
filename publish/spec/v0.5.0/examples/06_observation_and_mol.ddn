@@ -1,0 +1,5 @@
+// Language SPEC v0.5.0 public current: docs-first / product-open.
+물질량 <- 2@mol.
+(시간: 시간, 물질량: 물질량) 보임.
+
+// 명시 보기가 없으므로 결과표이며 graph를 추정하지 않는다.

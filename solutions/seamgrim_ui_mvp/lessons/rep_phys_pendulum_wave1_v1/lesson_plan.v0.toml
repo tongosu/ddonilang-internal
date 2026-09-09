@@ -1,0 +1,39 @@
+schema = "seamgrim.lesson_plan.v0"
+lesson_id = "rep_phys_pendulum_wave1_v1"
+title = "진자 각도와 에너지"
+
+[[activities]]
+activity_id = "observe-angle-energy"
+kind = "observe"
+title = "각도와 에너지를 먼저 본다"
+prompt = "진자가 움직이는 동안 각도, 속도, 운동에너지와 위치에너지가 어떻게 함께 바뀌는지 관찰하세요."
+view_plan_ref = "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/view_plan.detjson"
+anchor_refs = ["obs.theta", "obs.kinetic_energy", "obs.potential_energy"]
+allowed_controls = []
+
+[[activities]]
+activity_id = "change-start-angle"
+kind = "change"
+title = "처음 각도를 바꾼다"
+prompt = "처음 각도만 바꾸고 같은 관찰 anchor로 에너지 변화가 어떻게 달라지는지 봅니다."
+preset_ref = "pendulum.theta0"
+allowed_controls = ["theta0"]
+anchor_refs = ["obs.theta", "obs.kinetic_energy", "obs.potential_energy"]
+
+[[activities]]
+activity_id = "compare-original-changed"
+kind = "compare"
+title = "원래 값과 바꾼 값을 비교한다"
+prompt = "기준 실행과 각도를 바꾼 실행을 나란히 보며 최고점과 가장 빠른 지점을 비교하세요."
+preset_ref = "pendulum.theta0"
+allowed_controls = ["theta0"]
+anchor_refs = ["obs.theta", "obs.speed", "obs.kinetic_energy"]
+check_ref = "lineage:local_compare"
+
+[[activities]]
+activity_id = "explain-zero-crossing-energy"
+kind = "explain"
+title = "영점 통과와 최고점을 설명한다"
+prompt = "각도가 0에 가까운 지점과 최고점에서 운동에너지와 위치에너지가 어떻게 바뀌는지 말로 정리하세요."
+question = "영점 통과에서 운동에너지가 커지고 최고점에서 위치에너지가 커지는 까닭은 무엇인가요?"
+anchor_refs = ["obs.theta", "obs.speed", "obs.kinetic_energy", "obs.potential_energy"]

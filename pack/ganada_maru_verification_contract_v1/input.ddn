@@ -1,0 +1,5 @@
+"GANADA_MARU_VERIFICATION_CONTRACT_V1" 보여주기.
+"cells=90" 보여주기.
+"behavior_claims=0" 보여주기.
+"docs_ssot_change=false" 보여주기.
+"contract_checker=tests/run_ganada_maru_verification_contract_check.py" 보여주기.

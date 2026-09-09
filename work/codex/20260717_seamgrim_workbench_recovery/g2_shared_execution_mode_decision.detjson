@@ -1,0 +1,98 @@
+{
+  "artifact": {
+    "js_binding_sha256": "a56d02c049363ef3f1c894cff4a92b51755961f9327fbcbfab93ec68d5590649",
+    "manifest_source_file_count": 78,
+    "manifest_source_tree_sha256": "80883eb566d8102ba55751c6324a52f0f05ea0cc01b882732d0438c19c1d4557",
+    "wasm_sha256": "af14393c5a8637de03e59721c006ae1bd1598a5e8386658f8fe45c1b2672c8e0",
+    "wasm_size": 3948858
+  },
+  "claims": {
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "state_hash_formula_change": false,
+    "status": "G2_SHARED_EXECUTION_MODE_DECISION_COMPLETE"
+  },
+  "decision_contract": {
+    "authority": "parsed_program",
+    "consumer_paths": [
+      "CLI execution_envelope",
+      "WASM wasm_execution_envelope_json",
+      "WASM DdnWasmVm.get_execution_mode_decision_json",
+      "Studio run screen",
+      "Approved Workbench single-file VM",
+      "Approved Workbench linked-project runtime_execution_envelope"
+    ],
+    "live_hooks": [
+      "every_madi",
+      "every_n_madi"
+    ],
+    "one_shot_hooks": [
+      "none",
+      "start_only",
+      "condition_only"
+    ],
+    "schema": "ddn.execution_mode_decision.v1",
+    "source_regex_authority": false
+  },
+  "matrix": {
+    "case_count": 8,
+    "cases": [
+      {
+        "id": "no_hook",
+        "mode": "oneshot"
+      },
+      {
+        "id": "start_only",
+        "mode": "oneshot"
+      },
+      {
+        "id": "condition_only",
+        "mode": "oneshot"
+      },
+      {
+        "id": "every_madi",
+        "mode": "live"
+      },
+      {
+        "id": "every_n_madi",
+        "mode": "live"
+      },
+      {
+        "id": "alias_whitespace",
+        "mode": "live"
+      },
+      {
+        "id": "hook_text_string",
+        "mode": "oneshot"
+      },
+      {
+        "id": "hook_text_comment",
+        "mode": "oneshot"
+      }
+    ],
+    "status": "PASS"
+  },
+  "schema": "seamgrim.workbench_recovery.g2_shared_execution_mode_decision.v1",
+  "source_commit_before_artifact_amend": "c6efb61b074f54ac200519c23c552d4f9fbfa5f3",
+  "verification": {
+    "cli_wasm_true_parity_equality": {
+      "report_sha256": "4fdd2140bf257309cedf288ab2086900f431a75e7c6b6c5c646efa4044c04ad2",
+      "status": "PASS"
+    },
+    "clean_wasm_freshness": "PASS",
+    "execution_envelope_unit": "PASS",
+    "lang_ast_decision_tests": "4/4 PASS",
+    "linked_multifile_live_decision": "PASS",
+    "preprocess_surface_decision_tests": "2/2 PASS",
+    "studio_layout_contract": "PASS",
+    "wasm_decision_matrix": "8/8 PASS",
+    "wasm_target_check": "PASS",
+    "wasm_vm_runtime_runner": "PASS",
+    "wasm_wrapper_runner": "PASS"
+  },
+  "worktree": {
+    "build_command": "CARGO_NET_OFFLINE=true powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\build_wasm_tool.ps1 -Profile release -Target web",
+    "path": "I:/home/urihanl/ddn/codex/build/worktrees/seamgrim_recovery_g2_c6efb61",
+    "source_status_before_build": "CLEAN"
+  }
+}

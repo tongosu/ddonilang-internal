@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "I_max", "type": "수" },
+    { "name": "I_min", "type": "수" },
+    { "name": "I목록", "type": "수" },
+    { "name": "dI", "type": "수" },
+    { "name": "px", "type": "수" },
+    { "name": "py", "type": "수" }
+  ]
+}

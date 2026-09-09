@@ -1,0 +1,58 @@
+{
+  "schema": "ddn.nurigym.step_record.v0.2.public_schema.contract.v1",
+  "pack_id": "nurigym_step_record_v02_public_schema_v1",
+  "goal": "D2",
+  "evidence_tier": "product_wire_runner",
+  "closure_grade": "닫힘-동작",
+  "opt_in_only": true,
+  "default_version": "v0.1",
+  "public_version": "v0.2",
+  "parser_frontdoor_change": false,
+  "runtime_state_hash_formula_change": false,
+  "gymnasium_full_compatibility_claim": false,
+  "legacy_schema": "nurigym.step.v1",
+  "legacy_fields_preserved": [
+    "schema",
+    "episode_id",
+    "agent_id",
+    "madi",
+    "observation",
+    "action",
+    "reward",
+    "next_observation",
+    "done"
+  ],
+  "v02_additive_fields": [
+    "step_record_version",
+    "terminated",
+    "truncated",
+    "info",
+    "raw_action",
+    "resolved_action",
+    "normalized_action",
+    "action_status",
+    "merge_candidates",
+    "merged_action",
+    "applied_action",
+    "missing_input"
+  ],
+  "invariants": [
+    "done == terminated || truncated",
+    "natural termination => terminated=true,truncated=false",
+    "max-step/time-limit termination => terminated=false,truncated=true",
+    "v0.2 missing_input is array",
+    "v0.1 default output omits v0.2 fields"
+  ],
+  "case_files": [
+    "cases/c01_v02_gridmaze_terminated.json",
+    "cases/c02_v02_gridmaze_truncated.json",
+    "cases/c03_v02_shared_clip_missing.json",
+    "cases/c04_v01_default_unchanged.json"
+  ],
+  "checker": "tests/run_nurigym_step_record_v02_public_schema_check.py",
+  "relationship_to_roundtrip_pack": {
+    "roundtrip_pack": "nurigym_step_record_v02_roundtrip_v1",
+    "public_schema_pack_role": "product teul-cli wire emission",
+    "roundtrip_pack_role": "producer-wire-consumer fixture compatibility"
+  }
+}

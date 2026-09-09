@@ -1,0 +1,46 @@
+[
+  {
+    "family": "line",
+    "rust_result_schema": "seamgrim.workbench.line_result.v1_candidate",
+    "canonical_family": "workbench-line",
+    "canonical_status": "available",
+    "canonical_hash": "candidate:fnv1a32:canonical_view_payload:8d65e159",
+    "renderer_status": "ready",
+    "renderer_data_source": "canonical_workbench_result",
+    "history_count": 1,
+    "state_hash": "blake3:5f2bcd446d72fde0c082c3ab284cc9ba698012406ea5b11573bba7ee19537188"
+  },
+  {
+    "family": "pendulum",
+    "rust_result_schema": "seamgrim.workbench.pendulum_result.v1_candidate",
+    "canonical_family": "workbench-pendulum",
+    "canonical_status": "available",
+    "canonical_hash": "candidate:fnv1a32:canonical_view_payload:2a3d4fa2",
+    "renderer_status": "ready",
+    "renderer_data_source": "canonical_workbench_result",
+    "history_count": 2,
+    "state_hash": "blake3:70a05dbd30ee0323c26f878bc7454b47e697662647898c9fb6537ad761edce80"
+  },
+  {
+    "family": "projectile",
+    "rust_result_schema": "seamgrim.workbench.projectile_result.v1_candidate",
+    "canonical_family": "workbench-projectile",
+    "canonical_status": "available",
+    "canonical_hash": "candidate:fnv1a32:canonical_view_payload:9d859cfe",
+    "renderer_status": "ready",
+    "renderer_data_source": "canonical_workbench_result",
+    "history_count": 3,
+    "state_hash": "blake3:51bdcd9243632f8b34e0df7ce5041f478e95aef6a0d019c4314f9584fc0dff73"
+  },
+  {
+    "family": "grid",
+    "rust_result_schema": "seamgrim.workbench.grid_result.v1_candidate",
+    "canonical_family": "workbench-grid",
+    "canonical_status": "available",
+    "canonical_hash": "candidate:fnv1a32:canonical_view_payload:f6227928",
+    "renderer_status": "ready",
+    "renderer_data_source": "canonical_workbench_result",
+    "history_count": 0,
+    "state_hash": "blake3:3b31989c30185af5043bf367664f14e5fcfa898d4517cff2e1d3cdf15f6f347a"
+  }
+]
