@@ -1,0 +1,274 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "rep_phys_pendulum_wave1_v1",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "anchors": [
+    {
+      "anchor_id": "obs.theta",
+      "source_ref": {
+        "kind": "observation",
+        "key": "theta"
+      },
+      "value_type": "scalar",
+      "unit": "rad",
+      "label": "각도",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "theta <- theta + omega * dt"
+      },
+      "accessibility_name": "Pendulum angle observation"
+    },
+    {
+      "anchor_id": "obs.angular_velocity",
+      "source_ref": {
+        "kind": "observation",
+        "key": "omega"
+      },
+      "value_type": "scalar",
+      "unit": "rad/s",
+      "label": "각속도",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "omega <- omega + alpha * dt"
+      },
+      "accessibility_name": "Pendulum angular velocity observation"
+    },
+    {
+      "anchor_id": "obs.speed",
+      "source_ref": {
+        "kind": "observation",
+        "key": "speed"
+      },
+      "value_type": "scalar",
+      "unit": "m/s",
+      "label": "속도",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "speed <- L * omega"
+      },
+      "accessibility_name": "Pendulum speed observation"
+    },
+    {
+      "anchor_id": "obs.kinetic_energy",
+      "source_ref": {
+        "kind": "observation",
+        "key": "kinetic_energy"
+      },
+      "value_type": "scalar",
+      "unit": "J/kg",
+      "label": "운동에너지",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "kinetic_energy <- 0.5 * speed * speed"
+      },
+      "accessibility_name": "Pendulum kinetic energy observation"
+    },
+    {
+      "anchor_id": "obs.potential_energy",
+      "source_ref": {
+        "kind": "observation",
+        "key": "potential_energy"
+      },
+      "value_type": "scalar",
+      "unit": "J/kg",
+      "label": "위치에너지",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "potential_energy <- g * L * (1 - ((theta) cos))"
+      },
+      "accessibility_name": "Pendulum potential energy observation"
+    },
+    {
+      "anchor_id": "obs.pivot",
+      "source_ref": {
+        "kind": "constant",
+        "value": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "value_type": "point2",
+      "unit": "m",
+      "label": "고정점",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "점(0, 0, 크기=0.05, 색=\"#f59e0b\")"
+      },
+      "accessibility_name": "Pendulum fixed pivot point"
+    },
+    {
+      "anchor_id": "obs.bob",
+      "source_ref": {
+        "kind": "point2",
+        "x_key": "bob_x",
+        "y_key": "bob_y"
+      },
+      "value_type": "point2",
+      "unit": "m",
+      "label": "추",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "bob_x <- L * ((theta) sin); bob_y <- -L * ((theta) cos)"
+      },
+      "accessibility_name": "Pendulum bob position"
+    },
+    {
+      "anchor_id": "obs.time",
+      "source_ref": {
+        "kind": "observation",
+        "key": "t"
+      },
+      "value_type": "scalar",
+      "unit": "s",
+      "label": "시간",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "source_span": "t <- t + dt"
+      },
+      "accessibility_name": "Pendulum time observation"
+    }
+  ],
+  "measures": [
+    {
+      "measure_id": "measure.angle.theta",
+      "kind": "angle",
+      "pivot_anchor": "obs.pivot",
+      "reference_direction": {
+        "x": 0,
+        "y": -1,
+        "unit": "m",
+        "label": "수직 기준"
+      },
+      "end_anchor": "obs.bob",
+      "value_anchor": "obs.theta",
+      "unit": "rad",
+      "label": "θ",
+      "style": {
+        "arc_color": "#ef4444",
+        "baseline_color": "#94a3b8",
+        "current_color": "#0ea5e9",
+        "label_color": "#991b1b"
+      },
+      "diagnostics": {
+        "unit_mismatch": "E_VIEW_PLAN_UNIT_MISMATCH"
+      }
+    },
+    {
+      "measure_id": "measure.length.rod",
+      "kind": "length",
+      "start_anchor": "obs.pivot",
+      "end_anchor": "obs.bob",
+      "unit": "m",
+      "label": "줄 길이",
+      "offset": 0.11,
+      "tick_size": 0.055,
+      "style": {
+        "line_color": "#16a34a",
+        "label_color": "#166534"
+      }
+    },
+    {
+      "measure_id": "measure.vector.velocity",
+      "kind": "vector",
+      "origin_anchor": "obs.bob",
+      "reference_anchor": "obs.pivot",
+      "magnitude_anchor": "obs.speed",
+      "sign_anchor": "obs.angular_velocity",
+      "unit": "m/s",
+      "label": "속도",
+      "scale": 0.24,
+      "style": {
+        "arrow_color": "#7c3aed",
+        "label_color": "#5b21b6"
+      }
+    },
+    {
+      "measure_id": "measure.axes.xy",
+      "kind": "axes",
+      "origin_anchor": "obs.pivot",
+      "unit": "m",
+      "label": "좌표축·눈금",
+      "range": {
+        "x_min": -1.2,
+        "x_max": 1.2,
+        "y_min": -1.2,
+        "y_max": 0.3
+      },
+      "tick_step": 0.5,
+      "style": {
+        "axis_color": "#334155",
+        "tick_color": "#64748b"
+      }
+    },
+    {
+      "measure_id": "measure.trajectory.bob",
+      "kind": "trajectory",
+      "pivot_anchor": "obs.pivot",
+      "end_anchor": "obs.bob",
+      "value_anchor": "obs.theta",
+      "unit": "m",
+      "label": "추 궤적",
+      "samples": 24,
+      "min_visible_sweep": 0.22,
+      "style": {
+        "trail_color": "#f97316"
+      }
+    }
+  ],
+  "graph_cursor": {
+    "cursor_id": "graph.current.theta",
+    "x_anchor": "obs.time",
+    "y_anchor": "obs.theta",
+    "series_id": "theta",
+    "label": "현재 각도"
+  },
+  "camera": {
+    "default_policy": "fit",
+    "policies": [
+      {
+        "policy_id": "fixed",
+        "mode": "fixed",
+        "range": {
+          "x_min": -1.35,
+          "x_max": 1.35,
+          "y_min": -1.35,
+          "y_max": 0.35
+        }
+      },
+      {
+        "policy_id": "fit",
+        "mode": "fit",
+        "padding": 0.28,
+        "min_span": 1.4
+      },
+      {
+        "policy_id": "follow",
+        "mode": "follow",
+        "target_anchor": "obs.bob",
+        "span": {
+          "x": 1.8,
+          "y": 1.8
+        }
+      }
+    ],
+    "conflict_diagnostic": "W_VIEW_CAMERA_POLICY_CONFLICT",
+    "state_hash_participation": false
+  },
+  "hash_policy": {
+    "state_hash_participation": false,
+    "view_plan_hash_candidate": true,
+    "world_draw_payload_hash_candidate_uses_world_coordinates": true,
+    "canonical_bogae_hash_claim": false
+  },
+  "primary_view_target": "space2d",
+  "required_anchor_ids": [
+    "obs.time",
+    "obs.theta",
+    "obs.angular_velocity",
+    "obs.bob",
+    "obs.speed",
+    "obs.kinetic_energy",
+    "obs.potential_energy"
+  ]
+}

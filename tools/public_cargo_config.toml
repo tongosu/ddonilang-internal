@@ -1,0 +1,3 @@
+[target.'cfg(windows)']
+# teul-cli's command tree needs a larger stack than the Windows default.
+rustflags = ["-C", "link-arg=/STACK:16777216"]

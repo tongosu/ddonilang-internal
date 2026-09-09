@@ -1,0 +1,5 @@
+"SEAMGRIM_LIVE_TRACE_REACTION_V1" 보여주기.
+"committed observation evaluates once per tick" 보여주기.
+"offline predicate core is reused by live adapter" 보여주기.
+"lineage reset and duplicate diagnostics are checked" 보여주기.
+"no world write or state_hash participation claimed" 보여주기.

@@ -1,0 +1,21 @@
+{
+  "schema": "ddn.smoke.golden.v1",
+  "ddn_file": "../../solutions/seamgrim_ui_mvp/seed_lessons_v1/math_quadratic_integral_seed_v1/lesson.ddn",
+  "contract": "D-STRICT",
+  "checkpoints": [
+    {
+      "tick": 0,
+      "state_hash": "blake3:b78f209bca359c84f15e0c2492b82a42512f0f15ebca3543d5376b2c6b698688"
+    },
+    {
+      "tick": 10,
+      "state_hash": "blake3:6dbc0fde7c849a2d15c767d7757181259dd96fc322f9abff9c0332c334e96ea3"
+    },
+    {
+      "tick": 20,
+      "state_hash": "blake3:704b75c4518d765e6e7b314e996243f75b96dcd25677dbc3ab30987ddab19471"
+    }
+  ],
+  "max_ticks": 20,
+  "timeout_ms": 30000
+}

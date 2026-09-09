@@ -1,0 +1,7 @@
+{
+  "case_id": "c01_infer_only_mlp",
+  "command_kind": "infer",
+  "stdout": [
+    "{\"schema\":\"seulgi.infer_output.v1\",\"model_hash\":\"blake3:e5c511e9bbe54dc9e104d0f9feb279ecd6bee254d15c5ec70fbeacce77a11788\",\"output\":[-9]}"
+  ]
+}

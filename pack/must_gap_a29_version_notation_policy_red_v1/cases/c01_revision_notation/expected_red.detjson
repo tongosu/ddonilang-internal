@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "VERSION_NOTATION_POLICY",
+  "expected_future_diag": "E_VERSION_REVISION_NOTATION_RESERVED",
+  "notes": [
+    "문서/언어 revision 표기 금지 정책의 진단 이름은 아직 확정하지 않는다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

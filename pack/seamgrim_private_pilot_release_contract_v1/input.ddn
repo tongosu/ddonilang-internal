@@ -1,0 +1,16 @@
+"SEAMGRIM_PRIVATE_PILOT_RELEASE_CONTRACT_V1" 보여주기.
+"manifest_fields=13" 보여주기.
+"build_context=allowlist_only" 보여주기.
+"forbidden_internal_prefixes=7" 보여주기.
+"runtime_identity=non_root" 보여주기.
+"digest_pin_status=verification_required_until_operator_source" 보여주기.
+"service_hardening=private_network_readonly_data_bind" 보여주기.
+"api_run_body_limit=2000000" 보여주기.
+"edge_policy=https_redirect_tls_body_rate_timeout_headers" 보여주기.
+"edge_browser_csp=workbench_canvas_pass" 보여주기.
+"health_split=public_private_operator" 보여주기.
+"log_redaction=query_capability_body_excluded" 보여주기.
+"backup_restore=application_consistent_empty_target" 보여주기.
+"corrupt_backup=rejected_before_restore" 보여주기.
+"deploy_canary_rollback=pointer_only_no_data_restore" 보여주기.
+"bad_release=promotion_rejected_current_kept" 보여주기.

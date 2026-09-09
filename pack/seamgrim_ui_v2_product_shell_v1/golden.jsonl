@@ -1,0 +1,1 @@
+{"id":"c01_seamgrim_ui_v2_product_shell_marker","cmd":["run","pack/seamgrim_ui_v2_product_shell_v1/input.ddn"],"stdout":["SEAMGRIM_UI_V2_PRODUCT_SHELL_V1","global shell and L0/L1 product flow verified by browser runner","desktop and mobile layout smoke verified","no parser runtime state_hash semantics change claimed"],"exit_code":0}

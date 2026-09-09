@@ -1,0 +1,30 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_project_share_clone_v0",
+  "kind": "seamgrim_project_share_clone",
+  "wave": "wave2e",
+  "gates": ["G5"],
+  "browser_runner": "tests/seamgrim_project_share_clone_runner.mjs",
+  "checker": "tests/run_seamgrim_project_share_clone_check.py",
+  "checks": [
+    "view_link_fragment",
+    "fresh_context_view_open",
+    "view_url_fragment_scrubbed",
+    "view_readonly_original",
+    "view_save_disabled",
+    "edit_link_hidden_from_view",
+    "clone_as_my_version",
+    "clone_new_project_id",
+    "clone_editable_after_open",
+    "clone_origin_lineage",
+    "clone_save_does_not_move_original"
+  ],
+  "product_behavior_change": true,
+  "docs_closed_claim": false,
+  "behavior_closed_claim": true,
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "server_login_cloud_claim": false,
+  "public_listing_claim": false
+}

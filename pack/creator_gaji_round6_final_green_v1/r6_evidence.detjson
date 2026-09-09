@@ -1,0 +1,125 @@
+{
+  "baseline": {
+    "clean_worktree": "I:/home/urihanl/ddn/codex/build/r6_clean_42ead21_20260717",
+    "r6_parent_head": "42ead21",
+    "start_head": "adf019cfdf02078c67b3a1f39b334e765bc34ce2"
+  },
+  "claims": {
+    "behavior_closed": true,
+    "docs_ssot_change": false,
+    "external_creator_pilot_success_count": 0,
+    "overall_goal_complete": false,
+    "r0_through_r7_complete": false,
+    "r6_complete": true,
+    "r7_complete": false,
+    "state_hash_formula_change": false
+  },
+  "date": "2026-07-17",
+  "repairs": [
+    "pack_golden_independent_cargo_target",
+    "ai_prompt_crlf_to_lf_portability",
+    "runtime_typecheck_map_surface_fixture",
+    "release_wasm_manifest_source_refresh"
+  ],
+  "schema": "ddn.creator_gaji.round6_final_green.evidence.v1",
+  "test_matrix": [
+    {
+      "command": "python tests/run_seamgrim_public_physics_wedge_quality_gate_check.py",
+      "id": "public_physics_wedge",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_workbench_durable_quality_gate_check.py",
+      "id": "durable_quality_gate_twice",
+      "result": "PASS",
+      "runs": 2
+    },
+    {
+      "command": "cargo test -p ddonirang-core fixed64_lint_gate_no_float_in_core",
+      "id": "fixed64_lint",
+      "passed": 1,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-core",
+      "id": "core_all",
+      "passed": 55,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-lang --no-default-features",
+      "id": "lang_minimal",
+      "passed": 259,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-tool --no-default-features",
+      "id": "tool_minimal",
+      "lib_passed": 306,
+      "result": "PASS",
+      "runtime_passed": 319
+    },
+    {
+      "command": "cargo test -p ddonirang-tool",
+      "id": "tool_default",
+      "lib_passed": 306,
+      "result": "PASS",
+      "runtime_passed": 319
+    },
+    {
+      "command": "cargo check",
+      "id": "root_workspace_check",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo check --manifest-path tools/teul-cli/Cargo.toml",
+      "id": "teul_cli_independent_check",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_freshness_check.py",
+      "id": "wasm_freshness",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_true_parity_equality_check.py",
+      "id": "cli_wasm_true_parity",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_sync_gate_check.py",
+      "id": "cli_wasm_sync_gate",
+      "result": "PASS",
+      "substeps": 11
+    },
+    {
+      "command": "python tests/run_ci_sanity_gate.py --profile core_lang",
+      "context": "main_worktree_with_preexisting_user_sources_and_local_docs",
+      "id": "ci_sanity_core_lang",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check && git status --short -- docs/ssot",
+      "id": "diff_and_ssot_boundary",
+      "result": "PASS"
+    }
+  ],
+  "validation_context": {
+    "cargo_root_target": "I:/home/urihanl/ddn/codex/build/r6_target_42ead21",
+    "cargo_teul_target": "I:/home/urihanl/ddn/codex/build/r6_pack_target_42ead21",
+    "core_lang_sanity_context": "main integration state because ignored docs and preexisting user changes are required inputs",
+    "ssot_bundle_mode": "read_only_environment_path",
+    "ssot_bundle_variable": "DDN_VOL4_BUNDLE_PATH"
+  },
+  "wasm_artifact": {
+    "js_binding_hash_mode": "crlf_to_lf_then_sha256",
+    "js_binding_sha256": "0bd5406824717ce8e06835531e850b81a1c9766fd3bb81bd0a69d7d0889a8fbd",
+    "manifest_sha256": "934d2dca8c06ab21beb38f2a26c77e0e62365e91448913c95cec98927469cdfa",
+    "source_file_count": 76,
+    "source_hash_mode": "crlf_to_lf_then_sha256",
+    "source_tree_sha256": "1d10c6161335fcbf3373c4df79ba0dc28804ae5c1622aad9d336eac80d031f57",
+    "wasm_hash_mode": "raw_bytes_sha256",
+    "wasm_sha256": "b04585a7b7357565f1891827524937be85c1713784c34644b67eb28fcdb4f7d8",
+    "wasm_size": 3942200
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "baseline": {
+    "clean_worktree": "I:/home/urihanl/ddn/codex/build/r5_clean_87b28b0_20260717",
+    "r5_parent_head": "87b28b0",
+    "start_head": "adf019cfdf02078c67b3a1f39b334e765bc34ce2"
+  },
+  "claims": {
+    "docs_ssot_change": false,
+    "external_creator_pilot_success_count": 0,
+    "overall_goal_complete": false,
+    "r0_through_r7_complete": false,
+    "r5_complete": true,
+    "state_hash_formula_change": false
+  },
+  "date": "2026-07-17",
+  "portable_inputs": {
+    "approved_workbench_preexisting_user_diff_staged": false,
+    "approved_workbench_preexisting_user_diff_used_for_clean_validation": true,
+    "dialect_tsv": "docs/context/notes/dialect/DDONIRANG_dialect_keywords_full_v8_20260215.tsv",
+    "ssot_bundle_mode": "read_only_environment_path",
+    "ssot_bundle_variable": "DDN_VOL4_BUNDLE_PATH"
+  },
+  "regression_matrix": [
+    {
+      "command": "python tests/run_seamgrim_wasm_sealed_runtime_binding_check.py",
+      "id": "sealed_wasm_browser_binding",
+      "normal_cases": 16,
+      "result": "PASS",
+      "tamper_cases": 2
+    },
+    {
+      "command": "python tests/run_seamgrim_gaji_bundle_check.py",
+      "id": "creator_gaji_aggregate",
+      "result": "PASS"
+    },
+    {
+      "command": "node tests/gaji_four_viewport_runner.mjs",
+      "id": "four_viewport_creator_circulation",
+      "result": "PASS",
+      "runs": 12,
+      "viewports": 4
+    },
+    {
+      "command": "python tests/run_seamgrim_native_multifile_authoring_promotion_check.py --full",
+      "id": "native_multifile_full_promotion",
+      "result": "PASS",
+      "rust_tests": 23
+    },
+    {
+      "command": "python tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+      "id": "approved_workbench_quality",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_gaji_creator_wasm_parity_check.py",
+      "id": "local_gaji_cli_wasm_parity",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_multifile_portable_roundtrip_check.py",
+      "id": "multifile_portable_roundtrip",
+      "result": "PASS"
+    },
+    {
+      "command": "node tests/gaji_grid_vertical_runner.mjs",
+      "id": "grid_vertical",
+      "result": "PASS"
+    },
+    {
+      "command": "node tests/gaji_attack_performance_runner.mjs",
+      "id": "attack_performance",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_view_only_state_hash_invariant_check.py",
+      "id": "view_only_state_hash_invariant",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_local_project_graph_check.py",
+      "id": "disk_project_crlf_portability",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_local_project_gaji_wave1_quality_gate_check.py",
+      "id": "local_project_gaji_wave1",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py",
+      "id": "vol4_cli_wasm_parity",
+      "result": "PASS",
+      "runs": 38
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_freshness_check.py",
+      "id": "wasm_freshness",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_true_parity_equality_check.py",
+      "id": "true_parity_equality",
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-tool --lib canonicalizes_disk_crlf_without_changing_lf_or_lone_cr",
+      "id": "disk_crlf_unit",
+      "result": "PASS"
+    }
+  ],
+  "repairs": [
+    "portable_text_hash_modes",
+    "browser_manifest_hash_mode_verification",
+    "js_content_tamper_negative_control",
+    "native_project_entry_file_activation",
+    "view_local_run_contract_gate_alignment",
+    "disk_project_crlf_canonicalization",
+    "read_only_vol4_bundle_path_override"
+  ],
+  "schema": "ddn.creator_gaji_round5_regression.evidence.v1",
+  "wasm_artifact": {
+    "js_binding_hash_mode": "crlf_to_lf_then_sha256",
+    "js_binding_sha256": "0bd5406824717ce8e06835531e850b81a1c9766fd3bb81bd0a69d7d0889a8fbd",
+    "manifest_sha256": "934d2dca8c06ab21beb38f2a26c77e0e62365e91448913c95cec98927469cdfa",
+    "source_file_count": 76,
+    "source_hash_mode": "crlf_to_lf_then_sha256",
+    "source_tree_sha256": "1d10c6161335fcbf3373c4df79ba0dc28804ae5c1622aad9d336eac80d031f57",
+    "wasm_hash_mode": "raw_bytes_sha256",
+    "wasm_sha256": "b04585a7b7357565f1891827524937be85c1713784c34644b67eb28fcdb4f7d8",
+    "wasm_size": 3942200
+  }
+}

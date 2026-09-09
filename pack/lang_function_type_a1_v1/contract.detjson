@@ -1,0 +1,39 @@
+{
+  "schema": "ddn.lang.function_type_a1.pack.contract.v1",
+  "pack_id": "lang_function_type_a1_v1",
+  "evidence_tier": "runner_backed",
+  "closure_claim": "bounded_behavioral_parity",
+  "oracle": "ddonirang-lang shared AST/parser/canon frontdoor",
+  "product_path": "lang/tool/teul-cli/WASM",
+  "strict_runtime_parity": true,
+  "state_hash_policy": "strict_equality",
+  "hash_domain_note": "함수 타입 선언 자체는 실행 상태를 바꾸지 않으며 CLI/WASM은 같은 canonical DDN과 빈 실행 상태를 내야 한다.",
+  "cases": [
+    {
+      "id": "c01_simple_multi_higher_order",
+      "input": "cases/c01_simple_multi_higher_order/input.ddn",
+      "ticks": 1,
+      "expected_cli_stdout": [],
+      "expected_parse_warning_codes": [],
+      "expected_cli_wasm_row_parity": true
+    },
+    {
+      "id": "c02_non_associative_reject",
+      "input": "cases/c02_non_associative_reject/input.ddn",
+      "expect_reject": true,
+      "expected_error_contains": ["E_FUNCTION_TYPE_ARROW_NON_ASSOCIATIVE"]
+    },
+    {
+      "id": "c03_right_arrow_alias_reject",
+      "input": "cases/c03_right_arrow_alias_reject/input.ddn",
+      "expect_reject": true,
+      "expected_error_contains": ["E_FUNCTION_TYPE_RIGHT_ARROW_FORBIDDEN"]
+    },
+    {
+      "id": "c04_value_position_reject",
+      "input": "cases/c04_value_position_reject/input.ddn",
+      "expect_reject": true,
+      "expected_error_contains": ["E_FUNCTION_TYPE_ARROW_VALUE_POSITION"]
+    }
+  ]
+}

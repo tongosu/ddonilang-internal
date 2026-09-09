@@ -1,0 +1,22 @@
+(매마디)마다 {
+  // 출력은 숫자만. (V, I) 순서.
+  // NOTE: export_graph.py는 stdout 숫자쌍을 (x,y)로 묶는다.
+
+  R <- 10.
+  V_min <- 0.
+  V_max <- 10.
+  dV <- 0.25.
+
+  V <- V_min.
+
+  { V <= V_max }인것 동안: {
+    I <- (V=V, R=R) (#ascii) 수식{ V / R }.
+
+    보임 {
+      값1: V.
+      값2: I.
+    }.
+
+    V <- V + dV.
+  }.
+}.

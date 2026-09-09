@@ -1,0 +1,36 @@
+{
+  "schema": "seamgrim.wave3b.foundation12.curriculum_cohort.contract.v1",
+  "world_count": 12,
+  "card_count": 12,
+  "lesson_card_schema": "seamgrim.lesson_card.v0",
+  "active_allowlist_schema": "seamgrim.active_lessons.allowlist.v1",
+  "browser_route": "default browse card -> btn-open-in-studio -> tab=studio&lesson=<lesson_id>",
+  "catalog_mode_full_required": false,
+  "required_card_fields": [
+    "grade_band",
+    "subject_refs",
+    "curriculum_refs",
+    "concept_spine_refs",
+    "stem_practice_refs",
+    "crosscutting_refs",
+    "primary_view",
+    "allowed_controls",
+    "allowed_observations",
+    "prediction_prompt",
+    "inquiry_prompt",
+    "misconception_refs",
+    "status_axes"
+  ],
+  "negative_controls": [
+    "missing field",
+    "unknown control",
+    "unknown observation",
+    "unknown view"
+  ],
+  "student_card_internal_status_leak": false,
+  "behavior_closed_claim": true,
+  "canonical_curriculum_alignment_claim": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_edit": false
+}

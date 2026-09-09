@@ -1,0 +1,1 @@
+{"input_path": "input.ddn", "stdout": ["묶음{__이음관계종류=endpoint_relation_set, 관계들=차림[묶음{__이음관계종류=endpoint_equality, 규칙=같게, 오른쪽=장터.소매끝.체결값, 왼쪽=가계1.구매끝.체결값, 채널=체결값}, 묶음{__이음관계종류=endpoint_flow, 규칙=흐르게, 방향=왼쪽에서오른쪽, 부호규약=left_plus_right_zero, 오른쪽=장터.소매끝.재화, 왼쪽=가계1.구매끝.재화, 채널=재화}], 오른쪽끝=장터.소매끝, 왼쪽끝=가계1.구매끝}"], "exit_code": 0}

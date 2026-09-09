@@ -1,0 +1,87 @@
+{
+  "claims": {
+    "closure_tier": "behavior-closed",
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g9_status": "G9_PROJECT_DERIVED_CONTROLS_COMPLETE",
+    "global_hardcoded_action_button_count": 0,
+    "global_hardcoded_pendulum_control_count": 0,
+    "state_hash_formula_change": false
+  },
+  "authoritative_inputs": {
+    "action_discovery": "project file payload with schema ddn.input_action_map.v1",
+    "ddn_source_regex_discovery": false,
+    "setup_discovery": "Rust/WASM wasm_canon_maegim_plan -> ddn.maegim_control_plan.v1"
+  },
+  "project_surface_matrix": [
+    {
+      "action_count": 0,
+      "control_names": [
+        "초기속도x",
+        "초기속도y",
+        "중력가속도",
+        "dt",
+        "마디수"
+      ],
+      "project_id": "rep_phys_projectile_xy_v1"
+    },
+    {
+      "action_count": 0,
+      "control_names": [
+        "g",
+        "L",
+        "theta0",
+        "omega0",
+        "damp",
+        "dt",
+        "t_max"
+      ],
+      "project_id": "rep_phys_pendulum_wave1_v1"
+    },
+    {
+      "action_count": 3,
+      "action_ids": [
+        "left",
+        "right",
+        "drop"
+      ],
+      "control_names": [],
+      "project_id": "rep_grid_game_state_drop_v1"
+    }
+  ],
+  "run_recipe_boundary": {
+    "active_run_parameter_after_candidate_change": 12.299999999813735,
+    "active_run_state_hash_unchanged_by_next_candidate": true,
+    "applied_control": "중력가속도",
+    "applied_fixed64_value": 12.299999999813735,
+    "candidate_schema": "seamgrim.workbench.run_recipe_candidate.v1",
+    "candidate_value": 12.3,
+    "next_candidate_value": 10.7,
+    "wasm_apply_boundary": "WasmVmHandle.setParam"
+  },
+  "input_and_view_boundaries": {
+    "action_committed_exactly_once": true,
+    "action_map_lineage_in_input_snapshot": true,
+    "action_target": "next InputSnapshot",
+    "project_switch_clears_previous_actions": true,
+    "project_switch_clears_previous_controls": true,
+    "view_setting_created_input_snapshot": false,
+    "view_setting_created_run_recipe": false,
+    "view_setting_state_hash_unchanged": true
+  },
+  "verification": {
+    "committed_view_verticals_browser": "PASS",
+    "durable_persistence_adapters_browser": "PASS",
+    "execution_lifecycle_browser": "PASS",
+    "live_step_pump_browser": "PASS",
+    "node_syntax": "PASS",
+    "one_file_native_browser": "PASS",
+    "progressive_disclosure_browser": "PASS",
+    "project_control_model_unit": "PASS",
+    "project_controls_browser": "PASS",
+    "ui_common": "PASS",
+    "view_instances_browser": "PASS",
+    "wasm_vm_runtime": "PASS"
+  },
+  "schema": "seamgrim.workbench_recovery.g9_project_derived_controls.v1"
+}

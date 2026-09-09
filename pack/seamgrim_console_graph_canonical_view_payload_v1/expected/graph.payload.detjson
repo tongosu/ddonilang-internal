@@ -1,0 +1,64 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:20349bc1",
+  "content": {
+    "graph": {
+      "graph_kind": "timeseries",
+      "meta": {
+        "producer": "t5b.authoritative_fixture",
+        "version": "v1"
+      },
+      "schema": "seamgrim.graph.v0",
+      "series": [
+        {
+          "id": "position.x",
+          "label": "x 위치",
+          "points": [
+            { "x": 0, "y": 0 },
+            { "x": 1, "y": 8 },
+            { "x": 2, "y": 12.5 }
+          ]
+        },
+        {
+          "id": "velocity.x",
+          "label": "x 속도",
+          "points": [
+            { "x": 0, "y": 8 },
+            { "x": 1, "y": 6 },
+            { "x": 2, "y": 3 }
+          ]
+        }
+      ],
+      "x": {
+        "channel_id": "time",
+        "kind": "time",
+        "unit": "s"
+      },
+      "y": {
+        "channel_id": "position.x",
+        "kind": "position",
+        "unit": "m"
+      }
+    },
+    "series_identities": [
+      "position.x",
+      "velocity.x"
+    ]
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "graph",
+  "identity": {
+    "observation_projection_identity": "",
+    "result_identity": "",
+    "source_hash": "sha256:t5b_source",
+    "state_hash": "blake3:t5b_state_7",
+    "tick_id": 7,
+    "view_hash": ""
+  },
+  "provenance": {
+    "input_authority": "native_authoritative_structured_input",
+    "source": "structured_resource_value_json"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

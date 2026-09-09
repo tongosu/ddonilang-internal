@@ -1,0 +1,1 @@
+{"id":"c00_ganada_ka_publication_read_api_marker","cmd":["run","pack/ganada_ka_publication_read_api_v1/input.ddn"],"stdout":["GANADA_KA_PUBLICATION_READ_API_V1","cell=카-2","surface=ttonimaru_publication_read_api","public_registry_final_claim=false","matrix_upgrade_claim=false"],"exit_code":0}

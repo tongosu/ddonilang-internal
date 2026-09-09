@@ -1,0 +1,35 @@
+{
+  "schema": "ddn.seamgrim_workbench_recovery.g18_final_audit.v1",
+  "finished_at_utc": "2026-07-17T19:25:00Z",
+  "start_head": "5686231",
+  "pre_g18_report_head": "5806244",
+  "status": [
+    "WORKBENCH_LIVE_EXECUTION_AND_VIEW_RECOVERY_CLOSED",
+    "READY_FOR_INDEPENDENT_REVIEW",
+    "BLOCK_EXTERNAL_ROUND0_PENDING_INDEPENDENT_REVIEW"
+  ],
+  "final_checks": [
+    "main: git diff --check => PASS",
+    "main: git status --short -- docs/ssot => clean",
+    "clean worktree I:/home/urihanl/ddn/codex/build/worktrees/g16_582be2e: checkout 5806244",
+    "clean worktree: python tests/run_ddn_cli_wasm_freshness_check.py => PASS"
+  ],
+  "evidence": [
+    "work/codex/20260717_seamgrim_workbench_recovery/g15_integrated_workbench_recovery_gate.detjson",
+    "work/codex/20260717_seamgrim_workbench_recovery/g16_clean_detached_verification.detjson",
+    "docs/reports/impl/REPORT_SEAMGRIM_WORKBENCH_RECOVERY_IMPLEMENTATION_V1_20260718.md",
+    "docs/reports/audit/REQUEST_SEAMGRIM_WORKBENCH_RECOVERY_INDEPENDENT_REVIEW_V1_20260718.md"
+  ],
+  "external_user_success_count": 0,
+  "not_claimed": [
+    "READY_TO_START_EXTERNAL_CREATOR_ROUND0",
+    "full_ddn_language_cli_wasm_equivalence",
+    "full_pack_and_gaji_parity",
+    "idc_cloud_login_release_scope",
+    "full_korean_manim_completion"
+  ],
+  "open_scope": [
+    "independent review has not yet run",
+    "clean detached full core_lang needs approved local docs/ssot/ssot data provisioning"
+  ]
+}

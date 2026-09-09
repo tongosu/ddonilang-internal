@@ -1,0 +1,111 @@
+{
+  "baseline": {
+    "branch": "codex/queue-20260706",
+    "minimum_ancestor": "d139da2a86c0b4b7bf3af8ee096e57dd8a35b549",
+    "start_head": "adf019cfdf02078c67b3a1f39b334e765bc34ce2"
+  },
+  "claims": {
+    "ai_prompt_current_ssot_golden_closed": true,
+    "behavior_closed": true,
+    "creator_gaji_round0_green_baseline": true,
+    "docs_closed": true,
+    "docs_ssot_change_count": 0,
+    "durable_gate_reproducible": true,
+    "external_creator_pilot_started": false,
+    "external_creator_pilot_success_count": 0,
+    "fixed64_no_float_core_gate_closed": true,
+    "independent_review_completed": false,
+    "independent_review_requested": true,
+    "overall_goal_complete": true,
+    "public_wedge_native_creator_contract_closed": true,
+    "r0_through_r7_complete": true,
+    "ready_to_start_external_creator_round0": true,
+    "state_hash_formula_change": false,
+    "unrelated_dirty_and_untracked_preserved": true
+  },
+  "correction": {
+    "baseline_failures": [
+      "source_tree_sha256 mismatch",
+      "source_files mismatch"
+    ],
+    "baseline_freshness_status": "FAIL",
+    "baseline_head": "56862318cae8f1b43bb36d1513c3dcec3cba7ccd",
+    "prior_sync_gate_claim_valid": false,
+    "recovery_freshness_status": "PASS",
+    "recovery_head": "G1_SELF",
+    "reason": "clean checkout retained a stale WASM artifact after tool/src/ai_prompt.rs changed"
+  },
+  "date": "2026-07-17",
+  "handoff": {
+    "audit_request": "docs/reports/audit/REQUEST_CREATOR_GAJI_ROUND0_GREEN_BASELINE_INDEPENDENT_REVIEW_V1_20260717.md",
+    "implementation_report": "docs/reports/impl/REPORT_CREATOR_GAJI_ROUND0_GREEN_BASELINE_V1_20260717.md",
+    "next_action": "independent review, then owner-authorized external creator Round 0",
+    "session_delta": "work/_session_deltas/20260717_codex_creator_gaji_round0_green_baseline.md"
+  },
+  "rounds": [
+    {
+      "commit": "141069d",
+      "evidence": "pack/creator_gaji_round0_green_baseline_v1/r0_baseline.detjson",
+      "id": "R0",
+      "result": "PASS"
+    },
+    {
+      "commit": "0043995",
+      "evidence": "tests/run_seamgrim_one_file_ddn_create_run_check.py",
+      "id": "R1",
+      "result": "PASS"
+    },
+    {
+      "commit": "cd75407",
+      "evidence": "pack/creator_gaji_round2_durable_readiness_v1/r2_evidence.detjson",
+      "id": "R2",
+      "result": "PASS"
+    },
+    {
+      "commit": "88dd727",
+      "evidence": "pack/creator_gaji_round3_ai_prompt_current_ssot_v1/r3_evidence.detjson",
+      "id": "R3",
+      "result": "PASS"
+    },
+    {
+      "commit": "87b28b0",
+      "evidence": "pack/creator_gaji_round4_fixed64_boundary_v1/r4_evidence.detjson",
+      "id": "R4",
+      "result": "PASS"
+    },
+    {
+      "commit": "42ead21",
+      "evidence": "pack/creator_gaji_round5_regression_v1/r5_evidence.detjson",
+      "id": "R5",
+      "result": "PASS"
+    },
+    {
+      "commit": "662b58c",
+      "evidence": "pack/creator_gaji_round6_final_green_v1/r6_evidence.detjson",
+      "id": "R6",
+      "result": "PASS"
+    },
+    {
+      "commit": "SELF",
+      "evidence": "pack/creator_gaji_round7_handoff_v1/r0_r7_aggregate.detjson",
+      "id": "R7",
+      "result": "PASS"
+    }
+  ],
+  "schema": "ddn.creator_gaji.round7_handoff.aggregate.v1",
+  "verification_summary": {
+    "ci_sanity_core_lang": "PASS",
+    "cli_wasm_sync_gate_substeps": 11,
+    "creator_four_viewport_runs": 12,
+    "durable_final_gate_runs": 2,
+    "public_wedge_final_runs": 1,
+    "r2_capability_component_runs": 3,
+    "r2_owned_residual_processes": 0,
+    "r2_owned_residual_sockets": 0,
+    "r2_owned_residual_temp_dirs": 0,
+    "r2_persistence_component_runs": 3,
+    "sealed_wasm_normal_cases": 16,
+    "sealed_wasm_tamper_cases": 2,
+    "vol4_cli_wasm_cases": 38
+  }
+}

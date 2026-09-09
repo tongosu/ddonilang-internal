@@ -1,0 +1,1 @@
+{"id":"c01_integrators_g1_pendulum_one_step","cmd":["run","pack/stdlib_l1_integrators_g1_v1/input.ddn"],"stdout":["integrator_g1","euler","0.1999999999","-0.02","semi_implicit_euler","0.1979999998","-0.02","linear_interpolation","0.1989999997"],"exit_code":0}

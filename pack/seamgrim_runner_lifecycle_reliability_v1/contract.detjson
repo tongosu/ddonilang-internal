@@ -1,0 +1,81 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_runner_lifecycle_reliability_v1",
+  "current_gate": "G4",
+  "product_behavior_change": true,
+  "runner_instrumentation_change": true,
+  "behavior_closed_claim": true,
+  "reliability_closed_claim": true,
+  "actual_container_claim": false,
+  "private_idc_claim": false,
+  "external_user_success_claim": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false,
+  "required_negative_controls": [
+    "empty-project-id",
+    "no-ready",
+    "premature-run",
+    "teardown-delay",
+    "pid-reuse-simulation",
+    "owned-leak-injection",
+    "unrelated-helper-overlap",
+    "view-capability-run-write"
+  ],
+  "project_run_prerequisite_contract": {
+    "save_wait_source": "structured_workbench_snapshot_and_capability_links",
+    "project_id_required_before_run_api": true,
+    "head_revision_required_before_run_api": true,
+    "edit_capability_required_before_run_api": true,
+    "capability_fragment_scrubbed_after_open": true,
+    "empty_project_id_reaches_api": false,
+    "view_capability_rejects": [
+      "create_run",
+      "checkpoint",
+      "finalize",
+      "restore"
+    ],
+    "conflict_preserves_local_work": true
+  },
+  "server_lifecycle_contract": {
+    "port_request": 0,
+    "ready_record_schema": "seamgrim.ddn_exec_server.ready.v1",
+    "free_port_toc_tou_removed": true,
+    "parallel_runner_count": 4,
+    "owned_residual_pids_after_each_run": 0,
+    "unrelated_process_termination_allowed": false
+  },
+  "owner_scoped_lifecycle_contract": {
+    "process_identity_required": true,
+    "process_identity_fields": [
+      "pid",
+      "parent_pid",
+      "creation_time",
+      "executable_name",
+      "command_fingerprint_sha256",
+      "identity_sha256",
+      "run_owner_id"
+    ],
+    "pre_stop_descendant_snapshot_required": true,
+    "pid_only_residual_detection": false,
+    "global_process_diff_used": false,
+    "post_stop_same_pid_identity_mismatch_classification": "pid_reused_or_identity_changed_ignored",
+    "residual_socket_required": true,
+    "unrelated_process_termination_allowed": false,
+    "job_object_status": "not_introduced_pre_stop_identity_snapshot_used",
+    "negative_controls": [
+      "unrelated-helper-overlap",
+      "owned-leak-injection",
+      "pid-reuse-simulation"
+    ]
+  },
+  "g4_matrix_contract": "g4_matrix_contract.detjson",
+  "g4_matrix_checker": "tests/run_seamgrim_first_run_reliability_matrix_check.py",
+  "forbidden_evidence": [
+    "capability_raw",
+    "authorization_raw",
+    "ddn_body",
+    "absolute_temp_path"
+  ],
+  "later_gate": "G5 checks local container runtime availability and prepares verifiable container inputs. Actual container claims still require G6-G11."
+}

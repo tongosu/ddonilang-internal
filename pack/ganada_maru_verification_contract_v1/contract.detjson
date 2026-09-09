@@ -1,0 +1,4223 @@
+{
+  "schema": "ddn.ganada.maru.verification_contract.v1",
+  "pack": "ganada_maru_verification_contract_v1",
+  "closure_grade": "닫힘-문서",
+  "generated_for": "Ganada verification criteria before structure reconsideration",
+  "cell_count": 90,
+  "branch_count": 15,
+  "maru_count_per_branch": 6,
+  "product_code_change": false,
+  "parser_landed_claim": false,
+  "runtime_claim": false,
+  "ui_behavior_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "allowed_status_grades": [
+    "미착수",
+    "후보",
+    "닫힘-문서",
+    "닫힘-동작",
+    "실패",
+    "결정필요"
+  ],
+  "forbidden_status_terms_in_contract_claims": [
+    "진짜닫힘"
+  ],
+  "global_policy_refs": [
+    {
+      "path": "docs/context/roadmap/GANADA_MATRIX_CORRECTED_20260706.md",
+      "line": 9,
+      "contains": "진짜닫힘"
+    },
+    {
+      "path": "docs/context/roadmap/GANADA_MATRIX_CORRECTED_20260706.md",
+      "line": 10,
+      "contains": "존재+PASS이나형식뿐"
+    },
+    {
+      "path": "docs/context/roadmap/GANADA_MATRIX_CORRECTED_20260706.md",
+      "line": 11,
+      "contains": "존재하나FAIL"
+    },
+    {
+      "path": "docs/context/roadmap/GANADA_MATRIX_CORRECTED_20260706.md",
+      "line": 16,
+      "contains": "기능이 아니라 문서 존재 여부"
+    },
+    {
+      "path": "docs/context/roadmap/PLAN_GANADA_REVERIFICATION_20260706.md",
+      "line": 16,
+      "contains": "실행 확인"
+    },
+    {
+      "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_CODEX_GUIDE_20260426.md",
+      "line": 22,
+      "contains": "pack/checker/CI evidence"
+    }
+  ],
+  "evidence_kinds": {
+    "doc_report": {
+      "qualifies_behavior_close": false
+    },
+    "proposal": {
+      "qualifies_behavior_close": false
+    },
+    "pack_golden_pass": {
+      "qualifies_behavior_close": true
+    },
+    "product_cli_or_runtime_pass": {
+      "qualifies_behavior_close": true
+    },
+    "browser_or_ui_runner_pass": {
+      "qualifies_behavior_close": true
+    },
+    "tooling_runner_or_ci_pass": {
+      "qualifies_behavior_close": true
+    }
+  },
+  "branches": [
+    {
+      "id": "가",
+      "name": "말과 실행 코어",
+      "public_name": "언어 코어 / 내부 정본",
+      "default_workflow_surface": "cli_runtime"
+    },
+    {
+      "id": "나",
+      "name": "표준가지·표준라이브러리",
+      "public_name": "표준가지",
+      "default_workflow_surface": "cli_runtime"
+    },
+    {
+      "id": "다",
+      "name": "수학·심볼릭·증명 라이브러리",
+      "public_name": "셈증명 / 수학가지",
+      "default_workflow_surface": "cli_runtime"
+    },
+    {
+      "id": "라",
+      "name": "말블록과 편집환경",
+      "public_name": "말블록 짜임판",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "마",
+      "name": "셈그림 교과 실험실",
+      "public_name": "셈그림 교과 실험실",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "바",
+      "name": "자유 실험실",
+      "public_name": "자유 실험실",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "사",
+      "name": "보개·공간·게임",
+      "public_name": "보개공간",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "아",
+      "name": "누리짐·AI 환경",
+      "public_name": "누리짐",
+      "default_workflow_surface": "cli_runtime"
+    },
+    {
+      "id": "자",
+      "name": "AI·슬기·배움틀",
+      "public_name": "슬기/배움틀 경계",
+      "default_workflow_surface": "cli_runtime"
+    },
+    {
+      "id": "차",
+      "name": "말힘누리·RPG·규칙 기반 게임",
+      "public_name": "말힘누리 / RPG 저작",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "카",
+      "name": "또니마루·공유·레지스트리",
+      "public_name": "또니마루",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "타",
+      "name": "검증·팩·도구줄",
+      "public_name": "검증줄 / 도구줄",
+      "default_workflow_surface": "pack_tooling"
+    },
+    {
+      "id": "파",
+      "name": "경제·사회·역사 시뮬레이션",
+      "public_name": "사회세계 실험실",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "하",
+      "name": "교육·교재·커리큘럼",
+      "public_name": "배움마당",
+      "default_workflow_surface": "ui_browser"
+    },
+    {
+      "id": "거",
+      "name": "AI 개발·검증·활용·개발보조",
+      "public_name": "슬기쓰기",
+      "default_workflow_surface": "cli_runtime"
+    }
+  ],
+  "cells": [
+    {
+      "cell_id": "가-0",
+      "branch": "가",
+      "branch_name": "말과 실행 코어",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "언어 코어 / 내부 정본: current-line 문법 ledger 정리",
+      "original_milestone": "current-line 문법 ledger 정리",
+      "original_representative_work": "grammar ledger / runtime_status 표",
+      "original_completion_evidence": "SSOT_ROADMAP/OPEN_ISSUES",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 76,
+          "contains": "current-line 문법 ledger 정리"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "가-1",
+      "branch": "가",
+      "branch_name": "말과 실행 코어",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "언어 코어 / 내부 정본: core smoke 안정화",
+      "original_milestone": "core smoke 안정화",
+      "original_representative_work": "parser/canon/run 최소 smoke",
+      "original_completion_evidence": "core smoke pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 77,
+          "contains": "core smoke 안정화"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "가-2",
+      "branch": "가",
+      "branch_name": "말과 실행 코어",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "언어 코어 / 내부 정본: 대표 문법 pack 닫힘",
+      "original_milestone": "대표 문법 pack 닫힘",
+      "original_representative_work": "채비/훅/조건/임자/계약 대표 pack",
+      "original_completion_evidence": "golden/checker PASS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 78,
+          "contains": "대표 문법 pack 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "가-3",
+      "branch": "가",
+      "branch_name": "말과 실행 코어",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "언어 코어 / 내부 정본: 편집기 진단 연결",
+      "original_milestone": "편집기 진단 연결",
+      "original_representative_work": "LSP/fix-it/diag",
+      "original_completion_evidence": "LSP minimum pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 79,
+          "contains": "편집기 진단 연결"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "가-4",
+      "branch": "가",
+      "branch_name": "말과 실행 코어",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "언어 코어 / 내부 정본: package/gaji 연결",
+      "original_milestone": "package/gaji 연결",
+      "original_representative_work": "gaji metadata / lock / package",
+      "original_completion_evidence": "registry shell pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 80,
+          "contains": "package/gaji 연결"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "가-5",
+      "branch": "가",
+      "branch_name": "말과 실행 코어",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "언어 코어 / 내부 정본: LTS 문법선",
+      "original_milestone": "LTS 문법선",
+      "original_representative_work": "breaking-change ledger / compat guide",
+      "original_completion_evidence": "release gate",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 81,
+          "contains": "LTS 문법선"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "나-0",
+      "branch": "나",
+      "branch_name": "표준가지·표준라이브러리",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "표준가지: 표준가지 후보 목록 확정",
+      "original_milestone": "표준가지 후보 목록 확정",
+      "original_representative_work": "std_core/text/time/random/unit/color/grid/input/resource/network/policy",
+      "original_completion_evidence": "stdlib proposal",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 91,
+          "contains": "표준가지 후보 목록 확정"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "나-1",
+      "branch": "나",
+      "branch_name": "표준가지·표준라이브러리",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "표준가지: std_core/grid/input 첫실행",
+      "original_milestone": "std_core/grid/input 첫실행",
+      "original_representative_work": "차림/범위/격자/입력사상",
+      "original_completion_evidence": "std_core, std_grid, std_input_map smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 92,
+          "contains": "std_core/grid/input 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "나-2",
+      "branch": "나",
+      "branch_name": "표준가지·표준라이브러리",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "표준가지: std_unit/random/event 닫힘",
+      "original_milestone": "std_unit/random/event 닫힘",
+      "original_representative_work": "단위/난수/이벤트 큐",
+      "original_completion_evidence": "golden pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 93,
+          "contains": "std_unit/random/event 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "나-3",
+      "branch": "나",
+      "branch_name": "표준가지·표준라이브러리",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "표준가지: std_agent/resource/network/policy",
+      "original_milestone": "std_agent/resource/network/policy",
+      "original_representative_work": "임자집합/자원/관계망/정책레버",
+      "original_completion_evidence": "social-world dependency pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 94,
+          "contains": "std_agent/resource/network/policy"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "나-4",
+      "branch": "나",
+      "branch_name": "표준가지·표준라이브러리",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "표준가지: 표준가지 registry",
+      "original_milestone": "표준가지 registry",
+      "original_representative_work": "표준가지 설치/버전/문서",
+      "original_completion_evidence": "local registry pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 95,
+          "contains": "표준가지 registry"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "나-5",
+      "branch": "나",
+      "branch_name": "표준가지·표준라이브러리",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "표준가지: 표준 LTS",
+      "original_milestone": "표준 LTS",
+      "original_representative_work": "호환성, deprecation, benchmark",
+      "original_completion_evidence": "stdlib LTS suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 96,
+          "contains": "표준 LTS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "다-0",
+      "branch": "다",
+      "branch_name": "수학·심볼릭·증명 라이브러리",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "셈증명 / 수학가지: math/proof 범위 확정",
+      "original_milestone": "math/proof 범위 확정",
+      "original_representative_work": "math_exact/vector/matrix/symbolic/solve/proof_min",
+      "original_completion_evidence": "math library proposal",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 106,
+          "contains": "math/proof 범위 확정"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "다-1",
+      "branch": "다",
+      "branch_name": "수학·심볼릭·증명 라이브러리",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "셈증명 / 수학가지: exact/vector/function 첫실행",
+      "original_milestone": "exact/vector/function 첫실행",
+      "original_representative_work": "정확한 수, 벡터, 함수 그래프",
+      "original_completion_evidence": "math smoke pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 107,
+          "contains": "exact/vector/function 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "다-2",
+      "branch": "다",
+      "branch_name": "수학·심볼릭·증명 라이브러리",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "셈증명 / 수학가지: symbolic/solve/proof 닫힘",
+      "original_milestone": "symbolic/solve/proof 닫힘",
+      "original_representative_work": "정리/전개/미분/제한 solver/proof bridge",
+      "original_completion_evidence": "symbolic/proof pack PASS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 108,
+          "contains": "symbolic/solve/proof 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "다-3",
+      "branch": "다",
+      "branch_name": "수학·심볼릭·증명 라이브러리",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "셈증명 / 수학가지: 셈그림 수학 보개 연결",
+      "original_milestone": "셈그림 수학 보개 연결",
+      "original_representative_work": "수식→그래프→증명 맛보기",
+      "original_completion_evidence": "seamgrim math view pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 109,
+          "contains": "셈그림 수학 보개 연결"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "다-4",
+      "branch": "다",
+      "branch_name": "수학·심볼릭·증명 라이브러리",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "셈증명 / 수학가지: 수학가지 공유",
+      "original_milestone": "수학가지 공유",
+      "original_representative_work": "math package / examples",
+      "original_completion_evidence": "registry pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 110,
+          "contains": "수학가지 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "다-5",
+      "branch": "다",
+      "branch_name": "수학·심볼릭·증명 라이브러리",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "셈증명 / 수학가지: 수학 LTS",
+      "original_milestone": "수학 LTS",
+      "original_representative_work": "numeric/proof regression",
+      "original_completion_evidence": "math LTS suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 111,
+          "contains": "수학 LTS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "라-0",
+      "branch": "라",
+      "branch_name": "말블록과 편집환경",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말블록 짜임판: 말블록 설계 확정",
+      "original_milestone": "말블록 설계 확정",
+      "original_representative_work": "말블록/짜임판/팔레트/텍스트섬",
+      "original_completion_evidence": "proposal",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 121,
+          "contains": "말블록 설계 확정"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "라-1",
+      "branch": "라",
+      "branch_name": "말블록과 편집환경",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말블록 짜임판: block→DDN 첫실행",
+      "original_milestone": "block→DDN 첫실행",
+      "original_representative_work": "라-1-01 기본 팔레트, 라-1-02 codegen",
+      "original_completion_evidence": "generated DDN check/run",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 122,
+          "contains": "block→DDN 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "라-2",
+      "branch": "라",
+      "branch_name": "말블록과 편집환경",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말블록 짜임판: subset roundtrip 닫힘",
+      "original_milestone": "subset roundtrip 닫힘",
+      "original_representative_work": "DDN→block subset, raw/opaque block",
+      "original_completion_evidence": "roundtrip pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 123,
+          "contains": "subset roundtrip 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "라-3",
+      "branch": "라",
+      "branch_name": "말블록과 편집환경",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말블록 짜임판: 3모드 작업실 통합",
+      "original_milestone": "3모드 작업실 통합",
+      "original_representative_work": "편집/확장/전체화면",
+      "original_completion_evidence": "three-mode layout pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 124,
+          "contains": "3모드 작업실 통합"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "라-4",
+      "branch": "라",
+      "branch_name": "말블록과 편집환경",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말블록 짜임판: 말블록 예제 공유",
+      "original_milestone": "말블록 예제 공유",
+      "original_representative_work": "교재/샘플/registry 연결",
+      "original_completion_evidence": "lesson package",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 125,
+          "contains": "말블록 예제 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "라-5",
+      "branch": "라",
+      "branch_name": "말블록과 편집환경",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말블록 짜임판: 편집환경 안정화",
+      "original_milestone": "편집환경 안정화",
+      "original_representative_work": "LSP/fix-it/diagnostic 연동",
+      "original_completion_evidence": "editor LTS suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 126,
+          "contains": "편집환경 안정화"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "마-0",
+      "branch": "마",
+      "branch_name": "셈그림 교과 실험실",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "셈그림 교과 실험실: 교과 카탈로그",
+      "original_milestone": "교과 카탈로그",
+      "original_representative_work": "수학/물리/경제/과학 차시 목록",
+      "original_completion_evidence": "curriculum catalog",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 136,
+          "contains": "교과 카탈로그"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "마-1",
+      "branch": "마",
+      "branch_name": "셈그림 교과 실험실",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "셈그림 교과 실험실: 대표 차시 첫실행",
+      "original_milestone": "대표 차시 첫실행",
+      "original_representative_work": "포물선/진자/수요공급",
+      "original_completion_evidence": "lesson smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 137,
+          "contains": "대표 차시 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "마-2",
+      "branch": "마",
+      "branch_name": "셈그림 교과 실험실",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "셈그림 교과 실험실: 교과 pack 닫힘",
+      "original_milestone": "교과 pack 닫힘",
+      "original_representative_work": "차시별 D-PACK + 활동지 연결",
+      "original_completion_evidence": "pack/checker PASS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 138,
+          "contains": "교과 pack 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "마-3",
+      "branch": "마",
+      "branch_name": "셈그림 교과 실험실",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "셈그림 교과 실험실: 수업용 작업실",
+      "original_milestone": "수업용 작업실",
+      "original_representative_work": "교사용/학생용 모드",
+      "original_completion_evidence": "classroom UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 139,
+          "contains": "수업용 작업실"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "마-4",
+      "branch": "마",
+      "branch_name": "셈그림 교과 실험실",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "셈그림 교과 실험실: 공개 차시",
+      "original_milestone": "공개 차시",
+      "original_representative_work": "공개 교재/lesson registry",
+      "original_completion_evidence": "publication pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 140,
+          "contains": "공개 차시"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "마-5",
+      "branch": "마",
+      "branch_name": "셈그림 교과 실험실",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "셈그림 교과 실험실: 교과 LTS",
+      "original_milestone": "교과 LTS",
+      "original_representative_work": "학년/단원/버전 관리",
+      "original_completion_evidence": "curriculum LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 141,
+          "contains": "교과 LTS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "바-0",
+      "branch": "바",
+      "branch_name": "자유 실험실",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "자유 실험실: 빈 작업실 설계",
+      "original_milestone": "빈 작업실 설계",
+      "original_representative_work": "새 실험, 매김, 기록",
+      "original_completion_evidence": "free lab proposal",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 151,
+          "contains": "빈 작업실 설계"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "바-1",
+      "branch": "바",
+      "branch_name": "자유 실험실",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "자유 실험실: 새 실험 첫실행",
+      "original_milestone": "새 실험 첫실행",
+      "original_representative_work": "빈 캔버스에서 DDN 실행",
+      "original_completion_evidence": "free-lab smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 152,
+          "contains": "새 실험 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "바-2",
+      "branch": "바",
+      "branch_name": "자유 실험실",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "자유 실험실: 실험 노트/보고서",
+      "original_milestone": "실험 노트/보고서",
+      "original_representative_work": "가설/레버/지표/결론 artifact",
+      "original_completion_evidence": "experiment_report pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 153,
+          "contains": "실험 노트/보고서"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "바-3",
+      "branch": "바",
+      "branch_name": "자유 실험실",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "자유 실험실: 자유 실험 UI",
+      "original_milestone": "자유 실험 UI",
+      "original_representative_work": "파라미터 sweep, 고스트 비교",
+      "original_completion_evidence": "free-lab UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 154,
+          "contains": "자유 실험 UI"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "바-4",
+      "branch": "바",
+      "branch_name": "자유 실험실",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "자유 실험실: 실험 공유",
+      "original_milestone": "실험 공유",
+      "original_representative_work": "remix/share link",
+      "original_completion_evidence": "share pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 155,
+          "contains": "실험 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "바-5",
+      "branch": "바",
+      "branch_name": "자유 실험실",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "자유 실험실: 연구자 모드",
+      "original_milestone": "연구자 모드",
+      "original_representative_work": "batch, CSV, notebook 연결",
+      "original_completion_evidence": "research workflow suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 156,
+          "contains": "연구자 모드"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "사-0",
+      "branch": "사",
+      "branch_name": "보개·공간·게임",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "보개공간: family/backend/profile 경계",
+      "original_milestone": "family/backend/profile 경계",
+      "original_representative_work": "graph/table/space/grid/sprite/3D",
+      "original_completion_evidence": "bogae schema docs",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 166,
+          "contains": "family/backend/profile 경계"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "사-1",
+      "branch": "사",
+      "branch_name": "보개·공간·게임",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "보개공간: graph/space2d 첫실행",
+      "original_milestone": "graph/space2d 첫실행",
+      "original_representative_work": "DrawList, graph, space2d",
+      "original_completion_evidence": "bogae smoke pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 167,
+          "contains": "graph/space2d 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "사-2",
+      "branch": "사",
+      "branch_name": "보개·공간·게임",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "보개공간: sprite/grid2d 닫힘",
+      "original_milestone": "sprite/grid2d 닫힘",
+      "original_representative_work": "sprite skin, grid2d game input",
+      "original_completion_evidence": "sprite/grid pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 168,
+          "contains": "sprite/grid2d 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "사-3",
+      "branch": "사",
+      "branch_name": "보개·공간·게임",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "보개공간: space3d/game preview",
+      "original_milestone": "space3d/game preview",
+      "original_representative_work": "camera/HUD/simple game",
+      "original_completion_evidence": "game preview pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 169,
+          "contains": "space3d/game preview"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "사-4",
+      "branch": "사",
+      "branch_name": "보개·공간·게임",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "보개공간: asset/view 공유",
+      "original_milestone": "asset/view 공유",
+      "original_representative_work": "모양씨, asset registry",
+      "original_completion_evidence": "asset registry pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 170,
+          "contains": "asset/view 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "사-5",
+      "branch": "사",
+      "branch_name": "보개·공간·게임",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "보개공간: renderer hardening",
+      "original_milestone": "renderer hardening",
+      "original_representative_work": "backend parity/perf caps",
+      "original_completion_evidence": "renderer LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 171,
+          "contains": "renderer hardening"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "아-0",
+      "branch": "아",
+      "branch_name": "누리짐·AI 환경",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "누리짐: Gym schema skeleton",
+      "original_milestone": "Gym schema skeleton",
+      "original_representative_work": "reset/step/obs/reward/info",
+      "original_completion_evidence": "nurigym schema docs",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 181,
+          "contains": "Gym schema skeleton"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "아-1",
+      "branch": "아",
+      "branch_name": "누리짐·AI 환경",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "누리짐: reset/step 첫실행",
+      "original_milestone": "reset/step 첫실행",
+      "original_representative_work": "CartPole/GridMaze stub",
+      "original_completion_evidence": "smoke pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 182,
+          "contains": "reset/step 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "아-2",
+      "branch": "아",
+      "branch_name": "누리짐·AI 환경",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "누리짐: 대표 환경 golden",
+      "original_milestone": "대표 환경 golden",
+      "original_representative_work": "CartPole/GridMaze/Bandit",
+      "original_completion_evidence": "dataset hash pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 183,
+          "contains": "대표 환경 golden"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "아-3",
+      "branch": "아",
+      "branch_name": "누리짐·AI 환경",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "누리짐: Python/Web parity",
+      "original_milestone": "Python/Web parity",
+      "original_representative_work": "wasmtime-py + web",
+      "original_completion_evidence": "parity pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 184,
+          "contains": "Python/Web parity"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "아-4",
+      "branch": "아",
+      "branch_name": "누리짐·AI 환경",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "누리짐: dataset registry",
+      "original_milestone": "dataset registry",
+      "original_representative_work": "episode detjsonl, registry",
+      "original_completion_evidence": "dataset publish pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 185,
+          "contains": "dataset registry"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "아-5",
+      "branch": "아",
+      "branch_name": "누리짐·AI 환경",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "누리짐: training workflow",
+      "original_milestone": "training workflow",
+      "original_representative_work": "curriculum RL, benchmark",
+      "original_completion_evidence": "training workflow suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 186,
+          "contains": "training workflow"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "자-0",
+      "branch": "자",
+      "branch_name": "AI·슬기·배움틀",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기/배움틀 경계: AI 경계 문서",
+      "original_milestone": "AI 경계 문서",
+      "original_representative_work": "슬기/배움틀/코어 3층",
+      "original_completion_evidence": "boundary docs",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 196,
+          "contains": "AI 경계 문서"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "자-1",
+      "branch": "자",
+      "branch_name": "AI·슬기·배움틀",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기/배움틀 경계: SeulgiIntent smoke",
+      "original_milestone": "SeulgiIntent smoke",
+      "original_representative_work": "intent schema, Gatekeeper skeleton",
+      "original_completion_evidence": "intent pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 197,
+          "contains": "SeulgiIntent smoke"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "자-2",
+      "branch": "자",
+      "branch_name": "AI·슬기·배움틀",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기/배움틀 경계: Gatekeeper/InputSnapshot 닫힘",
+      "original_milestone": "Gatekeeper/InputSnapshot 닫힘",
+      "original_representative_work": "world-affecting AI injection",
+      "original_completion_evidence": "AI boundary pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 198,
+          "contains": "Gatekeeper/InputSnapshot 닫힘"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "자-3",
+      "branch": "자",
+      "branch_name": "AI·슬기·배움틀",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기/배움틀 경계: AI 제안 UI",
+      "original_milestone": "AI 제안 UI",
+      "original_representative_work": "슬기제안/승인/거절",
+      "original_completion_evidence": "AI support UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 199,
+          "contains": "AI 제안 UI"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "자-4",
+      "branch": "자",
+      "branch_name": "AI·슬기·배움틀",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기/배움틀 경계: model artifact 공유",
+      "original_milestone": "model artifact 공유",
+      "original_representative_work": "artifact seal/hash",
+      "original_completion_evidence": "model registry pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 200,
+          "contains": "model artifact 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "자-5",
+      "branch": "자",
+      "branch_name": "AI·슬기·배움틀",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기/배움틀 경계: replay-safe AI workflow",
+      "original_milestone": "replay-safe AI workflow",
+      "original_representative_work": "replay without AI recall",
+      "original_completion_evidence": "AI LTS suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 201,
+          "contains": "replay-safe AI workflow"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "차-0",
+      "branch": "차",
+      "branch_name": "말힘누리·RPG·규칙 기반 게임",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말힘누리 / RPG 저작: action/story 설계",
+      "original_milestone": "action/story 설계",
+      "original_representative_work": "action_method, phrase binding",
+      "original_completion_evidence": "proposal/schema",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 211,
+          "contains": "action/story 설계"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "차-1",
+      "branch": "차",
+      "branch_name": "말힘누리·RPG·규칙 기반 게임",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말힘누리 / RPG 저작: phrase/action smoke",
+      "original_milestone": "phrase/action smoke",
+      "original_representative_work": "phrase→confirmed_event",
+      "original_completion_evidence": "smoke pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 212,
+          "contains": "phrase/action smoke"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "차-2",
+      "branch": "차",
+      "branch_name": "말힘누리·RPG·규칙 기반 게임",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말힘누리 / RPG 저작: story/RPG pack",
+      "original_milestone": "story/RPG pack",
+      "original_representative_work": "actor/state/dialogue/map",
+      "original_completion_evidence": "story pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 213,
+          "contains": "story/RPG pack"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "차-3",
+      "branch": "차",
+      "branch_name": "말힘누리·RPG·규칙 기반 게임",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말힘누리 / RPG 저작: RPG Box/누리메이커",
+      "original_milestone": "RPG Box/누리메이커",
+      "original_representative_work": "map editor + script",
+      "original_completion_evidence": "authoring UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 214,
+          "contains": "RPG Box/누리메이커"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "차-4",
+      "branch": "차",
+      "branch_name": "말힘누리·RPG·규칙 기반 게임",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말힘누리 / RPG 저작: story package",
+      "original_milestone": "story package",
+      "original_representative_work": "story artifact family",
+      "original_completion_evidence": "package pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 215,
+          "contains": "story package"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "차-5",
+      "branch": "차",
+      "branch_name": "말힘누리·RPG·규칙 기반 게임",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "말힘누리 / RPG 저작: engine adapter",
+      "original_milestone": "engine adapter",
+      "original_representative_work": "Godot/native adapter",
+      "original_completion_evidence": "adapter LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 216,
+          "contains": "engine adapter"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "카-0",
+      "branch": "카",
+      "branch_name": "또니마루·공유·레지스트리",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "또니마루: platform charter",
+      "original_milestone": "platform charter",
+      "original_representative_work": "lesson/project/package/published artifact",
+      "original_completion_evidence": "platform docs",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 226,
+          "contains": "platform charter"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "카-1",
+      "branch": "카",
+      "branch_name": "또니마루·공유·레지스트리",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "또니마루: server MVP",
+      "original_milestone": "server MVP",
+      "original_representative_work": "local server, project save",
+      "original_completion_evidence": "server smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 227,
+          "contains": "server MVP"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "카-2",
+      "branch": "카",
+      "branch_name": "또니마루·공유·레지스트리",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "또니마루: publication/read API",
+      "original_milestone": "publication/read API",
+      "original_representative_work": "immutable publication, read-only API",
+      "original_completion_evidence": "API pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 228,
+          "contains": "publication/read API"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "카-3",
+      "branch": "카",
+      "branch_name": "또니마루·공유·레지스트리",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "또니마루: project/share UI",
+      "original_milestone": "project/share UI",
+      "original_representative_work": "share link, revision pin",
+      "original_completion_evidence": "share UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 229,
+          "contains": "project/share UI"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "카-4",
+      "branch": "카",
+      "branch_name": "또니마루·공유·레지스트리",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "또니마루: public registry seed",
+      "original_milestone": "public registry seed",
+      "original_representative_work": "trust/lineage/badge",
+      "original_completion_evidence": "registry seed pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 230,
+          "contains": "public registry seed"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "카-5",
+      "branch": "카",
+      "branch_name": "또니마루·공유·레지스트리",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "또니마루: platform hardening",
+      "original_milestone": "platform hardening",
+      "original_representative_work": "auth/RBAC/audit/backup",
+      "original_completion_evidence": "platform LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 231,
+          "contains": "platform hardening"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "타-0",
+      "branch": "타",
+      "branch_name": "검증·팩·도구줄",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "pack_tooling",
+      "expected_user_workflow": "검증줄 / 도구줄: pack/checker skeleton",
+      "original_milestone": "pack/checker skeleton",
+      "original_representative_work": "pack template, schema index",
+      "original_completion_evidence": "skeleton docs",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "tooling_runner_or_ci_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 241,
+          "contains": "pack/checker skeleton"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "타-1",
+      "branch": "타",
+      "branch_name": "검증·팩·도구줄",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "pack_tooling",
+      "expected_user_workflow": "검증줄 / 도구줄: runner PASS",
+      "original_milestone": "runner PASS",
+      "original_representative_work": "단일 pack runner",
+      "original_completion_evidence": "runner PASS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "tooling_runner_or_ci_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 242,
+          "contains": "runner PASS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "타-2",
+      "branch": "타",
+      "branch_name": "검증·팩·도구줄",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "pack_tooling",
+      "expected_user_workflow": "검증줄 / 도구줄: CI/golden gate",
+      "original_milestone": "CI/golden gate",
+      "original_representative_work": "golden/checker/CI",
+      "original_completion_evidence": "CI PASS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "tooling_runner_or_ci_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 243,
+          "contains": "CI/golden gate"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "타-3",
+      "branch": "타",
+      "branch_name": "검증·팩·도구줄",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "pack_tooling",
+      "expected_user_workflow": "검증줄 / 도구줄: 진단 UI/LSP",
+      "original_milestone": "진단 UI/LSP",
+      "original_representative_work": "fix-it, diagnostic viewer",
+      "original_completion_evidence": "LSP pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "tooling_runner_or_ci_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 244,
+          "contains": "진단 UI/LSP"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "타-4",
+      "branch": "타",
+      "branch_name": "검증·팩·도구줄",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "pack_tooling",
+      "expected_user_workflow": "검증줄 / 도구줄: registry 검증",
+      "original_milestone": "registry 검증",
+      "original_representative_work": "publish/install/verify",
+      "original_completion_evidence": "registry check pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "tooling_runner_or_ci_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 245,
+          "contains": "registry 검증"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "타-5",
+      "branch": "타",
+      "branch_name": "검증·팩·도구줄",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "pack_tooling",
+      "expected_user_workflow": "검증줄 / 도구줄: benchmark/LTS",
+      "original_milestone": "benchmark/LTS",
+      "original_representative_work": "perf/reference band/migration",
+      "original_completion_evidence": "benchmark suite",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "tooling_runner_or_ci_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 246,
+          "contains": "benchmark/LTS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "파-0",
+      "branch": "파",
+      "branch_name": "경제·사회·역사 시뮬레이션",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "사회세계 실험실: 케이스 카드 표준",
+      "original_milestone": "케이스 카드 표준",
+      "original_representative_work": "JOJO_CASE_CARD_V1, view_requirements",
+      "original_completion_evidence": "case schema",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 256,
+          "contains": "케이스 카드 표준"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "파-1",
+      "branch": "파",
+      "branch_name": "경제·사회·역사 시뮬레이션",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "사회세계 실험실: 기준 시장 3개 첫실행",
+      "original_milestone": "기준 시장 3개 첫실행",
+      "original_representative_work": "기준 시장/세금/가격상한",
+      "original_completion_evidence": "AGE4 case smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 257,
+          "contains": "기준 시장 3개 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "파-2",
+      "branch": "파",
+      "branch_name": "경제·사회·역사 시뮬레이션",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "사회세계 실험실: bridge/social pack",
+      "original_milestone": "bridge/social pack",
+      "original_representative_work": "model-first/agent-first/bridge",
+      "original_completion_evidence": "bridge report pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 258,
+          "contains": "bridge/social pack"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "파-3",
+      "branch": "파",
+      "branch_name": "경제·사회·역사 시뮬레이션",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "사회세계 실험실: 정책 고스트 UI",
+      "original_milestone": "정책 고스트 UI",
+      "original_representative_work": "비교 실행, 고스트 overlay",
+      "original_completion_evidence": "policy ghost pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 259,
+          "contains": "정책 고스트 UI"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "파-4",
+      "branch": "파",
+      "branch_name": "경제·사회·역사 시뮬레이션",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "사회세계 실험실: 템플릿 공유",
+      "original_milestone": "템플릿 공유",
+      "original_representative_work": "사회세계 template registry",
+      "original_completion_evidence": "social template pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 260,
+          "contains": "템플릿 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "파-5",
+      "branch": "파",
+      "branch_name": "경제·사회·역사 시뮬레이션",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "사회세계 실험실: 사회세계 LTS",
+      "original_milestone": "사회세계 LTS",
+      "original_representative_work": "교육/정책/역사 모델 안정화",
+      "original_completion_evidence": "social-world LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 261,
+          "contains": "사회세계 LTS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "하-0",
+      "branch": "하",
+      "branch_name": "교육·교재·커리큘럼",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "배움마당: 총서/차시 템플릿",
+      "original_milestone": "총서/차시 템플릿",
+      "original_representative_work": "9권+참조권+교사용",
+      "original_completion_evidence": "textbook map",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 271,
+          "contains": "총서/차시 템플릿"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "하-1",
+      "branch": "하",
+      "branch_name": "교육·교재·커리큘럼",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "배움마당: 대표 교재 첫실행",
+      "original_milestone": "대표 교재 첫실행",
+      "original_representative_work": "1권/2권/교과 샘플",
+      "original_completion_evidence": "teaching smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 272,
+          "contains": "대표 교재 첫실행"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "하-2",
+      "branch": "하",
+      "branch_name": "교육·교재·커리큘럼",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "배움마당: 차시 pack 연결",
+      "original_milestone": "차시 pack 연결",
+      "original_representative_work": "teacher_notes/student_sheet/pack",
+      "original_completion_evidence": "lesson pack PASS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 273,
+          "contains": "차시 pack 연결"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "하-3",
+      "branch": "하",
+      "branch_name": "교육·교재·커리큘럼",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "배움마당: 교사용/학생용 UI",
+      "original_milestone": "교사용/학생용 UI",
+      "original_representative_work": "배움마당 화면",
+      "original_completion_evidence": "classroom UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 274,
+          "contains": "교사용/학생용 UI"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "하-4",
+      "branch": "하",
+      "branch_name": "교육·교재·커리큘럼",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "배움마당: 공개 강좌/교재",
+      "original_milestone": "공개 강좌/교재",
+      "original_representative_work": "5분/1시간/4주 과정",
+      "original_completion_evidence": "publication pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 275,
+          "contains": "공개 강좌/교재"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "하-5",
+      "branch": "하",
+      "branch_name": "교육·교재·커리큘럼",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "ui_browser",
+      "expected_user_workflow": "배움마당: 교육 운영 LTS",
+      "original_milestone": "교육 운영 LTS",
+      "original_representative_work": "제출/평가/버전관리",
+      "original_completion_evidence": "education LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "browser_or_ui_runner_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 276,
+          "contains": "교육 운영 LTS"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "거-0",
+      "branch": "거",
+      "branch_name": "AI 개발·검증·활용·개발보조",
+      "maru": 0,
+      "maru_label": "씨앗마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기쓰기: 질문카드 설계",
+      "original_milestone": "질문카드 설계",
+      "original_representative_work": "??{...}, prompt_hash, response_hash",
+      "original_completion_evidence": "question card schema",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 286,
+          "contains": "질문카드 설계"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "거-1",
+      "branch": "거",
+      "branch_name": "AI 개발·검증·활용·개발보조",
+      "maru": 1,
+      "maru_label": "첫실행마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기쓰기: 질문카드 smoke",
+      "original_milestone": "질문카드 smoke",
+      "original_representative_work": "proposal/patch/fix-it 생성",
+      "original_completion_evidence": "toolchain smoke",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 287,
+          "contains": "질문카드 smoke"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "거-2",
+      "branch": "거",
+      "branch_name": "AI 개발·검증·활용·개발보조",
+      "maru": 2,
+      "maru_label": "닫힘마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기쓰기: AI 산출물 검증",
+      "original_milestone": "AI 산출물 검증",
+      "original_representative_work": "AI-generated DDN/lesson lint",
+      "original_completion_evidence": "AI validation pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 288,
+          "contains": "AI 산출물 검증"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "거-3",
+      "branch": "거",
+      "branch_name": "AI 개발·검증·활용·개발보조",
+      "maru": 3,
+      "maru_label": "작업실마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기쓰기: 개발보조 UI",
+      "original_milestone": "개발보조 UI",
+      "original_representative_work": "Codex 일감/교재 초안/보고서",
+      "original_completion_evidence": "authoring UI pack",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 289,
+          "contains": "개발보조 UI"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "거-4",
+      "branch": "거",
+      "branch_name": "AI 개발·검증·활용·개발보조",
+      "maru": 4,
+      "maru_label": "나눔마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기쓰기: 저작자 도구 공유",
+      "original_milestone": "저작자 도구 공유",
+      "original_representative_work": "question card template registry",
+      "original_completion_evidence": "tool registry",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 290,
+          "contains": "저작자 도구 공유"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    },
+    {
+      "cell_id": "거-5",
+      "branch": "거",
+      "branch_name": "AI 개발·검증·활용·개발보조",
+      "maru": 5,
+      "maru_label": "단단마루",
+      "workflow_surface": "cli_runtime",
+      "expected_user_workflow": "슬기쓰기: AI workflow hardening",
+      "original_milestone": "AI workflow hardening",
+      "original_representative_work": "approval/replay/audit",
+      "original_completion_evidence": "AI workflow LTS",
+      "original_status": "닫힘-동작",
+      "minimum_evidence": [
+        "source_matrix_row",
+        "candidate_pack_or_checker",
+        "product_path_execution_when_behavior_claimed"
+      ],
+      "behavior_close_requirements": [
+        "product_path_execution_pass",
+        "reproducible_pack_or_checker_pass",
+        "file_line_evidence_for_all_claims",
+        "product_cli_or_runtime_pass"
+      ],
+      "docs_close_requirements": [
+        "proposal_or_report_or_contract_exists",
+        "no_behavior_claim",
+        "file_line_evidence_for_scope"
+      ],
+      "excluded_evidence": [
+        "status_report_only",
+        "proposal_only",
+        "markdown_existence_checker_only",
+        "unrun_pack_or_checker",
+        "external_ai_claim"
+      ],
+      "current_evidence_refs": [
+        {
+          "path": "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md",
+          "line": 291,
+          "contains": "AI workflow hardening"
+        }
+      ],
+      "behavior_claim_in_contract": false,
+      "default_if_evidence_missing": "후보"
+    }
+  ],
+  "checker": "tests/run_ganada_maru_verification_contract_check.py"
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave3b_submission_inbox_v1",
+  "contract_kind": "seamgrim_wave3b_submission_inbox_product_gate",
+  "product_behavior_claim": true,
+  "classroom_exchange_schema": "seamgrim.classroom_exchange.v0",
+  "input_kind": "student_submission",
+  "batch_review_schema": "seamgrim.student_submission_inbox_batch.v0",
+  "minimum_submission_rows": 3,
+  "required_row_fields": [
+    "local_label",
+    "origin_match",
+    "prediction_present",
+    "explanation_present",
+    "run_evidence_present",
+    "observation_ref_count",
+    "control_diff",
+    "integrity_state",
+    "version_state",
+    "duplicate_state",
+    "reopenable"
+  ],
+  "reopen_button_required": true,
+  "autograding_claim": false,
+  "account_required": false,
+  "cloud_sync": false,
+  "public_upload_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "state_hash_formula_change": false,
+  "browser_runner": "tests/seamgrim_wave3b_submission_inbox_runner.mjs"
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "ddn.declarative_closure.mageum.fixture.v1",
+  "pack": "sim_mageum_box_v1",
+  "fixture_id": "box_bounce_red",
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "reaction": "튕김(e)",
+  "proposed_surface": "막음 상자 { x in [0, 10], y in [0, 10], 반응: 튕김(e=1) }",
+  "accepted_product_surface": false,
+  "runtime_landed": false,
+  "parser_landed": false,
+  "expected_status": "red_contract_only"
+}

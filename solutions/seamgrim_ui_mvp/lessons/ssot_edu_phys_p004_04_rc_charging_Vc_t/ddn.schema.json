@@ -1,0 +1,12 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "C", "type": "수" },
+    { "name": "R", "type": "수" },
+    { "name": "Vc", "type": "수" },
+    { "name": "Vin", "type": "수" },
+    { "name": "dt", "type": "수" },
+    { "name": "t", "type": "수" },
+    { "name": "t_max", "type": "수" }
+  ]
+}

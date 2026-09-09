@@ -1,0 +1,23 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave2b_quality_gate_v1",
+  "kind": "seamgrim_wave2b_final_quality_gate",
+  "wave": "wave2b",
+  "gate": "G8",
+  "browser_runner": "tests/seamgrim_wave2b_quality_gate_runner.mjs",
+  "viewports": ["1440x900", "1280x720", "1024x768", "390x844"],
+  "requires_canvas_pixel_check": true,
+  "requires_ddn_source_access": true,
+  "requires_keyboard_activation": true,
+  "requires_tooltip_and_aria": true,
+  "requires_trace_replay_stability": true,
+  "requires_cli_wasm_frontdoor_regression": true,
+  "requires_wave1_wave2a_regression": true,
+  "requires_cargo_check": true,
+  "requires_core_lang_sanity": true,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "final_korean_manim_complete_claim": false,
+  "requires_docs_ssot_clean": true
+}

@@ -1,0 +1,1 @@
+{"id":"run_archive_store","cmd":["run","pack/seamgrim_workbench_run_archive_store_v1/input.ddn"],"stdout":["G4 run archive store","마디 0\t","public_observation_trace_hash=sha256:77a57077eaaab8c89f4d1ec1159f721dd071d45eb86c0ba56a0af80f4c2b67b2"],"exit_code":0}

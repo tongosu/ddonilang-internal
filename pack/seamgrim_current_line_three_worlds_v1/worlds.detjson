@@ -1,0 +1,45 @@
+{
+  "schema": "ddn.seamgrim.current_line_three_worlds.v1",
+  "status": "behavior_closed",
+  "corpus_inclusion_claim": false,
+  "worlds": [
+    {
+      "world_concept_id": "math.linear_function",
+      "representation_id": "math.linear_function.explicit_tick.v1",
+      "representation_kind": "explicit_tick",
+      "feasibility_grade": "ga",
+      "lesson_id": "rep_math_function_line_v1",
+      "lesson_pack": "edu_seamgrim_rep_math_function_line_v1",
+      "first_delight_id": "linear-function",
+      "route_aliases": ["line", "math_function_line"],
+      "visible_controls": ["기울기", "절편", "간격"],
+      "graph_axes": ["x", "y"],
+      "view_roles": ["graph_series"]
+    },
+    {
+      "world_concept_id": "physics.projectile",
+      "representation_id": "physics.projectile.explicit_tick.v1",
+      "representation_kind": "explicit_tick",
+      "feasibility_grade": "ga",
+      "lesson_id": "rep_phys_projectile_xy_v1",
+      "lesson_pack": "edu_seamgrim_rep_phys_projectile_xy_v1",
+      "first_delight_id": "projectile",
+      "route_aliases": ["physics_projectile"],
+      "visible_controls": ["초기속도x", "초기속도y", "중력가속도"],
+      "view_roles": ["trajectory_trail"]
+    },
+    {
+      "world_concept_id": "economy.market_tax",
+      "representation_id": "economy.market_tax.explicit_tick.v1",
+      "representation_kind": "explicit_tick",
+      "feasibility_grade": "ga",
+      "lesson_id": "rep_econ_supply_demand_tax_v1",
+      "lesson_pack": "edu_seamgrim_rep_econ_supply_demand_tax_v1",
+      "first_delight_id": "market-tax",
+      "route_aliases": ["economy", "econ_supply_demand_tax"],
+      "visible_controls": ["시작가격", "세금", "수요기울기"],
+      "graph_axes": ["t", "가격"],
+      "view_roles": ["graph_series"]
+    }
+  ]
+}

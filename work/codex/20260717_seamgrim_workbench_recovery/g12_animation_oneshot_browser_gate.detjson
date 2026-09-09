@@ -1,0 +1,102 @@
+{
+  "schema": "seamgrim.workbench_recovery.gate_evidence.v1",
+  "gate": "G12",
+  "status": "PASS",
+  "recorded_at_kst": "2026-07-18T00:00:00+09:00",
+  "base_head_before_gate_commit": "a081764",
+  "goal": "animation and one-shot product browser gate",
+  "implementation_summary": [
+    "Added a dedicated browser gate for live animation, one-shot completion, and deterministic live step equivalence.",
+    "Verified official projectile and pendulum projects advance without pressing the step button.",
+    "Sampled committed state hash, semantic payload hash, and actual canvas pixel hash changes for both live verticals.",
+    "Verified pause freezes committed state, resume advances, and stop/done prevents further progression.",
+    "Verified one-shot completion disables pause/resume/step, does not auto-progress, and renders a nonblank static result.",
+    "Verified auto 5-step hashes equal paused manual 5-step hashes for the same source.",
+    "Verified continuous 10 auto steps equal 5 + pause + resume + 5 auto steps.",
+    "Verified same-frame redraw keeps semantic payload hash stable and view open/close stays outside the world state hash."
+  ],
+  "representative_result": {
+    "projectile": {
+      "project_id": "rep_phys_projectile_xy_v1",
+      "sample_count": 3,
+      "last_sample_madi": 4,
+      "distinct_state_hashes": 3,
+      "distinct_semantic_payload_hashes": 3,
+      "distinct_pixel_hashes": 3,
+      "stopped_count": 14
+    },
+    "pendulum": {
+      "project_id": "rep_phys_pendulum_wave1_v1",
+      "sample_count": 3,
+      "last_sample_madi": 6,
+      "distinct_state_hashes": 3,
+      "distinct_semantic_payload_hashes": 3,
+      "distinct_pixel_hashes": 3,
+      "stopped_count": 22
+    },
+    "oneshot": {
+      "committed_step_count": 1,
+      "pause_resume_step_disabled": true,
+      "static_view_nonblank": true
+    },
+    "equivalence": {
+      "auto_manual_equal_steps": 5,
+      "continuous_pause_resume_equal_steps": 10
+    }
+  },
+  "commands": [
+    {
+      "cmd": "node tests/seamgrim_workbench_animation_oneshot_gate_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_animation_oneshot_gate: ok"
+    },
+    {
+      "cmd": "python tests/run_seamgrim_workbench_animation_oneshot_gate_check.py",
+      "result": "PASS",
+      "evidence": "[seamgrim-workbench-animation-oneshot-gate-v1] OK behavior-closed"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_live_step_pump_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_live_step_pump: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_committed_view_verticals_browser_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_committed_view_verticals_browser: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_semantic_view_renderer_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_semantic_view_renderer: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_semantic_view_payload_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_semantic_view_payload: ok"
+    },
+    {
+      "cmd": "git diff --check",
+      "result": "PASS",
+      "evidence": "exit code 0; unrelated CRLF warnings only"
+    },
+    {
+      "cmd": "git status --short -- docs/ssot",
+      "result": "PASS",
+      "evidence": "empty"
+    }
+  ],
+  "changed_files": [
+    "tests/seamgrim_workbench_animation_oneshot_gate_runner.mjs",
+    "tests/run_seamgrim_workbench_animation_oneshot_gate_check.py"
+  ],
+  "not_claimed": [
+    "G13 four viewport product quality gate",
+    "G14 race matrix",
+    "G15 integrated full battery",
+    "G16 clean detached worktree verification",
+    "READY_TO_START_EXTERNAL_CREATOR_ROUND0",
+    "external user success"
+  ],
+  "external_user_success_count": 0
+}

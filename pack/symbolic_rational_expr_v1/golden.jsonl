@@ -1,0 +1,3 @@
+{"id":"c01_cli_definedness_obligation_fail_closed","cmd":["symbolic","simplify","(x^2 - 1)/(x - 1)"],"exit_code":1,"expected_error_code":"E_SYMBOLIC_DEFINEDNESS_OBLIGATION_REQUIRED_INTERNAL"}
+{"id":"c02_ddn_definedness_obligation_fail_closed","cmd":["run","pack/symbolic_rational_expr_v1/input.ddn","--age-target","AGE1","--trace-tier","T-OFF"],"exit_code":1,"expected_error_code":"E_SYMBOLIC_DEFINEDNESS_OBLIGATION_REQUIRED_INTERNAL"}
+

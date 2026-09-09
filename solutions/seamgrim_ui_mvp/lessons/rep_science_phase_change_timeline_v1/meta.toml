@@ -1,0 +1,7 @@
+title = "상변화와 온도 그래프"
+description = "가열하면서 고체, 융해, 액체, 기화 구간의 온도 변화를 봅니다."
+grade = "middle"
+subject = "science"
+level = "intro"
+goals = ["가열 과정에서 단계 변화(고체/융해/액체/기화/기체)를 확인한다", "잠열 구간에서 온도 정체를 관찰한다"]
+required_views = ["graph", "text"]

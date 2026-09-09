@@ -1,0 +1,110 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "rep_phys_damped_oscillation_v1",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "required_anchor_ids": [
+    "obs.time",
+    "obs.displacement",
+    "obs.velocity",
+    "obs.total_energy",
+    "obs.energy_loss"
+  ],
+  "anchors": [
+    {
+      "anchor_id": "obs.time",
+      "source_ref": {
+        "kind": "observation",
+        "key": "t"
+      },
+      "value_type": "scalar",
+      "unit": "s",
+      "label": "시간",
+      "graph_key": "t",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+        "source_span": "t <- t + dt"
+      },
+      "accessibility_name": "Damped oscillation time observation"
+    },
+    {
+      "anchor_id": "obs.displacement",
+      "source_ref": {
+        "kind": "observation",
+        "key": "x"
+      },
+      "value_type": "scalar",
+      "unit": "m",
+      "label": "변위",
+      "graph_key": "x",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+        "source_span": "x <- x + (v*dt)"
+      },
+      "accessibility_name": "Damped oscillation displacement observation"
+    },
+    {
+      "anchor_id": "obs.velocity",
+      "source_ref": {
+        "kind": "observation",
+        "key": "v"
+      },
+      "value_type": "scalar",
+      "unit": "m/s",
+      "label": "속도",
+      "graph_key": "v",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+        "source_span": "v <- v + (a*dt)"
+      },
+      "accessibility_name": "Damped oscillation velocity observation"
+    },
+    {
+      "anchor_id": "obs.total_energy",
+      "source_ref": {
+        "kind": "observation",
+        "key": "총에너지"
+      },
+      "value_type": "scalar",
+      "unit": "J",
+      "label": "총에너지",
+      "graph_key": "총에너지",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+        "source_span": "총에너지 <- 운동에너지 + 탄성에너지"
+      },
+      "accessibility_name": "Damped oscillation total energy observation"
+    },
+    {
+      "anchor_id": "obs.energy_loss",
+      "source_ref": {
+        "kind": "observation",
+        "key": "에너지손실"
+      },
+      "value_type": "scalar",
+      "unit": "J",
+      "label": "누적 에너지 손실",
+      "graph_key": "에너지손실",
+      "provenance": {
+        "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+        "source_span": "에너지손실 <- 에너지손실 + 감쇠계수 * v * v * dt"
+      },
+      "accessibility_name": "Damped oscillation energy loss observation"
+    }
+  ],
+  "measures": [],
+  "graph_cursor": {
+    "cursor_id": "graph.current.displacement",
+    "x_anchor": "obs.time",
+    "y_anchor": "obs.displacement",
+    "series_id": "x",
+    "label": "현재 변위"
+  },
+  "hash_policy": {
+    "state_hash_participation": false,
+    "view_plan_hash_candidate": true,
+    "world_draw_payload_hash_candidate_uses_world_coordinates": true,
+    "canonical_bogae_hash_claim": false
+  },
+  "primary_view_target": "graph"
+}

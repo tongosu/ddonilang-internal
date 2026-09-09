@@ -1,0 +1,14 @@
+{
+  "name": "W31_G01_state_hash",
+  "walk": 31,
+  "command": "run",
+  "entry": "../../../../../../pack/gogae3_w31_shared_stage/input.ddn",
+  "args": {
+    "madi": 1,
+    "seed": "0x0"
+  },
+  "expect": {
+    "exit": 0,
+    "state_hash": "blake3:d4a39990d5478e5ae4920f883213026ab18f2048d3168f5ed05643cf7eee2137"
+  }
+}

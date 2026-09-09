@@ -1,0 +1,94 @@
+{
+  "schema": "seamgrim.actual_container_rehearsal.contract.v1",
+  "pack": "seamgrim_actual_container_rehearsal_v1",
+  "current_gate": "G11",
+  "ready_for_container_runtime": true,
+  "actual_container_verified": false,
+  "actual_oci_build_claim": false,
+  "actual_oci_run_claim": false,
+  "actual_edge_tls_claim": false,
+  "private_idc_deployed": false,
+  "external_participant_success_count": 0,
+  "runtime_activation_policy": {
+    "install_without_approval_allowed": false,
+    "image_pull_without_approval_allowed": false,
+    "required_install_approval_env": "CONTAINER_RUNTIME_INSTALL_APPROVED",
+    "required_pull_approval_env": "CONTAINER_IMAGE_PULL_APPROVED"
+  },
+  "static_inputs": {
+    "dockerfile": "solutions/seamgrim_ui_mvp/deploy/Dockerfile",
+    "compose": "solutions/seamgrim_ui_mvp/deploy/docker-compose.yml",
+    "nginx_edge": "solutions/seamgrim_ui_mvp/deploy/nginx/seamgrim.conf",
+    "release_checker": "tests/run_seamgrim_private_pilot_release_check.py",
+    "g5_readiness_checker": "tests/run_seamgrim_actual_container_readiness_check.py",
+    "g9_storage_error_hardening_checker": "tests/run_seamgrim_storage_error_hardening_check.py",
+    "g10_local_backup_restore_rollback_checker": "tests/run_seamgrim_local_backup_restore_rollback_rehearsal_check.py",
+    "g11_actual_container_rehearsal_checker": "tests/run_seamgrim_actual_container_rehearsal_check.py"
+  },
+  "g6_g8_runtime_status": {
+    "actual_oci_build_executed": false,
+    "actual_oci_run_executed": false,
+    "actual_edge_tls_process_executed": false,
+    "blocked_reason": "container runtime and/or image pull approval unavailable"
+  },
+  "g9_local_hardening": {
+    "max_project_runs_enforced": true,
+    "max_run_checkpoints_enforced": true,
+    "max_checkpoint_canonical_bytes_enforced": true,
+    "unexpected_500_redacted": true,
+    "capability_raw_storage_forbidden": true,
+    "tamper_negative_control_required": true,
+    "existing_storage_security_recovery_checker_required": true
+  },
+  "g10_local_backup_restore_rollback": {
+    "projectile_project_required": true,
+    "pendulum_or_grid_project_required": true,
+    "application_consistent_backup_required": true,
+    "empty_target_restore_required": true,
+    "restore_compare_project_revision_object_run_capability": true,
+    "corrupt_backup_rejected": true,
+    "incomplete_backup_rejected": true,
+    "non_empty_restore_rejected_by_backup_tool": true,
+    "bad_release_rejected_before_pointer_switch": true,
+    "code_only_rollback_required": true,
+    "bounded_disk_pressure_scratch_only": true,
+    "actual_container_volume_claim": false
+  },
+  "g11_integrated_quality": {
+    "public_physics_first_project_required": true,
+    "durable_workbench_required": true,
+    "cli_wasm_freshness_required": true,
+    "cli_wasm_true_parity_required": true,
+    "cli_wasm_sync_required": true,
+    "view_only_state_hash_invariant_required": true,
+    "bounded_load_executed": false,
+    "bounded_load_blocked_reason": "actual container runtime unavailable",
+    "actual_container_behavior_evidence": false
+  },
+  "required_static_policies": {
+    "non_root_runtime_user": "seamgrim",
+    "compose_read_only": true,
+    "compose_no_new_privileges": true,
+    "compose_cap_drop_all": true,
+    "compose_internal_network": true,
+    "compose_no_host_app_port": true,
+    "operator_owned_data_volume": true,
+    "operator_owned_backup_volume": true,
+    "operator_owned_log_volume": true,
+    "nginx_http_to_https": true,
+    "nginx_tls_key_material_operator_owned": true,
+    "nginx_query_and_authorization_not_logged": true,
+    "nginx_body_limit": "2m",
+    "nginx_security_headers": [
+      "Content-Security-Policy",
+      "X-Content-Type-Options",
+      "Referrer-Policy",
+      "X-Frame-Options",
+      "Permissions-Policy"
+    ]
+  },
+  "runtime_evidence_path": "out/seamgrim_actual_container_rehearsal_v1/g5_readiness.detjson",
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false
+}

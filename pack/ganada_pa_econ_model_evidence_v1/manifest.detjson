@@ -1,0 +1,26 @@
+{
+  "schema": "ddn.ganada.remaining_stems.evidence.v1",
+  "pack": "ganada_pa_econ_model_evidence_v1",
+  "pack_kind": "representative_evidence",
+  "branch": "파",
+  "tracked_cells": ["파-0", "파-1"],
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_pa_econ_model_evidence_v1/manifest.detjson:1",
+    "tests/run_econ_model_first_g1_check.py:1",
+    "pack/sim_econ_market_v1/golden.jsonl:1"
+  ],
+  "commands": [
+    {"id": "econ_model_first_g1", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_econ_model_first_g1_check.py"], "expect_stdout_contains": "econ_model_first_g1_check: PASS"},
+    {"id": "econ_pack_set", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "sim_econ_market_v1", "econ_model_supply_demand_equilibrium_v1", "econ_model_money_supply_v1", "econ_model_tax_welfare_v1"], "expect_stdout_contains": "pack golden ok"}
+  ]
+}

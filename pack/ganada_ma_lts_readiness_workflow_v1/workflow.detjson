@@ -1,0 +1,48 @@
+{
+  "schema": "ddn.ganada.ma.lts_readiness_workflow.v1",
+  "pack": "ganada_ma_lts_readiness_workflow_v1",
+  "cell_id": "마-5",
+  "status": "product_pass_gate",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "lts_certification_claim": false,
+  "remote_lts_certification_claim": false,
+  "release_execution_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "workflow": {
+    "lts_runner_matrix_policy": "local_regression_gate",
+    "product_runner": "tests/ganada_ma_lts_readiness_runner.mjs",
+    "required_selectors": [
+      "lts-readiness-panel",
+      "lts-regression-gate",
+      "lts-operations-report",
+      "lts-boundary-warning"
+    ],
+    "required_boundaries": [
+      "lts_certification_claim:false",
+      "remote_lts_certification:false",
+      "release_execution:false",
+      "gradebook_write:false"
+    ]
+  },
+  "required_commands": [
+    {
+      "kind": "pack_golden_pass",
+      "command": ["python", "tests/run_pack_golden.py", "ganada_ma_lts_readiness_workflow_v1"],
+      "expect_stdout_contains": "pack golden ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/ganada_ma_lts_readiness_runner.mjs"],
+      "expect_stdout_contains": "ganada_ma_lts_readiness: ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/education_operations_lts_runner.mjs"],
+      "expect_stdout_contains": "education_operations_lts: ok"
+    }
+  ]
+}

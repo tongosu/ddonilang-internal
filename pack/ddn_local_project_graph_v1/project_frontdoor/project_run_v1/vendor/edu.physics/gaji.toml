@@ -1,0 +1,3 @@
+id = "edu.physics"
+version = "0.1.0"
+dependencies = { "edu.units" = "0.1.0" }

@@ -1,0 +1,21 @@
+{
+  "schema": "seamgrim.wasm.hash_verify.v1",
+  "steps": 3,
+  "baseline_a": [
+    "blake3:b077efd1902396854b4b13c94ab5beb296ad75804a6a38360245ace2cecad1ab",
+    "blake3:605259d6c4c9c379287da7d2e672f9a50b74e26a803499fa3e4ef9fc31a69670",
+    "blake3:43e3f2f5ffd9e41853c33d3422b858074aa904c8ce86b3222827b36149a10669"
+  ],
+  "baseline_b": [
+    "blake3:b077efd1902396854b4b13c94ab5beb296ad75804a6a38360245ace2cecad1ab",
+    "blake3:605259d6c4c9c379287da7d2e672f9a50b74e26a803499fa3e4ef9fc31a69670",
+    "blake3:43e3f2f5ffd9e41853c33d3422b858074aa904c8ce86b3222827b36149a10669"
+  ],
+  "changed": [
+    "blake3:b077efd1902396854b4b13c94ab5beb296ad75804a6a38360245ace2cecad1ab",
+    "blake3:605259d6c4c9c379287da7d2e672f9a50b74e26a803499fa3e4ef9fc31a69670",
+    "blake3:43e3f2f5ffd9e41853c33d3422b858074aa904c8ce86b3222827b36149a10669"
+  ],
+  "baseline_equal": true,
+  "baseline_vs_changed_different": false
+}

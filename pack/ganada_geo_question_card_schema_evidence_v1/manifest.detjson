@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.ganada.remaining_stems.evidence.v1",
+  "pack": "ganada_geo_question_card_schema_evidence_v1",
+  "pack_kind": "representative_evidence",
+  "branch": "거",
+  "tracked_cells": ["거-0", "거-1", "거-2"],
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_geo_question_card_schema_evidence_v1/manifest.detjson:1",
+    "tests/run_seulgi_question_card_schema_check.py:1",
+    "tests/question_card_validation_runner.mjs:1"
+  ],
+  "commands": [
+    {"id": "question_card_schema", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_seulgi_question_card_schema_check.py"], "expect_stdout_contains": "PASS"},
+    {"id": "question_card_smoke", "kind": "tooling_runner_or_ci_pass", "command": ["node", "tests/question_card_smoke_runner.mjs"], "expect_stdout_contains": "question_card_smoke: ok"},
+    {"id": "question_card_validation", "kind": "tooling_runner_or_ci_pass", "command": ["node", "tests/question_card_validation_runner.mjs"], "expect_stdout_contains": "question_card_validation: ok"}
+  ]
+}

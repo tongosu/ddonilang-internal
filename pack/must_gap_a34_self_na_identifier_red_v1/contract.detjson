@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a34_self_na_identifier_red_v1",
+  "track": "A",
+  "item": "A34",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:2542",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER1_V1.md:55",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A34_self_na_identifier_V1.md",
+  "cases": [
+    {
+      "id": "c01_na_self_in_imeumssi",
+      "input": "cases/c01_na_self_in_imeumssi/input.ddn",
+      "expected_red": "cases/c01_na_self_in_imeumssi/expected_red.detjson"
+    }
+  ]
+}

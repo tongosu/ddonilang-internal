@@ -1,0 +1,136 @@
+{
+  "schema": "seamgrim.private_pilot.release_contract.v1",
+  "pack": "seamgrim_private_pilot_release_contract_v1",
+  "claim_boundary": {
+    "private_idc_deployed": false,
+    "tls_operational_claim": false,
+    "capacity_claim": false,
+    "external_participant_success_count": 0
+  },
+  "required_manifest_fields": [
+    "source_commit",
+    "source_tree_hash",
+    "release_created_at",
+    "python_version",
+    "sqlite_version",
+    "rust_toolchain",
+    "teul_cli_sha256",
+    "wasm_sha256",
+    "wasm_binding_sha256",
+    "static_asset_manifest_sha256",
+    "project_store_schema",
+    "deploy_config_sha256",
+    "checker_summary"
+  ],
+  "forbidden_release_prefixes": [
+    ".git/",
+    "build/",
+    "docs/",
+    "out/",
+    "pack/",
+    "tests/",
+    "work/"
+  ],
+  "required_runtime_identity": {
+    "user": "seamgrim",
+    "root_default": false
+  },
+  "release_filesystem_policy": {
+    "read_only_possible": true,
+    "writable_paths_operator_owned": true
+  },
+  "dependency_pin_boundary": {
+    "floating_latest_allowed": false,
+    "digest_pin_without_operator_source_claim": "verification_required"
+  },
+  "service_hardening": {
+    "schema": "seamgrim.private_pilot.service_hardening_contract.v1",
+    "app_host_port_publish_allowed": false,
+    "app_expose_private_network_only": true,
+    "project_data_bind_required": true,
+    "backup_staging_bind_required": true,
+    "log_bind_required": true,
+    "release_read_only_required": true,
+    "tmpfs_build_dir_required": true,
+    "no_new_privileges_required": true,
+    "cap_drop_all_required": true,
+    "resource_bounds_required": [
+      "pids_limit",
+      "mem_limit",
+      "nofile"
+    ],
+    "api_run_body_limit_bytes": 2000000,
+    "capacity_claim": false
+  },
+  "edge_policy": {
+    "schema": "seamgrim.private_pilot.edge_policy_contract.v1",
+    "external_entry_ports": [
+      80,
+      443
+    ],
+    "http_redirects_to_https": true,
+    "tls_key_material_in_repo": false,
+    "client_max_body_size": "2m",
+    "app_json_body_limit_bytes": 2000000,
+    "write_rate_limit_required": true,
+    "slow_client_timeout_required": true,
+    "wasm_mime_required": "application/wasm",
+    "security_headers_required": [
+      "Content-Security-Policy",
+      "X-Content-Type-Options",
+      "Referrer-Policy",
+      "X-Frame-Options",
+      "Permissions-Policy"
+    ],
+    "access_log_query_or_authorization_allowed": false,
+    "browser_csp_smoke_required": true,
+    "tls_operational_claim": false
+  },
+  "health_observability": {
+    "schema": "seamgrim.private_pilot.health_observability_contract.v1",
+    "public_health_path": "/api/health",
+    "private_readiness_path": "/api/private/readiness",
+    "operator_check_path": "/api/operator/check",
+    "public_health_sensitive_detail_allowed": false,
+    "private_readiness_management_boundary_required": true,
+    "operator_check_exact_versions_required": true,
+    "operator_check_disk_backup_integrity_required": true,
+    "log_forbidden_fields": [
+      "capability",
+      "Authorization",
+      "DDN source",
+      "project snapshot",
+      "query string"
+    ],
+    "external_monitoring_vendor_required": false
+  },
+  "backup_restore": {
+    "schema": "seamgrim.private_pilot.backup_restore_contract.v1",
+    "backup_before_audit_required": true,
+    "product_backup_api_required": "SeamgrimProjectStore.backup_to",
+    "raw_live_db_copy_claim_allowed": false,
+    "backup_destination_inside_data_allowed": false,
+    "snapshot_manifest_required": true,
+    "source_commit_required": true,
+    "schema_required": true,
+    "db_and_object_hash_required": true,
+    "empty_target_restore_required": true,
+    "project_reopen_required": true,
+    "run_lineage_required": true,
+    "view_clone_required": true,
+    "corrupt_backup_rejected_before_restore": true,
+    "live_restore_automatic": false,
+    "offhost_copy_executes_by_default": false
+  },
+  "deploy_rollback": {
+    "schema": "seamgrim.private_pilot.deploy_rollback_contract.v1",
+    "immutable_release_dir_required": true,
+    "release_verify_before_pointer_switch": true,
+    "backup_before_pointer_switch": true,
+    "canary_verify_required": true,
+    "data_restore_included_in_rollback": false,
+    "bad_release_rejected_before_pointer_switch": true,
+    "idempotent_apply_required": true,
+    "current_data_deleted_by_rollback": false
+  }
+}

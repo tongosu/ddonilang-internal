@@ -1,0 +1,15 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_mageum_box_v1",
+  "kind": "declarative_closure_mageum_box_red_fixture",
+  "goal": "G7",
+  "runtime_claim": false,
+  "parser_landed_claim": false,
+  "product_code_change": false,
+  "ssot_edit_claim": false,
+  "new_language_block": false,
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "reaction": "튕김(e)",
+  "fixture": "box_fixture.detjson"
+}

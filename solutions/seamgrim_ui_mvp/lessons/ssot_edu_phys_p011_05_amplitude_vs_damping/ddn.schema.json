@@ -1,0 +1,13 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "F0", "type": "수" },
+    { "name": "c_max", "type": "수" },
+    { "name": "c_min", "type": "수" },
+    { "name": "c목록", "type": "수" },
+    { "name": "dc", "type": "수" },
+    { "name": "k", "type": "수" },
+    { "name": "m", "type": "수" },
+    { "name": "w", "type": "수" }
+  ]
+}

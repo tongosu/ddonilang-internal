@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "cs_linear_search_v1",
+  "world_concept_id": "cs.linear_search",
+  "name": "선형 탐색 단계 보기",
+  "one_line": "앞에서부터 하나씩 비교해 목표를 찾는 과정을 센다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["채비", "매김", "매마디마다", "조건"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "cs", "age_band": "middle", "textbook_candidates": ["2권 자료와 반복", "3권 상태와 마디"]},
+  "source": {"lesson_id": "rep_cs_linear_search_timeline_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_cs_linear_search_timeline_v1/lesson.ddn", "existing_pack_id": "edu_seamgrim_rep_cs_linear_search_timeline_v1", "representative_madi": 40},
+  "surfaces": ["설정", "채비", "매김", "시작할때", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:58c146a464149ad27e52401f37a030e7e919ea44de70eb860b9bbe73fdbdeb88", "trace_hash": "blake3:876752a160355155b0f000d1b19ef60bb77068bcb7d2e6438d97d170c1650662", "pilot_case_id": "cs_linear_search_v1"},
+  "few_shot": [{"audience": "child", "intent": "숫자 줄에서 목표 칸을 앞부터 찾고 몇 번 봤는지 세어줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "선형 탐색의 현재 인덱스와 비교 횟수를 마디별 상태로 보여주는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "데이터길이", "range": "4..40", "effect": "최대 비교 범위가 달라진다."}, {"parameter": "목표인덱스", "range": "0..39", "effect": "찾기까지 필요한 비교 횟수가 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_cs_linear_search_timeline_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

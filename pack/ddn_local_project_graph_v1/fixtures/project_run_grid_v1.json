@@ -1,0 +1,23 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  이름: \"격자스모크\".\n  첫글: \"./app/main.ddn\".\n\n  목표 {\n    앱: \"./app/main.ddn\".\n  }\n\n  모듈길 {\n    로컬: \"./lib\".\n  }\n}.\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "쓰임 {\n  규칙: \"./lib/grid\".\n}\n규칙.시작점수 보여주기.\n"
+    },
+    {
+      "path": "lib/grid.ddn",
+      "role": "ddn_source",
+      "utf8_text": "드러냄 {\n  시작점수.\n}\n시작점수 <- 3.\n"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "cs_state_transition_v1",
+  "world_concept_id": "cs.state_transition",
+  "name": "상태 전이와 체력 변화",
+  "one_line": "전투·피해·복귀 알림이 임자의 상태와 체력을 바꾸는 순서를 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["알림씨", "임자", "받으면", "송신", "매마디마다"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "cs", "age_band": "middle", "textbook_candidates": ["4권 임자와 사건"]},
+  "source": {"lesson_id": "rep_ddonirang_vol4_state_transition_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_ddonirang_vol4_state_transition_v1/lesson.ddn", "existing_pack_id": null, "representative_madi": 3},
+  "surfaces": ["설정", "알림씨", "임자", "받으면", "송신", "시작할때", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:b5a7d3ebcded2d52ce2cbc41b00c539da936e58b7f41947f86c3e2ca18062907", "trace_hash": "blake3:d466e5b27fcc7d8e1c19d471e20398d00ecfbc2466e661169138304ed80954d9", "pilot_case_id": "cs_state_transition_v1"},
+  "few_shot": [{"audience": "child", "intent": "전투를 시작하고 큰 피해를 받은 뒤 복귀하는 상태 변화를 보여줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "알림 송신과 조건 수신으로 임자 상태와 체력이 함께 전이되는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "피해량", "range": "0..100", "effect": "부상 상태로 넘어가는지와 남은 체력이 달라진다."}, {"parameter": "부상기준", "range": "1..100", "effect": "큰 피해를 판정하는 문턱이 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_ddonirang_vol4_state_transition_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

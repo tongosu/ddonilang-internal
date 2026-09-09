@@ -1,0 +1,33 @@
+{
+  "schema": "ddn.nurigym.vectorized_consumer.prototype_fixture.v1",
+  "consumer_layer_api_only": true,
+  "language_surface_change": false,
+  "consumer_api": "consume_vectorized_rollout(records, env_slots)",
+  "env_slots": [
+    {
+      "env_slot": 0,
+      "env_id": "nurigym.gridmaze2d",
+      "seed_stream": "gym",
+      "record_ids": [
+        "valid",
+        "noop_missing",
+        "clip"
+      ]
+    },
+    {
+      "env_slot": 1,
+      "env_id": "nurigym.gridmaze2d",
+      "seed_stream": "rollout",
+      "record_ids": [
+        "reject",
+        "shared_merge"
+      ]
+    }
+  ],
+  "perf_baseline_connection": {
+    "pack": "perf_baseline_v1",
+    "axis": "gym_rollout_step_per_sec",
+    "case_id": "nurigym_rollout_short_proxy_v1",
+    "measurement_command": "python tests/run_perf_baseline_check.py"
+  }
+}

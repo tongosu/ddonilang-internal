@@ -1,0 +1,23 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "tool_world_diff_v1",
+  "kind": "world_diff_toolchain_and_human_review_behavior",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "product_ui_change": true,
+  "toolchain_entrypoint": "teul-cli world-diff",
+  "artifact_schema": "ddn.world_diff.v1",
+  "supported_axes": ["control_init", "control_range", "control_step", "control_type", "control_added", "control_removed"],
+  "same_input_empty_diff": true,
+  "candidate_authority_before_review": "none",
+  "human_confirmation_required": true,
+  "automatic_apply": false,
+  "file_write": false,
+  "full_ast_diff_claim": false,
+  "solveplan_diff_claim": false,
+  "first_divergence_madi_claim": false,
+  "cli_wasm_state_hash_parity_claim": false,
+  "browser_runner": "tests/seamgrim_world_diff_review_runner.mjs",
+  "checker": "tests/run_tool_world_diff_v1_check.py",
+  "docs_ssot_change": false
+}

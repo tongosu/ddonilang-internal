@@ -1,0 +1,1 @@
+{"id":"c00_ganada_ka_platform_hardening_marker","cmd":["run","pack/ganada_ka_platform_hardening_v1/input.ddn"],"stdout":["GANADA_KA_PLATFORM_HARDENING_V1","cell=카-5","surface=ttonimaru_platform_hardening","ganada_matrix_upgrade_claim=false","production_deploy_claim=false"],"exit_code":0}

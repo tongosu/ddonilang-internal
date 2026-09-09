@@ -1,0 +1,27 @@
+{
+  "schema": "seamgrim.state.v0",
+  "state_hash": "sha256:t5e-authoritative-state",
+  "source_hash": "sha256:t5e-source",
+  "result_identity": "result:t5e-grid",
+  "tick_id": 7,
+  "console_log": [
+    { "tick": 7, "line_no": 1, "kind": "output", "text": "가😀" },
+    { "tick": 7, "line_no": 2, "kind": "output", "text": "#P" }
+  ],
+  "view_meta": {
+    "grid2d": {
+      "schema": "seamgrim.nurimaker.grid_state.v1",
+      "gridW": 3,
+      "gridH": 2,
+      "tileSize": 18,
+      "tiles": [[1, 0, 2], [0, 3, 0]],
+      "palette": { "0": "#ffffff", "1": "#111111", "2": "#22aa22", "3": "#ffaa00" },
+      "actors": [
+        { "id": "player", "row": 1, "col": 0, "label": "P", "fill": "#ff0000" },
+        { "id": "goal", "row": 0, "col": 2, "label": "G", "fill": "#00ff00" }
+      ]
+    }
+  },
+  "resources": { "value": {}, "value_json": {} },
+  "patch": []
+}

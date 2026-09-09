@@ -1,0 +1,11 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "MULTI_DISPATCH_SPECIFIC_TYPE_WINS",
+  "expected_future_result": "specific",
+  "notes": [
+    "정수32가 수보다 구체적이면 정수32 후보가 선택되어야 한다.",
+    "현재 user_seeds는 이름당 단일 UserSeed라 overload 후보를 보존하지 않는다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

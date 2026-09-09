@@ -1,0 +1,1 @@
+{"id":"c00_ganada_execution_evidence_registry_marker","cmd":["run","pack/ganada_execution_evidence_registry_v1/input.ddn"],"stdout":["GANADA_EXECUTION_EVIDENCE_REGISTRY_V1","tracked_cells=8","matrix_cells_total=90","docs_only_behavior_closure_allowed=false","strong_evidence_required=true","checker=tests/run_ganada_execution_evidence_registry_check.py"],"exit_code":0}

@@ -1,0 +1,44 @@
+{
+  "schema": "seamgrim.private_idc_round0_readiness.contract.v1",
+  "pack": "seamgrim_private_idc_round0_readiness_v1",
+  "current_gate": "G16",
+  "private_idc_deployed": false,
+  "ready_for_invited_round0": false,
+  "round0_evidence_recorded": false,
+  "external_participant_success_count": 0,
+  "remote_commands_allowed_without_activation": false,
+  "required_non_secret_inputs": [
+    "PRIVATE_IDC_DEPLOY_APPROVED",
+    "PRIVATE_IDC_SSH_ALIAS",
+    "PRIVATE_IDC_EXPECTED_HOSTKEY_SHA256",
+    "PRIVATE_IDC_PRIVATE_DOMAIN",
+    "PRIVATE_IDC_ALLOWED_NETWORK",
+    "PRIVATE_IDC_RUNTIME_POLICY",
+    "PRIVATE_IDC_DATA_ROOT",
+    "PRIVATE_IDC_BACKUP_TARGET",
+    "PRIVATE_IDC_TLS_MODE",
+    "PRIVATE_IDC_ROLLBACK_OWNER"
+  ],
+  "input_sheet": "work/codex/20260711_idc_deployment_intake/IDC_INPUT_SHEET.md",
+  "g12_checker": "tests/run_seamgrim_private_idc_round0_readiness_check.py",
+  "g16_round0_required_files": [
+    "work/beta/seamgrim_round0/ROUND0_OPERATIONS_PACKET_V1_20260713.md",
+    "work/beta/seamgrim_round0/PARTICIPANT_TASK_CARD.md",
+    "work/beta/seamgrim_round0/MODERATOR_GUIDE.md",
+    "work/beta/seamgrim_round0/SESSION_CHECKLIST.md",
+    "work/beta/seamgrim_round0/OBSERVATION_LOG_TEMPLATE.detjson",
+    "work/beta/seamgrim_round0/RESULT_SUMMARY_TEMPLATE.detjson"
+  ],
+  "g16_round0_claims": {
+    "participant_count": 0,
+    "success_count": 0,
+    "invitation_sent": false,
+    "hidden_telemetry_added": false,
+    "ready_for_invited_round0": false,
+    "blocked_reason": "private IDC canary and invitation approval missing"
+  },
+  "runtime_evidence_path": "out/seamgrim_private_idc_round0_readiness_v1/latest.detjson",
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false
+}

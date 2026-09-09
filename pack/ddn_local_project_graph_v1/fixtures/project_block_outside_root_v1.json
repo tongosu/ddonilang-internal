@@ -1,0 +1,18 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  이름: \"밖블록\".\n  첫글: \"./app/main.ddn\".\n}.\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "프로젝트 {\n  이름: \"여기아님\".\n}.\n"
+    }
+  ]
+}

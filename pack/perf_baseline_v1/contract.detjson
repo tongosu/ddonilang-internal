@@ -1,0 +1,22 @@
+{
+  "schema": "ddn.perf_baseline.pack.contract.v1",
+  "pack_id": "perf_baseline_v1",
+  "evidence_tier": "runner_skeleton",
+  "closure_claim": "no",
+  "product_perf_claim": false,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "source_pack": "benchmark_baseline_v1",
+  "runner": "tools/scripts/run_perf_baseline_v1.py",
+  "baseline": "pack/perf_baseline_v1/baseline.detjson",
+  "axes": [
+    "tick_throughput",
+    "wasm_load_first_frame",
+    "gym_rollout_step_per_sec"
+  ],
+  "regression_gate": {
+    "allowed_worse_ratio": 0.2,
+    "gate_kind": "median_wall_clock_ms_ratio",
+    "fail_on_regression_supported": true
+  }
+}

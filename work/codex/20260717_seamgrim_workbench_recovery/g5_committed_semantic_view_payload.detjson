@@ -1,0 +1,43 @@
+{
+  "claims": {
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g5_status": "G5_COMMITTED_SEMANTIC_VIEW_PAYLOAD_COMPLETE",
+    "state_hash_formula_change": false
+  },
+  "determinism": {
+    "same_frame_same_view_artifact_hash": "EQUAL",
+    "same_frame_same_view_payload_hash": "EQUAL",
+    "view_config_change_runtime_state_hash": "UNCHANGED",
+    "view_config_change_semantic_payload_hash": "CHANGED"
+  },
+  "payload_contract": {
+    "committed_frame_fields": [
+      "run_id",
+      "frame_id",
+      "madi",
+      "state_hash",
+      "source_hash"
+    ],
+    "ordered_observations_preserve_runtime_channel_order": true,
+    "schema": "seamgrim.workbench.semantic_view_payload.v1",
+    "trajectory_uses_committed_frames_only": true,
+    "view_binding_schema": "seamgrim.workbench.semantic_view_binding.v1",
+    "view_config_participates_in_state_hash": false
+  },
+  "product_binding": {
+    "canvas_committed_frame_dataset": "PASS",
+    "canvas_semantic_payload_hash": "PASS",
+    "semantic_observation_dom": "PASS",
+    "single_file_active_frame": "PASS",
+    "virtual_project_active_frame": "SUPPORTED"
+  },
+  "schema": "seamgrim.workbench_recovery.g5_committed_semantic_view_payload.v1",
+  "verification": {
+    "execution_lifecycle_browser_runner": "PASS",
+    "git_diff_check": "PASS",
+    "live_step_pump_browser_runner": "PASS",
+    "node_syntax": "PASS",
+    "semantic_view_payload_unit": "PASS"
+  }
+}

@@ -1,0 +1,1 @@
+{"id":"c01_lesson_plan_roundtrip_marker","cmd":["run","pack/lesson_plan_roundtrip_v1/input.ddn"],"stdout":["LESSON_PLAN_ROUNDTRIP_V1","lesson_plan.v0.toml parses to normalized product AST","observe change compare explain activities are browser-runner verified","list/code editor roundtrip is semantic-lossless","DDN syntax and runtime state_hash are unchanged"],"exit_code":0}

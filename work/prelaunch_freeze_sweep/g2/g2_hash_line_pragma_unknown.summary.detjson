@@ -1,0 +1,22 @@
+{
+  "canonical_ddn": "#미정의: 값\n1 보여주기.\n",
+  "configured_ticks": null,
+  "effective_ticks": 1,
+  "final_row": {},
+  "output_log_texts": [
+    "1"
+  ],
+  "output_rows": [],
+  "parse_warnings": [],
+  "preprocessed_ddn": "#미정의: 값\r\n1 보여주기.\r\n",
+  "resources": {
+    "value_json": {}
+  },
+  "schema": "ddn.teul_cli.run_summary.v1",
+  "state_hash": "blake3:f83311d1881e4ab122c25dd8c3a9e30349858a9cac5f6066f609c52c4ed9db45",
+  "stdout_lines": [
+    "1"
+  ],
+  "ticks_run": 1,
+  "trace_hash": "blake3:10668d8713b9e33e8ba921c7037f6cd471541134a50b7757673a0c3d10cea6a6"
+}

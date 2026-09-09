@@ -1,0 +1,505 @@
+{
+  "critical_path_candidate": [
+    "V1-C001",
+    "V1-C002",
+    "V1-C003",
+    "V1-C031",
+    "V1-C032",
+    "V1-C034",
+    "V1-C035",
+    "V1-C037",
+    "V1-C043",
+    "V1-C044",
+    "V1-C045",
+    "V1-C046",
+    "V1-C047",
+    "V1-C054"
+  ],
+  "nodes": [
+    {
+      "capability_id": "V1-C001",
+      "dependencies": [],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C002",
+      "dependencies": [
+        "V1-C001",
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C003",
+      "dependencies": [
+        "V1-C001",
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C004",
+      "dependencies": [
+        "V1-C001"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C005",
+      "dependencies": [
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C006",
+      "dependencies": [
+        "V1-C001",
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C007",
+      "dependencies": [
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C008",
+      "dependencies": [
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C009",
+      "dependencies": [
+        "V1-C002",
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C010",
+      "dependencies": [
+        "V1-C004",
+        "V1-C009"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C011",
+      "dependencies": [
+        "V1-C009",
+        "V1-C008"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C012",
+      "dependencies": [
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C013",
+      "dependencies": [
+        "V1-C009",
+        "V1-C026"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C014",
+      "dependencies": [
+        "V1-C004",
+        "V1-C009"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C015",
+      "dependencies": [
+        "V1-C014",
+        "V1-C009"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C016",
+      "dependencies": [
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C017",
+      "dependencies": [
+        "V1-C007",
+        "V1-C016"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C018",
+      "dependencies": [
+        "V1-C005",
+        "V1-C016",
+        "V1-C017"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C019",
+      "dependencies": [
+        "V1-C001",
+        "V1-C009"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C020",
+      "dependencies": [
+        "V1-C001",
+        "V1-C019"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C021",
+      "dependencies": [
+        "V1-C001",
+        "V1-C022"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C022",
+      "dependencies": [
+        "V1-C004"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C023",
+      "dependencies": [
+        "V1-C022"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C024",
+      "dependencies": [
+        "V1-C023",
+        "V1-C028"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C025",
+      "dependencies": [
+        "V1-C004",
+        "V1-C009",
+        "V1-C016"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C026",
+      "dependencies": [
+        "V1-C004",
+        "V1-C005"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C027",
+      "dependencies": [
+        "V1-C026"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C028",
+      "dependencies": [
+        "V1-C027",
+        "V1-C029"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C029",
+      "dependencies": [
+        "V1-C026"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C030",
+      "dependencies": [
+        "V1-C001",
+        "V1-C026"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C031",
+      "dependencies": [
+        "V1-C001",
+        "V1-C026",
+        "V1-C030"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C032",
+      "dependencies": [
+        "V1-C031",
+        "V1-C041"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C033",
+      "dependencies": [
+        "V1-C026",
+        "V1-C029"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C034",
+      "dependencies": [
+        "V1-C031",
+        "V1-C027"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C035",
+      "dependencies": [
+        "V1-C034",
+        "V1-C031"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C036",
+      "dependencies": [
+        "V1-C033",
+        "V1-C035"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C037",
+      "dependencies": [
+        "V1-C035",
+        "V1-C036",
+        "V1-C038",
+        "V1-C039"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C038",
+      "dependencies": [
+        "V1-C027",
+        "V1-C035"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C039",
+      "dependencies": [
+        "V1-C022",
+        "V1-C036"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C040",
+      "dependencies": [
+        "V1-C022",
+        "V1-C024",
+        "V1-C039"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C041",
+      "dependencies": [
+        "V1-C001",
+        "V1-C031"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C042",
+      "dependencies": [
+        "V1-C002",
+        "V1-C003",
+        "V1-C041"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C043",
+      "dependencies": [
+        "V1-C031"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C044",
+      "dependencies": [
+        "V1-C043",
+        "V1-C032",
+        "V1-C034"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C045",
+      "dependencies": [
+        "V1-C044",
+        "V1-C037"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C046",
+      "dependencies": [
+        "V1-C043"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C047",
+      "dependencies": [
+        "V1-C043",
+        "V1-C041"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    },
+    {
+      "capability_id": "V1-C048",
+      "dependencies": [
+        "V1-C006",
+        "V1-C009"
+      ],
+      "gate_status": "NOT_IN_V1_FLOOR",
+      "required": false
+    },
+    {
+      "capability_id": "V1-C049",
+      "dependencies": [
+        "V1-C005",
+        "V1-C028"
+      ],
+      "gate_status": "NOT_IN_V1_FLOOR",
+      "required": false
+    },
+    {
+      "capability_id": "V1-C050",
+      "dependencies": [
+        "V1-C026",
+        "V1-C028"
+      ],
+      "gate_status": "NOT_IN_V1_FLOOR",
+      "required": false
+    },
+    {
+      "capability_id": "V1-C051",
+      "dependencies": [
+        "V1-C028",
+        "V1-C030"
+      ],
+      "gate_status": "NOT_IN_V1_FLOOR",
+      "required": false
+    },
+    {
+      "capability_id": "V1-C052",
+      "dependencies": [
+        "V1-C031",
+        "V1-C032",
+        "V1-C047"
+      ],
+      "gate_status": "NOT_IN_V1_FLOOR",
+      "required": false
+    },
+    {
+      "capability_id": "V1-C053",
+      "dependencies": [
+        "V1-C026",
+        "V1-C028",
+        "V1-C050"
+      ],
+      "gate_status": "NOT_IN_V1_FLOOR",
+      "required": false
+    },
+    {
+      "capability_id": "V1-C054",
+      "dependencies": [
+        "V1-C045",
+        "V1-C046",
+        "V1-C047",
+        "V1-C037"
+      ],
+      "gate_status": "OPEN",
+      "required": true
+    }
+  ],
+  "program_id": "DDN_V1_PRODUCT_CLOSURE_LONG_RANGE_R1",
+  "schema": "ddn.v1_dependency_dag.r1"
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "ddn.cli_wasm.post_wasm_shared_changes.contract.v1",
+  "scope": "G5 post-WASM shared runtime/source metadata boundary",
+  "runtime_semantics_change": false,
+  "state_hash_formula_change": false,
+  "trace_hash_formula_change": false,
+  "bogae_hash_formula_change": false,
+  "required_report_checks": [
+    "public_wasm_api",
+    "configured_madi",
+    "initial_input",
+    "step_input",
+    "seulgi_injection",
+    "after_ai_input_state",
+    "reset_input",
+    "restore_input",
+    "state_hash_exposed"
+  ],
+  "required_cargo_tests": [
+    "w23_network_sam_state_hash_is_stable",
+    "replay_sam_replays_snapshots_in_order"
+  ],
+  "product_wasm_expectations": {
+    "frame_source_person": {
+      "label": "사람",
+      "code": 0
+    },
+    "seulgi_packet_source": {
+      "label": "슬기",
+      "code": 1
+    },
+    "configured_madi_fixture": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c10_setting_madi_count/input.ddn",
+    "configured_madi_expected": 3,
+    "net_event_source_product_injection": "not_exposed_by_wasm_api"
+  },
+  "non_claims": [
+    "No state_hash, trace_hash, or bogae_hash formula is changed.",
+    "No new DDN syntax is added.",
+    "NetEvent source metadata is covered by existing Rust product tests because the public WASM API has no net-event injection method.",
+    "This contract does not claim full CLI/WASM single runtime closure."
+  ]
+}

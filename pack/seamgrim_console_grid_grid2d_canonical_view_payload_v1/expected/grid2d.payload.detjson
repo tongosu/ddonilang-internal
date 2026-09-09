@@ -1,0 +1,33 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:d588d72f",
+  "content": {
+    "family_contract_version": "grid2d.v1_candidate",
+    "grid": {
+      "actors": [
+        { "actor_id": "player", "col": 0, "row": 1, "symbol": "P" },
+        { "actor_id": "goal", "col": 2, "row": 0, "symbol": "G" }
+      ],
+      "cols": 3,
+      "rows": 2,
+      "tiles": [[1, 0, 2], [0, 3, 0]]
+    }
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "grid2d",
+  "identity": {
+    "observation_projection_identity": "",
+    "result_identity": "result:t5e-grid",
+    "source_hash": "sha256:t5e-source",
+    "state_hash": "sha256:t5e-authoritative-state",
+    "tick_id": 7,
+    "view_hash": ""
+  },
+  "provenance": {
+    "classification": "AUTHORITATIVE_STRUCTURED",
+    "input_authority": "native_authoritative_structured_input",
+    "source": "canonical_grid2d_authoritative_state"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

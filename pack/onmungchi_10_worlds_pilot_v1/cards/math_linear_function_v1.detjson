@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "math_linear_function_v1",
+  "world_concept_id": "math.linear_function",
+  "name": "일차함수 그래프",
+  "one_line": "기울기와 절편을 바꾸며 직선의 변화를 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["설정", "채비", "매김", "매마디마다", "조건"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "math", "age_band": "middle", "textbook_candidates": ["1권 값과 식", "3권 상태와 마디"]},
+  "source": {"lesson_id": "rep_math_function_line_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/lesson.ddn", "existing_pack_id": "edu_seamgrim_rep_math_function_line_v1", "representative_madi": 24},
+  "surfaces": ["설정", "채비", "매김", "시작할때", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:5843606909bebb67056ff1ec3c10e569d8e7b1e7a9417a1012f06490147a3696", "trace_hash": "blake3:2fe642be37c3165ac225ec27531e45e3000e7803faeae69fc52850ec54914fa1", "pilot_case_id": "math_linear_function_v1"},
+  "few_shot": [{"audience": "child", "intent": "기울기와 y 절편을 바꾸며 직선이 어떻게 움직이는지 보여줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "일차함수의 기울기와 절편 변화를 x-y 관찰로 비교하는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "기울기", "range": "-5..5", "effect": "직선의 기울기와 증가 방향이 바뀐다."}, {"parameter": "절편", "range": "-20..20", "effect": "직선이 위아래로 이동한다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_math_function_line_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

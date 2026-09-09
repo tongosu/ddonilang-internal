@@ -1,0 +1,30 @@
+{
+  "schema": "ddn.ganada.ka.platform_hardening.v1",
+  "pack": "ganada_ka_platform_hardening_v1",
+  "cell_id": "카-5",
+  "status": "product_pass_gate",
+  "product_surface": "ttonimaru_platform_hardening",
+  "source_pack": "ttonimaru_registry_5_v1",
+  "product_runner": "tests/ganada_ka_platform_hardening_runner.mjs",
+  "source_runner": "tests/ttonimaru_platform_hardening_runner.mjs",
+  "source_pack_claim_note": "ttonimaru_registry_5_v1 may claim its local product tier; Ganada matrix upgrade is not claimed here.",
+  "ganada_matrix_upgrade_claim": false,
+  "public_registry_final_claim": false,
+  "registry_publish_claim": false,
+  "production_deploy_claim": false,
+  "cloud_account_claim": false,
+  "cryptographic_signing_claim": false,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_ka_platform_hardening_v1/workflow.detjson:1",
+    "tests/ganada_ka_platform_hardening_runner.mjs:1",
+    "tests/ttonimaru_platform_hardening_runner.mjs:1",
+    "pack/ttonimaru_registry_5_v1/contract.detjson:1"
+  ]
+}

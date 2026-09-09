@@ -1,0 +1,37 @@
+{
+  "block_kind_counts": {
+    "assign": 1,
+    "charim_block": 1,
+    "charim_item_const_step": 1,
+    "charim_item_plain": 1,
+    "charim_item_var": 1,
+    "hook_start": 1,
+    "hook_tick": 1,
+    "if_else": 1,
+    "show": 3
+  },
+  "block_plan_schema": "ddn.block_editor_plan.v1",
+  "canon_after": "채비 {\n  g:수 = (9.8) 매김 {\n    범위: 1..20.\n    간격: 0.1.\n  }.\n  t:변수 <- 0.\n  안내:글 = \"초기\".\n}.\n(시작)할때 {\n  안내 보여주기.\n}.\n(매마디)마다 {\n  t <- t + 1.\n  만약 t < 3 이라면 {\n    t 보여주기.\n  } 아니면 {\n    g 보여주기.\n  }.\n}.\n",
+  "canon_after_hash": "sha256:3e5218b4b1eea1679ae0877da1565ec6388468df221ea4028ed6a67e42207a11",
+  "canon_before": "채비 {\n  g:수 = (9.8) 매김 {\n    범위: 1..20.\n    간격: 0.1.\n  }.\n  t:변수 <- 0.\n  안내:글 = \"초기\".\n}.\n(시작)할때 {\n  안내 보여주기.\n}.\n(매마디)마다 {\n  t <- t + 1.\n  만약 t < 3 이라면 {\n    t 보여주기.\n  } 아니면 {\n    g 보여주기.\n  }.\n}.\n",
+  "canon_before_hash": "sha256:3e5218b4b1eea1679ae0877da1565ec6388468df221ea4028ed6a67e42207a11",
+  "canon_equal": true,
+  "decode_errors": [],
+  "encoded_ddn": "채비 {\n  g:수 = (9.8) 매김 {\n    범위: 1..20.\n    간격: 0.1.\n  }.\n\n  t:변수 <- 0.\n\n  안내:글 = \"초기\".\n}.\n\n(시작)할때 {\n  안내 보여주기.\n}.\n\n(매마디)마다 {\n  t <- t + 1.\n\n  만약 t < 3 이라면 {\n    t 보여주기.\n  } 아니면 {\n    g 보여주기.\n  }.\n}.\n",
+  "encoded_hash": "sha256:1236d69f374da38a70676fa124dc0a6e0a9f1a6d1b54b9f7148a44f8e464a6c7",
+  "flat_json": {
+    "digest": "sha256:a9542e0c99c7aa17cb1423f527cef53e6074b8938fdbf60d8b577e486e59f715",
+    "edge_count": 0,
+    "node_count": 0,
+    "schema": "ddn.guseong_flatten_plan.v1"
+  },
+  "pack": "block_editor_roundtrip_v1",
+  "raw_block_count": 0,
+  "raw_blocks": [],
+  "schema": "ddn.block_editor_roundtrip_smoke.v1",
+  "top_level_block_kinds": [
+    "charim_block",
+    "hook_start",
+    "hook_tick"
+  ]
+}

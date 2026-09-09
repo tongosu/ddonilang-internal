@@ -1,0 +1,25 @@
+{
+  "schema": "ddn.education_physics_vertical_slice_g5.contract.v1",
+  "pack_id": "education_physics_vertical_slice_g5_v1",
+  "goal": "G5 education + physics vertical slice evidence",
+  "evidence_tier": "pack_skeleton_plus_existing_product_smoke_reference",
+  "closure_grade": "닫힘-문서",
+  "scoped_behavior_evidence": {
+    "browser_delivery_smoke_command": "python tests/run_seamgrim_wasm_web_smoke_contract_pack_check.py",
+    "claim_scope": "existing Seamgrim WASM/browser delivery smoke only",
+    "does_not_claim_physics_lesson_browser_rendering": true
+  },
+  "linked_existing_evidence": [
+    "pack/stdlib_l1_integrators_g1_v1/README.md",
+    "pack/stdlib_l1_integrators_g1_v1/input.ddn",
+    "pack/stdlib_l1_integrators_g1_v1/golden.jsonl",
+    "pack/std_bogae_graph2d_v1/contract.detjson",
+    "tests/run_seamgrim_wasm_web_smoke_contract_pack_check.py",
+    "tests/run_stdlib_l1_integrators_g1_check.py"
+  ],
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_change": false,
+  "natural_language_direct_execution": false,
+  "product_physics_browser_workflow_claim": false
+}

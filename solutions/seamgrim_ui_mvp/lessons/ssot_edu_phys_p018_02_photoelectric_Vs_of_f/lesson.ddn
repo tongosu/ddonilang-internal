@@ -1,0 +1,28 @@
+// stateful-sim preview(auto): range sampler -> step sim
+
+(시작)할때 {
+  f <- 0.0.
+}.
+
+(매마디)마다 {
+  // 출력은 숫자만. (f, Vs) 순서.
+
+  k <- 1.0.
+  f0 <- 2.5.
+
+  f_min <- 0.0.
+  f_max <- 6.0.
+  df <- 0.05.
+
+  { f <= f_max }인것 일때 {
+    Vs <- k*(f - f0).
+    { Vs < 0 }인것 일때 {
+      Vs <- 0.
+    }.
+    보임 {
+      f: f.
+      Vs: Vs.
+    }.
+    f <- f + (df).
+  }.
+}.

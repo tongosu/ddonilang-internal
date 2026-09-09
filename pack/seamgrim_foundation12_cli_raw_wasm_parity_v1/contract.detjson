@@ -1,0 +1,46 @@
+{
+  "schema": "seamgrim.foundation12.cli_raw_wasm_parity.contract.v1",
+  "goal": "CODEX_SUPERLONG_GOAL_DDN_CLI_WASM_SINGLE_RUNTIME_CLOSURE_V1_20260712 G6",
+  "lesson_ids": [
+    "elem_math_number_line",
+    "elem_math_fraction_line",
+    "elem_math_rectangle_area",
+    "elem_science_daily_temperature",
+    "elem_econ_allowance_budget",
+    "elem_econ_store_stock",
+    "rep_math_function_line_v1",
+    "rep_phys_pendulum_wave1_v1",
+    "rep_phys_projectile_xy_v1",
+    "rep_econ_supply_demand_tax_v1",
+    "rep_phys_damped_oscillation_v1",
+    "high_math_derivative"
+  ],
+  "cli_frontdoor": "cargo run --quiet --manifest-path tool/Cargo.toml -- run-summary <lesson.ddn> --madi 2 --summary-json <tmp>",
+  "wasm_frontdoor": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js DdnWasmVm(<same lesson.ddn>).runTicksParsed(2) + wasm_execution_envelope_json(<same lesson.ddn>, 2)",
+  "same_source_surface": "solutions/seamgrim_ui_mvp/lessons/<lesson_id>/lesson.ddn",
+  "required_strict_evidence": [
+    "canonical_ddn_comparison",
+    "warning_codes_equal",
+    "configured_ticks_equal",
+    "final_row_cli_subset_equal",
+    "final_row_comparison",
+    "output_rows_comparison",
+    "output_log_comparison",
+    "execution_envelope_comparison",
+    "state_hash_comparison",
+    "state_hash_policy",
+    "state_hash_formula_change"
+  ],
+  "state_hash_policy": "strict_equality",
+  "state_hash_formula_change": false,
+  "trace_hash_formula_change": false,
+  "bogae_hash_formula_change": false,
+  "new_ddn_syntax": false,
+  "docs_ssot_edit": false,
+  "full_single_runtime_closure_claim": false,
+  "non_claims": [
+    "This pack does not claim full CLI/WASM single runtime closure.",
+    "This pack does not add new language syntax or runtime hash inputs.",
+    "Browser product workflow is covered by existing Wave3B Foundation12 checks and is not the G6 raw WASM parity surface."
+  ]
+}
