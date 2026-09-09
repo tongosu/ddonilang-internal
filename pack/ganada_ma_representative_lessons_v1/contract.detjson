@@ -1,0 +1,50 @@
+{
+  "schema": "ddn.ganada.ma.representative_lessons.v1",
+  "pack": "ganada_ma_representative_lessons_v1",
+  "branch": "마",
+  "product_behavior_claim": true,
+  "behavior_scope": "Existing representative lesson DDN smoke golden execution and lesson catalog discoverability.",
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "docs_ssot_change": false,
+  "lessons": [
+    {
+      "domain": "math",
+      "lesson_id": "math_parabola",
+      "catalog_ref": "solutions/seamgrim_ui_mvp/lessons/index.json:1400",
+      "lesson_ddn": "solutions/seamgrim_ui_mvp/lessons_rewrite_v1/math_parabola/lesson.ddn",
+      "smoke_golden": "pack/seamgrim_curriculum_batch_smoke_v1/smoke_math_parabola.v1.json",
+      "batch_golden_ref": "pack/seamgrim_curriculum_batch_smoke_v1/golden.jsonl:130"
+    },
+    {
+      "domain": "physics",
+      "lesson_id": "physics_projectile",
+      "catalog_ref": "solutions/seamgrim_ui_mvp/lessons/index.json:1454",
+      "lesson_ddn": "solutions/seamgrim_ui_mvp/lessons_rewrite_v1/physics_projectile/lesson.ddn",
+      "smoke_golden": "pack/seamgrim_curriculum_batch_smoke_v1/smoke_physics_projectile.v1.json",
+      "batch_golden_ref": "pack/seamgrim_curriculum_batch_smoke_v1/golden.jsonl:27"
+    },
+    {
+      "domain": "econ",
+      "lesson_id": "econ_supply_demand",
+      "catalog_ref": "solutions/seamgrim_ui_mvp/lessons/index.json:189",
+      "lesson_ddn": "solutions/seamgrim_ui_mvp/lessons_rewrite_v1/econ_supply_demand/lesson.ddn",
+      "smoke_golden": "pack/seamgrim_curriculum_batch_smoke_v1/smoke_econ_supply_demand.v1.json",
+      "batch_golden_ref": "pack/seamgrim_curriculum_batch_smoke_v1/golden.jsonl:137"
+    },
+    {
+      "domain": "science",
+      "lesson_id": "rep_science_phase_change_timeline_v1",
+      "catalog_ref": "solutions/seamgrim_ui_mvp/lessons/index.json:1563",
+      "lesson_ddn": "solutions/seamgrim_ui_mvp/lessons/rep_science_phase_change_timeline_v1/lesson.ddn",
+      "smoke_golden": "pack/ganada_ma_representative_lessons_v1/smoke_rep_science_phase_change_timeline.v1.json",
+      "batch_golden_ref": "tests/run_seamgrim_subject_representative_examples_check.py:39"
+    }
+  ],
+  "commands": [
+    ["python", "tests/run_pack_golden.py", "ganada_ma_representative_lessons_v1"],
+    ["python", "tests/run_seamgrim_lesson_run_preset_rail_check.py"],
+    ["node", "tests/seamgrim_lesson_run_preset_rail_runner.mjs"]
+  ]
+}

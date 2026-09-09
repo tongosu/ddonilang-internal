@@ -1,0 +1,17 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_seum_tick_phase_v1",
+  "kind": "declarative_closure_seum_tick_phase_product",
+  "goal": "G2",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "ssot_edit_claim": false,
+  "artifact_schema": "ddn.solveplan.v1",
+  "product_entrypoint": "teul-cli run --solveplan-out",
+  "expected_artifact": "expected_solveplan_phase.detjson",
+  "phase": {
+    "name": "seum_solve",
+    "tick_order": ["state_read", "seum_solve", "state_write", "hook_next_segment"]
+  },
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation"
+}

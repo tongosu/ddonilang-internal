@@ -1,0 +1,34 @@
+{
+  "schema": "ddn.nuri_madi_phase_trace_g1.contract.v1",
+  "pack_id": "nuri_madi_phase_trace_g1_v1",
+  "evidence_tier": "pack_skeleton",
+  "closure_grade": "닫힘-문서",
+  "behavior_closure_claim": false,
+  "product_runtime_path_verified": false,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_change": false,
+  "source_refs": [
+    "docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:48",
+    "docs/ssot/ssot/SSOT_PLATFORM_v24.12.9.md:60",
+    "docs/ssot/ssot/SSOT_OPEN_ISSUES_v24.12.9.md:45",
+    "docs/ssot/ssot/SSOT_OPEN_ISSUES_v24.12.9.md:51"
+  ],
+  "linked_existing_action_status_evidence": [
+    "pack/nurigym_shared_sync_action_pipeline_v1/contract.detjson",
+    "tools/teul-cli/src/cli/nurigym.rs"
+  ],
+  "required_fixtures": [
+    "phase_trace.detjson",
+    "action_record.detjson",
+    "write_conflict_fatal.detjson"
+  ],
+  "required_phases": ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7"],
+  "required_action_statuses": ["맞음", "가만히", "잘림", "거부"],
+  "write_conflict": {
+    "error_code": "E_MADI_WRITE_CONFLICT",
+    "fatal": true,
+    "payload_shape_finalized": false,
+    "decision_needed": "OI-NURI-WRITE-CONFLICT-ERROR-01"
+  }
+}

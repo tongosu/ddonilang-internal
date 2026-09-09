@@ -1,0 +1,31 @@
+{
+  "schema": "ddn.ganada.la.malblock_share_seed.v1",
+  "pack": "ganada_la_malblock_share_seed_v1",
+  "cell_id": "라-4",
+  "status": "product_pass_gate",
+  "workflow": "malblock_example_local_export_preview",
+  "local_export_only": true,
+  "public_registry_publish_claim": false,
+  "public_link_creation_claim": false,
+  "cloud_sync_claim": false,
+  "product_runners": [
+    "tests/studio_local_share_and_packaging_browser_runner.mjs",
+    "tests/studio_registry_share_seed_export_action_runner.mjs"
+  ],
+  "supporting_checks": [
+    "tests/run_seamgrim_package_registry_surface_check.py"
+  ],
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_la_malblock_share_seed_v1/workflow.detjson:1",
+    "tests/studio_local_share_and_packaging_browser_runner.mjs:1",
+    "tests/studio_registry_share_seed_export_action_runner.mjs:1",
+    "tests/run_seamgrim_package_registry_surface_check.py:1"
+  ]
+}

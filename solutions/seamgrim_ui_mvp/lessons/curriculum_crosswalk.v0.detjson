@@ -1,0 +1,106 @@
+{
+  "schema": "seamgrim.curriculum_crosswalk.v0",
+  "claim_boundary": {
+    "canonical_curriculum_alignment": false,
+    "copies_curriculum_standard_text": false,
+    "docs_ssot_change": false,
+    "source": "docs/context/roadmap/SEAMGRIM_DDONIRANG_K12_UNIVERSITY_STEM_CURRICULUM_MASTERPLAN_V1_20260712.md"
+  },
+  "refs": {
+    "ccss.math.function": {
+      "description": "Function relationship and graph interpretation reference.",
+      "label": "함수 관계와 그래프",
+      "source_url": "https://corestandards.org/mathematics-standards/"
+    },
+    "cee.econ.market": {
+      "description": "Market price, demand, supply, and policy-effect reference.",
+      "label": "시장과 제도",
+      "source_url": "https://www.councilforeconed.org/policy-advocacy/k-12-standards/"
+    },
+    "kr2022.econ.market.candidate": {
+      "description": "Korean curriculum candidate link for market, price, and policy discussion.",
+      "label": "시장 가격과 정책",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "kr2022.math.middle.function.candidate": {
+      "description": "Korean curriculum candidate link for middle-school change and relation.",
+      "label": "중등 변화와 관계",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "kr2022.physics.motion.candidate": {
+      "description": "Korean curriculum candidate link for motion, force, and energy inquiry.",
+      "label": "운동과 에너지",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "ngss.practice.analyze_data": {
+      "description": "Analyze and interpret data.",
+      "label": "자료 해석",
+      "source_url": "https://www.nextgenscience.org/three-dimensional-learning"
+    },
+    "ngss.practice.modeling": {
+      "description": "Develop and use models.",
+      "label": "모델 만들기",
+      "source_url": "https://www.nextgenscience.org/three-dimensional-learning"
+    },
+    "ngss.practice.plan_investigation": {
+      "description": "Plan and carry out investigations.",
+      "label": "실험 설계",
+      "source_url": "https://www.nextgenscience.org/three-dimensional-learning"
+    },
+    "kr2022.math.elementary.number.candidate": {
+      "description": "Korean curriculum candidate link for elementary number, fraction, and number-line sense.",
+      "label": "초등 수와 연산",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "kr2022.math.elementary.geometry.candidate": {
+      "description": "Korean curriculum candidate link for elementary area and shape measurement.",
+      "label": "초등 도형과 측정",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "kr2022.science.elementary.data.candidate": {
+      "description": "Korean curriculum candidate link for elementary observation, data, and daily science inquiry.",
+      "label": "초등 과학 관찰과 자료",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "kr2022.econ.personal_finance.candidate": {
+      "description": "Candidate link for elementary personal finance and simple stock-flow economic reasoning.",
+      "label": "생활 경제와 흐름",
+      "source_url": "https://ncic.re.kr/"
+    },
+    "kr2022.math.high.calculus.candidate": {
+      "description": "Korean curriculum candidate link for high-school rate of change and derivative interpretation.",
+      "label": "고등 변화율과 도함수",
+      "source_url": "https://ncic.re.kr/"
+    }
+  },
+  "concept_spine": {
+    "cause_effect": "원인과 결과",
+    "change_rate": "변화율",
+    "energy_flow": "에너지 흐름",
+    "feedback_balance": "피드백과 균형",
+    "measurement_unit": "측정과 단위",
+    "relation_function": "관계와 함수",
+    "state_time": "상태와 시간"
+  },
+  "crosscutting": {
+    "cause_effect": "원인과 결과",
+    "patterns": "패턴",
+    "scale_rate": "척도와 비율",
+    "stability_change": "안정성과 변화",
+    "systems": "시스템"
+  },
+  "misconceptions": {
+    "damping_means_no_motion": "감쇠가 있으면 즉시 멈춘다고 생각함",
+    "graph_height_is_slope": "그래프의 높이를 기울기로 착각함",
+    "projectile_speed_constant": "포사체 속도가 항상 같다고 생각함",
+    "tax_only_moves_price": "세금이 가격만 바꾸고 거래량은 바꾸지 않는다고 생각함",
+    "pendulum_longer_means_faster": "줄이 길수록 항상 더 빨라진다고 생각함",
+    "number_line_position_as_count": "수직선 위치를 칸 개수와 항상 같다고 생각함",
+    "fraction_denominator_only": "분모만 보면 분수 크기를 알 수 있다고 생각함",
+    "area_adds_not_multiplies": "넓이가 가로와 세로의 곱이 아니라 합이라고 생각함",
+    "temperature_changes_jump": "하루 기온이 중간 과정 없이 바로 바뀐다고 생각함",
+    "budget_income_only": "잔액이 수입만으로 정해지고 지출 흐름은 작다고 생각함",
+    "stock_replenishes_instantly": "재고가 주문과 동시에 바로 보충된다고 생각함",
+    "derivative_is_same_as_function": "도함수 값을 원래 함수값과 같다고 생각함"
+  }
+}

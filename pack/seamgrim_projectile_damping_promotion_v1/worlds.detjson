@@ -1,0 +1,26 @@
+{
+  "schema": "seamgrim.projectile_damping_promotion.v1",
+  "claim_boundary": {
+    "canonical_curriculum_alignment": false,
+    "external_student_success_claim": false,
+    "state_hash_formula_change": false,
+    "new_ddn_syntax": false,
+    "five_lesson_completion": false
+  },
+  "worlds": [
+    {
+      "lesson_id": "rep_phys_projectile_xy_v1",
+      "world_id": "rep_phys_projectile_xy_v1",
+      "source_status": "existing_representative",
+      "expected_primary_view": "space2d",
+      "workflow": ["route_load", "curriculum_inquiry", "run_evidence", "project_save", "project_reopen"]
+    },
+    {
+      "lesson_id": "rep_phys_damped_oscillation_v1",
+      "world_id": "rep_phys_damped_oscillation_v1",
+      "source_status": "promoted_from_ssot_edu_phys_p011_01_underdamped_xt",
+      "expected_primary_view": "graph",
+      "workflow": ["route_load", "curriculum_inquiry", "run_evidence", "project_save", "project_reopen"]
+    }
+  ]
+}

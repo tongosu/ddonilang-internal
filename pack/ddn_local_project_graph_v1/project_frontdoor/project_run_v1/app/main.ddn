@@ -1,0 +1,6 @@
+쓰임 {
+  운동: "./lib/운동".
+  물리: "./vendor/edu.physics/ddn/constants".
+}
+운동.속도구하기 보여주기.
+물리.중력 보여주기.

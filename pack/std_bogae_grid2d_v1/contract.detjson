@@ -1,0 +1,23 @@
+{
+  "schema": "ddn.std_bogae_grid2d.contract.v1",
+  "pack_id": "std_bogae_grid2d_v1",
+  "evidence_tier": "pack_skeleton",
+  "closure_grade": "닫힘-문서",
+  "behavior_closure_claim": false,
+  "rendering_smoke_claim": false,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "world_state_mutation": false,
+  "profile": "grid2d",
+  "core_pack": "std_bogae_core_v1",
+  "linked_existing_grid2d_evidence": [
+    "pack/bogae_grid2d_smoke_v1",
+    "pack/std_grid_game_bogae_web_out_determinism_v1",
+    "pack/nurimaker_grid_replay_v1"
+  ],
+  "hash_truth": {
+    "bogae_hash_source": "payload_or_DrawList_bytes",
+    "pixel_hash_truth": false,
+    "algorithm": "blake3"
+  }
+}

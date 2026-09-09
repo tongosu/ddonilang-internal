@@ -1,0 +1,17 @@
+{
+  "canonical_body_hash": "sha256:01c89efd00e0cd0669fd250ffc567d87e9dc5219b5f228f90e8de40103ff625e",
+  "cert_algo": "sha256-proto",
+  "cert_manifest_schema": "ddn.cert_manifest.v1",
+  "contract_diag_count": 0,
+  "profile": "abort",
+  "proof_runtime_hash": "sha256:f9817cbc9ac1e3e5c01251a08a87a9d5db3e4a33143bc22203f88dd4e1cd416d",
+  "proof_subject_hash": "sha256:03ef37172134663c8f70068db0c93d518ce07df771520846bc3663f59bf85823",
+  "schema": "ddn.proof_certificate_v1_runtime_candidate.v1",
+  "solver_translation_hash": "sha256:7da0f8af0de2f96d1c9f35b88fed301652231800f435d93ae4485731d475baba",
+  "source_proof_kind": "run_contract_certificate_v1",
+  "source_proof_path": "pack/age1_immediate_proof_case_analysis_solver_open_smoke_v1/proof.actual.detjson",
+  "source_proof_schema": "ddn.proof.detjson.v0",
+  "state_hash": "blake3:23bd38196ca3c8e8d7d4c69a21c6def1aebafc9eface7a1fd76f3d2f1721dd5b",
+  "trace_hash": "blake3:976c6049a389417e709d5376f0a94463926768dbde3d58c7b97987b33b9c7c50",
+  "verified": false
+}

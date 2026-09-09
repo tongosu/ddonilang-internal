@@ -1,0 +1,74 @@
+{
+  "schema": "ddn.nuri_madi_phase_trace_g1.action_record.v1",
+  "pack_id": "nuri_madi_phase_trace_g1_v1",
+  "phase_link": {
+    "raw_action_phase": "P2",
+    "merge_phase": "P3",
+    "apply_phase": "P4"
+  },
+  "records": [
+    {
+      "case_id": "valid_move",
+      "agent_id": "agent.alpha",
+      "recv_seq": 1,
+      "raw_action": {"kind": "move", "dx": 1, "dy": 0},
+      "resolved_action": {"kind": "move", "dx": 1, "dy": 0},
+      "normalized_action": {"kind": "move", "dx": 1, "dy": 0},
+      "action_status": "맞음",
+      "merge_candidate": true,
+      "merged_action": {"kind": "move", "dx": 1, "dy": 0},
+      "applied_action": {"kind": "move", "dx": 1, "dy": 0}
+    },
+    {
+      "case_id": "missing_noop",
+      "agent_id": "agent.beta",
+      "recv_seq": 2,
+      "raw_action": null,
+      "resolved_action": {"kind": "noop"},
+      "normalized_action": {"kind": "noop"},
+      "action_status": "가만히",
+      "merge_candidate": true,
+      "merged_action": {"kind": "noop"},
+      "applied_action": {"kind": "noop"}
+    },
+    {
+      "case_id": "clipped_move",
+      "agent_id": "agent.gamma",
+      "recv_seq": 3,
+      "raw_action": {"kind": "move", "dx": 99, "dy": 0},
+      "resolved_action": {"kind": "move", "dx": 99, "dy": 0},
+      "normalized_action": {"kind": "move", "dx": 1, "dy": 0},
+      "action_status": "잘림",
+      "merge_candidate": true,
+      "merged_action": {"kind": "move", "dx": 1, "dy": 0},
+      "applied_action": {"kind": "move", "dx": 1, "dy": 0}
+    },
+    {
+      "case_id": "rejected_unknown",
+      "agent_id": "agent.delta",
+      "recv_seq": 4,
+      "raw_action": {"kind": "teleport", "x": 10, "y": 10},
+      "resolved_action": null,
+      "normalized_action": null,
+      "action_status": "거부",
+      "merge_candidate": false,
+      "merged_action": null,
+      "applied_action": null
+    }
+  ],
+  "invariants": [
+    {
+      "id": "status_four_kinds_observed",
+      "ok": true,
+      "statuses": ["맞음", "가만히", "잘림", "거부"]
+    },
+    {
+      "id": "reject_excluded_before_merge",
+      "ok": true
+    },
+    {
+      "id": "raw_and_merged_actions_both_visible",
+      "ok": true
+    }
+  ]
+}

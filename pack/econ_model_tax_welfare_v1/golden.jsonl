@@ -1,0 +1,1 @@
+{"id":"c01_tax_welfare_linear_market","cmd":["run","pack/econ_model_tax_welfare_v1/input.ddn"],"stdout":["econ_model_first","tax_welfare","60","50","625","625","500","50"],"exit_code":0}

@@ -1,0 +1,41 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "lang_seum_linear_v1",
+  "kind": "declarative_closure_solveplan_s1_product",
+  "goal": "G1",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "ssot_edit_claim": false,
+  "artifact_schema": "ddn.solveplan.v1",
+  "required_fields": [
+    "schema",
+    "source_hash",
+    "stage",
+    "method",
+    "relations",
+    "unknowns",
+    "lowering",
+    "diagnostics",
+    "state_hash_inputs"
+  ],
+  "stage": "S1",
+  "method": "linear_system_bounded_exact_v1",
+  "boundary": {
+    "accept_unknown_count": 8,
+    "reject_unknown_count": 9,
+    "reject_code": "E_SEUM_UNSUPPORTED"
+  },
+  "tie_break": "source_declaration_order",
+  "source_fixtures": [
+    "source_s1_n8.ddn",
+    "source_s1_n9_reject.ddn",
+    "source_s1_tiebreak.ddn"
+  ],
+  "expected_artifacts": [
+    "expected_solveplan_s1_n8.detjson",
+    "expected_solveplan_s1_n9_reject.detjson",
+    "expected_solveplan_s1_tiebreak.detjson"
+  ],
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation",
+  "product_entrypoint": "teul-cli run --solveplan-out"
+}

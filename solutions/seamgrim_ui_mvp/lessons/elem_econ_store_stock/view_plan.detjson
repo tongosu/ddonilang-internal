@@ -1,0 +1,17 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "elem_econ_store_stock",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "graph",
+  "required_anchor_ids": ["obs.time", "obs.stock", "obs.demand", "obs.reorder"],
+  "anchors": [
+    {"anchor_id": "obs.time", "source_ref": {"kind": "observation", "key": "t"}, "value_type": "scalar", "unit": "tick", "label": "마디", "accessibility_name": "재고 흐름 마디", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_econ_store_stock/lesson.ddn", "source_span": "t <- t + 1"}},
+    {"anchor_id": "obs.stock", "source_ref": {"kind": "observation", "key": "재고"}, "value_type": "scalar", "unit": "개", "label": "재고", "accessibility_name": "현재 재고", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_econ_store_stock/lesson.ddn", "source_span": "재고 <- 재고 - 판매"}},
+    {"anchor_id": "obs.demand", "source_ref": {"kind": "observation", "key": "수요"}, "value_type": "scalar", "unit": "개/tick", "label": "수요", "accessibility_name": "이번 마디 수요", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_econ_store_stock/lesson.ddn", "source_span": "수요 <- 기본수요 + 수요증가 * t"}},
+    {"anchor_id": "obs.reorder", "source_ref": {"kind": "observation", "key": "발주"}, "value_type": "scalar", "unit": "개", "label": "발주", "accessibility_name": "발주 여부와 수량", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_econ_store_stock/lesson.ddn", "source_span": "발주 <- 보충량"}}
+  ],
+  "measures": [],
+  "graph_cursor": {"cursor_id": "graph.current.stock", "x_anchor": "obs.time", "y_anchor": "obs.stock", "series_id": "재고", "label": "현재 재고"},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

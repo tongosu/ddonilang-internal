@@ -1,0 +1,22 @@
+{
+  "schema": "ddn.nurigym_step_record_v02_consumer_g6.contract.v1",
+  "pack_id": "nurigym_step_record_v02_consumer_g6_v1",
+  "goal": "G6 AI Gym consumer and step_record.v0.2 additive prototype",
+  "evidence_tier": "consumer_tool_layer_prototype",
+  "closure_grade": "닫힘-문서",
+  "linked_existing_evidence": [
+    "pack/nurigym_shared_sync_action_pipeline_v1/contract.detjson",
+    "tests/run_nurigym_shared_sync_action_pipeline_pack_check.py",
+    "tools/teul-cli/src/cli/nurigym.rs",
+    "pack/perf_baseline_v1/baseline.detjson",
+    "tests/run_perf_baseline_check.py",
+    "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707.md"
+  ],
+  "additive_only": true,
+  "public_schema_required_field_change": false,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_change": false,
+  "gymnasium_compatible_consumer_claim": false,
+  "vectorized_consumer_layer_only": true
+}

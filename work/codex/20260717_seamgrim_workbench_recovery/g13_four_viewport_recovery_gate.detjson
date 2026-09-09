@@ -1,0 +1,159 @@
+{
+  "schema": "seamgrim.workbench_recovery.gate_evidence.v1",
+  "gate": "G13",
+  "status": "PASS",
+  "base_head_before_gate_commit": "cabe136",
+  "claim_level": "behavior-closed",
+  "goal": {
+    "summary": "Close the Seamgrim Workbench product quality gate across 1440x900, 1024x768, 778x912, and 390x844 browser viewports.",
+    "required_contracts": [
+      "DDN source and primary view remain reachable",
+      "first-screen management-only inputs are absent",
+      "unrelated project controls are absent",
+      "canvas dimensions are positive",
+      "canvas is nonblank and changes with time",
+      "side open/close refits primary view",
+      "overlay moves with primary coordinates",
+      "magnifier is gated before target selection",
+      "horizontal overflow is absent",
+      "incoherent button/label overlap is absent",
+      "console errors and key warnings are absent"
+    ]
+  },
+  "implementation": {
+    "product_changes": [
+      "Capped the compact viewport project list with internal scrolling.",
+      "Made setup controls span the full control grid.",
+      "Kept tablet controls compact with a four-column grid and smaller input/card spacing.",
+      "Reordered mobile sections so run strip, file tabs, and workbench layout precede the control grid."
+    ],
+    "test_changes": [
+      "Added a four-viewport Playwright browser gate runner.",
+      "Added a Python wrapper that validates the runner, output summary, screenshots, canvas evidence, browser issues, and SSOT cleanliness."
+    ]
+  },
+  "artifacts": {
+    "summary": "out/seamgrim_workbench_g13/summary.detjson",
+    "screenshots": [
+      "out/seamgrim_workbench_g13/workbench_g13_1440x900.png",
+      "out/seamgrim_workbench_g13/workbench_g13_1024x768.png",
+      "out/seamgrim_workbench_g13/workbench_g13_778x912.png",
+      "out/seamgrim_workbench_g13/workbench_g13_390x844.png"
+    ],
+    "screenshots_committed": false
+  },
+  "viewport_results": [
+    {
+      "viewport": "1440x900",
+      "canvas_first": {
+        "width": 410,
+        "height": 494,
+        "non_white": 9076,
+        "pixel_hash": "fnv1a32:f4a91632",
+        "state_hash": "blake3:5f117174da2b30626401ef9fd0f6a8bf4f01117c88c2287d97a6062e31f6949d",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:8710c3a9"
+      },
+      "canvas_second": {
+        "width": 410,
+        "height": 494,
+        "non_white": 8942,
+        "pixel_hash": "fnv1a32:6eafe3bc",
+        "state_hash": "blake3:bb583e44f9c327285b12c59bb5ea36ce969cd6933c58d85e2385d5a93ada997b",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:e64df8e6"
+      },
+      "browser_issues": []
+    },
+    {
+      "viewport": "1024x768",
+      "canvas_first": {
+        "width": 320,
+        "height": 240,
+        "non_white": 7961,
+        "pixel_hash": "fnv1a32:228ef9c4",
+        "state_hash": "blake3:5f117174da2b30626401ef9fd0f6a8bf4f01117c88c2287d97a6062e31f6949d",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:8710c3a9"
+      },
+      "canvas_second": {
+        "width": 320,
+        "height": 240,
+        "non_white": 7832,
+        "pixel_hash": "fnv1a32:c3036c7b",
+        "state_hash": "blake3:bb583e44f9c327285b12c59bb5ea36ce969cd6933c58d85e2385d5a93ada997b",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:e64df8e6"
+      },
+      "browser_issues": []
+    },
+    {
+      "viewport": "778x912",
+      "canvas_first": {
+        "width": 320,
+        "height": 240,
+        "non_white": 7961,
+        "pixel_hash": "fnv1a32:228ef9c4",
+        "state_hash": "blake3:5f117174da2b30626401ef9fd0f6a8bf4f01117c88c2287d97a6062e31f6949d",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:8710c3a9"
+      },
+      "canvas_second": {
+        "width": 320,
+        "height": 240,
+        "non_white": 7832,
+        "pixel_hash": "fnv1a32:c3036c7b",
+        "state_hash": "blake3:bb583e44f9c327285b12c59bb5ea36ce969cd6933c58d85e2385d5a93ada997b",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:e64df8e6"
+      },
+      "browser_issues": []
+    },
+    {
+      "viewport": "390x844",
+      "canvas_first": {
+        "width": 338,
+        "height": 318,
+        "non_white": 7866,
+        "pixel_hash": "fnv1a32:14536292",
+        "state_hash": "blake3:5f117174da2b30626401ef9fd0f6a8bf4f01117c88c2287d97a6062e31f6949d",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:8710c3a9"
+      },
+      "canvas_second": {
+        "width": 338,
+        "height": 318,
+        "non_white": 7723,
+        "pixel_hash": "fnv1a32:84cfa903",
+        "state_hash": "blake3:bb583e44f9c327285b12c59bb5ea36ce969cd6933c58d85e2385d5a93ada997b",
+        "semantic_payload_hash": "candidate:fnv1a32:semantic_view:e64df8e6"
+      },
+      "browser_issues": []
+    }
+  ],
+  "commands": [
+    {
+      "command": "node tests/seamgrim_workbench_four_viewport_recovery_gate_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_workbench_four_viewport_recovery_gate_check.py",
+      "status": "PASS"
+    },
+    {
+      "command": "node tests/seamgrim_workbench_progressive_disclosure_browser_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node tests/seamgrim_workbench_project_controls_browser_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASS"
+    },
+    {
+      "command": "git status --short -- docs/ssot",
+      "status": "PASS_EMPTY"
+    }
+  ],
+  "known_non_claims": [
+    "G14 race matrix is not claimed by this gate.",
+    "G15 canonical approved gate suite migration is not claimed by this gate.",
+    "G16 final ready evidence is not claimed by this gate.",
+    "External deployment, production hosting, and SSOT text changes are not claimed."
+  ]
+}

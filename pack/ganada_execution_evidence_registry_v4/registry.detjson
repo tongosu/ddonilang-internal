@@ -1,0 +1,276 @@
+{
+  "schema": "ddn.ganada.execution_evidence_registry.v4",
+  "pack": "ganada_execution_evidence_registry_v4",
+  "source_registry": "ganada_execution_evidence_registry_v3",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "scope": "Ganada W6-W8 evidence registry: previous W6-W7 gates plus remaining stems 다/사/아/차/파/거",
+  "matrix_cells_total": 90,
+  "inherited_total_tracked_cells_count": 17,
+  "prior_v4_tracked_cells_count": 2,
+  "remaining_stem_tracked_cells_count": 36,
+  "tracked_cells_count": 38,
+  "repair_gates_count": 3,
+  "branch_reaudit_gate_count": 6,
+  "representative_evidence_gate_count": 12,
+  "remaining_stem_gate_count": 18,
+  "total_tracked_cells_after_inheritance": 55,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "behavior_closed_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "docs_only_behavior_closure_allowed": false,
+  "strong_evidence_required_for_behavior_close": true,
+  "strong_evidence_kinds": [
+    "pack_golden_pass",
+    "product_cli_or_runtime_pass",
+    "browser_or_ui_runner_pass",
+    "tooling_runner_or_ci_pass"
+  ],
+  "weak_evidence_kinds": [
+    "doc_report",
+    "proposal",
+    "markdown_existence_checker_only",
+    "status_token_only"
+  ],
+  "prior_v4_tracked_cells": [
+    {
+      "cell_id": "카-5",
+      "branch": "카",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ka5_platform_hardening",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_ka_platform_hardening_check.py"],
+          "expect_stdout_contains": "ganada_ka_platform_hardening_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ka_platform_hardening_v1/workflow.detjson:1",
+        "tests/ganada_ka_platform_hardening_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-5",
+      "branch": "라",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la5_editor_stability",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_la_editor_stability_check.py"],
+          "expect_stdout_contains": "ganada_la_editor_stability_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_editor_stability_v1/workflow.detjson:1",
+        "tests/run_ganada_la_editor_stability_check.py:1"
+      ]
+    }
+  ],
+  "remaining_stem_tracked_cells": [
+    "다-0", "다-1", "다-2", "다-3", "다-4", "다-5",
+    "사-0", "사-1", "사-2", "사-3", "사-4", "사-5",
+    "아-0", "아-1", "아-2", "아-3", "아-4", "아-5",
+    "차-0", "차-1", "차-2", "차-3", "차-4", "차-5",
+    "파-0", "파-1", "파-2", "파-3", "파-4", "파-5",
+    "거-0", "거-1", "거-2", "거-3", "거-4", "거-5"
+  ],
+  "remaining_stem_gates": [
+    {
+      "id": "da_branch_reaudit",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_da_branch_execution_reaudit_check.py"],
+      "expect_stdout_contains": "ganada_da_branch_execution_reaudit_check: PASS",
+      "file_line_refs": ["pack/ganada_da_branch_execution_reaudit_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "da_math_core",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_da_math_core_evidence_check.py"],
+      "expect_stdout_contains": "ganada_da_math_core_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_da_math_core_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "da_math_workflow",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_da_math_workflow_evidence_check.py"],
+      "expect_stdout_contains": "ganada_da_math_workflow_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_da_math_workflow_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "sa_branch_reaudit",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_sa_branch_execution_reaudit_check.py"],
+      "expect_stdout_contains": "ganada_sa_branch_execution_reaudit_check: PASS",
+      "file_line_refs": ["pack/ganada_sa_branch_execution_reaudit_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "sa_bogae_standard",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_sa_bogae_standard_evidence_check.py"],
+      "expect_stdout_contains": "ganada_sa_bogae_standard_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_sa_bogae_standard_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "sa_bogae_game_renderer",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_sa_bogae_game_renderer_evidence_check.py"],
+      "expect_stdout_contains": "ganada_sa_bogae_game_renderer_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_sa_bogae_game_renderer_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "a_branch_reaudit",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_a_branch_execution_reaudit_check.py"],
+      "expect_stdout_contains": "ganada_a_branch_execution_reaudit_check: PASS",
+      "file_line_refs": ["pack/ganada_a_branch_execution_reaudit_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "a_nurigym_env",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_a_nurigym_env_evidence_check.py"],
+      "expect_stdout_contains": "ganada_a_nurigym_env_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_a_nurigym_env_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "a_nurigym_step_record",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_a_nurigym_step_record_evidence_check.py"],
+      "expect_stdout_contains": "ganada_a_nurigym_step_record_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_a_nurigym_step_record_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "cha_branch_reaudit",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_cha_branch_execution_reaudit_check.py"],
+      "expect_stdout_contains": "ganada_cha_branch_execution_reaudit_check: PASS",
+      "file_line_refs": ["pack/ganada_cha_branch_execution_reaudit_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "cha_rpg_malhim",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_cha_rpg_malhim_evidence_check.py"],
+      "expect_stdout_contains": "ganada_cha_rpg_malhim_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_cha_rpg_malhim_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "cha_rpg_ui_adapter",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_cha_rpg_ui_adapter_evidence_check.py"],
+      "expect_stdout_contains": "ganada_cha_rpg_ui_adapter_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_cha_rpg_ui_adapter_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "pa_branch_reaudit",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_pa_branch_execution_reaudit_check.py"],
+      "expect_stdout_contains": "ganada_pa_branch_execution_reaudit_check: PASS",
+      "file_line_refs": ["pack/ganada_pa_branch_execution_reaudit_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "pa_econ_model",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_pa_econ_model_evidence_check.py"],
+      "expect_stdout_contains": "ganada_pa_econ_model_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_pa_econ_model_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "pa_social_world",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_pa_social_world_evidence_check.py"],
+      "expect_stdout_contains": "ganada_pa_social_world_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_pa_social_world_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "geo_branch_reaudit",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_geo_branch_execution_reaudit_check.py"],
+      "expect_stdout_contains": "ganada_geo_branch_execution_reaudit_check: PASS",
+      "file_line_refs": ["pack/ganada_geo_branch_execution_reaudit_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "geo_question_card_schema",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_geo_question_card_schema_evidence_check.py"],
+      "expect_stdout_contains": "ganada_geo_question_card_schema_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_geo_question_card_schema_evidence_v1/manifest.detjson:1"]
+    },
+    {
+      "id": "geo_ai_dev_workflow",
+      "kind": "tooling_runner_or_ci_pass",
+      "command": ["python", "tests/run_ganada_geo_ai_dev_workflow_evidence_check.py"],
+      "expect_stdout_contains": "ganada_geo_ai_dev_workflow_evidence_check: PASS",
+      "file_line_refs": ["pack/ganada_geo_ai_dev_workflow_evidence_v1/manifest.detjson:1"]
+    }
+  ],
+  "repair_gates": [
+    {
+      "id": "repair_malblock_authoring_ui",
+      "commands": [
+        {
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_malblock_authoring_ui_check.py"],
+          "expect_stdout_contains": "[malblock-authoring-ui-v1] OK"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_malblock_authoring_ui_check.py:1",
+        "pack/ganada_stale_checker_repair_v1/repair.detjson:1"
+      ]
+    },
+    {
+      "id": "repair_studio_malblock_workbench",
+      "commands": [
+        {
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_studio_malblock_workbench_integration_check.py"],
+          "expect_stdout_contains": "studio_malblock_workbench_integration_check: ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_studio_malblock_workbench_integration_check.py:1",
+        "pack/ganada_stale_checker_repair_v1/repair.detjson:1"
+      ]
+    },
+    {
+      "id": "repair_malblock_roundtrip_subset",
+      "commands": [
+        {
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_seamgrim_malblock_roundtrip_subset_check.py"],
+          "expect_stdout_contains": "[seamgrim-malblock-roundtrip-subset] ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_seamgrim_malblock_roundtrip_subset_check.py:1",
+        "pack/ganada_stale_checker_repair_v1/repair.detjson:1"
+      ]
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "docs_only_behavior_close_block_v4",
+      "evidence_kinds": ["doc_report", "proposal", "markdown_existence_checker_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    },
+    {
+      "id": "status_token_only_behavior_close_block_v4",
+      "evidence_kinds": ["status_token_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    }
+  ]
+}

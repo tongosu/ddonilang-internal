@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "b", "type": "수" },
+    { "name": "dx", "type": "수" },
+    { "name": "k", "type": "수" },
+    { "name": "x_max", "type": "수" },
+    { "name": "x_min", "type": "수" },
+    { "name": "x목록", "type": "수" }
+  ]
+}

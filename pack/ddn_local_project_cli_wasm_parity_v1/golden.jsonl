@@ -1,0 +1,1 @@
+{"case_id":"G1_virtual_project_manifest_cli","cmd":["project-normalize","pack/ddn_local_project_cli_wasm_parity_v1/fixtures/virtual_project.json"],"stdout_path":"expected/normalized_manifest.detjson","exit_code":0}

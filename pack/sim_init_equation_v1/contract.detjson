@@ -1,0 +1,23 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_init_equation_v1",
+  "kind": "declarative_closure_init_plan_product",
+  "goal": "G6",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "ssot_edit_claim": false,
+  "artifact_schema": "ddn.solveplan.v1",
+  "product_entrypoint": "teul-cli run --solveplan-out",
+  "init_plan_kind": "t0_one_shot",
+  "apply": "before_madi_0",
+  "allowed_stages": [
+    "S0",
+    "S1"
+  ],
+  "unsupported_code": "E_INIT_UNSUPPORTED",
+  "expected_artifacts": [
+    "expected_init_s0.detjson",
+    "expected_init_s2_reject.detjson"
+  ],
+  "state_hash_integration": "manifest_field_only_pending_tonni_confirmation"
+}

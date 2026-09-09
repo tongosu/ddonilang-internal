@@ -1,0 +1,13 @@
+{
+  "schema": "ddn.v1_core_supported_ingress_w1.candidate.v1",
+  "source_profile_identity": "v1-core-v25",
+  "cases": [
+    {"id": "VC01_VC02_VC03_POSITIVE", "path": "fixtures/positive_definition_rebinding.ddn", "outcome": "ACCEPTED"},
+    {"id": "VC12_LANGUAGE_CORE_COLLECTION", "path": "fixtures/language_core_collection.ddn", "outcome": "ACCEPTED"},
+    {"id": "VC13_STRICT_SELECTION_OUT_OF_RANGE", "path": "fixtures/strict_selection_out_of_range.ddn", "diagnostic": "FATAL:CHARIM_INDEX_OUT_OF_RANGE"},
+    {"id": "VC04_VALUE_TYPE_MISMATCH", "path": "fixtures/value_type_mismatch.ddn", "diagnostic": "E_RUNTIME_TYPE_MISMATCH"},
+    {"id": "VC18_LEGACY_DEFINITION", "path": "fixtures/legacy_definition_equals.ddn", "diagnostic": "E_V25_DEFINITION_MIGRATION_REQUIRED"},
+    {"id": "VD01_DIRECT_RECURSION", "path": "fixtures/direct_recursion.ddn", "diagnostic": "E_V1_CORE_RECURSION_UNSUPPORTED"},
+    {"id": "VD01_MUTUAL_RECURSION", "path": "fixtures/mutual_recursion.ddn", "diagnostic": "E_V1_CORE_RECURSION_UNSUPPORTED"}
+  ]
+}

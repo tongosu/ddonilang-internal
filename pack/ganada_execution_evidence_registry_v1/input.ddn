@@ -1,0 +1,6 @@
+"GANADA_EXECUTION_EVIDENCE_REGISTRY_V1" 보여주기.
+"tracked_cells=8" 보여주기.
+"matrix_cells_total=90" 보여주기.
+"docs_only_behavior_closure_allowed=false" 보여주기.
+"strong_evidence_required=true" 보여주기.
+"checker=tests/run_ganada_execution_evidence_registry_check.py" 보여주기.

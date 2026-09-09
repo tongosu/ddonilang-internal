@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "df", "type": "수" },
+    { "name": "f0", "type": "수" },
+    { "name": "f_max", "type": "수" },
+    { "name": "f_min", "type": "수" },
+    { "name": "f목록", "type": "수" },
+    { "name": "h", "type": "수" }
+  ]
+}

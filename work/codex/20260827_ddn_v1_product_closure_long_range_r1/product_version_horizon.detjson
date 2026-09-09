@@ -1,0 +1,492 @@
+{
+  "program_id": "DDN_V1_PRODUCT_CLOSURE_LONG_RANGE_R1",
+  "rows": [
+    {
+      "capability_id": "V1-C001",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "한국어 기본 원문 표면",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C002",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Definition `:=`",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C003",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Binding/Rebinding `<-`",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C004",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "기본 값·자료형·정체성",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C005",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "정확수·결정적 수치",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C006",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "글·바이트·NFC",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C007",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Product",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C008",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Sum·선택값·typed result",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C009",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "이름 있는 callable",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C010",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "익명 callable",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C011",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "ResultPlace",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C012",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "조건·반복",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C013",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "bounded recursion",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C014",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "기본 generic",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C015",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "구실·골라부름",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C016",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "기본 collection",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C017",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "typed Selection",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C018",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Basic Tensor R1",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C019",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "한국어 활용형",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C020",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "닫힌 여러표면·canon",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C021",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "모듈·여러 파일",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C022",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "프로젝트 정체성",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C023",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "dependency identity",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C024",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "local dependency·lock",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C025",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "기본 stdlib",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C026",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "결정적 실행",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C027",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "state/result hash",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C028",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "receipt·replay",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C029",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "외부 입력 sealing",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C030",
+      "completion_target": "CONTINUOUS",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "silent semantic fallback 금지",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C031",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "shared 언어·runtime authority",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C032",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "official CLI",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C033",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Native adapter",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C034",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "WASM path",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C035",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "RuntimeBridge",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C036",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "HostBridge",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C037",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "Common Workbench",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C038",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "renderer-independent canonical view",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C039",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "project save·reopen",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C040",
+      "completion_target": "V1.2",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "import·export 최소선",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C041",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "기본 diagnostics",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C042",
+      "completion_target": "V1.0",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "pre-v25 migration",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C043",
+      "completion_target": "V1.0",
+      "experimental_from": "V0.9",
+      "first_target_version": "V1.0",
+      "korean_name": "public source projection",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C044",
+      "completion_target": "V1.0",
+      "experimental_from": "V0.9",
+      "first_target_version": "V1.0",
+      "korean_name": "public-source-only release build",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C045",
+      "completion_target": "V1.0",
+      "experimental_from": "V0.9",
+      "first_target_version": "V1.0",
+      "korean_name": "clean-machine install·run",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C046",
+      "completion_target": "V1.0",
+      "experimental_from": "V0.9",
+      "first_target_version": "V1.0",
+      "korean_name": "license·notice·SBOM",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C047",
+      "completion_target": "CONTINUOUS",
+      "experimental_from": "V0.9",
+      "first_target_version": "V1.0",
+      "korean_name": "public conformance",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    },
+    {
+      "capability_id": "V1-C048",
+      "completion_target": "V1.5",
+      "experimental_from": "V1.0",
+      "first_target_version": "V1.0",
+      "korean_name": "글무늬·Regex",
+      "required_from": "V1.5",
+      "v1_membership": "OPTIONAL"
+    },
+    {
+      "capability_id": "V1-C049",
+      "completion_target": "V2.0",
+      "experimental_from": "V1.5",
+      "first_target_version": "V1.0",
+      "korean_name": "기본 Proof·보임",
+      "required_from": "V2.0",
+      "v1_membership": "OPTIONAL"
+    },
+    {
+      "capability_id": "V1-C050",
+      "completion_target": "V2.5",
+      "experimental_from": "V2.0",
+      "first_target_version": "V2.0",
+      "korean_name": "State Machine",
+      "required_from": "V2.5",
+      "v1_membership": "DEFERRED"
+    },
+    {
+      "capability_id": "V1-C051",
+      "completion_target": "V3.5",
+      "experimental_from": "V3.0",
+      "first_target_version": "V3.0",
+      "korean_name": "AI 협업 surface",
+      "required_from": "V3.5",
+      "v1_membership": "DEFERRED"
+    },
+    {
+      "capability_id": "V1-C052",
+      "completion_target": "V4_PLUS",
+      "experimental_from": "V1.8",
+      "first_target_version": "V1.8",
+      "korean_name": "부분·완전 self-hosting",
+      "required_from": "V4_PLUS",
+      "v1_membership": "DEFERRED"
+    },
+    {
+      "capability_id": "V1-C053",
+      "completion_target": "V3.0",
+      "experimental_from": "V2.5",
+      "first_target_version": "V2.5",
+      "korean_name": "세계·결정적 simulation",
+      "required_from": "V2.8",
+      "v1_membership": "DEFERRED"
+    },
+    {
+      "capability_id": "V1-C054",
+      "completion_target": "V1.0",
+      "experimental_from": "V0.9",
+      "first_target_version": "V1.0",
+      "korean_name": "V0.9 외부 사용자 검증·V1 승격",
+      "required_from": "V1.0",
+      "v1_membership": "REQUIRED"
+    }
+  ],
+  "schema": "ddn.product_version_horizon.r1"
+}

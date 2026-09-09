@@ -1,0 +1,95 @@
+{
+  "base_commit": "9031053c",
+  "claims": {
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g3_status": "G3_EXECUTION_LIFECYCLE_COMPLETE",
+    "live_automatic_pump": false,
+    "state_hash_formula_change": false
+  },
+  "control_contract": {
+    "disabled_reason_surface": [
+      "button.disabled",
+      "data-disabled-reason",
+      "title",
+      "aria-label"
+    ],
+    "done": [
+      "start",
+      "history_when_present",
+      "branch_when_present"
+    ],
+    "idle": [
+      "start"
+    ],
+    "live_paused": [
+      "resume",
+      "step",
+      "stop",
+      "history_when_present"
+    ],
+    "live_running": [
+      "pause",
+      "stop",
+      "history_when_present"
+    ],
+    "oneshot_done_disables": [
+      "pause",
+      "resume",
+      "step",
+      "stop"
+    ]
+  },
+  "execution_lifecycle": {
+    "generation_cancellation": [
+      "new start",
+      "project switch",
+      "stop request",
+      "history cursor"
+    ],
+    "legacy_runtime_status_is_authority": false,
+    "schema": "seamgrim.workbench.execution_lifecycle.v1",
+    "states": [
+      "idle",
+      "preparing",
+      "running",
+      "pausing",
+      "paused",
+      "stopping",
+      "done",
+      "failed",
+      "history_readonly"
+    ]
+  },
+  "finalization": {
+    "claim_is_synchronous": true,
+    "duplicate_failed_finalize_claim": "REJECTED",
+    "failed_finalize_attempt_count": 1,
+    "run_binding_sealed_before_archive_create": true
+  },
+  "product_browser_matrix": {
+    "branch_child_run": "PASS",
+    "duplicate_start_single_run": "PASS",
+    "failed_archive_exactly_once_claim": "PASS",
+    "live_pause_step_resume_stop": "PASS",
+    "oneshot_immediate_done": "PASS",
+    "past_cursor_read_only": "PASS",
+    "preparing_project_switch_cancels_stale_result": "PASS"
+  },
+  "runtime_surface_correction": {
+    "commit": "9031053",
+    "issue": "legacy UI lowering removed hook syntax before the VM decision was reread",
+    "resolution": "classify the original DDN surface through wasm_execution_envelope_json",
+    "source_regex_authority": false,
+    "verification": "actual pendulum source remains live after JS legacy lowering"
+  },
+  "schema": "seamgrim.workbench_recovery.g3_execution_lifecycle.v1",
+  "verification": {
+    "browser_runner": "PASS: seamgrim_workbench_execution_lifecycle_browser",
+    "execution_lifecycle_unit": "PASS",
+    "git_diff_check": "PASS",
+    "node_syntax": "PASS",
+    "preprocessed_surface_runner": "PASS",
+    "wasm_vm_runtime_runner": "PASS"
+  }
+}

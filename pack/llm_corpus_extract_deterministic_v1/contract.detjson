@@ -1,0 +1,28 @@
+{
+  "schema": "ddn.llm_corpus_extract.pack.contract.v1",
+  "pack_id": "llm_corpus_extract_deterministic_v1",
+  "evidence_tier": "tool_runner",
+  "closure_claim": "no",
+  "tool": "tests/tools/extract_llm_corpus_v1.py",
+  "default_output": "out/llm_corpus_v1.jsonl",
+  "row_schema": "ddn.llm_corpus.row.v1",
+  "manifest_schema": "ddn.llm_corpus.manifest.v1",
+  "determinism_rules": [
+    "sorted_path_order",
+    "no_generated_summary",
+    "stable_json_key_order",
+    "grammar_manifest_cards",
+    "classified_corpus_kinds",
+    "row_hash_per_row",
+    "corpus_hash_over_rows"
+  ],
+  "required_kinds": [
+    "grammar_card",
+    "ssot_term",
+    "diagnostic_card",
+    "pack_summary",
+    "example"
+  ],
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false
+}

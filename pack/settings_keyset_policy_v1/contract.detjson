@@ -1,0 +1,63 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "settings_keyset_policy_v1",
+  "kind": "decision_closure_settings_keyset_policy",
+  "goal": "D2",
+  "closure_grade": "닫힘-문서",
+  "tooling_only": true,
+  "parser_landed_claim": false,
+  "runtime_claim": false,
+  "product_code_change": false,
+  "state_hash_formula_change": false,
+  "keysets": {
+    "설정.누리": {
+      "closed_keys": [
+        "시앗",
+        "시앗묶음"
+      ],
+      "result_affecting": [
+        "시앗",
+        "시앗묶음"
+      ],
+      "aliases": {
+        "seed": "시앗",
+        "seed_bag": "시앗묶음",
+        "seed_streams": "시앗묶음"
+      },
+      "deferred_keys": [
+        "환경ID",
+        "세계갈래",
+        "크기",
+        "경계다룸",
+        "첫상태참조",
+        "규칙묶음",
+        "계산단위계"
+      ]
+    },
+    "설정.이야기": {
+      "closed_keys": [
+        "들머리"
+      ],
+      "result_affecting": [
+        "들머리"
+      ],
+      "aliases": {
+        "entry": "들머리"
+      }
+    },
+    "설정.셈": {
+      "status": "deferred_until_separate_keyset_decision",
+      "known_artifact_behavior": [
+        "적분"
+      ]
+    }
+  },
+  "hash_policy": {
+    "doc_run_hash_excluded": true,
+    "story_entry_run_hash_included": true,
+    "nuri_seed_run_hash_included": true,
+    "nuri_seed_streams_run_hash_included": true,
+    "state_hash_formula_change": false
+  },
+  "checker": "tests/run_settings_keyset_policy_check.py"
+}

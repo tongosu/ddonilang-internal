@@ -1,0 +1,20 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_workbench_run_archive_lineage_v1",
+  "gate": "G5",
+  "product_behavior_change": true,
+  "behavior_closed_claim": true,
+  "actual_wasm_run_required": true,
+  "server_run_archive_required": true,
+  "source_revision_mutated_by_run": false,
+  "renderer_pixels_stored": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "checks": [
+    "run_start_creates_server_archive",
+    "committed_madi_checkpoint_saved",
+    "run_stop_finalizes_archive",
+    "branch_records_parent_server_run_and_hash",
+    "new_browser_reopens_run_archive_list"
+  ]
+}

@@ -1,0 +1,23 @@
+theta0 <- 0.2.
+omega0 <- 0.
+dt <- 0.1.
+acc0 <- 0 - theta0.
+
+euler_omega1 <- (omega0, acc0, dt) 적분.오일러.
+euler_theta1 <- (theta0, omega0, dt) 적분.오일러.
+
+semi_pair <- (theta0, omega0, acc0, dt) 적분.반암시적오일러.
+semi_theta1 <- (semi_pair, 0) 차림.값.
+semi_omega1 <- (semi_pair, 1) 차림.값.
+
+linear_mid_theta <- (euler_theta1, semi_theta1, 0.5) 보간.선형.
+
+"integrator_g1" 보여주기.
+"euler" 보여주기.
+euler_theta1 보여주기.
+euler_omega1 보여주기.
+"semi_implicit_euler" 보여주기.
+semi_theta1 보여주기.
+semi_omega1 보여주기.
+"linear_interpolation" 보여주기.
+linear_mid_theta 보여주기.

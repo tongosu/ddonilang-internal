@@ -1,0 +1,26 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_experiment_manifest_v1",
+  "kind": "declarative_closure_experiment_manifest_candidate",
+  "goal": "G8",
+  "runtime_claim": false,
+  "parser_landed_claim": false,
+  "product_code_change": false,
+  "ssot_edit_claim": false,
+  "state_hash_formula_change": false,
+  "plan_hash_status": "pending_canonical_bytes_decision",
+  "manifest": "experiment_manifest.detjson",
+  "required_fields": [
+    "schema",
+    "manifest_id",
+    "source",
+    "source_hash",
+    "run_config_hash",
+    "seed",
+    "solveplan_artifact",
+    "input_snapshot",
+    "outputs",
+    "state_hash_policy",
+    "plan_hash_status"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "seamgrim.semantic_scenes_five_lessons.contract.v1",
+  "product_schema": "seamgrim.curriculum_semantic_scene.v0",
+  "lesson_ids": [
+    "rep_math_function_line_v1",
+    "rep_phys_pendulum_wave1_v1",
+    "rep_phys_projectile_xy_v1",
+    "rep_phys_damped_oscillation_v1",
+    "rep_econ_supply_demand_tax_v1"
+  ],
+  "minimum_anchor_count": 2,
+  "runtime_binding_scope": [
+    "slider_panel",
+    "committed_observation_payload",
+    "primary_view"
+  ],
+  "claim_boundary": {
+    "world_state_storage": false,
+    "state_hash_formula_change": false,
+    "semantic_runtime_completion_claim": false,
+    "new_ddn_syntax": false
+  }
+}

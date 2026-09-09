@@ -1,0 +1,83 @@
+{
+  "schema": "seamgrim.state.v0",
+  "tick_id": 7,
+  "state_hash": "blake3:t5b_state_7",
+  "source_hash": "sha256:t5b_source",
+  "channels": [],
+  "row": [],
+  "observation_manifest": {
+    "schema": "ddn.observation_manifest.v0",
+    "version": "20.6.33",
+    "nodes": [],
+    "params": [],
+    "traces": [],
+    "diagnostics": [],
+    "default_pivot": {
+      "x_channel": "",
+      "y_channels": []
+    }
+  },
+  "resources": {
+    "json": {},
+    "fixed64": {},
+    "handle": {},
+    "value": {},
+    "value_json": {
+      "output_log": [
+        {
+          "tick": 6,
+          "line_no": 1,
+          "kind": "output",
+          "text": "준비"
+        },
+        {
+          "tick": 7,
+          "line_no": 2,
+          "kind": "output",
+          "text": "위치 12.5"
+        }
+      ],
+      "graph.result": {
+        "schema": "seamgrim.graph.v0",
+        "graph_kind": "timeseries",
+        "x": {
+          "kind": "time",
+          "unit": "s",
+          "channel_id": "time"
+        },
+        "y": {
+          "kind": "position",
+          "unit": "m",
+          "channel_id": "position.x"
+        },
+        "series": [
+          {
+            "id": "position.x",
+            "label": "x 위치",
+            "points": [
+              { "x": 0, "y": 0 },
+              { "x": 1, "y": 8 },
+              { "x": 2, "y": 12.5 }
+            ]
+          },
+          {
+            "id": "velocity.x",
+            "label": "x 속도",
+            "points": [
+              { "x": 0, "y": 8 },
+              { "x": 1, "y": 6 },
+              { "x": 2, "y": 3 }
+            ]
+          }
+        ],
+        "meta": {
+          "producer": "t5b.authoritative_fixture",
+          "version": "v1"
+        }
+      }
+    },
+    "component": {}
+  },
+  "patch": [],
+  "view_meta": {}
+}

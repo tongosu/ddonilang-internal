@@ -1,0 +1,102 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:52594bff",
+  "content": {
+    "entity_identities": [
+      {
+        "collection": "points",
+        "entity_id": "trajectory.start",
+        "identity_source": "source",
+        "primitive_type": "point",
+        "semantic_role": "trajectory_sample"
+      },
+      {
+        "collection": "points",
+        "entity_id": "trajectory.end",
+        "identity_source": "source",
+        "primitive_type": "point",
+        "semantic_role": "trajectory_sample"
+      },
+      {
+        "collection": "shapes",
+        "entity_id": "pendulum.rod",
+        "identity_source": "source",
+        "primitive_type": "line",
+        "semantic_role": "pendulum_rod"
+      },
+      {
+        "collection": "shapes",
+        "entity_id": "pendulum.bob",
+        "identity_source": "source",
+        "primitive_type": "circle",
+        "semantic_role": "pendulum_bob"
+      }
+    ],
+    "family_contract_version": "space2d.v1_candidate",
+    "space2d": {
+      "camera": {
+        "x_max": 2,
+        "x_min": -2,
+        "y_max": 1,
+        "y_min": -2
+      },
+      "meta": {
+        "title": "authoritative T5C space2d"
+      },
+      "points": [
+        {
+          "id": "trajectory.start",
+          "role": "trajectory_sample",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "trajectory.end",
+          "role": "trajectory_sample",
+          "x": 1.5,
+          "y": -0.5
+        }
+      ],
+      "schema": "seamgrim.space2d.v0",
+      "shapes": [
+        {
+          "id": "pendulum.rod",
+          "kind": "line",
+          "role": "pendulum_rod",
+          "stroke": "#475569",
+          "width": 2,
+          "x1": 0,
+          "x2": 0.479426,
+          "y1": 0,
+          "y2": -0.877583
+        },
+        {
+          "fill": "#38bdf8",
+          "id": "pendulum.bob",
+          "kind": "circle",
+          "r": 0.08,
+          "role": "pendulum_bob",
+          "x": 0.479426,
+          "y": -0.877583
+        }
+      ]
+    }
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "space2d",
+  "identity": {
+    "observation_projection_identity": "",
+    "result_identity": "result:t5c:space2d:1",
+    "source_hash": "sha256:t5c-authoritative-source",
+    "state_hash": "sha256:t5c-authoritative-state",
+    "tick_id": 7,
+    "view_hash": ""
+  },
+  "provenance": {
+    "classification": "AUTHORITATIVE_STRUCTURED",
+    "input_authority": "native_authoritative_structured_input",
+    "source": "structured_view_meta"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

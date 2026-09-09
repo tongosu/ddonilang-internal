@@ -1,0 +1,26 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_approved_workbench_runtime_lineage_v1",
+  "goal": "approved_deterministic_workbench",
+  "gates": ["G3", "G4", "G5"],
+  "product_path": "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+  "browser_runner": "tests/seamgrim_approved_workbench_runtime_lineage_runner.mjs",
+  "checker": "tests/run_seamgrim_approved_workbench_runtime_lineage_check.py",
+  "checks": [
+    "run_pause_resume_stop_step_forward_current_madi_hash",
+    "actual_wasm_vm_path_used",
+    "setup_control_creates_new_run_recipe_only",
+    "action_control_creates_next_inputsnapshot_only",
+    "view_role_switch_keeps_state_hash",
+    "history_back_read_only",
+    "branch_creates_child_run",
+    "overwrite_same_run_id_parent_hash_mutation_rejected"
+  ],
+  "product_behavior_change": true,
+  "docs_closed_claim": false,
+  "behavior_closed_claim": true,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "mock_runtime_as_wasm": false,
+  "cloud_or_public_registry_claim": false
+}

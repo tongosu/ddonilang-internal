@@ -1,0 +1,1 @@
+{"id":"c00_ganada_sa_bogae_standard_evidence_marker","cmd":["run","pack/ganada_sa_bogae_standard_evidence_v1/input.ddn"],"stdout":["GANADA_SA_BOGAE_STANDARD_EVIDENCE_V1","tracked_cells=사-0,사-1,사-2","behavior_closed_claim=false","matrix_upgrade_claim=false"],"exit_code":0}

@@ -1,0 +1,25 @@
+{
+  "schema": "ddn.ganada.remaining_stems.evidence.v1",
+  "pack": "ganada_sa_bogae_game_renderer_evidence_v1",
+  "pack_kind": "representative_evidence",
+  "branch": "사",
+  "tracked_cells": ["사-3", "사-5"],
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_sa_bogae_game_renderer_evidence_v1/manifest.detjson:1",
+    "pack/std_grid_game_bogae_browser_dom_smoke_v1/golden.jsonl:1",
+    "pack/std_grid_game_bogae_web_playback_controls_v1/golden.jsonl:1"
+  ],
+  "commands": [
+    {"id": "grid_game_renderer_pack_set", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "std_grid_game_bogae_browser_dom_smoke_v1", "std_grid_game_bogae_web_playback_controls_v1", "std_grid_game_bogae_web_out_determinism_v1"], "expect_stdout_contains": "pack golden ok"}
+  ]
+}

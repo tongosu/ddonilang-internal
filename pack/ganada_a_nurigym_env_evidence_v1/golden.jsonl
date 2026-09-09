@@ -1,0 +1,1 @@
+{"id":"c00_ganada_a_nurigym_env_evidence_marker","cmd":["run","pack/ganada_a_nurigym_env_evidence_v1/input.ddn"],"stdout":["GANADA_A_NURIGYM_ENV_EVIDENCE_V1","tracked_cells=아-0,아-1,아-3","behavior_closed_claim=false","matrix_upgrade_claim=false"],"exit_code":0}

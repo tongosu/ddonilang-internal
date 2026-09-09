@@ -1,0 +1,28 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  이름: \"순환\".\n  첫글: \"./app/main.ddn\".\n}.\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "쓰임 {\n  a: \"./lib/a\".\n}\na.값 보여주기.\n"
+    },
+    {
+      "path": "lib/a.ddn",
+      "role": "ddn_source",
+      "utf8_text": "쓰임 {\n  b: \"./lib/b\".\n}\n드러냄 {\n  값: b.값.\n}\n"
+    },
+    {
+      "path": "lib/b.ddn",
+      "role": "ddn_source",
+      "utf8_text": "쓰임 {\n  a: \"./lib/a\".\n}\n드러냄 {\n  값: a.값.\n}\n"
+    }
+  ]
+}

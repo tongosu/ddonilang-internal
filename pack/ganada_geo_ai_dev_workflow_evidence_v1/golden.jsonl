@@ -1,0 +1,1 @@
+{"id":"c00_ganada_geo_ai_dev_workflow_evidence_marker","cmd":["run","pack/ganada_geo_ai_dev_workflow_evidence_v1/input.ddn"],"stdout":["GANADA_GEO_AI_DEV_WORKFLOW_EVIDENCE_V1","tracked_cells=거-3,거-4,거-5","behavior_closed_claim=false","matrix_upgrade_claim=false"],"exit_code":0}

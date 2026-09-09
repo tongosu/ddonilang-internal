@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_approved_workbench_quality_gate_v1",
+  "goal": "approved_deterministic_workbench",
+  "gates": ["G8"],
+  "product_path": "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+  "browser_runner": "tests/seamgrim_approved_workbench_quality_gate_runner.mjs",
+  "checker": "tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+  "viewports": ["1440x900", "1024x768", "778x912", "390x844"],
+  "checks": [
+    "ddn_source_accessible",
+    "primary_canvas_nonblank",
+    "primary_and_source_have_sufficient_height",
+    "side_open_close_refit",
+    "no_horizontal_overflow",
+    "keyboard_focus",
+    "icon_tooltip_and_accessible_name",
+    "reduced_motion_context",
+    "console_error_warning_zero"
+  ],
+  "product_behavior_change": false,
+  "docs_closed_claim": false,
+  "behavior_closed_claim": true,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "public_registry_claim": false
+}

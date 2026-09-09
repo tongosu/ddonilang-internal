@@ -1,0 +1,27 @@
+{
+  "canonical_ddn": "값 <- (#ascii) 수식{1+1}.\n값 보여주기.\n",
+  "configured_ticks": null,
+  "effective_ticks": 1,
+  "final_row": {},
+  "output_log_texts": [
+    "(#ascii) 수식{ 1 + 1 }"
+  ],
+  "output_rows": [],
+  "parse_warnings": [],
+  "preprocessed_ddn": "값 <- (#ascii) 수식{1+1}.\r\n값 보여주기.\r\n",
+  "resources": {
+    "value_json": {
+      "값": {
+        "dialect": "#ascii",
+        "raw": "1 + 1"
+      }
+    }
+  },
+  "schema": "ddn.teul_cli.run_summary.v1",
+  "state_hash": "blake3:56a032ca479aa47e8b2df1488d96d66c4dfe31ce01564a85d49c0203c5ddeda4",
+  "stdout_lines": [
+    "(#ascii) 수식{ 1 + 1 }"
+  ],
+  "ticks_run": 1,
+  "trace_hash": "blake3:fd1e21e1f3b16e3dfdcdd460f0a5e333e23175b44a1587379ad0bd4ea9c27ac7"
+}

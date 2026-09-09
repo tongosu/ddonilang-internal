@@ -1,0 +1,27 @@
+// stateful-sim preview(auto): range sampler -> step sim
+
+(시작)할때 {
+  x <- -2.
+}.
+
+(매마디)마다 {
+  함수 = (#ascii1) 수식{ y = a x + b }.
+
+  a <- 1.5.
+  b <- -1.
+
+  x_min <- -2.
+  x_max <- 4.
+  dx <- 0.5.
+
+  { x <= x_max }인것 일때 {
+    y <- a * x + b.
+    label <- (x=x, y=y) 글무늬{"point({x},{y})"}.
+    보임 {
+      x: x.
+      y: y.
+      label: label.
+    }.
+    x <- x + (dx).
+  }.
+}.

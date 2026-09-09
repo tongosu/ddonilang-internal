@@ -1,0 +1,55 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_public_physics_wedge_v1",
+  "goal": "public_physics_wedge_default_workbench",
+  "gates": ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"],
+  "product_paths": [
+    "solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py",
+    "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+    "solutions/seamgrim_ui_mvp/ui/workbench/workbench.css",
+    "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js"
+  ],
+  "required_checkers": [
+    "tests/run_seamgrim_public_default_route_check.py",
+    "tests/run_seamgrim_public_physics_first_run_check.py",
+    "tests/run_seamgrim_one_file_ddn_create_run_check.py",
+    "tests/run_seamgrim_public_physics_change_storyboard_check.py",
+    "tests/run_seamgrim_public_share_clone_reopen_check.py",
+    "tests/run_seamgrim_legacy_deeplink_compat_check.py",
+    "tests/run_seamgrim_public_single_node_serving_check.py",
+    "tests/run_seamgrim_public_four_viewport_quality_check.py"
+  ],
+  "regression_checkers": [
+    "tests/run_seamgrim_workbench_durable_quality_gate_check.py",
+    "tests/run_ddn_cli_wasm_freshness_check.py",
+    "tests/run_ddn_cli_wasm_true_parity_equality_check.py",
+    "tests/run_ddn_cli_wasm_sync_gate_check.py",
+    "tests/run_seamgrim_view_only_state_hash_invariant_check.py"
+  ],
+  "checks": [
+    "default_route_opens_workbench",
+    "legacy_route_preserved",
+    "official_projectile_first_project",
+    "actual_wasm_run",
+    "native_one_file_creator_dynamic_id_edit_recover_run",
+    "native_one_file_and_multifile_coexist",
+    "server_save_and_view_share",
+    "view_write_rejection",
+    "clone_remix_lineage",
+    "restart_reopen",
+    "legacy_deeplink_compat",
+    "single_node_readiness",
+    "four_viewport_quality",
+    "cli_wasm_freshness_and_equality",
+    "view_only_state_hash_invariant",
+    "security_negative_controls"
+  ],
+  "behavior_closed_claim": true,
+  "docs_closed_claim": false,
+  "external_user_success_claim": false,
+  "idc_deployment_claim": false,
+  "public_registry_claim": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false
+}

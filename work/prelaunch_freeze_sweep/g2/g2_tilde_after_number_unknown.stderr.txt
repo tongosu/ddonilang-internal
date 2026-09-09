@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.54s
+     Running `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_tilde_after_number_unknown.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_tilde_after_number_unknown.summary.detjson`
+E_PARSE_UNEXPECTED_TOKEN work\prelaunch_freeze_sweep\g2\g2_tilde_after_number_unknown.ddn:1:7 예상: '.' or newline
+error: process didn't exit successfully: `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_tilde_after_number_unknown.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_tilde_after_number_unknown.summary.detjson` (exit code: 1)

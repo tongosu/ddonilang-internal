@@ -1,0 +1,38 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:2eddff4d",
+  "content": {
+    "family_contract_version": "console_grid.v1_candidate",
+    "grid": {
+      "cells": [
+        { "cell_id": "console:0:0", "col": 0, "row": 0, "source_line_no": 1, "source_output_identity": "", "text": "가" },
+        { "cell_id": "console:0:1", "col": 1, "row": 0, "source_line_no": 1, "source_output_identity": "", "text": "😀" },
+        { "cell_id": "console:1:0", "col": 0, "row": 1, "source_line_no": 2, "source_output_identity": "", "text": "#" },
+        { "cell_id": "console:1:1", "col": 1, "row": 1, "source_line_no": 2, "source_output_identity": "", "text": "P" }
+      ],
+      "cols": 2,
+      "ordered_rows": [
+        { "line_no": 1, "output_identity": "", "row": 0, "text": "가😀", "tick": 7 },
+        { "line_no": 2, "output_identity": "", "row": 1, "text": "#P", "tick": 7 }
+      ],
+      "rows": 2
+    }
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "console-grid",
+  "identity": {
+    "observation_projection_identity": "",
+    "result_identity": "result:t5e-grid",
+    "source_hash": "sha256:t5e-source",
+    "state_hash": "sha256:t5e-authoritative-state",
+    "tick_id": 7,
+    "view_hash": ""
+  },
+  "provenance": {
+    "classification": "AUTHORITATIVE_STRUCTURED",
+    "input_authority": "native_authoritative_structured_input",
+    "source": "canonical_console_view_payload"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

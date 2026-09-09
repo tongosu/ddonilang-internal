@@ -1,0 +1,1 @@
+{"id":"c00_ganada_la_branch_execution_reaudit_marker","cmd":["run","pack/ganada_la_branch_execution_reaudit_v1/input.ddn"],"stdout":["GANADA_LA_BRANCH_EXECUTION_REAUDIT_V1","branch=라","cells=6","docs_only_behavior_closure_allowed=false","matrix_upgrade_claim=false"],"exit_code":0}

@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a42_numeric_literal_suffix_split_red_v1",
+  "track": "A",
+  "item": "A42",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:3291",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER2_V1.md:39",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A42_numeric_literal_suffix_split_V1.md",
+  "cases": [
+    {
+      "id": "c01_numeric_unit_josa_suffix",
+      "input": "cases/c01_numeric_unit_josa_suffix/input.ddn",
+      "expected_red": "cases/c01_numeric_unit_josa_suffix/expected_red.detjson"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "ddn.ganada.remaining_stems.reaudit.v1",
+  "pack": "ganada_pa_branch_execution_reaudit_v1",
+  "pack_kind": "branch_execution_reaudit",
+  "branch": "파",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claims": 0,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_pa_branch_execution_reaudit_v1/manifest.detjson:1",
+    "pack/ganada_maru_verification_contract_v1/contract.detjson:1",
+    "tests/run_econ_age4_ready_baseline_tax_ceiling_check.py:1"
+  ],
+  "cells": [
+    {
+      "cell_id": "파-0",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["pack/age2_econ_market_shock_v1/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "pa0_econ_case_schema_smoke", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "age2_econ_market_shock_v1"], "expect_stdout_contains": "pack golden ok"}
+      ]
+    },
+    {
+      "cell_id": "파-1",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["tests/run_econ_age4_ready_baseline_tax_ceiling_check.py:1"],
+      "evidence_checks": [
+        {"id": "pa1_baseline_market", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_econ_age4_ready_baseline_tax_ceiling_check.py"], "expect_stdout_contains": "econ_age4_ready_baseline_tax_ceiling_v1: PASS"}
+      ]
+    },
+    {
+      "cell_id": "파-2",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["tests/social_world_bridge_pack_runner.mjs:1"],
+      "evidence_checks": [
+        {"id": "pa2_social_bridge", "kind": "tooling_runner_or_ci_pass", "command": ["node", "tests/social_world_bridge_pack_runner.mjs"], "expect_stdout_contains": "social_world_bridge_pack: ok"}
+      ]
+    },
+    {
+      "cell_id": "파-3",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["tests/social_world_policy_ghost_ui_runner.mjs:1"],
+      "evidence_checks": [
+        {"id": "pa3_policy_ghost", "kind": "browser_or_ui_runner_pass", "command": ["node", "tests/social_world_policy_ghost_ui_runner.mjs"], "expect_stdout_contains": "social_world_policy_ghost_ui: ok"}
+      ]
+    },
+    {
+      "cell_id": "파-4",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["tests/social_world_template_registry_runner.mjs:1"],
+      "evidence_checks": [
+        {"id": "pa4_template_registry", "kind": "tooling_runner_or_ci_pass", "command": ["node", "tests/social_world_template_registry_runner.mjs"], "expect_stdout_contains": "social_world_template_registry: ok"}
+      ]
+    },
+    {
+      "cell_id": "파-5",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["tests/social_world_lts_readiness_runner.mjs:1"],
+      "evidence_checks": [
+        {"id": "pa5_social_lts_readiness", "kind": "tooling_runner_or_ci_pass", "command": ["node", "tests/social_world_lts_readiness_runner.mjs"], "expect_stdout_contains": "social_world_lts_readiness: ok"}
+      ]
+    }
+  ]
+}

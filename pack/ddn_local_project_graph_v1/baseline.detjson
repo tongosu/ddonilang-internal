@@ -1,0 +1,255 @@
+{
+  "schema": "ddn.local_project_graph.baseline.v1",
+  "pack": "ddn_local_project_graph_v1",
+  "gate": "G0",
+  "date_kst": "2026-07-15",
+  "branch": "codex/queue-20260706",
+  "start_head": "12dbffc91bf8356b373b6c1a952591e0a6c02d16",
+  "minimum_common_ancestor": "12dbffc91bf8356b373b6c1a952591e0a6c02d16",
+  "minimum_common_ancestor_verified": true,
+  "docs_ssot_dirty": false,
+  "preexisting_dirty_line_count": 150,
+  "preexisting_dirty_policy": "preserve_unrelated_do_not_stash_stage_or_commit",
+  "target_overlap_at_g0": false,
+  "dirty_ownership_summary": {
+    "tracked_other_work_examples": [
+      "AGENTS.md",
+      "AGENT_WORKFLOW.md",
+      "SSOT_POLICY.md",
+      "docs/context/all/DEV_SUMMARY.md",
+      "tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+      "work/erq/ERQ_QUEUE.md"
+    ],
+    "untracked_other_work_prefixes": [
+      "publish/spec/",
+      "tests/run_compendium_*.py",
+      "tools/build_ssot_*.py",
+      "work/_session_deltas/20260709_*",
+      "work/_session_deltas/20260710_*",
+      "work/_session_deltas/20260711_*",
+      "work/_session_deltas/20260712_*",
+      "work/_session_deltas/20260713_*",
+      "work/_session_deltas/20260714_*",
+      "work/codex/",
+      "또니랑/"
+    ]
+  },
+  "ssot_evidence_refs": [
+    {
+      "surface": "module_family_status",
+      "file": "docs/ssot/ssot/SSOT_DECISIONS_v24.14.1.md",
+      "line": 102,
+      "evidence": "D20 marks 쓰임/드러냄/프로젝트{} as confirmed_design_pending_impl"
+    },
+    {
+      "surface": "claim_status_split",
+      "file": "docs/ssot/ssot/SSOT_DECISIONS_v24.14.1.md",
+      "line": 109,
+      "evidence": "D27 separates surface existence, executable, and product-ready states"
+    },
+    {
+      "surface": "project_root_name",
+      "file": "docs/ssot/ssot/SSOT_DECISIONS_v24.14.1.md",
+      "line": 598,
+      "evidence": "canonical root declaration file is 뿌리.ddn"
+    },
+    {
+      "surface": "module_io",
+      "file": "docs/ssot/ssot/SSOT_LANG_v24.14.1.md",
+      "line": 7743,
+      "evidence": "MOD1 fixes 쓰임/드러냄 as file-level module I/O"
+    },
+    {
+      "surface": "project_block",
+      "file": "docs/ssot/ssot/SSOT_LANG_v24.14.1.md",
+      "line": 7844,
+      "evidence": "PROJECT1 requires 뿌리.ddn and root-only 프로젝트{}"
+    },
+    {
+      "surface": "toolchain_mod1",
+      "file": "docs/ssot/ssot/SSOT_TOOLCHAIN_v24.14.1.md",
+      "line": 1624,
+      "evidence": "TC-MOD1 owns project root discovery and toolchain metadata"
+    }
+  ],
+  "product_evidence_refs": [
+    {
+      "surface": "lang_official_stmt_ast",
+      "file": "lang/src/ast.rs",
+      "line": 109,
+      "evidence": "official lang Stmt enum has no ImportBlock/ExportBlock/ProjectBlock at G0"
+    },
+    {
+      "surface": "cli_parser_import_export_ast",
+      "file": "tools/teul-cli/src/lang/ast.rs",
+      "line": 87,
+      "evidence": "CLI-local parser has ImportBlock and ExportBlock variants"
+    },
+    {
+      "surface": "cli_parser_import",
+      "file": "tools/teul-cli/src/lang/parser.rs",
+      "line": 1908,
+      "evidence": "CLI-local parser recognizes 쓰임 block"
+    },
+    {
+      "surface": "cli_parser_export",
+      "file": "tools/teul-cli/src/lang/parser.rs",
+      "line": 1916,
+      "evidence": "CLI-local parser recognizes 드러냄 and legacy 공개 block"
+    },
+    {
+      "surface": "cli_runtime_import_side_table",
+      "file": "tools/teul-cli/src/runtime/eval.rs",
+      "line": 888,
+      "evidence": "CLI-local runtime records import aliases but does not resolve a project graph"
+    },
+    {
+      "surface": "cli_policy_root_discovery",
+      "file": "tools/teul-cli/src/cli/run.rs",
+      "line": 2662,
+      "evidence": "current CLI policy root discovery looks for ddn.project.json"
+    },
+    {
+      "surface": "tool_project_meta_legacy_policy",
+      "file": "tool/src/project_meta.rs",
+      "line": 1,
+      "evidence": "tool project_meta is old AGE/det/openness policy, not TC-MOD1 project graph"
+    },
+    {
+      "surface": "wasm_single_source",
+      "file": "tool/src/wasm_api.rs",
+      "line": 1,
+      "evidence": "WASM API exposes single-source parse/run surfaces, not virtual project source"
+    },
+    {
+      "surface": "portable_snapshot_wrapper",
+      "file": "docs/reports/impl/SEAMGRIM_PORTABLE_PROJECT_CONTENT_EXCHANGE_WAVE1_V1_20260715.md",
+      "line": 1,
+      "evidence": "portable exchange Wave 1 closed existing seamgrim.project_snapshot_artifact.v0 wrapper"
+    }
+  ],
+  "capability_matrix": [
+    {
+      "surface": "뿌리.ddn root discovery",
+      "ssot_status": "MUST",
+      "parser": "absent",
+      "canon": "absent",
+      "cli": "absent; current policy helper discovers ddn.project.json only",
+      "wasm": "absent",
+      "workbench": "absent",
+      "pack": "baseline_only",
+      "claim": "not_closed"
+    },
+    {
+      "surface": "프로젝트{} root block",
+      "ssot_status": "designed",
+      "parser": "absent in official lang and CLI-local parser",
+      "canon": "absent",
+      "cli": "absent",
+      "wasm": "absent",
+      "workbench": "absent",
+      "pack": "baseline_only",
+      "claim": "not_closed"
+    },
+    {
+      "surface": "쓰임{} direct import",
+      "ssot_status": "designed",
+      "parser": "partial in CLI-local parser only",
+      "canon": "not integrated into official lang canon",
+      "cli": "parse-only side table, no project graph symbol resolution",
+      "wasm": "absent",
+      "workbench": "absent",
+      "pack": "baseline_only",
+      "claim": "not_closed"
+    },
+    {
+      "surface": "드러냄{} direct export",
+      "ssot_status": "designed",
+      "parser": "partial in CLI-local parser only",
+      "canon": "not integrated into official lang canon",
+      "cli": "parse-only, export block ignored at runtime",
+      "wasm": "absent",
+      "workbench": "absent",
+      "pack": "baseline_only",
+      "claim": "not_closed"
+    },
+    {
+      "surface": "local gaji lock bridge",
+      "ssot_status": "toolchain_pending_impl",
+      "parser": "not language-owned",
+      "canon": "not language-owned",
+      "cli": "gaji scanners/helpers exist but no ddn.lock bridge",
+      "wasm": "absent",
+      "workbench": "metadata display only",
+      "pack": "baseline_only",
+      "claim": "not_closed"
+    },
+    {
+      "surface": "CLI/WASM multi-file equality",
+      "ssot_status": "required_by_goal",
+      "parser": "single-source only in current WASM path",
+      "canon": "single-source only",
+      "cli": "single-file run command only",
+      "wasm": "single-source VM only",
+      "workbench": "single source editor only",
+      "pack": "baseline_only",
+      "claim": "not_closed"
+    },
+    {
+      "surface": "one-file project and portable artifact",
+      "ssot_status": "regression_must_preserve",
+      "parser": "landed",
+      "canon": "landed",
+      "cli": "landed",
+      "wasm": "landed",
+      "workbench": "landed",
+      "pack": "seamgrim_portable_project_artifact_v1, seamgrim_portable_project_workbench_v1",
+      "claim": "baseline_pass"
+    }
+  ],
+  "selected_symbol_subset": {
+    "pure_callable_symbol": "bounded callable seed/function already accepted by current runtime; exact fixture to be chosen in G4 after parser path is wired",
+    "readonly_scalar_constant": "bounded scalar value exposed through 드러냄 or local gaji constants in G6",
+    "excluded": [
+      "mutable cross-module global state",
+      "arbitrary imported module top-level effects",
+      "generic specialization",
+      "dynamic import",
+      "remote registry"
+    ]
+  },
+  "implementation_direction": {
+    "shared_core_owner": "ddonirang-tool project module, called by CLI and WASM adapters",
+    "resolver_duplication_policy": "no copied CLI/WASM resolver",
+    "portable_payload_kind": "seamgrim.local_project_tree.v0 inside existing local_package_payload",
+    "pack_limit_policy": "extend ddn_local_project_graph_v1, ddn_local_project_cli_wasm_parity_v1, seamgrim_multifile_project_workbench_v1, seamgrim_multifile_portable_roundtrip_v1 only"
+  },
+  "baseline_commands": [
+    {
+      "command": "python tests/run_seamgrim_portable_project_artifact_check.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_portable_project_workbench_check.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_one_file_ddn_create_run_check.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_true_parity_equality_check.py",
+      "result": "PASS"
+    }
+  ],
+  "non_claims": {
+    "LOCAL_PROJECT_GRAPH_V1_CLOSED": false,
+    "LOCAL_GAJI_LOCK_BRIDGE_V1_CLOSED": false,
+    "MULTIFILE_CLI_WASM_PARITY_V1_CLOSED": false,
+    "SEAMGRIM_MULTIFILE_AUTHORING_V1_CLOSED": false,
+    "full_module_system_complete": false,
+    "public_package_ecosystem_complete": false,
+    "state_hash_formula_change": false,
+    "docs_ssot_modified": false
+  }
+}

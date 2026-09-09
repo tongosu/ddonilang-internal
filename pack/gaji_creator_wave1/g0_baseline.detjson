@@ -1,0 +1,35 @@
+{
+  "schema": "ddn.creator_gaji_circulation.g0_baseline.v1",
+  "recorded_at_kst": "2026-07-17",
+  "branch": "codex/queue-20260706",
+  "start_head": "d55e7524591d29943d77a6ab7676bc3a3e2adc2a",
+  "minimum_ancestor": "d55e7524591d29943d77a6ab7676bc3a3e2adc2a",
+  "minimum_ancestor_verified": true,
+  "stage_clean": true,
+  "docs_ssot_clean": true,
+  "native_multifile_authoring_full_gate": "PASS",
+  "independent_review_result": "NOT_FOUND_REQUEST_ONLY",
+  "reuse_map": [
+    {"owner":"tool/src/local_project.rs","truth":["VirtualProjectSource","project graph","local gaji lock","atomic project edit plan"]},
+    {"owner":"tools/teul-cli/src/cli/gaji.rs","truth":["gaji lock","install","update","vendor","package hash"]},
+    {"owner":"tools/teul-cli/src/cli/gaji_registry.rs","truth":["deterministic archive","publish","search","versions","entry","verify","download"]},
+    {"owner":"tool/src/wasm_api.rs","truth":["project graph adapter","local gaji lock adapter","project execution adapter"]},
+    {"owner":"solutions/seamgrim_ui_mvp/ui/workbench/workbench.js","truth":["native project tree","portable local_package_payload","durable save/share/clone adapter"]}
+  ],
+  "open_product_connections": [
+    "Rust AST/project-graph gaji extraction plan",
+    "shared Rust lifecycle plans exposed to WASM",
+    "Workbench extract/publish/shelf/install/update/remove/remix workflow",
+    "four-viewport browser circulation evidence"
+  ],
+  "ownership_exclusions": [
+    "tools/teul-cli/src/canon.rs",
+    "unrelated dirty and untracked files present at START_HEAD"
+  ],
+  "non_claims": [
+    "independent_review_passed",
+    "public_registry_closed",
+    "creator_gaji_circulation_closed",
+    "external_creator_success"
+  ]
+}

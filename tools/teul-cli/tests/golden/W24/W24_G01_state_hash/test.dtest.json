@@ -1,0 +1,14 @@
+{
+  "name": "W24_G01_state_hash",
+  "walk": 24,
+  "command": "run",
+  "entry": "../../../../../../pack/gogae3_w24_ecs_archetype/input.ddn",
+  "args": {
+    "madi": 1,
+    "seed": "0x0"
+  },
+  "expect": {
+    "exit": 0,
+    "state_hash": "blake3:29833ae4ef6be278b6e83ffa36dd11e549421d21c1174d6d66b3404a33c52bb7"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  이름: \"포물선연구실\".\n  뿌리: \"./\".\n  첫글: \"./app/main.ddn\".\n\n  목표 {\n    앱: \"./app/main.ddn\".\n  }\n\n  모듈길 {\n    로컬: \"./lib\".\n  }\n\n  가지 {\n    물리: \"vendor/edu.physics\".\n  }\n}.\n"
+    },
+    {
+      "path": "ddn.project.json",
+      "role": "project_json",
+      "utf8_text": "{\n  \"entry_path\": \"./app/main.ddn\"\n}\n"
+    },
+    {
+      "path": "ddn.lock",
+      "role": "lock",
+      "utf8_text": "{\n  \"schema\": \"ddn.lock.v0\",\n  \"pins\": []\n}\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "쓰임 {\n  운동: \"./lib/운동\".\n}\n운동.속도구하기 보여주기.\n"
+    },
+    {
+      "path": "lib/운동.ddn",
+      "role": "ddn_source",
+      "utf8_text": "드러냄 {\n  속도구하기.\n}\n속도구하기 <- 7.\n"
+    },
+    {
+      "path": "vendor/edu.physics/gaji.toml",
+      "role": "gaji_manifest",
+      "utf8_text": "id = \"edu.physics\"\nversion = \"0.1.0\"\n"
+    }
+  ]
+}

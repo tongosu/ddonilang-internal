@@ -1,0 +1,4 @@
+프로젝트 {
+  이름: "conflict".
+  첫글: "./app/main.ddn".
+}.

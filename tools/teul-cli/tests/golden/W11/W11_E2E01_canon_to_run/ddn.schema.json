@@ -1,0 +1,7 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "나이", "type": "수" },
+    { "name": "인사", "type": "글" }
+  ]
+}

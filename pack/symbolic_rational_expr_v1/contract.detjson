@@ -1,0 +1,12 @@
+{
+  "schema": "ddn.symbolic_rational_expr.pack.contract.v1",
+  "evidence_tier": "product_containment",
+  "closure_claim": "no",
+  "unsafe_predecessor_disposition": "SUPERSEDED_UNCONDITIONAL_SUCCESS_GOLDEN",
+  "cases": [
+    "c01_cli_definedness_obligation_fail_closed",
+    "c02_ddn_definedness_obligation_fail_closed"
+  ],
+  "target": "teul-cli symbolic + DDN bridge"
+}
+

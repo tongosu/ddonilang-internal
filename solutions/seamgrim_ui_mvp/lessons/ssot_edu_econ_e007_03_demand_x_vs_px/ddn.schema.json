@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "I", "type": "수" },
+    { "name": "dpx", "type": "수" },
+    { "name": "px_max", "type": "수" },
+    { "name": "px_min", "type": "수" },
+    { "name": "px목록", "type": "수" },
+    { "name": "py", "type": "수" }
+  ]
+}

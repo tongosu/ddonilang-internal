@@ -1,0 +1,21 @@
+{
+  "profile": "abort",
+  "verified": false,
+  "contract_diag_count": 1,
+  "proof_hash": "sha256:08678afa5d02a12ec6f2c076f0e162368ac329a5d93cc7ffe19e323537bb65b4",
+  "cert_manifest_hash": "sha256:7affafe0ec4662b2c39dd9dd5dcfb28e995150a13f6b816eef971b2b5d0acbb8",
+  "bundle_hash": "sha256:7b6cecc2bd2cd7a0e7c0e69782bdb2672744c95710d114b1155a8215ad51ab2d",
+  "proof_entry": "fixtures/input_abort.ddn",
+  "proof_state_hash": "blake3:b0c1e40b1797185b27b0ace9ef48af371e0a1070affff9ddcd355992d6451d65",
+  "proof_trace_hash": "blake3:782e33e0cbf239c583d780b7363c0fab90ccb93cff4df982b5b0e2cc96de03cb",
+  "proof_subject_hash": "sha256:08678afa5d02a12ec6f2c076f0e162368ac329a5d93cc7ffe19e323537bb65b4",
+  "cert_pubkey": "sha256-proto:3138cdc468696eaa83ee7be8ce180363ddf81ad7a0fca8998da231f4350105dd",
+  "cert_signature": "sha256-proto:0c7424223ac33c7477198c7335203681f6683e2728d96e10b20c8dba38b15ca0",
+  "cert_subject_hash": "sha256:08678afa5d02a12ec6f2c076f0e162368ac329a5d93cc7ffe19e323537bb65b4",
+  "subject_path": "abort.proof.detjson",
+  "runtime_candidate_profile": "abort",
+  "runtime_candidate_verified": false,
+  "runtime_candidate_diag_count": 1,
+  "runtime_artifact_profile": "abort",
+  "runtime_artifact_source_proof_path": "abort.proof.detjson"
+}

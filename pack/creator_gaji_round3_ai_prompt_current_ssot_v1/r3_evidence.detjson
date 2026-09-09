@@ -1,0 +1,54 @@
+{
+  "schema": "ddn.creator_gaji_round3_ai_prompt_current_ssot.evidence.v1",
+  "date": "2026-07-17",
+  "r2_commit": "cd75407",
+  "internal_ssot_version": "v24.15.1",
+  "public_language_spec_version": "v0.2.1",
+  "version_namespaces_separate": true,
+  "authority_sources": {
+    "index": "docs/ssot/ssot/SSOT_INDEX_v24.15.1.md",
+    "manifest": "docs/ssot/ssot/SSOT_ALL_MANIFEST_v24.15.1.md",
+    "public_current": "publish/spec/CURRENT.md"
+  },
+  "generation": {
+    "command": "cargo run -p ddonirang-tool -- ai prompt --profile lean --out tests/toolchain_golden/ai_prompt_lean.txt",
+    "result": "PASS",
+    "bundle_kind": "dir",
+    "profile": "lean",
+    "bundle_hash": "sha256:6c9f0e6832170b73beecae053387ff0127bc9bdd48018b9aa7b724baa6fb8c93",
+    "file_list": [
+      "SSOT_INDEX_v24.15.1.md",
+      "SSOT_TERMS_v24.15.1.md",
+      "SSOT_DECISIONS_v24.15.1.md",
+      "SSOT_LANG_v24.15.1.md",
+      "SSOT_DEMOS_v24.15.1.md",
+      "GATE0_IMPLEMENTATION_CHECKLIST_v24.15.1.md"
+    ],
+    "golden_bytes": 640103,
+    "golden_sha256": "d6fa38e3728608fe190a147bee30eab808b9aa87bd79f5b3f62327f5dbbf1dab"
+  },
+  "invariants": {
+    "static_template_owns_version": false,
+    "authoritative_ssot_version_line_count": 1,
+    "stale_v20_6_33_absent": true,
+    "public_v0_2_1_not_used_as_ssot_version": true,
+    "index_manifest_mismatch_rejected": true,
+    "bundle_hash_file_list_and_version_same_source": true,
+    "utf8_bom_absent": true,
+    "lf_only": true,
+    "trailing_whitespace_absent": true
+  },
+  "tests": [
+    {"name": "ai_prompt_bundle_hash_vector_matches", "result": "PASS"},
+    {"name": "ai_prompt_output_invariants_hold", "result": "PASS"},
+    {"name": "ai_prompt_rejects_index_manifest_version_mismatch", "result": "PASS"},
+    {"name": "ai_prompt_output_matches_golden", "result": "PASS"}
+  ],
+  "claims": {
+    "r3_complete": true,
+    "r0_through_r7_complete": false,
+    "overall_goal_complete": false,
+    "external_creator_pilot_success_count": 0,
+    "docs_ssot_change": false
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "schema": "ddn.ganada.execution_evidence_registry.v3",
+  "pack": "ganada_execution_evidence_registry_v3",
+  "source_registry": "ganada_execution_evidence_registry_v2",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "scope": "Ganada Product Advancement Week4-5 touched cells",
+  "matrix_cells_total": 90,
+  "inherited_tracked_cells_count": 8,
+  "tracked_cells_count": 9,
+  "total_tracked_cells_after_inheritance": 17,
+  "week45_workflow_gates_count": 9,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "docs_only_behavior_closure_allowed": false,
+  "strong_evidence_required_for_behavior_close": true,
+  "strong_evidence_kinds": [
+    "pack_golden_pass",
+    "product_cli_or_runtime_pass",
+    "browser_or_ui_runner_pass",
+    "tooling_runner_or_ci_pass"
+  ],
+  "weak_evidence_kinds": [
+    "doc_report",
+    "proposal",
+    "markdown_existence_checker_only",
+    "status_token_only"
+  ],
+  "tracked_cells": [
+    {
+      "cell_id": "라-0",
+      "branch": "라",
+      "maru": 0,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la0_design_contract",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_seamgrim_malblock_design_check.py"],
+          "expect_stdout_contains": "[seamgrim-malblock-design] ok"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_branch_execution_reaudit_v1/reaudit.detjson:1",
+        "tests/run_seamgrim_malblock_design_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "라-1",
+      "branch": "라",
+      "maru": 1,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la1_first_run",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_first_run_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_first_run_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_first_run_v1/workflow.detjson:1",
+        "tests/ganada_la_malblock_first_run_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-2",
+      "branch": "라",
+      "maru": 2,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la2_roundtrip",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_roundtrip_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_roundtrip_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_roundtrip_v1/workflow.detjson:1",
+        "tests/run_ganada_la_malblock_roundtrip_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "라-3",
+      "branch": "라",
+      "maru": 3,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la3_workbench",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_workbench_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_workbench_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_workbench_v1/workflow.detjson:1",
+        "tests/ganada_la_malblock_workbench_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-4",
+      "branch": "라",
+      "maru": 4,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la4_share_seed",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_share_seed_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_share_seed_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_share_seed_v1/workflow.detjson:1",
+        "tests/run_ganada_la_malblock_share_seed_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "라-5",
+      "branch": "라",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "la5_block_editor_smoke",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_seamgrim_block_editor_smoke_check.py"],
+          "expect_stdout_contains": "block editor screen smoke ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_seamgrim_block_editor_smoke_check.py:1",
+        "tests/seamgrim_block_editor_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "카-2",
+      "branch": "카",
+      "maru": 2,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ka2_publication_read_api",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_ka_publication_read_api_check.py"],
+          "expect_stdout_contains": "ganada_ka_publication_read_api_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ka_publication_read_api_v1/workflow.detjson:1",
+        "tests/ganada_ka_publication_read_api_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "카-3",
+      "branch": "카",
+      "maru": 3,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ka3_project_share_ui",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_ka_project_share_ui_check.py"],
+          "expect_stdout_contains": "ganada_ka_project_share_ui_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ka_project_share_ui_v1/workflow.detjson:1",
+        "tests/ganada_ka_project_share_ui_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "카-4",
+      "branch": "카",
+      "maru": 4,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ka4_public_registry_seed",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_ka_public_registry_seed_check.py"],
+          "expect_stdout_contains": "ganada_ka_public_registry_seed_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ka_public_registry_seed_v1/workflow.detjson:1",
+        "tests/ganada_ka_public_registry_seed_runner.mjs:1"
+      ]
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "docs_only_behavior_close_block_v3",
+      "evidence_kinds": ["doc_report", "proposal", "markdown_existence_checker_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    },
+    {
+      "id": "status_token_only_behavior_close_block_v3",
+      "evidence_kinds": ["status_token_only"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    }
+  ]
+}

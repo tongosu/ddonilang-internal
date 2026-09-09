@@ -1,0 +1,302 @@
+{
+  "exact_blob_replacements": {},
+  "public_spec_identity": "Language_SPEC_v0.6.0_manifest_c3768144f426b84ef0bc4db5b4e1198948473c67e9a297e8f7b0bbf5e6e90bfb_seal_caa0d1df749216daa46b1db68db48aad5595d40b622d7601f9903b60a5e2b887",
+  "rules": [
+    {
+      "kind": "file",
+      "required": true,
+      "role": "BUILD_REQUIRED",
+      "source": ".gitattributes",
+      "target": ".gitattributes"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "BUILD_REQUIRED",
+      "source": ".gitignore",
+      "target": ".gitignore"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "BUILD_REQUIRED",
+      "source": "Cargo.toml",
+      "target": "Cargo.toml"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "BUILD_REQUIRED",
+      "source": "Cargo.lock",
+      "target": "Cargo.lock"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "BUILD_REQUIRED",
+      "source": "tools/public_cargo_config.toml",
+      "target": ".cargo/config.toml"
+    },
+    {
+      "json_remove_paths": [
+        [
+          "toolchain",
+          "teul_cli_bin"
+        ]
+      ],
+      "kind": "file",
+      "required": true,
+      "role": "PRODUCT_METADATA",
+      "source": "ddn.project.json",
+      "target": "ddn.project.json"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PRODUCT_METADATA",
+      "source": "ddn.schema.json",
+      "target": "ddn.schema.json"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PRODUCT_METADATA",
+      "source": "ddn.units.json",
+      "target": "ddn.units.json"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PRODUCT_METADATA",
+      "source": "ddn.asset.json",
+      "target": "ddn.asset.json"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PRODUCT_METADATA",
+      "source": "ddn.ai.policy.json",
+      "target": "ddn.ai.policy.json"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "core",
+      "target": "core"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "lang",
+      "target": "lang"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "numeric",
+      "target": "numeric"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "proof",
+      "target": "proof"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "symbolic",
+      "target": "symbolic"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "tool/Cargo.toml",
+      "target": "tool/Cargo.toml"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_SOURCE",
+      "source": "tool/src",
+      "target": "tool/src"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PRODUCT_ASSET",
+      "source": "tool/assets",
+      "target": "tool/assets"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "COMPILE_TIME_UNIT_TEST_SUPPORT",
+      "source": "tool/tests/ddn_execution_concurrency_w1c2_ddnrunner_dispatch.rs",
+      "target": "tool/tests/ddn_execution_concurrency_w1c2_ddnrunner_dispatch.rs"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PROJECTION_TOOL",
+      "source": "tools/project_public_source.py",
+      "target": "tools/project_public_source.py"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PROJECTION_VALIDATOR",
+      "source": "tools/validate_public_projection.py",
+      "target": "tools/validate_public_projection.py"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "WASM_CANDIDATE_TOOL",
+      "source": "tools/wasm_candidate_remap.py",
+      "target": "tools/wasm_candidate_remap.py"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PROJECTION_TOOL_TEST",
+      "source": "tests/test_project_public_source.py",
+      "target": "tests/test_project_public_source.py"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PROJECTION_VALIDATOR_TEST",
+      "source": "tests/test_validate_public_projection.py",
+      "target": "tests/test_validate_public_projection.py"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "WASM_BUILD_ENTRYPOINT",
+      "source": "scripts/build_wasm_tool.ps1",
+      "target": "scripts/build_wasm_tool.ps1"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "WINDOWS_X64_CANDIDATE_BUILD_ENTRYPOINT",
+      "source": "scripts/build_windows_x64_public_candidate.ps1",
+      "target": "scripts/build_windows_x64_public_candidate.ps1"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "WASM_BUILD_ENTRYPOINT",
+      "source": "scripts/copy_wasm_tool_to_ui.ps1",
+      "target": "scripts/copy_wasm_tool_to_ui.ps1"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "TRACKED_WASM_FAMILY",
+      "source": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.d.ts",
+      "target": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.d.ts"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "TRACKED_WASM_FAMILY",
+      "source": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js",
+      "target": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js"
+    },
+    {
+      "json_remove_paths": [
+        [
+          "generated_by",
+          "copy_command"
+        ]
+      ],
+      "kind": "file",
+      "required": true,
+      "role": "TRACKED_WASM_FAMILY",
+      "source": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.manifest.detjson",
+      "target": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.manifest.detjson"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "TRACKED_WASM_FAMILY",
+      "source": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
+      "target": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "TRACKED_WASM_FAMILY",
+      "source": "solutions/seamgrim_ui_mvp/ui/wasm/package.json",
+      "target": "solutions/seamgrim_ui_mvp/ui/wasm/package.json"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PUBLIC_SPEC_CURRENT",
+      "source": "publish/spec/CURRENT.md",
+      "target": "publish/spec/CURRENT.md"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PUBLIC_SPEC_EXACT_V0_6_0",
+      "source": "publish/spec/v0.6.0",
+      "target": "publish/spec/v0.6.0"
+    },
+    {
+      "kind": "tree",
+      "required": true,
+      "role": "PUBLIC_CONFORMANCE_CONTRACT",
+      "source": "pack/ddn_current_public_rejection_parity_v1",
+      "target": "pack/ddn_current_public_rejection_parity_v1"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PUBLIC_CONFORMANCE_INPUT",
+      "source": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c09_legacy_boim_reject/input.ddn",
+      "target": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c09_legacy_boim_reject/input.ddn"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PUBLIC_CONFORMANCE_INPUT",
+      "source": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c11_show_and_boim_split/input.ddn",
+      "target": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c11_show_and_boim_split/input.ddn"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PUBLIC_CONFORMANCE_INPUT",
+      "source": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c13_bogae_draw_madi_view_sugar/input.ddn",
+      "target": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c13_bogae_draw_madi_view_sugar/input.ddn"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PUBLIC_CONFORMANCE_RUNNER",
+      "source": "tests/run_ddn_cli_wasm_true_parity_successor_check.py",
+      "target": "tests/run_ddn_cli_wasm_true_parity_successor_check.py"
+    },
+    {
+      "kind": "file",
+      "required": true,
+      "role": "PUBLIC_CONFORMANCE_RUNNER",
+      "source": "tests/ddn_current_public_rejection_parity_runner.mjs",
+      "target": "tests/ddn_current_public_rejection_parity_runner.mjs"
+    }
+  ],
+  "schema": "ddn.public_projection_manifest.v25_40_official_cli_retirement_candidate.v1",
+  "source_commit": "ce877bf511b598c0b82348a005a8250c298098c0",
+  "status": "WINDOWS_X64_PATH_CLEAN_PUBLIC_SOURCE_OFFICIAL_CLI_CANDIDATE_NOT_PUBLICATION_AUTHORIZED",
+  "validation_receipt_identity": "OPEN_UNTIL_PATH_CLEAN_CANDIDATE_VALIDATION"
+}

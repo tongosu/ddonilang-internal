@@ -1,0 +1,59 @@
+{
+  "schema": "ddn.nurigym.step_record.v0.2.roundtrip_fixture.case.v1",
+  "case_id": "c04_reject",
+  "format_version": "v0.2",
+  "annex_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:58",
+  "producer_input": {
+    "mode": "single",
+    "agent_id": 3,
+    "raw_action": 99,
+    "out_of_range_policy": "reject"
+  },
+  "wire_record": {
+    "schema": "nurigym.step.v1",
+    "episode_id": 901,
+    "env_slot": 1,
+    "agent_id": 3,
+    "madi": 0,
+    "observation": {
+      "schema": "nurigym.obs.v1",
+      "slot_count": 2,
+      "values": [
+        0.0,
+        1.0
+      ]
+    },
+    "action": {
+      "schema": "nurigym.action.v1",
+      "value": 0
+    },
+    "reward": -1.0,
+    "next_observation": {
+      "schema": "nurigym.obs.v1",
+      "slot_count": 2,
+      "values": [
+        0.0,
+        1.0
+      ]
+    },
+    "done": false,
+    "raw_action": 99,
+    "resolved_action": 99,
+    "normalized_action": null,
+    "action_status": "거부",
+    "merge_candidates": [],
+    "merged_action": null,
+    "applied_action": 0,
+    "missing_input": []
+  },
+  "expected_consumer": {
+    "action_status": "거부",
+    "raw_action": 99,
+    "normalized_action": null,
+    "merged_action": null,
+    "applied_action": 0,
+    "missing_input": [],
+    "rejected_absent_from_merge": true,
+    "minimal_replay": false
+  }
+}

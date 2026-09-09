@@ -1,0 +1,9 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "dt", "type": "수" },
+    { "name": "g", "type": "수" },
+    { "name": "t", "type": "수" },
+    { "name": "y0", "type": "수" }
+  ]
+}

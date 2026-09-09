@@ -1,0 +1,134 @@
+{
+  "schema": "ddn.ganada.la.branch_execution_reaudit.v1",
+  "pack": "ganada_la_branch_execution_reaudit_v1",
+  "branch": "라",
+  "cell_count": 6,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_only_behavior_closure_allowed": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "cells": [
+    {
+      "cell_id": "라-0",
+      "workflow": "malblock_design_contract",
+      "behavior_closed_claim": false,
+      "commands": [
+        {
+          "id": "la0_design_contract",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_seamgrim_malblock_design_check.py"],
+          "expect_stdout_contains": "[seamgrim-malblock-design] ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_seamgrim_malblock_design_check.py:1",
+        "pack/seamgrim_malblock_0_v1/expected/malblock_design.detjson:1"
+      ]
+    },
+    {
+      "cell_id": "라-1",
+      "workflow": "malblock_first_run",
+      "behavior_closed_claim": false,
+      "commands": [
+        {
+          "id": "la1_first_run",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_first_run_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_first_run_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_first_run_v1/workflow.detjson:1",
+        "tests/ganada_la_malblock_first_run_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-2",
+      "workflow": "malblock_roundtrip_subset",
+      "behavior_closed_claim": false,
+      "commands": [
+        {
+          "id": "la2_roundtrip",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_roundtrip_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_roundtrip_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_roundtrip_v1/workflow.detjson:1",
+        "tests/run_block_editor_roundtrip_check.py:1"
+      ]
+    },
+    {
+      "cell_id": "라-3",
+      "workflow": "malblock_three_mode_workbench",
+      "behavior_closed_claim": false,
+      "commands": [
+        {
+          "id": "la3_workbench",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_workbench_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_workbench_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_workbench_v1/workflow.detjson:1",
+        "tests/ganada_la_malblock_workbench_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-4",
+      "workflow": "malblock_local_share_seed",
+      "behavior_closed_claim": false,
+      "commands": [
+        {
+          "id": "la4_share_seed",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_ganada_la_malblock_share_seed_check.py"],
+          "expect_stdout_contains": "ganada_la_malblock_share_seed_check: PASS"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_la_malblock_share_seed_v1/workflow.detjson:1",
+        "tests/studio_local_share_and_packaging_browser_runner.mjs:1"
+      ]
+    },
+    {
+      "cell_id": "라-5",
+      "workflow": "block_editor_screen_stability_matrix",
+      "behavior_closed_claim": false,
+      "commands": [
+        {
+          "id": "la5_block_editor_smoke",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_seamgrim_block_editor_smoke_check.py"],
+          "expect_stdout_contains": "block editor screen smoke ok"
+        }
+      ],
+      "file_line_refs": [
+        "tests/run_seamgrim_block_editor_smoke_check.py:1",
+        "tests/seamgrim_block_editor_runner.mjs:1"
+      ]
+    }
+  ],
+  "baseline_stale_failures": [
+    {
+      "command": ["python", "tests/run_malblock_authoring_ui_check.py"],
+      "observed_failure": "E_MALBLOCK_AUTHORING_UI_MISSING",
+      "classification": "stale_markdown_dependency_not_product_runner_failure"
+    },
+    {
+      "command": ["python", "tests/run_studio_malblock_workbench_integration_check.py"],
+      "observed_failure": "DEV_SUMMARY missing historic tokens",
+      "classification": "stale_summary_token_dependency_not_product_runner_failure"
+    },
+    {
+      "command": ["python", "tests/run_seamgrim_malblock_roundtrip_subset_check.py"],
+      "observed_failure": "missing SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1.md",
+      "classification": "stale_markdown_dependency_not_roundtrip_runner_failure"
+    }
+  ]
+}

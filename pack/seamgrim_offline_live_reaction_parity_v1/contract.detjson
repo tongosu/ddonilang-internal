@@ -1,0 +1,41 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_offline_live_reaction_parity_v1",
+  "kind": "seamgrim_offline_live_reaction_parity",
+  "product_behavior_claim": true,
+  "closed_by": "SEAMGRIM_OFFLINE_LIVE_REACTION_PARITY_V1",
+  "runner": "tests/seamgrim_offline_live_reaction_parity_runner.mjs",
+  "offline_runtime": "solutions/seamgrim_ui_mvp/ui/trace_reaction_runtime.js",
+  "live_runtime": "solutions/seamgrim_ui_mvp/ui/live_trace_reaction_runtime.js",
+  "resolved_scene_trace_schema": "seamgrim.resolved_scene_trace.v1",
+  "fixtures": [
+    "normal_sequential_input",
+    "same_tick_same_payload_duplicate",
+    "same_tick_different_payload_duplicate",
+    "reverse_tick",
+    "tick_gap",
+    "lineage_transition",
+    "same_property_conflict",
+    "explicit_priority_resolution"
+  ],
+  "compares": [
+    "utterance_tick",
+    "rule_id",
+    "predicate_result",
+    "selected_actions",
+    "suppressed_actions",
+    "diagnostics",
+    "camera_policy"
+  ],
+  "diagnostic_layers": ["what", "where", "fix"],
+  "same_priority_conflict_code": "E_TRACE_REACTION_CONFLICT",
+  "same_priority_conflict_view_code": "E_VIEW_REACTION_CONFLICT",
+  "state_hash_participation": false,
+  "state_hash_formula_change": false,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "docs_ssot_change": false,
+  "stage_plan_created": false,
+  "world_write": false,
+  "requires_docs_ssot_clean": true
+}

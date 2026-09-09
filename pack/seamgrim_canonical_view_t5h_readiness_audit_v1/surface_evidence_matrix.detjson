@@ -1,0 +1,112 @@
+{
+  "schema": "seamgrim.canonical_view.t5h_surface_evidence_matrix.v1",
+  "canonical_owner": "solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js",
+  "allowed_classifications": [
+    "PRODUCT_FUNCTION_BYTE_PARITY",
+    "ACTUAL_PRODUCT_BROWSER_VERTICAL",
+    "PRODUCT_BROWSER_AND_SERIALIZATION_BOUNDARY",
+    "SERIALIZATION_BYTE_PARITY",
+    "PRESENTATION_PORT_PARITY"
+  ],
+  "expected_classification_counts": {
+    "PRODUCT_FUNCTION_BYTE_PARITY": 15,
+    "ACTUAL_PRODUCT_BROWSER_VERTICAL": 4,
+    "PRODUCT_BROWSER_AND_SERIALIZATION_BOUNDARY": 2,
+    "SERIALIZATION_BYTE_PARITY": 2,
+    "PRESENTATION_PORT_PARITY": 3
+  },
+  "executables": [
+    {"id":"T5B_GOLDEN","runner":"tests/seamgrim_console_graph_canonical_view_payload_runner.mjs","browser":false},
+    {"id":"T5C_GOLDEN","runner":"tests/seamgrim_space2d_canonical_view_payload_runner.mjs","browser":false},
+    {"id":"T5D_GOLDEN","runner":"tests/seamgrim_table_text_structure_canonical_view_payload_runner.mjs","browser":false},
+    {"id":"T5E_GOLDEN","runner":"tests/seamgrim_console_grid_grid2d_canonical_view_payload_runner.mjs","browser":false},
+    {"id":"T5F_GOLDEN","runner":"tests/seamgrim_workbench_four_family_canonical_view_payload_runner.mjs","browser":false,"requires_source_wasm":true},
+    {"id":"T5F_BROWSER","runner":"tests/seamgrim_workbench_committed_view_verticals_browser_runner.mjs","browser":true,"requires_source_wasm":true},
+    {"id":"T5G_GOLDEN","runner":"tests/seamgrim_scene_curriculum_canonical_view_payload_runner.mjs","browser":false},
+    {"id":"T5G_BROWSER","runner":"tests/seamgrim_scene_curriculum_canonical_view_payload_browser_runner.mjs","browser":true},
+    {"id":"PLAYGROUND_IDENTITY_AUDIT","runner":"tests/seamgrim_canonical_view_t5h_playground_surface_identity_audit_runner.mjs","browser":false},
+    {"id":"PLAYGROUND_OPTION_B_MUTATION","runner":"tests/seamgrim_canonical_view_t5h_playground_option_b_mutation_runner.mjs","browser":false}
+  ],
+  "rows": [
+    {"key":"console","family":"console","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5B_GOLDEN","required_marker":"run_workbench_console_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5B_GOLDEN","required_marker":"run_workbench_console_byte_parity: true"}
+    ]},
+    {"key":"console_grid","family":"console-grid","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5E_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5E_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"bogae","classification":"PRESENTATION_PORT_PARITY","executable_id":"T5E_GOLDEN","required_marker":"this.bogae.renderCanonicalCellGrid(canonicalCellGridPayload)"}
+    ]},
+    {"key":"graph","family":"graph","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5B_GOLDEN","required_marker":"run_workbench_graph_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5B_GOLDEN","required_marker":"run_workbench_graph_byte_parity: true"}
+    ]},
+    {"key":"space2d","family":"space2d","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5C_GOLDEN","required_marker":"run_playground_space2d_byte_parity: true"},
+      {"surface":"bogae","classification":"PRESENTATION_PORT_PARITY","executable_id":"T5C_GOLDEN","required_marker":"run_bogae_space2d_byte_parity: true"}
+    ]},
+    {"key":"table","family":"table","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5D_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5D_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"}
+    ]},
+    {"key":"text","family":"text","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5D_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5D_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"}
+    ]},
+    {"key":"structure","family":"structure","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5D_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5D_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"}
+    ]},
+    {"key":"grid2d","family":"grid2d","evidence":[
+      {"surface":"run","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5E_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"workbench","classification":"PRODUCT_FUNCTION_BYTE_PARITY","executable_id":"T5E_GOLDEN","required_marker":"run_workbench_playground_byte_parity: true"},
+      {"surface":"nurimaker","classification":"PRESENTATION_PORT_PARITY","executable_id":"T5E_GOLDEN","required_marker":"Nurimaker canonical owner drift"}
+    ]},
+    {"key":"workbench_line","family":"workbench-line","evidence":[
+      {"surface":"workbench","classification":"ACTUAL_PRODUCT_BROWSER_VERTICAL","executable_id":"T5F_BROWSER","required_marker":"canonicalWorkbenchSnapshot(page, \"line\")"}
+    ]},
+    {"key":"workbench_pendulum","family":"workbench-pendulum","evidence":[
+      {"surface":"workbench","classification":"ACTUAL_PRODUCT_BROWSER_VERTICAL","executable_id":"T5F_BROWSER","required_marker":"canonicalWorkbenchSnapshot(page, \"pendulum\")"}
+    ]},
+    {"key":"workbench_projectile","family":"workbench-projectile","evidence":[
+      {"surface":"workbench","classification":"ACTUAL_PRODUCT_BROWSER_VERTICAL","executable_id":"T5F_BROWSER","required_marker":"canonicalWorkbenchSnapshot(page, \"projectile\")"}
+    ]},
+    {"key":"workbench_grid","family":"workbench-grid","evidence":[
+      {"surface":"workbench","classification":"ACTUAL_PRODUCT_BROWSER_VERTICAL","executable_id":"T5F_BROWSER","required_marker":"canonicalWorkbenchSnapshot(page, \"grid\")"}
+    ]},
+    {"key":"scene_summary","family":"scene-summary","evidence":[
+      {"surface":"app","classification":"PRODUCT_BROWSER_AND_SERIALIZATION_BOUNDARY","executable_id":"T5G_BROWSER","required_marker":"browser scene must preserve upstream canonical no_view"},
+      {"surface":"scene_session","classification":"SERIALIZATION_BYTE_PARITY","executable_id":"T5G_GOLDEN","required_marker":"scene session restore parity failed"}
+    ]},
+    {"key":"curriculum_semantic_scene","family":"curriculum-semantic-scene","evidence":[
+      {"surface":"run","classification":"PRODUCT_BROWSER_AND_SERIALIZATION_BOUNDARY","executable_id":"T5G_BROWSER","required_marker":"browser curriculum must preserve upstream canonical no_view"},
+      {"surface":"project_snapshot","classification":"SERIALIZATION_BYTE_PARITY","executable_id":"T5G_GOLDEN","required_marker":"curriculum project snapshot parity failed"}
+    ]}
+  ],
+  "compatibility_evidence": {
+    "surface": "playground",
+    "classification": "LEGACY_COMPATIBILITY_ONLY",
+    "owner_decision": "OPTION_B_PLAYGROUND_IS_LEGACY_COMPATIBILITY_ONLY",
+    "authoritative_meaning_owner": "solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js",
+    "full_product_surface_identity": false,
+    "keys": ["console", "console_grid", "graph", "space2d", "table", "text", "structure", "grid2d", "workbench_line", "workbench_pendulum", "workbench_projectile", "workbench_grid"],
+    "executable_id": "PLAYGROUND_IDENTITY_AUDIT"
+  },
+  "non_consumer_evidence": {
+    "surface": "run",
+    "classification": "NOT_ACTUAL_PRODUCT_CONSUMER",
+    "keys": ["workbench_line", "workbench_pendulum", "workbench_projectile", "workbench_grid"],
+    "source": "solutions/seamgrim_ui_mvp/ui/screens/run.js",
+    "forbidden_family_specific_consumer_markers": ["canonicalViewPayloads?.workbench_line", "canonicalViewPayloads?.workbench_pendulum", "canonicalViewPayloads?.workbench_projectile", "canonicalViewPayloads?.workbench_grid"]
+  },
+  "claim_boundaries": {
+    "matrix_cell_count": 26,
+    "direct_or_serialization_executable_cells": 23,
+    "presentation_port_cells": 3,
+    "legacy_compatibility_cells": 12,
+    "excluded_non_consumer_cells": 4,
+    "t5h_actual_surface_parity_closed": true,
+    "t5g_plain_pass_bound": true,
+    "playground_option_b_bound": true
+  }
+}

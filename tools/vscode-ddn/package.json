@@ -1,0 +1,74 @@
+{
+  "name": "ddn-language",
+  "displayName": "Ddonilang (ddn)",
+  "description": "Ddonilang language registration, syntax highlighting, and local stdio LSP client",
+  "version": "0.0.1",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:ddonilang"
+  ],
+  "publisher": "ddonilang",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "ddonilang",
+        "aliases": [
+          "DDN",
+          "ddn",
+          "Ddonilang",
+          "또니랑"
+        ],
+        "extensions": [
+          ".ddn",
+          ".ddl",
+          ".옮김"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ddonilang",
+        "scopeName": "source.ddn",
+        "path": "./syntaxes/ddn.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "ddn",
+        "path": "./snippets/ddn.code-snippets"
+      }
+    ],
+    "configuration": {
+      "title": "Ddonilang",
+      "properties": {
+        "ddonilang.lsp.executable": {
+          "type": "string",
+          "default": "",
+          "description": "Exact local path to ddonirang-lsp. Used by the future stdio client; empty means bounded local discovery."
+        },
+        "ddonilang.lsp.autoDiscover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow bounded local discovery of a Cargo-built ddonirang-lsp executable."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node test/extension.test.js && node test/activation.test.js && node test/package-inventory.js",
+    "package:inventory": "node test/package-inventory.js"
+  },
+  "dependencies": {
+    "vscode-languageclient": "8.1.0"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "3.9.2"
+  }
+}

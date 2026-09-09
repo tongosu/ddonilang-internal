@@ -1,0 +1,33 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_current_line_three_worlds_v1",
+  "kind": "seamgrim_current_line_three_worlds_product_behavior",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "product_behavior_claim": true,
+  "closed_by": "SEAMGRIM_CURRENT_LINE_THREE_WORLDS_V1",
+  "browser_runner": "tests/seamgrim_current_line_three_worlds_runner.mjs",
+  "world_manifest": "pack/seamgrim_current_line_three_worlds_v1/worlds.detjson",
+  "world_count": 3,
+  "feasibility_grade": "ga",
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "docs_ssot_change": false,
+  "corpus_inclusion_claim": false,
+  "covers": [
+    "three_first_delight_routes",
+    "active_representative_pack_reuse",
+    "two_or_three_beginner_controls",
+    "trajectory_or_graph_nonblank",
+    "changed_input_changed_state_hash",
+    "same_changed_input_same_state_hash",
+    "desktop_mobile_layout",
+    "cli_check_canon_run_same_source"
+  ],
+  "evidence": [
+    "node tests/seamgrim_first_delight_projectile_runner.mjs",
+    "node tests/seamgrim_current_line_three_worlds_runner.mjs",
+    "python tests/run_seamgrim_subject_representative_examples_check.py"
+  ],
+  "requires_docs_ssot_clean": true
+}

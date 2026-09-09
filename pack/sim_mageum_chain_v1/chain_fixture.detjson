@@ -1,0 +1,16 @@
+{
+  "schema": "ddn.declarative_closure.mageum.fixture.v1",
+  "pack": "sim_mageum_chain_v1",
+  "fixture_id": "chain_clamp_wrap_red",
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "reactions": [
+    "조임",
+    "감쌈"
+  ],
+  "proposed_surface": "막음 사슬 { 길이 <= L, 반응: 조임; 영역 안, 반응: 감쌈 }",
+  "accepted_product_surface": false,
+  "runtime_landed": false,
+  "parser_landed": false,
+  "expected_status": "red_contract_only"
+}

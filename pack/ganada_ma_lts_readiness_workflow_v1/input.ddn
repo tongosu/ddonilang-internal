@@ -1,0 +1,6 @@
+"GANADA_MA_LTS_READINESS_WORKFLOW_V1" 보여주기.
+"cell=마-5" 보여주기.
+"selectors=lts-readiness-panel,lts-regression-gate,lts-operations-report,lts-boundary-warning" 보여주기.
+"lts_runner_matrix_policy=local_regression_gate" 보여주기.
+"lts_certification_claim=false" 보여주기.
+"checker=tests/run_ganada_ma_lts_readiness_check.py" 보여주기.

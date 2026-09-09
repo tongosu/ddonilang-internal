@@ -1,0 +1,10 @@
+{
+  "lesson_id": "physics_motion_header_sample",
+  "title": "물리 · 등가속도",
+  "required_views": ["graph", "table"],
+  "ddn_meta": {
+    "name": "",
+    "desc": ""
+  }
+}
+

@@ -1,0 +1,18 @@
+{
+  "schema": "ddn.seulgi_ai_gate_no_authority_g7.contract.v1",
+  "pack_id": "seulgi_ai_gate_no_authority_g7_v1",
+  "goal": "G7 Seulgi gate fixture: AI proposal no-authority until sealed artifact",
+  "evidence_tier": "pack_skeleton_plus_existing_gatekeeper_reference",
+  "closure_grade": "닫힘-문서",
+  "linked_existing_evidence": [
+    "pack/seulgi_gatekeeper_v1/contract.detjson",
+    "tests/run_seulgi_gatekeeper_pack_check.py"
+  ],
+  "natural_language_direct_execution": false,
+  "ai_proposal_has_authority_before_gate": false,
+  "gate_required": true,
+  "sealed_artifact_required_for_authority": true,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_change": false
+}

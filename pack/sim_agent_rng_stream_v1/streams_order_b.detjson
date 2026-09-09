@@ -1,0 +1,64 @@
+{
+  "schema": "ddn.sim.agent_rng_stream.fixture.v1",
+  "fixture_id": "order_b",
+  "global_seed": 8675309,
+  "derivation": "(global_seed, agent_id, stream_name)",
+  "traversal_order": [
+    {
+      "agent_id": "agent-B",
+      "stream_name": "explore",
+      "draw_count": 2
+    },
+    {
+      "agent_id": "agent-A",
+      "stream_name": "explore",
+      "draw_count": 2
+    },
+    {
+      "agent_id": "agent-B",
+      "stream_name": "policy",
+      "draw_count": 3
+    },
+    {
+      "agent_id": "agent-A",
+      "stream_name": "policy",
+      "draw_count": 3
+    }
+  ],
+  "draws_by_stream": [
+    {
+      "agent_id": "agent-B",
+      "stream_name": "explore",
+      "draws_hex16": [
+        "b9f7faa2137921ba",
+        "d6d1041f9dd28a32"
+      ]
+    },
+    {
+      "agent_id": "agent-A",
+      "stream_name": "explore",
+      "draws_hex16": [
+        "ffe69d5a06eddb94",
+        "47efbf577a6cb0de"
+      ]
+    },
+    {
+      "agent_id": "agent-B",
+      "stream_name": "policy",
+      "draws_hex16": [
+        "9ff88db3b89114c3",
+        "e831700b9cf4efd0",
+        "224cbb8d5f3e4711"
+      ]
+    },
+    {
+      "agent_id": "agent-A",
+      "stream_name": "policy",
+      "draws_hex16": [
+        "295a015acf4be402",
+        "4841886d08f133e4",
+        "93cc1106c34782fb"
+      ]
+    }
+  ]
+}

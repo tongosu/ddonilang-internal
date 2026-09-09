@@ -1,0 +1,17 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "elem_math_rectangle_area",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "graph",
+  "required_anchor_ids": ["obs.time", "obs.width", "obs.height", "obs.area"],
+  "anchors": [
+    {"anchor_id": "obs.time", "source_ref": {"kind": "observation", "key": "t"}, "value_type": "scalar", "unit": "tick", "label": "마디", "accessibility_name": "직사각형 마디", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_rectangle_area/lesson.ddn", "source_span": "t <- t + 1"}},
+    {"anchor_id": "obs.width", "source_ref": {"kind": "observation", "key": "고정가로"}, "value_type": "scalar", "unit": "칸", "label": "가로", "accessibility_name": "직사각형 가로", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_rectangle_area/lesson.ddn", "source_span": "가로: 고정가로"}},
+    {"anchor_id": "obs.height", "source_ref": {"kind": "observation", "key": "세로"}, "value_type": "scalar", "unit": "칸", "label": "세로", "accessibility_name": "직사각형 세로", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_rectangle_area/lesson.ddn", "source_span": "세로 <- 세로 + 증가폭"}},
+    {"anchor_id": "obs.area", "source_ref": {"kind": "observation", "key": "넓이"}, "value_type": "scalar", "unit": "칸^2", "label": "넓이", "accessibility_name": "직사각형 넓이", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_rectangle_area/lesson.ddn", "source_span": "넓이 <- 고정가로 * 세로"}}
+  ],
+  "measures": [],
+  "graph_cursor": {"cursor_id": "graph.current.area", "x_anchor": "obs.time", "y_anchor": "obs.area", "series_id": "넓이", "label": "현재 넓이"},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

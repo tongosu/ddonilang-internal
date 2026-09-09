@@ -1,0 +1,1054 @@
+{
+  "schema": "seamgrim.lesson_card.v0",
+  "claim_boundary": {
+    "canonical_curriculum_alignment": false,
+    "external_student_success_claim": false,
+    "state_hash_formula_change": false
+  },
+  "cards": [
+    {
+      "lesson_id": "elem_math_number_line",
+      "world_id": "elem_math_number_line",
+      "grade_band": "elementary",
+      "subject_refs": [
+        "math"
+      ],
+      "curriculum_refs": [
+        "kr2022.math.elementary.number.candidate"
+      ],
+      "concept_spine_refs": [
+        "measurement_unit",
+        "relation_function"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "patterns",
+        "scale_rate"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "시작위치",
+        "이동량",
+        "최소값",
+        "최대값",
+        "목표값",
+        "최대마디"
+      ],
+      "allowed_observations": [
+        "t",
+        "위치",
+        "목표값",
+        "거리",
+        "방향"
+      ],
+      "prediction_prompt": "이동량을 크게 하면 목표값까지의 거리가 어떻게 달라질지 예상하세요.",
+      "inquiry_prompt": "시작위치와 이동량 중 하나만 바꾸고 수직선 위 위치 변화를 비교하세요.",
+      "misconception_refs": [
+        "number_line_position_as_count"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "elem_math_number_line",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "초등",
+        "core_concepts": [
+          "수직선",
+          "위치",
+          "거리"
+        ],
+        "inquiry_actions": [
+          "예상하기",
+          "하나만 바꾸기",
+          "위치 읽기"
+        ]
+      }
+    },
+    {
+      "lesson_id": "elem_math_fraction_line",
+      "world_id": "elem_math_fraction_line",
+      "grade_band": "elementary",
+      "subject_refs": [
+        "math"
+      ],
+      "curriculum_refs": [
+        "kr2022.math.elementary.number.candidate"
+      ],
+      "concept_spine_refs": [
+        "measurement_unit",
+        "relation_function"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "scale_rate",
+        "patterns"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "시작x",
+        "증가량",
+        "최대x",
+        "분모",
+        "최대마디"
+      ],
+      "allowed_observations": [
+        "t",
+        "x",
+        "분모",
+        "분수값",
+        "복원값",
+        "차이"
+      ],
+      "prediction_prompt": "분모를 바꾸면 같은 x에서 분수값이 어떻게 달라질지 예상하세요.",
+      "inquiry_prompt": "분모 하나만 바꾸고 분수값과 복원값의 차이를 비교하세요.",
+      "misconception_refs": [
+        "fraction_denominator_only"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/elem_math_fraction_line/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "elem_math_fraction_line",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "초등",
+        "core_concepts": [
+          "분수",
+          "소수",
+          "비율"
+        ],
+        "inquiry_actions": [
+          "크기 예상",
+          "분모 바꾸기",
+          "차이 읽기"
+        ]
+      }
+    },
+    {
+      "lesson_id": "elem_math_rectangle_area",
+      "world_id": "elem_math_rectangle_area",
+      "grade_band": "elementary",
+      "subject_refs": [
+        "math"
+      ],
+      "curriculum_refs": [
+        "kr2022.math.elementary.geometry.candidate"
+      ],
+      "concept_spine_refs": [
+        "measurement_unit",
+        "relation_function"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "scale_rate",
+        "patterns"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "고정가로",
+        "초기세로",
+        "증가폭",
+        "최대세로",
+        "최대마디"
+      ],
+      "allowed_observations": [
+        "t",
+        "가로",
+        "세로",
+        "넓이",
+        "둘레"
+      ],
+      "prediction_prompt": "세로가 늘어나면 넓이와 둘레 중 무엇이 더 빠르게 바뀔지 예상하세요.",
+      "inquiry_prompt": "가로를 고정하고 세로만 바꾸며 넓이 변화를 그래프에서 읽으세요.",
+      "misconception_refs": [
+        "area_adds_not_multiplies"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/elem_math_rectangle_area/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "elem_math_rectangle_area",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "초등",
+        "core_concepts": [
+          "넓이",
+          "둘레",
+          "곱셈"
+        ],
+        "inquiry_actions": [
+          "변화 예상",
+          "세로 바꾸기",
+          "그래프 읽기"
+        ]
+      }
+    },
+    {
+      "lesson_id": "elem_science_daily_temperature",
+      "world_id": "elem_science_daily_temperature",
+      "grade_band": "elementary",
+      "subject_refs": [
+        "physics"
+      ],
+      "curriculum_refs": [
+        "kr2022.science.elementary.data.candidate"
+      ],
+      "concept_spine_refs": [
+        "change_rate",
+        "state_time"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.plan_investigation",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "patterns",
+        "cause_effect"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "평균기온",
+        "일교차",
+        "완충계수",
+        "하루주기마디",
+        "최대마디"
+      ],
+      "allowed_observations": [
+        "t",
+        "목표기온",
+        "현재기온",
+        "변화량"
+      ],
+      "prediction_prompt": "일교차를 키우면 현재기온 그래프의 오르내림이 어떻게 바뀔지 예상하세요.",
+      "inquiry_prompt": "일교차 하나만 바꾸고 목표기온과 현재기온의 차이를 비교하세요.",
+      "misconception_refs": [
+        "temperature_changes_jump"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/elem_science_daily_temperature/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "elem_science_daily_temperature",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "초등",
+        "core_concepts": [
+          "기온",
+          "하루 변화",
+          "완만한 변화"
+        ],
+        "inquiry_actions": [
+          "변화 예상",
+          "하나만 바꾸기",
+          "차이 비교"
+        ]
+      }
+    },
+    {
+      "lesson_id": "elem_econ_allowance_budget",
+      "world_id": "elem_econ_allowance_budget",
+      "grade_band": "elementary",
+      "subject_refs": [
+        "econ"
+      ],
+      "curriculum_refs": [
+        "kr2022.econ.personal_finance.candidate"
+      ],
+      "concept_spine_refs": [
+        "feedback_balance",
+        "cause_effect"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "systems",
+        "cause_effect"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "월용돈",
+        "기본지출",
+        "지출증가",
+        "추가지출시작",
+        "추가지출",
+        "저축목표",
+        "최대마디"
+      ],
+      "allowed_observations": [
+        "t",
+        "용돈",
+        "지출",
+        "순증감",
+        "잔액",
+        "누적저축",
+        "누적지출",
+        "목표달성"
+      ],
+      "prediction_prompt": "지출이 늘어나면 잔액과 목표달성이 어떻게 달라질지 예상하세요.",
+      "inquiry_prompt": "추가지출 하나만 바꾸고 잔액과 누적저축 변화를 비교하세요.",
+      "misconception_refs": [
+        "budget_income_only"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/elem_econ_allowance_budget/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "elem_econ_allowance_budget",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "초등",
+        "core_concepts": [
+          "수입",
+          "지출",
+          "잔액"
+        ],
+        "inquiry_actions": [
+          "잔액 예상",
+          "지출 바꾸기",
+          "목표 확인"
+        ]
+      }
+    },
+    {
+      "lesson_id": "elem_econ_store_stock",
+      "world_id": "elem_econ_store_stock",
+      "grade_band": "elementary",
+      "subject_refs": [
+        "econ"
+      ],
+      "curriculum_refs": [
+        "kr2022.econ.personal_finance.candidate"
+      ],
+      "concept_spine_refs": [
+        "feedback_balance",
+        "state_time"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "systems",
+        "stability_change"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "초기재고",
+        "주문점",
+        "보충량",
+        "리드마디",
+        "기본수요",
+        "수요증가",
+        "최대마디"
+      ],
+      "allowed_observations": [
+        "t",
+        "수요",
+        "판매",
+        "재고",
+        "발주",
+        "보충",
+        "대기마디"
+      ],
+      "prediction_prompt": "수요가 늘어나면 재고가 주문점에 얼마나 빨리 가까워질지 예상하세요.",
+      "inquiry_prompt": "주문점 하나만 바꾸고 발주와 보충이 나타나는 마디를 비교하세요.",
+      "misconception_refs": [
+        "stock_replenishes_instantly"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/elem_econ_store_stock/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "elem_econ_store_stock",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "초등",
+        "core_concepts": [
+          "재고",
+          "수요",
+          "보충 지연"
+        ],
+        "inquiry_actions": [
+          "재고 예상",
+          "주문점 바꾸기",
+          "보충 확인"
+        ]
+      }
+    },
+    {
+      "lesson_id": "rep_math_function_line_v1",
+      "world_id": "rep_math_function_line_v1",
+      "grade_band": "middle",
+      "subject_refs": [
+        "math"
+      ],
+      "curriculum_refs": [
+        "kr2022.math.middle.function.candidate",
+        "ccss.math.function"
+      ],
+      "concept_spine_refs": [
+        "relation_function",
+        "change_rate"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "patterns",
+        "scale_rate"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "table",
+        "text"
+      ],
+      "allowed_controls": [
+        "기울기",
+        "절편",
+        "간격"
+      ],
+      "allowed_observations": [
+        "x",
+        "y"
+      ],
+      "prediction_prompt": "기울기를 크게 하면 같은 x에서 y가 어떻게 달라질지 먼저 적어 보세요.",
+      "inquiry_prompt": "기울기와 절편 중 하나만 바꾸고 그래프와 식의 대응을 비교하세요.",
+      "misconception_refs": [
+        "graph_height_is_slope"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_current_line_three_worlds_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "rep_math_function_line_v1",
+        "source_status": "existing_representative"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_current_line_three_worlds_check.py",
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "existing_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "중학교",
+        "core_concepts": [
+          "기울기",
+          "절편",
+          "식과 그래프 대응"
+        ],
+        "inquiry_actions": [
+          "예상하기",
+          "하나만 바꾸기",
+          "그래프 읽기"
+        ]
+      }
+    },
+    {
+      "lesson_id": "rep_phys_pendulum_wave1_v1",
+      "world_id": "rep_phys_pendulum_wave1_v1",
+      "grade_band": "middle",
+      "subject_refs": [
+        "physics"
+      ],
+      "curriculum_refs": [
+        "kr2022.physics.motion.candidate"
+      ],
+      "concept_spine_refs": [
+        "state_time",
+        "energy_flow",
+        "measurement_unit"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.plan_investigation",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "systems",
+        "stability_change"
+      ],
+      "primary_view": "space2d",
+      "secondary_views": [
+        "graph",
+        "text"
+      ],
+      "allowed_controls": [
+        "L",
+        "g",
+        "theta0",
+        "dt"
+      ],
+      "allowed_observations": [
+        "theta",
+        "omega",
+        "bob_x",
+        "bob_y",
+        "t"
+      ],
+      "prediction_prompt": "줄 길이를 바꾸기 전에 진자의 왕복이 빨라질지 느려질지 예상하세요.",
+      "inquiry_prompt": "줄 길이 하나만 바꾸고 각도 그래프와 추 위치를 같은 마디에서 비교하세요.",
+      "misconception_refs": [
+        "pendulum_longer_means_faster"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_pendulum_view_plan_product_v1"
+        ]
+      },
+      "view_refs": {
+        "lesson_plan": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson_plan.v0.toml",
+        "view_plan": "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/view_plan.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "rep_phys_pendulum_wave1_v1",
+        "source_status": "existing_representative"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_pendulum_view_plan_product_check.py",
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "existing_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "중학교",
+        "core_concepts": [
+          "각도",
+          "속도",
+          "줄 길이",
+          "에너지 흐름"
+        ],
+        "inquiry_actions": [
+          "예상 기록",
+          "조절값 실험",
+          "같은 마디 비교"
+        ]
+      }
+    },
+    {
+      "lesson_id": "rep_phys_projectile_xy_v1",
+      "world_id": "rep_phys_projectile_xy_v1",
+      "grade_band": "middle",
+      "subject_refs": [
+        "physics"
+      ],
+      "curriculum_refs": [
+        "kr2022.physics.motion.candidate"
+      ],
+      "concept_spine_refs": [
+        "state_time",
+        "change_rate",
+        "measurement_unit"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "cause_effect",
+        "scale_rate"
+      ],
+      "primary_view": "space2d",
+      "secondary_views": [
+        "graph",
+        "text"
+      ],
+      "allowed_controls": [
+        "초기속도x",
+        "초기속도y",
+        "중력가속도"
+      ],
+      "allowed_observations": [
+        "x",
+        "y",
+        "vx",
+        "vy"
+      ],
+      "prediction_prompt": "중력을 바꾸기 전에 궤적의 높이와 도달 거리를 예상하세요.",
+      "inquiry_prompt": "중력 또는 초기속도 하나만 바꾸고 궤적과 속도 벡터를 비교하세요.",
+      "misconception_refs": [
+        "projectile_speed_constant"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_first_delight_projectile_v1",
+          "seamgrim_wave2b_representative_worlds_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson",
+        "world_diff": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/world_diff_gravity_half.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "rep_phys_projectile_xy_v1",
+        "source_status": "existing_representative"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave2b_representative_worlds_check.py",
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "existing_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "중학교",
+        "core_concepts": [
+          "위치",
+          "속도 벡터",
+          "궤적",
+          "중력"
+        ],
+        "inquiry_actions": [
+          "예상하기",
+          "궤적 비교",
+          "그래프와 코드 연결"
+        ]
+      }
+    },
+    {
+      "lesson_id": "rep_econ_supply_demand_tax_v1",
+      "world_id": "rep_econ_supply_demand_tax_v1",
+      "grade_band": "middle",
+      "subject_refs": [
+        "econ"
+      ],
+      "curriculum_refs": [
+        "kr2022.econ.market.candidate",
+        "cee.econ.market"
+      ],
+      "concept_spine_refs": [
+        "feedback_balance",
+        "cause_effect",
+        "relation_function"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "systems",
+        "cause_effect"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "시작가격",
+        "세금",
+        "수요기울기"
+      ],
+      "allowed_observations": [
+        "가격",
+        "거래량",
+        "초과수요"
+      ],
+      "prediction_prompt": "세금을 올리면 가격과 거래량이 각각 어떻게 움직일지 예상하세요.",
+      "inquiry_prompt": "세금 하나만 바꾸고 가격 조정과 거래량 변화를 그래프에서 비교하세요.",
+      "misconception_refs": [
+        "tax_only_moves_price"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/rep_econ_supply_demand_tax_v1/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_current_line_three_worlds_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "rep_econ_supply_demand_tax_v1",
+        "source_status": "existing_representative"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_current_line_three_worlds_check.py",
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "existing_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "중학교",
+        "core_concepts": [
+          "수요",
+          "공급",
+          "세금",
+          "초과수요"
+        ],
+        "inquiry_actions": [
+          "정책 예상",
+          "하나만 바꾸기",
+          "모델 가정 말하기"
+        ]
+      }
+    },
+    {
+      "lesson_id": "rep_phys_damped_oscillation_v1",
+      "world_id": "rep_phys_damped_oscillation_v1",
+      "grade_band": "high",
+      "subject_refs": [
+        "physics"
+      ],
+      "curriculum_refs": [
+        "kr2022.physics.motion.candidate"
+      ],
+      "concept_spine_refs": [
+        "feedback_balance",
+        "energy_flow",
+        "state_time"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "stability_change",
+        "systems"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "감쇠계수",
+        "스프링상수",
+        "질량"
+      ],
+      "allowed_observations": [
+        "t",
+        "x",
+        "v",
+        "감쇠계수",
+        "총에너지",
+        "에너지손실"
+      ],
+      "prediction_prompt": "감쇠계수를 키우면 진폭이 얼마나 빨리 줄어들지 예상하세요.",
+      "inquiry_prompt": "감쇠계수 하나만 바꾸고 진폭과 에너지 손실의 변화를 비교하세요.",
+      "misconception_refs": [
+        "damping_means_no_motion"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_damped_oscillation_v1/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_projectile_damping_promotion_v1"
+        ]
+      },
+      "view_refs": {},
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "ssot_edu_phys_p011_01_underdamped_xt",
+        "promoted_lesson_id": "rep_phys_damped_oscillation_v1",
+        "source_status": "promoted_representative_wave3a"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_projectile_damping_promotion_check.py",
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "promotion_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "고등",
+        "core_concepts": [
+          "감쇠계수",
+          "진폭",
+          "총에너지",
+          "에너지 손실"
+        ],
+        "inquiry_actions": [
+          "감쇠 비교",
+          "진폭 읽기",
+          "모델 가정 확인"
+        ]
+      }
+    },
+    {
+      "lesson_id": "high_math_derivative",
+      "world_id": "high_math_derivative",
+      "grade_band": "high",
+      "subject_refs": [
+        "math"
+      ],
+      "curriculum_refs": [
+        "kr2022.math.high.calculus.candidate",
+        "ccss.math.function"
+      ],
+      "concept_spine_refs": [
+        "change_rate",
+        "relation_function"
+      ],
+      "stem_practice_refs": [
+        "ngss.practice.modeling",
+        "ngss.practice.analyze_data"
+      ],
+      "crosscutting_refs": [
+        "patterns",
+        "scale_rate"
+      ],
+      "primary_view": "graph",
+      "secondary_views": [
+        "text"
+      ],
+      "allowed_controls": [
+        "시작x",
+        "끝x",
+        "간격"
+      ],
+      "allowed_observations": [
+        "x",
+        "y"
+      ],
+      "prediction_prompt": "x가 바뀔 때 함수값 y가 어느 구간에서 증가하거나 감소할지 예상하세요.",
+      "inquiry_prompt": "구간과 간격을 바꾸며 그래프의 변화와 도함수 해석을 연결하세요.",
+      "misconception_refs": [
+        "derivative_is_same_as_function"
+      ],
+      "lesson_refs": {
+        "lesson_path": "solutions/seamgrim_ui_mvp/lessons/high_math_derivative/lesson.ddn",
+        "pack_refs": [
+          "seamgrim_wave3b_foundation12_model_alignment_v1"
+        ]
+      },
+      "view_refs": {
+        "primary_view_rules": "solutions/seamgrim_ui_mvp/lessons/primary_view_rules.v1.detjson"
+      },
+      "deployment_refs": {
+        "profile_schema": "deployment_profile.v0",
+        "runtime_role_toggle": false
+      },
+      "lineage": {
+        "source_lesson_id": "high_math_derivative",
+        "source_status": "foundation12_wave3b"
+      },
+      "evidence": {
+        "product_allowlist": true,
+        "behavior_refs": [
+          "tests/run_seamgrim_wave3b_foundation12_model_alignment_check.py"
+        ]
+      },
+      "status_axes": {
+        "curriculum_alignment": "candidate",
+        "product_behavior": "wave3b_g1_behavior_evidence"
+      },
+      "display": {
+        "grade_band": "고등",
+        "core_concepts": [
+          "함수값",
+          "변화율",
+          "구간"
+        ],
+        "inquiry_actions": [
+          "증감 예상",
+          "구간 바꾸기",
+          "그래프 해석"
+        ]
+      }
+    }
+  ]
+}

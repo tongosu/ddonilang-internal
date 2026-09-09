@@ -1,0 +1,10 @@
+매마디:움직씨 := {
+  "BEFORE_BRANCH_FAILURE" 보여주기.
+  { 참 }인것 일때 {
+    "INNER_BRANCH_FAILURE" 보여주기.
+    없는값 보여주기.
+  } 아니면 {
+    "UNREACHABLE_ELSE" 보여주기.
+  }.
+  "AFTER_BRANCH_FAILURE" 보여주기.
+}

@@ -1,0 +1,5 @@
+"SEAMGRIM_SEMANTIC_CURSOR_V1" 보여주기.
+"six pendulum anchors are explicit in view_plan" 보여주기.
+"observe graph space and source entrypoints select the same anchor" 보여주기.
+"source navigation uses source_ref and provenance only" 보여주기.
+"semantic cursor state_hash participation is false" 보여주기.

@@ -1,0 +1,40 @@
+{
+  "schema": "seamgrim.scene_curriculum_canonical_view_payload.case_matrix.v1",
+  "families": {
+    "scene-summary": {
+      "status_cases": {
+        "POSITIVE": { "status": "available", "diagnostic_code": null },
+        "MISSING_NO_VIEW": { "status": "no_view", "diagnostic_code": null },
+        "INVALID": { "status": "invalid", "diagnostic_code": "E_CANONICAL_SCENE_SUMMARY_INVALID_CANDIDATE" },
+        "UNSUPPORTED": { "status": "unsupported", "diagnostic_code": "E_CANONICAL_SCENE_SUMMARY_UNSUPPORTED_CANDIDATE" },
+        "AMBIGUOUS": { "status": "ambiguous", "diagnostic_code": "E_CANONICAL_SCENE_SUMMARY_AMBIGUOUS_CANDIDATE" },
+        "IDENTITY": { "status": "unavailable", "diagnostic_code": "E_CANONICAL_VIEW_REQUIRED_IDENTITY_MISSING_CANDIDATE" },
+        "UNKNOWN_STATUS": { "status": "invalid", "diagnostic_code": "E_CANONICAL_SCENE_SUMMARY_INVALID_CANDIDATE" }
+      },
+      "ordering": {
+        "required_families": ["graph", "table", "text"]
+      },
+      "cross_surface": {
+        "scene_session_byte_parity": true
+      }
+    },
+    "curriculum-semantic-scene": {
+      "status_cases": {
+        "POSITIVE": { "status": "available", "diagnostic_code": null },
+        "MISSING_NO_VIEW": { "status": "no_view", "diagnostic_code": null },
+        "INVALID": { "status": "invalid", "diagnostic_code": "E_CANONICAL_CURRICULUM_SCENE_INVALID_CANDIDATE" },
+        "UNSUPPORTED": { "status": "unsupported", "diagnostic_code": "E_CANONICAL_CURRICULUM_SCENE_UNSUPPORTED_CANDIDATE" },
+        "AMBIGUOUS": { "status": "ambiguous", "diagnostic_code": "E_CANONICAL_CURRICULUM_SCENE_AMBIGUOUS_CANDIDATE" },
+        "IDENTITY": { "status": "unavailable", "diagnostic_code": "E_CANONICAL_VIEW_REQUIRED_IDENTITY_MISSING_CANDIDATE" },
+        "UNKNOWN_STATUS": { "status": "invalid", "diagnostic_code": "E_CANONICAL_CURRICULUM_SCENE_INVALID_CANDIDATE" }
+      },
+      "ordering": {
+        "anchor_ids": ["control.속도", "observation.위치"],
+        "concept_labels": ["위치", "속도"]
+      },
+      "cross_surface": {
+        "project_snapshot_byte_parity": true
+      }
+    }
+  }
+}

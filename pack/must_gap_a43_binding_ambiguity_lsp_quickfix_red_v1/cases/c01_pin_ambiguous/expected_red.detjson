@@ -1,0 +1,15 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "PIN_AMBIGUOUS_LSP_QUICKFIX",
+  "expected_future_diag": "PIN_AMBIGUOUS",
+  "expected_future_quickfixes": [
+    "100@m:시작~에서",
+    "100@m:끝~에서"
+  ],
+  "notes": [
+    "SSOT 예시 클래스: 후보 핀 시작/끝 2개.",
+    "현재 LSP check_pin_ambiguity와 find_arg_binding_at는 stub이다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

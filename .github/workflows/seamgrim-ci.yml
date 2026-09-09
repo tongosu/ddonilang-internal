@@ -1,0 +1,118 @@
+name: Seamgrim CI Gate
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/seamgrim-ci.yml"
+      - ".github/branch-protection/**"
+      - "solutions/seamgrim_ui_mvp/**"
+      - "tests/**"
+      - "tools/**"
+      - "core/**"
+      - "lang/**"
+  workflow_dispatch:
+
+concurrency:
+  group: seamgrim-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  seamgrim-gate:
+    name: seamgrim-gate
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust Build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            tool -> target
+
+      - name: V1 Supported Ingress
+        run: python tests/run_v1_core_supported_ingress_w1.py
+
+      - name: Deploy Artifacts Check
+        run: python tests/run_seamgrim_deploy_artifacts_check.py
+
+      - name: Seamgrim CI Gate
+        env:
+          DDN_SEAMGRIM_CI_GATE_MAX_WORKERS: "14"
+          DDN_SEAMGRIM_CI_GATE_FAMILY_MAX_WORKERS: "10"
+        run: python tests/run_seamgrim_ci_gate.py --require-preview-synced --print-drilldown
+
+  historical-teul-custody:
+    name: historical-teul-custody
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Historical teul Build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            tools/teul-cli -> target
+
+      - name: Build Historical teul-cli
+        run: cargo build --manifest-path tools/teul-cli/Cargo.toml
+
+      - name: Export TEUL_CLI_BIN
+        shell: pwsh
+        run: |
+          $bin = Join-Path $PWD "tools/teul-cli/target/debug/teul-cli.exe"
+          if (!(Test-Path $bin)) {
+            throw "teul-cli binary not found: $bin"
+          }
+          "TEUL_CLI_BIN=$bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: W49 Golden Index Selfcheck
+        run: python tools/teul-cli/tests/run_w49_golden_index_selfcheck.py
+
+      - name: W49 Golden
+        run: python tools/teul-cli/tests/run_golden.py --root tools/teul-cli/tests/golden --teul-cli "${{ env.TEUL_CLI_BIN }}" --walk 49
+
+      - name: W111 Golden Index Selfcheck
+        run: python tools/teul-cli/tests/run_w111_golden_index_selfcheck.py
+
+      - name: W111 Golden
+        run: python tools/teul-cli/tests/run_golden.py --root tools/teul-cli/tests/golden --teul-cli "${{ env.TEUL_CLI_BIN }}" --walk 111
+
+      - name: W109 Golden Index Selfcheck
+        run: python tools/teul-cli/tests/run_w109_golden_index_selfcheck.py
+
+      - name: W109 Golden
+        run: python tools/teul-cli/tests/run_golden.py --root tools/teul-cli/tests/golden --teul-cli "${{ env.TEUL_CLI_BIN }}" --walk 109
+
+      - name: W107 Golden Index Selfcheck
+        run: python tools/teul-cli/tests/run_w107_golden_index_selfcheck.py
+
+      - name: W107 Golden
+        run: python tools/teul-cli/tests/run_golden.py --root tools/teul-cli/tests/golden --teul-cli "${{ env.TEUL_CLI_BIN }}" --walk 107

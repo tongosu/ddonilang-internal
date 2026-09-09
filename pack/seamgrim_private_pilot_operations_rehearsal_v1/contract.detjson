@@ -1,0 +1,27 @@
+{
+  "schema": "seamgrim.private_pilot.operations_rehearsal_contract.v1",
+  "pack": "seamgrim_private_pilot_operations_rehearsal_v1",
+  "local_rehearsal": {
+    "config_fail_closed_required": true,
+    "release_manifest_self_verify_required": true,
+    "service_boundary_required": true,
+    "edge_browser_csp_required": true,
+    "observability_split_required": true,
+    "backup_restore_required": true,
+    "deploy_canary_rollback_required": true,
+    "bad_release_rejection_required": true,
+    "code_rollback_data_restore_claim": false
+  },
+  "remote_gate": {
+    "private_idc_deploy_approved": false,
+    "idc_input_complete": false,
+    "ssh_inventory_allowed": false,
+    "remote_write_allowed": false,
+    "private_idc_deployed_claim": false
+  },
+  "runtime_availability_boundary": {
+    "docker_required_for_container_claim": true,
+    "nginx_required_for_real_tls_edge_claim": true,
+    "missing_runtime_is_not_fake_pass": true
+  }
+}

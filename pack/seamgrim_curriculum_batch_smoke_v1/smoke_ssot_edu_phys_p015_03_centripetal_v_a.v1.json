@@ -1,0 +1,17 @@
+{
+  "schema": "ddn.smoke.golden.v1",
+  "ddn_file": "../../solutions/seamgrim_ui_mvp/lessons_rewrite_v1/ssot_edu_phys_p015_03_centripetal_v_a/lesson.ddn",
+  "contract": "D-STRICT",
+  "checkpoints": [
+    {
+      "tick": 0,
+      "state_hash": "blake3:aedcc0f615fe2655d2a4755b81616c24bc3fe1660a88d119ac6d85e2fa3753c4"
+    },
+    {
+      "tick": 10,
+      "state_hash": "blake3:12738cf7e12645ed3177f1737786805196e5e20ecb3f87c978b7dc191d997541"
+    }
+  ],
+  "max_ticks": 10,
+  "timeout_ms": 30000
+}

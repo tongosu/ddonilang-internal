@@ -1,0 +1,122 @@
+{
+  "schema": "seamgrim.workbench_recovery.gate_evidence.v1",
+  "gate": "G11",
+  "status": "PASS",
+  "recorded_at_kst": "2026-07-18T00:00:00+09:00",
+  "base_head_before_gate_commit": "227fcfc",
+  "goal": "portable/snapshot/legacy view-selection compatibility migration",
+  "implementation_summary": [
+    "Added seamgrim.workbench.view_workspace_migration.v1 compatibility records for legacy selected_view and view_role inputs.",
+    "Hydrated modern view_workspace snapshots without legacy override.",
+    "Mapped legacy side and overlay selections to independent view instances; targetless magnifier and unknown family selections deterministically fall back to primary.",
+    "Preserved modern view_workspace in portable controls snapshots and kept selected_view as compatibility projection.",
+    "Routed Workbench project snapshot, local fallback reopen, portable import/open, catalog reopen, export, clone, and share flows through the migration helper.",
+    "Updated browser regressions for progressive drawer/dialog UI after G8."
+  ],
+  "legacy_migration_contract": {
+    "diagnostic_code": "W_LEGACY_VIEW_SELECTION_MIGRATED",
+    "preserved_world_state": true,
+    "selected_view_overlay": "primary plus independent overlay instance",
+    "view_role_side": "primary plus independent side instance",
+    "magnifier_without_target": "primary",
+    "unknown_legacy_selection": "primary",
+    "modern_workspace": "used as authoritative snapshot without legacy override"
+  },
+  "verified_requirements": {
+    "legacy_selected_view_import": "PASS: portable old artifact with selected_view=overlay opens with source/project preserved, no auto-run, no active frame, primary+overlay instances, and compat diagnostic.",
+    "legacy_view_role_reopen": "PASS: local fallback snapshot with view_role=side reopens current project/source unchanged, no run/active frame, and independent side instance plus compat diagnostic.",
+    "old_artifact_import_preserves_source_project_world": "PASS: portable preview does not mutate current source/project/view; confirmed open keeps imported DDN source and creates no world state.",
+    "export_uses_new_view_instance_structure": "PASS: build/export artifacts include controls_snapshot.view_workspace schema seamgrim.workbench.view_workspace.v1.",
+    "import_cancel_failure_invariant": "PASS: tampered SHA, old wrapper schema, and cancel keep project, server project, source, viewWorkspace, and active state hash unchanged.",
+    "clone_reopen_share_regressions": "PASS: portable clone, my-work reopen, server save/reopen, and capability share/clone regressions pass after drawer-aware UI flow updates.",
+    "docs_ssot_unchanged": "PASS: git status --short -- docs/ssot returned empty."
+  },
+  "commands": [
+    {
+      "cmd": "node tests/seamgrim_workbench_view_instance_model_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_view_instance_model: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_portable_project_artifact_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_portable_project_artifact: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_portable_project_workbench_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_portable_project_workbench: ok; import_project_id portable_699ca6229d28_01"
+    },
+    {
+      "cmd": "python tests/run_seamgrim_portable_project_artifact_check.py",
+      "result": "PASS",
+      "evidence": "[seamgrim-portable-project-artifact-v1] OK behavior-closed"
+    },
+    {
+      "cmd": "python tests/run_seamgrim_portable_project_workbench_check.py",
+      "result": "PASS",
+      "evidence": "[seamgrim-portable-project-workbench-v1] OK export-import-metadata-lineage-search-save-viewports"
+    },
+    {
+      "cmd": "python tests/run_seamgrim_workbench_capability_share_clone_check.py",
+      "result": "PASS",
+      "evidence": "[seamgrim-workbench-capability-share-clone-v1] OK behavior-closed"
+    },
+    {
+      "cmd": "python tests/run_seamgrim_workbench_my_work_reopen_check.py",
+      "result": "PASS",
+      "evidence": "[seamgrim-workbench-my-work-reopen-v1] OK behavior-closed"
+    },
+    {
+      "cmd": "python tests/run_seamgrim_workbench_server_project_save_reopen_check.py",
+      "result": "PASS",
+      "evidence": "[seamgrim-workbench-server-project-save-reopen-v1] OK behavior-closed"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_view_instances_browser_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_view_instances_browser: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_progressive_disclosure_browser_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_progressive_disclosure_browser: ok"
+    },
+    {
+      "cmd": "node tests/seamgrim_workbench_project_controls_browser_runner.mjs",
+      "result": "PASS",
+      "evidence": "seamgrim_workbench_project_controls_browser: ok"
+    },
+    {
+      "cmd": "git diff --check",
+      "result": "PASS",
+      "evidence": "exit code 0; unrelated CRLF warnings only"
+    },
+    {
+      "cmd": "git status --short -- docs/ssot",
+      "result": "PASS",
+      "evidence": "empty"
+    }
+  ],
+  "changed_files": [
+    "solutions/seamgrim_ui_mvp/ui/project_snapshot.js",
+    "solutions/seamgrim_ui_mvp/ui/workbench/view_instance_model.js",
+    "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js",
+    "tests/seamgrim_portable_project_artifact_runner.mjs",
+    "tests/seamgrim_portable_project_workbench_runner.mjs",
+    "tests/seamgrim_workbench_capability_share_clone_runner.mjs",
+    "tests/seamgrim_workbench_my_work_reopen_runner.mjs",
+    "tests/seamgrim_workbench_server_project_save_reopen_runner.mjs",
+    "tests/seamgrim_workbench_view_instance_model_runner.mjs"
+  ],
+  "not_claimed": [
+    "READY_TO_START_EXTERNAL_CREATOR_ROUND0",
+    "external user success",
+    "G12 animation/one-shot browser gate",
+    "G13 four viewport recovery gate",
+    "G14 race matrix",
+    "G15 integrated full battery",
+    "G16 clean detached worktree verification"
+  ],
+  "external_user_success_count": 0
+}

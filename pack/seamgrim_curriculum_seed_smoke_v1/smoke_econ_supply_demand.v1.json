@@ -1,0 +1,21 @@
+{
+  "schema": "ddn.smoke.golden.v1",
+  "ddn_file": "../../solutions/seamgrim_ui_mvp/seed_lessons_v1/econ_supply_demand_seed_v1/lesson.ddn",
+  "contract": "D-STRICT",
+  "checkpoints": [
+    {
+      "tick": 0,
+      "state_hash": "blake3:34316515b1f95c924b4431292ff5abbca78e88db4c3d86767847cb553d92e8e1"
+    },
+    {
+      "tick": 20,
+      "state_hash": "blake3:7cc4f734e5ff4bc436abcd9b8d55025cd6f5d4a6c9c9ad720abd8716248dd280"
+    },
+    {
+      "tick": 40,
+      "state_hash": "blake3:b5630970b4240dae78416fcf5a184849a89fa47675556cbe1eab9d3c4713e505"
+    }
+  ],
+  "max_ticks": 40,
+  "timeout_ms": 30000
+}
