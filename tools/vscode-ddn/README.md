@@ -14,14 +14,19 @@ This folder is the single owner for the local Ddonilang VS Code language contrib
 - Starter snippets for `설정 {}`, `(시작)할때`, `(매마디)마다`, `보임 {}` 구조화 관찰, 조사/핀 예시.
 - Fix-it rail stays in Seamgrim studio autofix. This package does not run semantic rewrite locally.
 
-## LSP configuration boundary
+## Local LSP client
 
-The package declares deterministic local settings for the future stdio client:
+The extension starts the existing local `ddonirang-lsp` stdio server for the registered document types:
 
 - `ddonilang.lsp.executable`: exact executable override.
 - `ddonilang.lsp.autoDiscover`: bounded local discovery toggle.
 
-The repository does not currently contain an offline-resolvable `vscode-languageclient` dependency or a checked-in Node lock/cache entry for it. This Unit therefore registers the language and configuration only. It does not claim LSP process startup, diagnostics, completion, or VS Code extension-host behavior.
+- `vscode-languageclient` is pinned to `8.1.0` in the extension-local lockfile.
+- Explicit executable paths must be local regular files; directories, symlinks, and missing paths fail closed.
+- Auto-discovery checks only workspace `target/debug` and `target/release`, plus the repository-local target directories relative to this extension.
+- No PATH-wide search, remote server, source upload, or private dependency copy is used.
+
+If no executable is available, the extension shows one clear error and does not retry indefinitely. Deactivation stops the client and its local server process.
 
 ## Immediate Dev Priority
 - 1순위: quick-fix
@@ -32,6 +37,8 @@ The repository does not currently contain an offline-resolvable `vscode-language
 ## 지금 되는 것 / candidate-ready helper / 다음 것 / 아직 안 되는 것
 - 지금 되는 것:
   - 설정/훅/snippet shell
+  - local stdio LSP client activation
+  - local diagnostics/completion/navigation transport wiring
   - `보임 {}` 구조화 관찰 snippet
   - 조사/핀 예시 snippet
   - `값~조사` / `값:핀` helper snippet
@@ -45,8 +52,7 @@ The repository does not currently contain an offline-resolvable `vscode-language
   - 조사/핀 helper를 diagnostic rail과 더 직접 잇는 안내
   - machine-readable prototype: `quickfix/ddn.quickfix-prototype.json`
 - 안 되는 것:
-- semantic LSP client/process integration
-- symbol index / hover / diagnostics client wiring
+- remote or workspace-crawl semantic indexing
   - full IDE workshop GUI
 
 ## 조사/핀 helper 선택 기준
@@ -93,8 +99,8 @@ The repository does not currently contain an offline-resolvable `vscode-language
 - ghost text: non-default draft, not current-line shell
 
 ## Boundary
-- No semantic LSP yet.
-- No symbol index / hover / diagnostics server.
+- The client consumes the existing local semantic LSP server; it does not duplicate parser or symbol ownership.
+- No remote server, source upload, or filesystem crawl.
 - No full IDE workshop GUI productionization.
 
 ## Notes
