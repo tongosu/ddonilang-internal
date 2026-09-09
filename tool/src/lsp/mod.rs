@@ -1,4 +1,5 @@
 pub mod definition;
+pub mod document_link;
 #[path = "../diagnostics.rs"]
 pub mod diagnostics;
 pub mod document_highlight;

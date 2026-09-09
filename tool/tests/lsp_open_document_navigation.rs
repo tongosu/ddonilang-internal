@@ -111,6 +111,29 @@ fn folding_range_error_code(server: &mut LspServer, uri: &str, version: i64, ext
     }
 }
 
+fn document_links(server: &mut LspServer, uri: &str, version: i64, extra: Value) -> Value {
+    let mut document = json!({"uri": uri, "version": version});
+    if let Some(extra_object) = extra.as_object() {
+        document
+            .as_object_mut()
+            .expect("document object")
+            .extend(extra_object.clone());
+    }
+    let event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(70),
+            method: "textDocument/documentLink".into(),
+            params: Some(json!({"textDocument": document})),
+        })
+        .unwrap();
+    match &event.responses[0] {
+        RpcMessage::Response {
+            result: Ok(result), ..
+        } => result.clone(),
+        _ => panic!("document link response missing: {event:?}"),
+    }
+}
+
 fn selection_ranges(server: &mut LspServer, uri: &str, version: i64, positions: Value) -> Value {
     let event = server
         .handle_message(RpcMessage::Request {
@@ -663,6 +686,206 @@ fn lsp17_selection_ranges_are_ordered_ast_parent_chains_and_current() {
         selection_ranges(&mut server, uri, 2, json!([{"line": 0, "character": 0}])),
         json!([])
     );
+}
+
+#[test]
+fn lsp27_selection_and_folding_ranges_are_bounded_ast_and_cancellable() {
+    let mut server = LspServer::new();
+    let initialize = init(&mut server);
+    assert_eq!(initialize["capabilities"]["foldingRangeProvider"], true);
+    assert_eq!(initialize["capabilities"]["selectionRangeProvider"], true);
+
+    let uri = "file:///lsp27-structural-navigation.ddn";
+    let source = "공유함수:셈씨 := {\n\"{ fake }\" 보여주기. // } fake\n1 돌려줘.\n}\n";
+    open(&mut server, uri, source, 1);
+    let ranges = folding_ranges(&mut server, uri, 1, json!({}));
+    assert_eq!(ranges.as_array().unwrap().len(), 2);
+    assert!(ranges
+        .as_array()
+        .unwrap()
+        .iter()
+        .all(|range| range["startLine"] == 0 && range["endLine"] == 3));
+    let selection = selection_ranges(
+        &mut server,
+        uri,
+        1,
+        json!([position(source, "공유함수"), position(source, "fake")]),
+    );
+    assert_eq!(selection.as_array().unwrap().len(), 2);
+    assert!(selection[0]["parent"].is_object());
+    assert_eq!(selection[1], Value::Null);
+
+    let mut many = String::new();
+    for index in 0..1_001 {
+        many.push_str(&format!("함수{index}:셈씨 := {{\n1 돌려줘.\n}}\n"));
+    }
+    let many_uri = "file:///lsp27-folding-limit.ddn";
+    open(&mut server, many_uri, &many, 1);
+    let bounded = folding_ranges(&mut server, many_uri, 1, json!({}));
+    assert_eq!(bounded.as_array().unwrap().len(), 1_000);
+
+    let too_many_positions = Value::Array(
+        (0..=100)
+            .map(|_| position(source, "공유함수"))
+            .collect(),
+    );
+    let limited = server
+        .handle_message(RpcMessage::Request {
+            id: json!(60),
+            method: "textDocument/selectionRange".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": 1},
+                "positions": too_many_positions,
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &limited.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32602
+    ));
+
+    server.cancel_request(&json!(61));
+    let cancelled_folding = server
+        .handle_message(RpcMessage::Request {
+            id: json!(61),
+            method: "textDocument/foldingRange".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": 1},
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled_folding.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
+
+    server.cancel_request(&json!(62));
+    let cancelled_selection = server
+        .handle_message(RpcMessage::Request {
+            id: json!(62),
+            method: "textDocument/selectionRange".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": 1},
+                "positions": [position(source, "공유함수")],
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled_selection.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
+}
+
+#[test]
+fn lsp28_document_links_are_typed_open_document_resource_targets() {
+    let mut server = LspServer::new();
+    let initialize = init(&mut server);
+    assert_eq!(
+        initialize["capabilities"]["documentLinkProvider"]["resolveProvider"],
+        false
+    );
+
+    let uri = "file:///workspace/자료/main.ddn";
+    let source = "그림:글 := @\"그림/🙂.png\".\n설명:글 := \"@\\\"가짜\\\"\". // @\"주석\"\n";
+    open(&mut server, uri, source, 1);
+    let links = document_links(&mut server, uri, 1, json!({}));
+    assert_eq!(links.as_array().unwrap().len(), 1);
+    assert_eq!(
+        links[0]["target"],
+        "file:///workspace/자료/%EA%B7%B8%EB%A6%BC/%F0%9F%99%82.png"
+    );
+    assert_eq!(links[0]["tooltip"], "DDN resource: 그림/🙂.png");
+    assert_eq!(
+        links[0]["range"]["start"],
+        position_at_byte(source, source.find("@\"").unwrap())
+    );
+    assert_eq!(links, document_links(&mut server, uri, 1, json!({})));
+    assert_eq!(links[0]["data"]["documentVersion"], 1);
+    assert_eq!(
+        links[0]["data"]["snapshotIdentity"],
+        server.documents().get(uri).unwrap().identity.as_str()
+    );
+
+    let malformed_uri = "file:///workspace/malformed.ddn";
+    open(
+        &mut server,
+        malformed_uri,
+        "그림:글 := @\"assets/broken.png\" + .",
+        1,
+    );
+    assert_eq!(
+        document_links(&mut server, malformed_uri, 1, json!({})),
+        json!([])
+    );
+    let unsafe_uri = "file:///workspace/unsafe.ddn";
+    open(
+        &mut server,
+        unsafe_uri,
+        "그림:글 := @\"../secret.png\".",
+        1,
+    );
+    assert_eq!(document_links(&mut server, unsafe_uri, 1, json!({})), json!([]));
+    close(&mut server, malformed_uri);
+    close(&mut server, unsafe_uri);
+
+    let changed = "그림:글 := @\"새/한글.png\".";
+    change(&mut server, uri, changed, 2);
+    let current = document_links(&mut server, uri, 2, json!({}));
+    assert_eq!(current.as_array().unwrap().len(), 1);
+    assert_eq!(
+        current[0]["target"],
+        "file:///workspace/자료/%EC%83%88/%ED%95%9C%EA%B8%80.png"
+    );
+
+    let stale = server
+        .handle_message(RpcMessage::Request {
+            id: json!(71),
+            method: "textDocument/documentLink".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": 1}
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &stale.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32801
+    ));
+
+    let stale_snapshot = server
+        .handle_message(RpcMessage::Request {
+            id: json!(72),
+            method: "textDocument/documentLink".into(),
+            params: Some(json!({
+                "textDocument": {
+                    "uri": uri,
+                    "version": 2,
+                    "snapshotIdentity": "snapshot:forged"
+                }
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &stale_snapshot.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32802
+    ));
+
+    server.cancel_request(&json!(73));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(73),
+            method: "textDocument/documentLink".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": 2}
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
+
+    close(&mut server, uri);
+    assert_eq!(document_links(&mut server, uri, 2, json!({})), json!([]));
 }
 
 #[test]

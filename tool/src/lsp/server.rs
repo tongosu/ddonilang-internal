@@ -4,6 +4,7 @@ use super::document_highlight::{document_highlights_snapshot, DocumentHighlightE
 use super::document_store::{
     DocumentChange, DocumentStore, DocumentStoreError, SourceSnapshotIdentity,
 };
+use super::document_link::{document_links_snapshot, DocumentLinkError, MAX_DOCUMENT_LINKS};
 use super::document_symbol::{document_symbols_snapshot, SymbolError as DocumentSymbolError};
 use super::folding_range::{folding_ranges_snapshot, FoldingRangeError};
 use super::hover::{hover_snapshot, HoverError};
@@ -37,6 +38,8 @@ const MAX_WORKSPACE_SYMBOLS: usize = 1_000;
 const MAX_REFERENCE_LOCATIONS: usize = 1_000;
 const MAX_CALL_HIERARCHY_ITEMS: usize = 1_000;
 const MAX_CALL_HIERARCHY_EDGES: usize = 10_000;
+const MAX_SELECTION_POSITIONS: usize = 100;
+const MAX_FOLDING_RANGES: usize = 1_000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServerState {
@@ -68,6 +71,7 @@ pub enum ServerError {
     Diagnostics(DiagnosticError),
     Definition(DefinitionError),
     DocumentSymbols(DocumentSymbolError),
+    DocumentLinks(DocumentLinkError),
     DocumentHighlights(DocumentHighlightError),
     FoldingRanges(FoldingRangeError),
     SelectionRanges(SelectionRangeError),
@@ -90,6 +94,7 @@ impl fmt::Display for ServerError {
             Self::Diagnostics(error) => write!(f, "diagnostics 분석 오류: {error}"),
             Self::Definition(error) => write!(f, "definition 분석 오류: {error}"),
             Self::DocumentSymbols(error) => write!(f, "document symbol 분석 오류: {error}"),
+            Self::DocumentLinks(error) => write!(f, "document link 분석 오류: {error}"),
             Self::DocumentHighlights(error) => write!(f, "document highlight 분석 오류: {error}"),
             Self::FoldingRanges(error) => write!(f, "folding range 분석 오류: {error}"),
             Self::SelectionRanges(error) => write!(f, "selection range 분석 오류: {error}"),
@@ -316,6 +321,7 @@ impl LspServer {
             "textDocument/definition" => self.definition(id, params),
             "textDocument/typeDefinition" => self.type_definition(id, params),
             "textDocument/documentSymbol" => self.document_symbols(id, params),
+            "textDocument/documentLink" => self.document_links(id, params),
             "textDocument/foldingRange" => self.folding_ranges(id, params),
             "textDocument/selectionRange" => self.selection_ranges(id, params),
             "workspace/symbol" => self.workspace_symbol(id, params),
@@ -624,6 +630,84 @@ impl LspServer {
         Ok(success_event(id, json!(symbols)))
     }
 
+    fn document_links(
+        &mut self,
+        id: Value,
+        params: Option<Value>,
+    ) -> Result<ServerEvent, ServerError> {
+        let params = object_params(params)?;
+        let document = text_document(&params)?;
+        let uri = string_field(document, "uri")?;
+        let Some(snapshot) = self.documents.get(uri) else {
+            return Ok(success_event(id, json!([])));
+        };
+        if let Some(requested_version) = document.get("version").and_then(Value::as_i64) {
+            if requested_version != snapshot.version {
+                return Ok(error_event(
+                    id,
+                    RpcError::with_data(
+                        -32801,
+                        "document link document version이 stale합니다",
+                        json!({
+                            "requestedVersion": requested_version,
+                            "currentVersion": snapshot.version,
+                            "snapshotIdentity": snapshot.identity.as_str(),
+                        }),
+                    ),
+                ));
+            }
+        }
+        if let Some(requested_identity) = document.get("snapshotIdentity").and_then(Value::as_str)
+        {
+            if requested_identity != snapshot.identity.as_str() {
+                return Ok(error_event(
+                    id,
+                    RpcError::with_data(
+                        -32802,
+                        "document link snapshot identity가 stale합니다",
+                        json!({
+                            "requestedSnapshotIdentity": requested_identity,
+                            "currentSnapshotIdentity": snapshot.identity.as_str(),
+                            "currentVersion": snapshot.version,
+                        }),
+                    ),
+                ));
+            }
+        }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
+        let source = snapshot.text().map_err(ServerError::Document)?;
+        let links = document_links_snapshot(snapshot).map_err(ServerError::DocumentLinks)?;
+        let mut values = Vec::with_capacity(links.len());
+        for link in links.into_iter().take(MAX_DOCUMENT_LINKS) {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
+            let range = super::position::byte_range_to_lsp_range(source, link.range, encoding)
+                .map_err(|error| {
+                    ServerError::InvalidParams(format!(
+                        "document link range가 잘못되었습니다: {error}"
+                    ))
+                })?;
+            values.push(json!({
+                "range": lsp_range_value(range),
+                "target": link.target,
+                "tooltip": format!("DDN resource: {}", link.resource_path),
+                "data": {
+                    "documentVersion": link.document_version,
+                    "snapshotIdentity": link.snapshot_identity,
+                    "sourceProfile": SOURCE_PROFILE_V25,
+                },
+            }));
+        }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        Ok(success_event(id, json!(values)))
+    }
+
     fn folding_ranges(
         &mut self,
         id: Value,
@@ -666,10 +750,14 @@ impl LspServer {
                 ));
             }
         }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
         let ranges = folding_ranges_snapshot(snapshot, encoding)
             .map_err(ServerError::FoldingRanges)?
             .into_iter()
+            .take(MAX_FOLDING_RANGES)
             .map(|folding| {
                 json!({
                     "startLine": folding.range.start.line,
@@ -680,6 +768,9 @@ impl LspServer {
                 })
             })
             .collect::<Vec<_>>();
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         Ok(success_event(id, json!(ranges)))
     }
 
@@ -698,6 +789,12 @@ impl LspServer {
             .iter()
             .map(parse_position)
             .collect::<Result<Vec<_>, _>>()?;
+        if positions.len() > MAX_SELECTION_POSITIONS {
+            return Ok(error_event(
+                id,
+                RpcError::new(-32602, "selection range positions 상한을 초과했습니다"),
+            ));
+        }
         let Some(snapshot) = self.documents.get(uri) else {
             return Ok(success_event(id, json!([])));
         };
@@ -732,12 +829,18 @@ impl LspServer {
                 ));
             }
         }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
         let ranges = selection_ranges_snapshot(snapshot, &positions, encoding)
             .map_err(ServerError::SelectionRanges)?
             .into_iter()
             .map(selection_range_value)
             .collect::<Vec<_>>();
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         Ok(success_event(id, json!(ranges)))
     }
 
@@ -2166,6 +2269,7 @@ impl LspServer {
                     "definitionProvider": true,
                     "typeDefinitionProvider": true,
                     "documentSymbolProvider": true,
+                    "documentLinkProvider": {"resolveProvider": false},
                     "foldingRangeProvider": true,
                     "selectionRangeProvider": true,
                     "workspaceSymbolProvider": true,

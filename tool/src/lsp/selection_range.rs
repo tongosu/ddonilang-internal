@@ -8,6 +8,8 @@ use ddonirang_lang::{
 };
 use std::fmt;
 
+const MAX_SELECTION_DEPTH: usize = 100;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelectionRange {
     pub range: LspRange,
@@ -112,7 +114,7 @@ fn selection_for_position(
         return None;
     }
     let mut chain = None;
-    for range in selected.iter().rev() {
+    for range in selected.iter().rev().take(MAX_SELECTION_DEPTH) {
         let lsp_range = byte_range_to_lsp_range(source, *range, encoding).ok()?;
         chain = Some(Box::new(SelectionRange {
             range: lsp_range,
@@ -123,6 +125,9 @@ fn selection_for_position(
 }
 
 fn selectable_token(kind: &TokenKind) -> bool {
+    if is_string_token(kind) {
+        return false;
+    }
     !matches!(
         kind,
         TokenKind::Eof
