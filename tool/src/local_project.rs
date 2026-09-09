@@ -28,8 +28,8 @@ use crate::sealed_domain_dataset::{
 };
 use ddonirang_core::ResourceHandle;
 use ddonirang_lang::{
-    resolve_known_call_target, Body, Expr, ExprKind, Lexer, ParseMode, Span, Stmt, Token,
-    TokenKind, TopLevelItem,
+    parse_module_directive_prefix, resolve_known_call_target, Body, Expr, ExprKind, Lexer,
+    ModuleDirectiveContext, ParseMode, Span, Stmt, Token, TokenKind, TopLevelItem,
 };
 
 pub const VIRTUAL_PROJECT_SOURCE_SCHEMA: &str = "ddn.virtual_project_source.v1";
@@ -1872,9 +1872,7 @@ pub fn build_project_edit_plan(
             // A newly authored module must be current V25 source, never a
             // brace-form directive or legacy binding that would need a later
             // migration pass before it can enter the shared frontdoor.
-            let template = format!(
-                "# {module_name} 모듈\n(값=값) 드러냄.\n\n값:수 := 0.\n"
-            );
+            let template = "(값=값) 드러냄.\n\n값:수 := 0.\n".to_string();
             build_add_file_plan(
                 request.source,
                 &before_hash,
@@ -3415,7 +3413,11 @@ fn module_alias_rewrites(
 
 fn strip_module_metadata_blocks_mapped(text: &str) -> Result<MappedSourceText, LocalProjectError> {
     let mut mapped = MappedSourceText {
-        text: text.to_string(),
+        // Current parenthesized metadata is first blanked through the shared
+        // typed parser.  Its byte-preserving mask keeps the source map exact;
+        // historical brace custody continues through the existing removal
+        // path below.
+        text: mask_module_metadata_blocks(text)?,
         source_boundaries: (0..=text.len()).collect(),
     };
     for name in ["쓰임", "드러냄", "공개"] {
@@ -3483,6 +3485,44 @@ fn remove_named_block_mapped(
 /// byte offset so AST-backed authoring locations remain source-exact.
 pub(crate) fn mask_module_metadata_blocks(text: &str) -> Result<String, LocalProjectError> {
     let mut bytes = text.as_bytes().to_vec();
+    let tokens = Lexer::new(text).tokenize().map_err(|error| {
+        LocalProjectError::new(
+            "E_PROJECT_ENTRY_PARSE",
+            format!("current module source 토큰화 실패: {}", error.message),
+        )
+    })?;
+    if matches!(tokens.first().map(|token| &token.kind), Some(TokenKind::LParen)) {
+        let mut context = ModuleDirectiveContext::default();
+        context.known_import_targets = tokens
+            .iter()
+            .filter_map(|token| match &token.kind {
+                TokenKind::StringLit(value) => Some(value.clone()),
+                _ => None,
+            })
+            .collect();
+        context.public_definition_targets = tokens
+            .iter()
+            .filter_map(|token| match &token.kind {
+                TokenKind::Ident(value) | TokenKind::Josa(value) => Some(value.clone()),
+                _ => None,
+            })
+            .collect();
+        if let Ok(document) = parse_module_directive_prefix(text, "project.ddn", &context) {
+            for directive in [document.imports, document.exports].into_iter().flatten() {
+                for byte in &mut bytes[directive.span.start..directive.span.end] {
+                    if !matches!(*byte, b'\n' | b'\r') {
+                        *byte = b' ';
+                    }
+                }
+            }
+            return String::from_utf8(bytes).map_err(|_| {
+                LocalProjectError::new(
+                    "E_PROJECT_AUTHORING_MASK_UTF8",
+                    "current directive offset 보존 mask가 UTF-8을 보존하지 못했습니다",
+                )
+            });
+        }
+    }
     for name in ["쓰임", "드러냄", "공개"] {
         let mut cursor = 0usize;
         while let Some(relative) = text[cursor..].find(name) {
@@ -5717,6 +5757,128 @@ fn gaji_package_sha256(prefix: &str, text_by_path: &BTreeMap<String, String>) ->
     sha256_hex(input.as_bytes())
 }
 
+#[derive(Debug, Clone)]
+struct CurrentModuleDirectives {
+    imports: Vec<ParsedImport>,
+    exports: Vec<ParsedExport>,
+}
+
+fn current_module_directives(
+    text: &str,
+    path: &str,
+    text_by_path: &BTreeMap<String, String>,
+) -> Result<Option<CurrentModuleDirectives>, LocalProjectError> {
+    // A current module directive always begins with its parenthesized typed
+    // surface.  Other project custody (including historical brace inputs)
+    // stays on its existing explicit parser path; it is never a fallback for
+    // a current typed document.
+    let tokens = Lexer::new(text).tokenize().map_err(|error| {
+        LocalProjectError::with_path(
+            "E_PROJECT_ENTRY_PARSE",
+            path,
+            format!("current module source 토큰화 실패: {}", error.message),
+        )
+    })?;
+    if !matches!(tokens.first().map(|token| &token.kind), Some(TokenKind::LParen)) {
+        return Ok(None);
+    }
+
+    let mut known_import_targets = BTreeSet::new();
+    for candidate_path in text_by_path.keys() {
+        let stem = candidate_path.strip_suffix(".ddn").unwrap_or(candidate_path);
+        known_import_targets.insert(stem.to_string());
+        known_import_targets.insert(candidate_path.to_string());
+        known_import_targets.insert(format!("./{stem}"));
+        known_import_targets.insert(format!("./{candidate_path}"));
+    }
+
+    // The shared typed parser owns directive syntax and spans.  Its registry
+    // preflight receives lexer-derived candidates only so the parser can read
+    // the declaration tail; actual export authority is then checked against
+    // the typed declaration AST below, rather than by a local string parser.
+    let mut lexical_candidates = BTreeSet::new();
+    for token in tokens {
+        if let TokenKind::Ident(name) | TokenKind::Josa(name) = token.kind {
+            lexical_candidates.insert(name);
+        }
+    }
+    let context = ModuleDirectiveContext::default()
+        .with_known_imports(known_import_targets)
+        .with_public_definitions(lexical_candidates);
+    let parsed = parse_module_directive_prefix(text, path, &context)
+        .map_err(|error| {
+            LocalProjectError::with_path_span(
+                "E_CURRENT_MODULE_DIRECTIVE",
+                path,
+                error.message,
+                (error.span.start, error.span.end),
+            )
+        })?;
+
+    let declared_names = if parsed.exports.is_some() {
+        ddonirang_lang::parse_v25_with_mode(
+            &parsed.declaration_source,
+            path,
+            ParseMode::Strict,
+        )
+        .map_err(|error| {
+            LocalProjectError::with_path_span(
+                "E_CURRENT_MODULE_DECLARATION",
+                path,
+                error.message,
+                (error.span.start, error.span.end),
+            )
+        })?
+        .items
+        .iter()
+        .map(|item| match item {
+            TopLevelItem::SeedDef(seed) => seed.canonical_name.clone(),
+        })
+        .collect::<BTreeSet<_>>()
+    } else {
+        BTreeSet::new()
+    };
+    let imports = parsed
+        .imports
+        .as_ref()
+        .map(|directive| {
+            directive
+                .entries
+                .iter()
+                .map(|entry| ParsedImport {
+                    alias: entry.local_name.clone(),
+                    source: entry.target.clone(),
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let exports = parsed
+        .exports
+        .as_ref()
+        .map(|directive| {
+            directive
+                .entries
+                .iter()
+                .map(|entry| {
+                    if !declared_names.contains(&entry.target) {
+                        return Err(LocalProjectError::with_path(
+                            "E_RD457_EXPORT_TARGET_PRIVATE_OR_UNKNOWN",
+                            path,
+                            format!("{}는 이 module의 typed DefinitionIdentity가 아닙니다", entry.target),
+                        ));
+                    }
+                    Ok(ParsedExport {
+                        external_name: entry.local_name.clone(),
+                        internal_name: entry.target.clone(),
+                    })
+                })
+                .collect::<Result<Vec<_>, _>>()
+        })
+        .transpose()?
+        .unwrap_or_default();
+    Ok(Some(CurrentModuleDirectives { imports, exports }))
+}
+
 pub(crate) fn parse_imports(
     text: &str,
     path: &str,
@@ -6006,7 +6168,11 @@ fn collect_module_info(
         ));
     }
     stack.push(path.to_string());
-    let parsed_imports = parse_imports(text, path)?;
+    let current_directives = current_module_directives(text, path, text_by_path)?;
+    let parsed_imports = current_directives
+        .as_ref()
+        .map(|directives| directives.imports.clone())
+        .unwrap_or(parse_imports(text, path)?);
     let mut seen_aliases = BTreeSet::new();
     let mut imports = Vec::new();
     for import in parsed_imports {
@@ -6061,7 +6227,10 @@ fn collect_module_info(
             .then(a.resolved_path.cmp(&b.resolved_path))
     });
     let mut exports = BTreeMap::new();
-    for export in parse_exports(text, path)? {
+    let parsed_exports = current_directives
+        .map(|directives| directives.exports)
+        .unwrap_or(parse_exports(text, path)?);
+    for export in parsed_exports {
         if exports
             .insert(export.external_name.clone(), export.internal_name.clone())
             .is_some()
@@ -7433,6 +7602,52 @@ mod tests {
                 && file.utf8_text.contains("값:수 := 0.")
                 && !file.utf8_text.contains("드러냄 {")
                 && !file.utf8_text.contains("채비 {")
+        }));
+
+        let generated_texts = added
+            .project_source
+            .files
+            .iter()
+            .map(|file| (file.path.clone(), file.utf8_text.clone()))
+            .collect::<BTreeMap<_, _>>();
+        let generated_directives = current_module_directives(
+            generated_texts
+                .get("lib/힘.ddn")
+                .expect("generated module text"),
+            "lib/힘.ddn",
+            &generated_texts,
+        )
+        .expect("generated current module directives")
+        .expect("generated current module directive surface");
+        assert_eq!(
+            generated_directives
+                .exports
+                .iter()
+                .map(|entry| (entry.external_name.as_str(), entry.internal_name.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("값", "값")]
+        );
+
+        let mut cross_module = added.project_source.clone();
+        cross_module
+            .files
+            .iter_mut()
+            .find(|file| file.path == "app/main.ddn")
+            .expect("entry file")
+            .utf8_text = "(힘=\"./lib/힘\") 쓰임.\n\n힘.값 보여주기.\n".to_string();
+        let boundary = build_linked_project_with_options(cross_module, None, false, None)
+            .expect("generated current module must resolve through the local-project linker")
+            .symbol_boundary;
+        assert!(boundary.exports.iter().any(|export| {
+            export.module_path == "lib/힘.ddn"
+                && export.external_name == "값"
+                && export.internal_name == "값"
+        }));
+        assert!(boundary.resolved_symbols.iter().any(|symbol| {
+            symbol.alias == "힘"
+                && symbol.symbol == "값"
+                && symbol.module_path == "lib/힘.ddn"
+                && symbol.internal_name == "값"
         }));
 
         let duplicated = build_project_edit_plan(edit_request(

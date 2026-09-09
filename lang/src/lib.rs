@@ -84,8 +84,9 @@ pub use model::{
     MODEL_IR_SCHEMA_CANDIDATE, STANDARD_REPRO_PROFILE_IDENTITY,
 };
 pub use module_directive::{
-    canonicalize_module_directive_document, parse_module_directive_document, ModuleDirective,
-    ModuleDirectiveContext, ModuleDirectiveDocument, ModuleDirectiveEntry, ModuleDirectiveKind,
+    canonicalize_module_directive_document, parse_module_directive_document,
+    parse_module_directive_prefix, ModuleDirective, ModuleDirectiveContext, ModuleDirectiveDocument,
+    ModuleDirectiveEntry, ModuleDirectiveKind,
 };
 pub use normalizer::{normalize, normalize_expression_identity, NormalizationLevel, Normalizer};
 pub use parser::{resolve_known_call_target, ParseError, ParseMode, Parser};

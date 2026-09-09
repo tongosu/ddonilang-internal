@@ -62,6 +62,30 @@ pub fn parse_module_directive_document(
     file_path: &str,
     context: &ModuleDirectiveContext,
 ) -> Result<ModuleDirectiveDocument, ParseError> {
+    let document = parse_module_directive_prefix(source, file_path, context)?;
+    if !document.declaration_source.is_empty() {
+        crate::parse_v25_with_mode(&document.declaration_source, file_path, ParseMode::Strict)
+            .map_err(|mut error| {
+                let directive_bytes = source.len() - document.declaration_source.len();
+                error.span = Span::new(
+                    directive_bytes + error.span.start,
+                    directive_bytes + error.span.end,
+                );
+                error
+            })?;
+    }
+    Ok(document)
+}
+
+/// Parse only the typed module-directive prefix.  Consumers that own a later
+/// link phase may validate the declaration tail after imported aliases have
+/// been resolved; this function never lowers a directive into an ordinary
+/// call or discards its typed metadata.
+pub fn parse_module_directive_prefix(
+    source: &str,
+    _file_path: &str,
+    context: &ModuleDirectiveContext,
+) -> Result<ModuleDirectiveDocument, ParseError> {
     let tokens = Lexer::new(source).tokenize().map_err(|error| ParseError {
         span: Span::new(error.pos, error.pos + 1),
         message: error.message,
@@ -119,18 +143,6 @@ pub fn parse_module_directive_document(
     } else {
         source[declaration_start..].to_string()
     };
-    if !declaration_source.is_empty() {
-        crate::parse_v25_with_mode(&declaration_source, file_path, ParseMode::Strict).map_err(
-            |mut error| {
-                error.span = Span::new(
-                    declaration_start + error.span.start,
-                    declaration_start + error.span.end,
-                );
-                error
-            },
-        )?;
-    }
-
     Ok(ModuleDirectiveDocument {
         imports,
         exports,

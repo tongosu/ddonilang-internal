@@ -97,21 +97,13 @@ import {
 const runtimeBridge = createRuntimeBridgeV1();
 const hostBridge = createHostBridgeV1();
 
-const FALLBACK_PENDULUM_DDN = `설정 {
-  제목: "진자 보기 코어".
-  설명: "줄 길이, 중력, 처음 각도, 마디 간격을 바꾸며 봅니다.".
-  마디수: 240.
-}.
-
-채비 {
-  g:수 <- (9.8) 매김 { 범위: 1..20. 간격: 0.1. }.
-  L:수 <- (1) 매김 { 범위: 0.2..3. 간격: 0.1. }.
-  theta0:수 <- (0.5) 매김 { 범위: -1.2..1.2. 간격: 0.05. }.
-}.
-
-(매마디)마다 {
-  theta 보여주기.
-}.`;
+const FALLBACK_PENDULUM_DDN = `매마디:움직씨 := {
+  중력:수 := 9.8.
+  줄길이:수 := 1.
+  처음각:수 := 0.5.
+  처음각 보여주기.
+}
+`;
 
 const FALLBACK_GRID_DDN = `설정 {
   제목: "격자 상태와 낙하 조각".
@@ -124,34 +116,16 @@ const FALLBACK_GRID_DDN = `설정 {
   보개로 그려.
 }.`;
 
-const FALLBACK_PROJECTILE_DDN = `설정 {
-  제목: "포물선 운동".
-  설명: "초기 속도와 중력을 바꾸며 포물선 운동을 관찰합니다.".
-  마디수: 240.
-}.
-
-채비 {
-  초기속도x: 수 <- (8.0) 매김 { 범위: 1..30. 간격: 1. }.
-  초기속도y: 수 <- (15.0) 매김 { 범위: 1..40. 간격: 1. }.
-  중력가속도: 수 <- (9.8) 매김 { 범위: 1..20. 간격: 0.1. }.
-  dt: 수 <- (0.1) 매김 { 범위: 0.02..0.5. 간격: 0.01. }.
-}.
-
-(시작)할때 {
-  t <- 0.
-  x <- 0.
-  y <- 0.
-  vx <- 초기속도x.
-  vy <- 초기속도y.
-}.
-
-(매마디)마다 {
-  x <- x + vx * dt.
-  y <- y + vy * dt.
-  vy <- vy - 중력가속도 * dt.
-}.
-
-보개로 그려.`;
+const FALLBACK_PROJECTILE_DDN = `매마디:움직씨 := {
+  초기속도x:수 := 8.
+  초기속도y:수 := 15.
+  중력가속도:수 := 9.8.
+  시간간격:수 := 0.1.
+  초기속도x 보여주기.
+  초기속도y 보여주기.
+  중력가속도 보여주기.
+}
+`;
 
 const PROJECTS = [
   {
@@ -265,20 +239,16 @@ const PROJECTS = [
       {
         path: "lesson.ddn",
         role: "main",
-        fallback: `설정 { 제목: "일차함수 기울기 작업". 마디수: 8. }.
-
-채비 {
-  a:수 <- 2 매김 { 범위: -5..5. 간격: 0.5. }.
-  b:수 <- 1 매김 { 범위: -5..5. 간격: 0.5. }.
-}.
-
-(매마디)마다 {
-  x <- 2.
-  y <- a * x + b.
+        fallback: `매마디:움직씨 := {
+  a:수 := 2.
+  b:수 := 1.
+  x:수 := 2.
+  y:수 := a * x + b.
   "series:line" 보여주기.
   x 보여주기.
   y 보여주기.
-}.`,
+}
+`,
       },
     ],
   },
@@ -468,20 +438,14 @@ function emptyServerProjectState() {
 }
 
 function defaultOneFileDdnSource(title = "새 한 파일 DDN") {
-  const safeTitle = ddnQuotedText(title) || "새 한 파일 DDN";
-  return `설정 {
-  제목: "${safeTitle}".
-  설명: "한 파일에서 값을 보여주는 최소 프로젝트입니다.".
-  마디수: 8.
-}.
-
-채비 {
-  값: 수 <- (1) 매김 { 범위: -10..10. 간격: 1. }.
-}.
-
-(매마디)마다 {
+  // The user-facing one-file template is current V25 source. Its title is
+  // Workbench presentation metadata, not hidden source syntax.
+  void title;
+  return `매마디:움직씨 := {
+  값:수 := 1.
   값 보여주기.
-}.`;
+}
+`;
 }
 
 function readOneFileDraft() {
@@ -790,11 +754,11 @@ function nativeProjectFiles(name, template = "physics") {
       {
         path: "app/main.ddn",
         role: "ddn_source",
-        utf8_text: `설정 { 제목: "${safeName}". 마디수: 4. }.
-
-(매마디)마다 {
-  0 보여주기.
-}.`,
+        utf8_text: `매마디:움직씨 := {
+  값:수 := 0.
+  값 보여주기.
+}
+`,
       },
     ];
   }
@@ -806,11 +770,12 @@ function nativeProjectFiles(name, template = "physics") {
       utf8_text: `(힘="./lib/힘") 쓰임.
 
 운동:움직씨 := {
-  위치:수 := 0.
-  속도:수 := 20.
-  dt:수 := 0.1.
-  위치 <- 위치 + 속도 * dt.
-  속도 <- 속도 - 9.8 * dt.
+  위치초기:수 := 0.
+  속도초기:수 := 20.
+  시간간격:수 := 0.1.
+  중력가속도:수 := 힘.중력.
+  속도:수 := 속도초기 - 중력가속도 * 시간간격.
+  위치:수 := 위치초기 + 속도 * 시간간격.
   위치 보여주기.
   속도 보여주기.
   힘.중력 보여주기.
