@@ -1,3 +1,4 @@
+use ddonirang_tool::lsp::document_highlight::document_highlights_snapshot;
 use ddonirang_tool::lsp::{byte_offset_to_position, LspServer, PositionEncoding, RpcMessage};
 use serde_json::{json, Value};
 
@@ -227,6 +228,15 @@ fn lsp8_highlight_stale_change_false_positive_and_close_fail_closed() {
         ),
         json!([])
     );
+    let snapshot = server.documents().get(URI).unwrap();
+    assert!(document_highlights_snapshot(
+        snapshot,
+        byte_offset_to_position(stdlib, stdlib.find("글로").unwrap(), PositionEncoding::Utf16)
+            .unwrap(),
+        PositionEncoding::Utf16,
+    )
+    .unwrap()
+    .is_none());
 
     let valid_string = "새함수:셈씨 := { \"새함수\" 보여주기. }";
     change(&mut server, valid_string, 5);
@@ -282,6 +292,45 @@ fn lsp14_highlight_ambiguous_duplicate_definition_is_empty() {
         ),
         json!([])
     );
+}
+
+#[test]
+fn lsp29_highlight_result_bound_and_cancellation_are_atomic() {
+    let mut source = "첫함수:셈씨 := { 1 돌려줘. }\n".to_string();
+    for index in 0..1_001 {
+        source.push_str(&format!("호출{index}:셈씨 := {{ 첫함수. }}\n"));
+    }
+
+    let mut server = LspServer::new();
+    init(&mut server);
+    open(&mut server, &source, 1);
+
+    let highlights = request(
+        &mut server,
+        30,
+        "textDocument/documentHighlight",
+        json!({
+            "textDocument": {"uri": URI, "version": 1},
+            "position": position(&source, "첫함수", 1)
+        }),
+    );
+    assert_eq!(highlights.as_array().unwrap().len(), 1_000);
+
+    server.cancel_request(&json!(31));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(31),
+            method: "textDocument/documentHighlight".into(),
+            params: Some(json!({
+                "textDocument": {"uri": URI, "version": 1},
+                "position": position(&source, "첫함수", 1)
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
 }
 
 trait RpcMessageTestExt {

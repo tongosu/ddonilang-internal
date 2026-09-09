@@ -4,6 +4,8 @@ use super::symbol::{collect_local_references, resolve_symbol, SymbolError};
 
 pub use super::symbol::SymbolError as DocumentHighlightError;
 
+pub const MAX_DOCUMENT_HIGHLIGHTS: usize = 1_000;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DocumentHighlightResolution {
     pub document_version: i64,
@@ -38,6 +40,7 @@ pub fn document_highlights_snapshot(
         identity: symbol.identity,
         highlights: ranges
             .into_iter()
+            .take(MAX_DOCUMENT_HIGHLIGHTS)
             .map(|range| DocumentHighlightRange {
                 kind: if Some(range) == declaration { 3 } else { 2 },
                 range,

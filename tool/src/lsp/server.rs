@@ -1,6 +1,8 @@
 use super::definition::DefinitionError;
 use super::diagnostics::{analyze_snapshot, DiagnosticError, DiagnosticReport, SOURCE_PROFILE_V25};
-use super::document_highlight::{document_highlights_snapshot, DocumentHighlightError};
+use super::document_highlight::{
+    document_highlights_snapshot, DocumentHighlightError, MAX_DOCUMENT_HIGHLIGHTS,
+};
 use super::document_store::{
     DocumentChange, DocumentStore, DocumentStoreError, SourceSnapshotIdentity,
 };
@@ -1523,6 +1525,9 @@ impl LspServer {
         else {
             return Ok(success_event(id, json!([])));
         };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let source = snapshot.text().map_err(ServerError::Document)?;
         let highlights = result
             .highlights
@@ -1544,6 +1549,10 @@ impl LspServer {
                 }))
             })
             .collect::<Result<Vec<_>, ServerError>>()?;
+        debug_assert!(highlights.len() <= MAX_DOCUMENT_HIGHLIGHTS);
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         Ok(success_event(id, json!(highlights)))
     }
 
