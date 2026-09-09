@@ -92,7 +92,14 @@ impl Normalizer {
 
         // 본문
         if let Some(body) = &seed.body {
-            if seed.params.is_empty() {
+            if self.source_epoch == SourceEpoch::V25 {
+                if let Some(Stmt::Return { value, .. }) = body.stmts.first() {
+                    if body.stmts.len() == 1 {
+                        self.normalize_expr(value);
+                        return;
+                    }
+                }
+            } else if seed.params.is_empty() {
                 if let Some(Stmt::Return { value, .. }) = body.stmts.first() {
                     if body.stmts.len() == 1 {
                         self.normalize_expr(value);
@@ -1102,6 +1109,29 @@ mod tests {
     x + 1 되돌림.
 }"#;
         assert_eq!(normalized.trim(), expected);
+    }
+
+    #[test]
+    fn v25_single_return_callable_emits_current_expression_surface() {
+        let source = "(x:수) 증가:셈씨 := x + 1";
+        let normalized = crate::parse_v25_and_normalize(
+            source,
+            "v25_single_return.ddn",
+            NormalizationLevel::N1,
+        )
+        .expect("V25 source must normalize");
+
+        assert_eq!(normalized.trim(), "(x:수) 증가:셈씨 := x + 1");
+        assert!(!normalized.contains("되돌림"));
+        assert!(!normalized.contains("돌려줘"));
+
+        let roundtrip = crate::parse_v25_and_normalize(
+            &normalized,
+            "v25_single_return.ddn",
+            NormalizationLevel::N1,
+        )
+        .expect("emitted V25 source must normalize");
+        assert_eq!(normalized, roundtrip);
     }
 
     #[test]

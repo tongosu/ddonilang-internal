@@ -19,6 +19,7 @@ pub mod frontdoor;
 pub mod lexer;
 pub mod migration;
 pub mod model;
+pub mod module_directive;
 pub mod normalizer;
 pub mod parser;
 pub mod runtime;
@@ -29,9 +30,9 @@ pub mod term_map;
 
 pub use age_gate::{age_not_available_error, AgeTarget};
 pub use ast::*;
-pub use canonicalizer::{canonicalize, canonicalize_ddl_wave1, canonicalize_ddl_wave2, canonicalize_ddl_wave3, CanonicalizeReport, LintWarning};
+pub use canonicalizer::{canonicalize, canonicalize_ddl_wave1, CanonicalizeReport, LintWarning};
 pub use currentline::{apply_currentline_cell, apply_currentline_cell_v25, CurrentLineResult};
-pub use ddl::{parse_ddl_wave1, parse_ddl_wave2, parse_ddl_wave3, DdlError};
+pub use ddl::{parse_ddl_wave1, DdlError};
 pub use delivery::{
     canonical_provider_occurrences, plan_delivery_occurrence, plan_internal_delivery_occurrence,
     select_exactly_one_endpoint, AsyncSend, DeliveryOccurrence, DeliveryOccurrenceFailure,
@@ -53,9 +54,10 @@ pub use frontdoor::{
     find_legacy_root_hide_directive, find_legacy_root_surface, has_legacy_boim_surface,
     has_natural_foreach_surface, has_right_assignment_arrow, has_simple_assignment_arrow,
     normalize_for_lang_parity, owner_inner_seum_canon_rows, owner_state_symbol_table_rows,
-    preprocess_frontdoor_source, validate_no_legacy_boim_surface, validate_no_legacy_header,
-    validate_no_legacy_range_comment, validate_no_legacy_root_hide_directive,
-    validate_no_legacy_root_surface, wrap_lang_parity_source,
+    parse_module_directive_frontdoor_with_mode, preprocess_frontdoor_source,
+    validate_no_legacy_boim_surface, validate_no_legacy_header, validate_no_legacy_range_comment,
+    validate_no_legacy_root_hide_directive, validate_no_legacy_root_surface,
+    wrap_lang_parity_source, ModuleDirectiveFrontdoorResult,
 };
 pub use lexer::{LexError, Lexer, Token, TokenKind};
 pub use migration::{
@@ -80,6 +82,10 @@ pub use model::{
     EXECUTION_CONTRACT_FIELD_RESOURCE, EXECUTION_CONTRACT_FIELD_RESULT,
     EXECUTION_CONTRACT_SCHEMA_CANDIDATE, FIXED_DEFAULT_PRECISE_RECIPE_NAME,
     MODEL_IR_SCHEMA_CANDIDATE, STANDARD_REPRO_PROFILE_IDENTITY,
+};
+pub use module_directive::{
+    canonicalize_module_directive_document, parse_module_directive_document, ModuleDirective,
+    ModuleDirectiveContext, ModuleDirectiveDocument, ModuleDirectiveEntry, ModuleDirectiveKind,
 };
 pub use normalizer::{normalize, normalize_expression_identity, NormalizationLevel, Normalizer};
 pub use parser::{resolve_known_call_target, ParseError, ParseMode, Parser};
@@ -201,67 +207,8 @@ pub fn parse_v25_and_normalize(
     level: NormalizationLevel,
 ) -> Result<String, ParseError> {
     let mut program = parse_v25(source, file_path)?;
-    validate_v25_current_program(&program)?;
     let _report = canonicalize(&mut program)?;
     Ok(normalize(&program, level))
-}
-
-/// Current V25 accepts direct `:=` definitions only. `채비 {}` remains
-/// parseable in the legacy custody parser long enough to report migration, but
-/// it must never enter the V25 normalization or execution-success path.
-pub fn validate_v25_current_program(program: &CanonProgram) -> Result<(), ParseError> {
-    for item in &program.items {
-        let TopLevelItem::SeedDef(seed) = item;
-        if let Some(body) = &seed.body {
-            if let Some(span) = legacy_chaebi_span(body) {
-                return Err(ParseError {
-                    span,
-                    message: "E_V25_DEFINITION_MIGRATION_REQUIRED: `채비 {}`는 현행 V25 source가 아니며 명시적 마이그레이션 입력으로 분리해야 합니다.".to_string(),
-                });
-            }
-        }
-    }
-    Ok(())
-}
-
-fn legacy_chaebi_span(body: &Body) -> Option<Span> {
-    body.stmts.iter().find_map(|stmt| match stmt {
-        Stmt::DeclBlock { span, .. } => Some(*span),
-        Stmt::Receive { body, .. }
-        | Stmt::Try { body, .. }
-        | Stmt::Repeat { body, .. }
-        | Stmt::While { body, .. }
-        | Stmt::ForEach { body, .. }
-        | Stmt::Quantifier { body, .. }
-        | Stmt::Guard { body, .. }
-        | Stmt::BeatBlock { body, .. }
-        | Stmt::Hook { body, .. }
-        | Stmt::HookWhenBecomes { body, .. }
-        | Stmt::HookWhile { body, .. } => legacy_chaebi_span(body),
-        Stmt::If {
-            then_body,
-            else_body,
-            ..
-        } => legacy_chaebi_span(then_body)
-            .or_else(|| else_body.as_ref().and_then(legacy_chaebi_span)),
-        Stmt::Choose {
-            branches,
-            else_body,
-            ..
-        } => branches
-            .iter()
-            .find_map(|branch| legacy_chaebi_span(&branch.body))
-            .or_else(|| legacy_chaebi_span(else_body)),
-        Stmt::Contract {
-            then_body,
-            else_body,
-            ..
-        } => then_body
-            .as_ref()
-            .and_then(legacy_chaebi_span)
-            .or_else(|| legacy_chaebi_span(else_body)),
-        _ => None,
-    })
 }
 
 /// 편리 함수: frontdoor 입력 표면 전처리 후 정본화

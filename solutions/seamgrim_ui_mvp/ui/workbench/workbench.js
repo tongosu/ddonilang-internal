@@ -3,6 +3,7 @@ import { createHostBridgeV1 } from "../host/host_bridge.js";
 import { extractCanonicalViewAuthorityInputsFromState } from "../seamgrim_runtime_state.js";
 import {
   analyzeSourceReadiness,
+  MODULE_DIRECTIVE_ANALYSIS_SNAPSHOT_SCHEMA,
   applySourceReadinessFix,
   projectAuthoritativeSourceAnalysis,
   projectSourceAnalysisUnavailable,
@@ -394,6 +395,10 @@ const state = {
   sourceAnalysisGeneration: 0,
   sourceAnalysisSourceText: "",
   sourceAnalysisInFlight: false,
+  completionDocumentVersion: 1,
+  completionGeneration: 0,
+  completionItems: [],
+  completionSelectedIndex: 0,
   sourceReadinessRunBlocked: false,
   sourceReadinessLastApplyOutcome: {
     schema: "seamgrim.workbench.source_readiness_apply_outcome.v1",
@@ -798,32 +803,27 @@ function nativeProjectFiles(name, template = "physics") {
     {
       path: "app/main.ddn",
       role: "ddn_source",
-      utf8_text: `쓰임 { 힘: "./lib/힘". }
+      utf8_text: `(힘="./lib/힘") 쓰임.
 
-설정 { 제목: "${safeName}". 마디수: 8. }.
-
-채비 {
-  위치: 수 <- 0.
-  속도: 수 <- 20.
-  dt: 수 <- 0.1.
-}.
-
-(매마디)마다 {
+운동:움직씨 := {
+  위치:수 := 0.
+  속도:수 := 20.
+  dt:수 := 0.1.
   위치 <- 위치 + 속도 * dt.
   속도 <- 속도 - 9.8 * dt.
   위치 보여주기.
   속도 보여주기.
   힘.중력 보여주기.
-}.`,
+}
+`,
     },
     {
       path: "lib/힘.ddn",
       role: "ddn_source",
-      utf8_text: `드러냄 { 중력. }
+      utf8_text: `(중력=중력) 드러냄.
 
-채비 {
-  중력: 수 <- 9.8.
-}.`,
+중력:수 := 9.8.
+`,
     },
   ];
 }
@@ -858,6 +858,12 @@ function buildNativeProject(name, template = "physics") {
     metadata: { title, summary: "셈그림에서 새로 만든 DDN 프로젝트", tags: ["내 작업", "네이티브", templateTag] },
   };
   if (payload) portableSnapshot.local_package_payload = payload;
+  const moduleDirectiveRegistry = template === "physics"
+    ? {
+        known_import_targets: ["./lib/힘"],
+        public_definition_targets: ["중력"],
+      }
+    : null;
   return {
     id,
     title,
@@ -874,6 +880,7 @@ function buildNativeProject(name, template = "physics") {
       magnifier: "현재 관찰값 확대",
     },
     portableSnapshot,
+    moduleDirectiveRegistry,
     files: files.map((file) => ({ path: file.path, role: file.role, fallback: file.utf8_text })),
   };
 }
@@ -924,6 +931,7 @@ const els = {
   summary: document.querySelector("#project-summary"),
   sourceTitle: document.querySelector("#source-panel-title"),
   sourceEditor: document.querySelector("#source-editor"),
+  completionPopup: document.querySelector("#completion-popup"),
   fileTabs: document.querySelector("[data-testid='file-tabs']"),
   fileDrawer: document.querySelector("[data-testid='file-drawer']"),
   fileList: document.querySelector("#file-list"),
@@ -1594,6 +1602,111 @@ function renderSource(project) {
   els.sourceEditor.value = state.fileTexts.get(file.path) ?? "";
 }
 
+function completionPosition(source, offset) {
+  const before = source.slice(0, offset);
+  const line = before.lastIndexOf("\n") + 1;
+  return {
+    line: before.slice(0, line).split("\n").length - 1,
+    character: before.slice(line).length,
+  };
+}
+
+function completionOffset(source, position) {
+  const lines = source.split("\n");
+  if (position.line < 0 || position.line >= lines.length) return null;
+  const lineStart = lines.slice(0, position.line).reduce((total, line) => total + line.length + 1, 0);
+  if (position.character < 0 || position.character > lines[position.line].length) return null;
+  return lineStart + position.character;
+}
+
+function closeCompletionPopup() {
+  state.completionItems = [];
+  state.completionSelectedIndex = 0;
+  if (els.completionPopup) {
+    els.completionPopup.hidden = true;
+    els.completionPopup.replaceChildren();
+  }
+  els.sourceEditor?.removeAttribute("aria-activedescendant");
+}
+
+function renderCompletionPopup() {
+  const popup = els.completionPopup;
+  if (!popup || !state.completionItems.length) {
+    if (popup) popup.hidden = true;
+    els.sourceEditor?.removeAttribute("aria-activedescendant");
+    return;
+  }
+  popup.replaceChildren();
+  popup.hidden = false;
+  state.completionItems.forEach((item, index) => {
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = "completion-option";
+    option.id = `completion-option-${index}`;
+    option.setAttribute("role", "option");
+    option.setAttribute("aria-selected", index === state.completionSelectedIndex ? "true" : "false");
+    option.dataset.testid = `completion-option-${index}`;
+    const label = document.createElement("span");
+    label.textContent = String(item.label ?? "");
+    const detail = document.createElement("span");
+    detail.className = "completion-option-detail";
+    detail.textContent = String(item.canonical_detail ?? "");
+    option.append(label, detail);
+    option.addEventListener("mousedown", (event) => event.preventDefault());
+    option.addEventListener("click", () => selectCompletion(index));
+    popup.appendChild(option);
+  });
+  els.sourceEditor.setAttribute("aria-activedescendant", `completion-option-${state.completionSelectedIndex}`);
+}
+
+function selectCompletion(index = state.completionSelectedIndex) {
+  const item = state.completionItems[index];
+  if (!item) return;
+  const source = els.sourceEditor.value;
+  const start = completionOffset(source, item.replacement_range?.start);
+  const end = completionOffset(source, item.replacement_range?.end);
+  if (start === null || end === null || start > end) {
+    closeCompletionPopup();
+    return;
+  }
+  const next = `${source.slice(0, start)}${String(item.insert_text ?? "")}${source.slice(end)}`;
+  els.sourceEditor.value = next;
+  els.sourceEditor.setSelectionRange(start + String(item.insert_text ?? "").length, start + String(item.insert_text ?? "").length);
+  closeCompletionPopup();
+  els.sourceEditor.dispatchEvent(new Event("input", { bubbles: true }));
+  els.sourceEditor.focus();
+}
+
+async function requestCompletion() {
+  const file = activeFile();
+  const source = els.sourceEditor?.value ?? "";
+  if (!file?.path?.endsWith(".ddn") || els.sourceEditor?.readOnly) {
+    closeCompletionPopup();
+    return;
+  }
+  const generation = ++state.completionGeneration;
+  const version = state.completionDocumentVersion;
+  const cursor = els.sourceEditor.selectionStart ?? source.length;
+  const result = await runtimeBridge.sharedCompletion({
+    schema: "ddonilang.completion.v1-candidate",
+    profile: "v1-core-v25",
+    document_identity: `seamgrim://${encodeURIComponent(currentProject().id)}/${encodeURIComponent(file.path)}`,
+    document_version: version,
+    source,
+    position: completionPosition(source, cursor),
+    encoding: "utf-16",
+  }).catch(() => null);
+  if (
+    generation !== state.completionGeneration
+    || version !== state.completionDocumentVersion
+    || source !== els.sourceEditor.value
+    || !result
+  ) return;
+  state.completionItems = Array.isArray(result.candidates) ? result.candidates : [];
+  state.completionSelectedIndex = 0;
+  renderCompletionPopup();
+}
+
 function renderProjectMeta(project) {
   els.title.textContent = project.title;
   els.kind.textContent = project.kind;
@@ -1824,6 +1937,21 @@ function refreshSourceReadiness(project = currentProject()) {
   return refreshPendingSourceReadiness(project);
 }
 
+function moduleDirectiveRegistryForProject(project) {
+  const registry = project?.moduleDirectiveRegistry;
+  if (!registry) return null;
+  const known = registry.known_import_targets;
+  const publicDefinitions = registry.public_definition_targets;
+  if (!Array.isArray(known) || !Array.isArray(publicDefinitions)) return null;
+  if (![...known, ...publicDefinitions].every((value) => typeof value === "string" && value.length > 0)) {
+    return null;
+  }
+  return {
+    known_import_targets: [...known],
+    public_definition_targets: [...publicDefinitions],
+  };
+}
+
 async function refreshAuthoritativeSourceReadiness(project = currentProject()) {
   const projectIdAtRequest = project.id;
   const entryPath = localProjectEntryPath(project);
@@ -1839,12 +1967,20 @@ async function refreshAuthoritativeSourceReadiness(project = currentProject()) {
     state.sourceAnalysisGeneration = generation;
     state.sourceAnalysisSourceText = sourceAtRequest;
     try {
-      const snapshot = await runtimeBridge.sourceAnalysis({
+      const registry = moduleDirectiveRegistryForProject(project);
+      const request = {
         source_text: sourceAtRequest,
         path: entryPath,
         analysis_generation: generation,
         source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
-      });
+      };
+      const snapshot = registry
+        ? await runtimeBridge.moduleDirectiveAnalysis({
+            schema: MODULE_DIRECTIVE_ANALYSIS_SNAPSHOT_SCHEMA,
+            ...request,
+            module_registry: registry,
+          })
+        : await runtimeBridge.sourceAnalysis(request);
       if (currentProject().id !== projectIdAtRequest) {
         return { ...pending, ready: false, blocked: true, superseded: true };
       }
@@ -3654,6 +3790,9 @@ document.querySelector("[data-testid='project-edit-apply']")?.addEventListener("
 });
 
 els.sourceEditor.addEventListener("input", () => {
+  state.completionDocumentVersion += 1;
+  state.completionGeneration += 1;
+  closeCompletionPopup();
   const editedPath = activeFile().path;
   state.fileTexts.set(editedPath, els.sourceEditor.value);
   if (editedPath === "ddn.lock") {
@@ -3701,6 +3840,24 @@ els.sourceEditor.addEventListener("input", () => {
   renderSemanticObservations(currentProject());
   renderRunMetadata(currentProject());
   drawPreview();
+  setTimeout(() => requestCompletion(), 120);
+});
+
+els.sourceEditor.addEventListener("keydown", (event) => {
+  if (els.completionPopup?.hidden || !state.completionItems.length) return;
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault();
+    const delta = event.key === "ArrowDown" ? 1 : -1;
+    state.completionSelectedIndex = (state.completionSelectedIndex + delta + state.completionItems.length)
+      % state.completionItems.length;
+    renderCompletionPopup();
+  } else if (event.key === "Enter" || event.key === "Tab") {
+    event.preventDefault();
+    selectCompletion();
+  } else if (event.key === "Escape") {
+    event.preventDefault();
+    closeCompletionPopup();
+  }
 });
 
 window.addEventListener("resize", () => drawPreview());

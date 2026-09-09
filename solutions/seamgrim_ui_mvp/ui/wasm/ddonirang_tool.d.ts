@@ -124,6 +124,12 @@ export function wasm_model_run_candidate_json(source: string): string;
  */
 export function wasm_model_run_candidate_json_with_source_file(source: string, source_file: string): string;
 
+/**
+ * Additive internal candidate carrier for lexer-backed RD-457 metadata.
+ * It deliberately does not alter the established source-analysis v1 export.
+ */
+export function wasm_module_directive_analysis_snapshot_json(request_json: string): string;
+
 export function wasm_normalize_project_source_json(source_json: string): string;
 
 export function wasm_preprocess_source(source: string): string;
@@ -260,6 +266,7 @@ export interface InitOutput {
     readonly wasm_model_prepared_state_json: (a: number, b: number, c: number, d: number, e: number) => void;
     readonly wasm_model_run_candidate_json: (a: number, b: number, c: number) => void;
     readonly wasm_model_run_candidate_json_with_source_file: (a: number, b: number, c: number, d: number, e: number) => void;
+    readonly wasm_module_directive_analysis_snapshot_json: (a: number, b: number, c: number) => void;
     readonly wasm_normalize_project_source_json: (a: number, b: number, c: number) => void;
     readonly wasm_preprocess_source: (a: number, b: number, c: number) => void;
     readonly wasm_primary_view_decision_json: (a: number, b: number, c: number, d: number) => void;

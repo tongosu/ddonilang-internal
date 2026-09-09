@@ -270,7 +270,10 @@
                   원문
                 </button>
               </div>
-              <textarea id="source-editor" data-testid="source-editor" spellcheck="false" aria-label="DDN 원문"></textarea>
+              <div class="source-editor-shell">
+                <textarea id="source-editor" data-testid="source-editor" spellcheck="false" aria-label="DDN 원문" aria-controls="completion-popup" aria-autocomplete="list"></textarea>
+                <div id="completion-popup" data-testid="completion-popup" class="completion-popup" role="listbox" aria-label="또니랑 자동완성" hidden></div>
+              </div>
             </section>
 
             <section class="panel bogae-panel" data-testid="bogae-panel" aria-label="보개">

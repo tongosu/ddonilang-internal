@@ -1777,10 +1777,6 @@ impl DdnProgram {
             parse_with_mode(&prepared, file_path, mode)
         }
         .map_err(|e| format_parse_error(&prepared, &e))?;
-        if v25 {
-            ddonirang_lang::validate_v25_current_program(&program)
-                .map_err(|e| format_parse_error(&prepared, &e))?;
-        }
         let report = canonicalize(&mut program).map_err(|e| format_parse_error(&prepared, &e))?;
         let parse_warnings = report
             .warnings
@@ -19647,21 +19643,6 @@ mod tests {
             Err(error) => error,
         };
         assert!(error.contains("E_V25_DEFINITION_MIGRATION_REQUIRED"));
-    }
-
-    #[test]
-    fn v25_legacy_chaebi_fails_before_runtime_state_exists() {
-        for script in [
-            "계산:움직씨 := {\n    채비 { 상수:수 = 1. }.\n}\n",
-            "계산:움직씨 := {\n    채비 { 상수:수 := 1. }.\n}\n",
-            "계산:움직씨 := {\n    값:수 := 1.\n    채비 { 상수:수 = 1. }.\n}\n",
-        ] {
-            let error = match DdnProgram::from_v25_source(script, "v25_legacy_chaebi.ddn") {
-                Ok(_) => panic!("legacy chaebi must fail before a runtime program exists"),
-                Err(error) => error,
-            };
-            assert!(error.contains("E_V25_DEFINITION_MIGRATION_REQUIRED"));
-        }
     }
 
     #[test]

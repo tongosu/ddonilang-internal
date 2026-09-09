@@ -5,6 +5,7 @@ export const RUNTIME_BRIDGE_V1_SCHEMA = "seamgrim.runtime_bridge.v1";
 export const RUNTIME_BRIDGE_V1_OPERATIONS = Object.freeze([
   "createSession",
   "sourceAnalysis",
+  "sharedCompletion",
   "runSummaryWithSourceProfile",
   "canonMaegimPlan",
   "planGajiExtraction",
@@ -110,6 +111,26 @@ export class WasmRuntimeAdapter {
       wasmModule,
       "wasm_source_analysis_snapshot_json",
       "E_SOURCE_ANALYSIS_WASM_REQUIRED 공통 Rust/WASM 원문 분석 기능이 필요합니다",
+    );
+    return JSON.parse(String(operation(JSON.stringify(request)) ?? "{}"));
+  }
+
+  async moduleDirectiveAnalysis(request) {
+    const wasmModule = await this.ensureProjectModule();
+    const operation = requireExport(
+      wasmModule,
+      "wasm_module_directive_analysis_snapshot_json",
+      "E_MODULE_DIRECTIVE_ANALYSIS_WASM_REQUIRED 공통 Rust/WASM module directive 분석 기능이 필요합니다",
+    );
+    return JSON.parse(String(operation(JSON.stringify(request)) ?? "{}"));
+  }
+
+  async sharedCompletion(request) {
+    const wasmModule = await this.ensureProjectModule();
+    const operation = requireExport(
+      wasmModule,
+      "wasm_project_authoring_completion_json",
+      "E_COMPLETION_WASM_REQUIRED 공통 Rust/WASM 자동완성 기능이 필요합니다",
     );
     return JSON.parse(String(operation(JSON.stringify(request)) ?? "{}"));
   }
@@ -228,6 +249,7 @@ export class RuntimeBridgeV1 {
 
   canonMaegimPlan(sourceText) { return this.#adapter.canonMaegimPlan(sourceText); }
   sourceAnalysis(request) { return this.#adapter.sourceAnalysis(request); }
+  sharedCompletion(request) { return this.#adapter.sharedCompletion(request); }
   runSummaryWithSourceProfile(request) { return this.#adapter.runSummaryWithSourceProfile(request); }
   planGajiExtraction(request) { return this.#adapter.planGajiExtraction(request); }
   projectSourceSha256(source) { return this.#adapter.projectSourceSha256(source); }

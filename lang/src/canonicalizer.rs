@@ -41,38 +41,6 @@ pub fn canonicalize_ddl_wave1(document: &DdlDocument) -> String {
     format!("{}\n", sections.join("\n\n"))
 }
 
-/// Canonical internal presentation for the fixed Wave 2 callable projection.
-pub fn canonicalize_ddl_wave2(document: &DdlCallableDocument) -> String {
-    let mut sections = Vec::with_capacity(document.sections.len());
-    for section in &document.sections {
-        let header = match section.language_profile_identity.as_str() {
-            "language-profile:ko" => "#!한국어",
-            "language-profile:ja" => "#!日本語",
-            _ => unreachable!("DDL parser admits only the fixed Wave 2 registry"),
-        };
-        let projection = &section.projection;
-        debug_assert!(matches!(projection.omitted_payload, OmittedPayload::CallableBody));
-        let parameters = projection.parameters.iter().map(|param| format!("{}:{}[{}]", param.localized_name, param.localized_type, param.relation_surface)).collect::<Vec<_>>().join(", ");
-        sections.push(format!("{header}\n{}({parameters}) -> {} :={{...}}.", projection.localized_name, projection.localized_result_type));
-    }
-    format!("{}\n", sections.join("\n\n"))
-}
-
-pub fn canonicalize_ddl_wave3(document: &DdlSumDocument) -> String {
-    let mut sections = Vec::with_capacity(document.sections.len());
-    for section in &document.sections {
-        let header = match section.language_profile_identity.as_str() {
-            "language-profile:ko" => "#!한국어",
-            "language-profile:ja" => "#!日本語",
-            _ => unreachable!("DDL parser admits only the fixed registry"),
-        };
-        let projection = &section.projection;
-        let branches = projection.branches.iter().map(|branch| format!("    ${}.", branch.localized_name)).collect::<Vec<_>>().join("\n");
-        sections.push(format!("{header}\n{}:{} := {{\n{branches}\n}}.", projection.localized_name, projection.localized_type));
-    }
-    format!("{}\n", sections.join("\n\n"))
-}
-
 pub fn canonicalize(program: &mut CanonProgram) -> Result<CanonicalizeReport, ParseError> {
     let mut warnings = Vec::new();
     let signatures = collect_seed_signatures(program);

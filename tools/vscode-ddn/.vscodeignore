@@ -1,0 +1,13 @@
+node_modules/**
+test/**
+legacy/**
+quickfix/**
+*.log
+*.tmp
+*.bak
+work/**
+docs/**
+backup/**
+secret/**
+**/.env
+**/.env.*

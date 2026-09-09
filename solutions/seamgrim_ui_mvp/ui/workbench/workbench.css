@@ -1304,3 +1304,45 @@ p {
     grid-template-columns: 1fr;
   }
 }
+.source-editor-shell {
+  position: relative;
+}
+
+.completion-popup {
+  position: absolute;
+  z-index: 20;
+  top: 2.7rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  max-height: 14rem;
+  overflow-y: auto;
+  border: 1px solid var(--line-strong, #b9c8d6);
+  border-radius: 0.55rem;
+  background: var(--surface, #ffffff);
+  box-shadow: 0 0.55rem 1.5rem rgb(20 36 52 / 18%);
+}
+
+.completion-option {
+  display: grid;
+  grid-template-columns: minmax(8rem, 1fr) minmax(8rem, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.completion-option[aria-selected="true"] {
+  background: var(--accent-soft, #e8f1f8);
+}
+
+.completion-option-detail {
+  overflow: hidden;
+  color: var(--muted, #607080);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

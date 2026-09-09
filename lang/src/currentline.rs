@@ -172,12 +172,6 @@ impl CurrentLineSession {
         self.boim_rows.clear();
         let mut rest = strip_comments(source);
         let (next, chaebis) = remove_named_blocks(&rest, "채비")?;
-        if self.fail_unknown_statement && !chaebis.is_empty() {
-            return Err(
-                "E_V25_DEFINITION_MIGRATION_REQUIRED: `채비 {}`는 현행 V25 source가 아니며 명시적 마이그레이션 입력으로 분리해야 합니다."
-                    .to_string(),
-            );
-        }
         rest = next;
         for body in chaebis {
             self.apply_chaebi(&body)?;
@@ -359,8 +353,10 @@ impl CurrentLineSession {
         if stmt.starts_with('(') && stmt.trim_end().ends_with("보임") {
             return self.execute_public_observation(stmt, actor, binds);
         }
-        if stmt.starts_with("보임") {
-            return Err("E_BOIM_LEGACY_REMOVED: `보임 {}` 블록은 제거되었습니다".to_string());
+        if let Some(rest) = stmt.strip_prefix("보임") {
+            if rest.trim_start().starts_with('{') {
+                return Err("E_BOIM_LEGACY_REMOVED: `보임 {}` 블록은 제거되었습니다".to_string());
+            }
         }
         if self.fail_unknown_statement {
             return Err(format!(
@@ -657,7 +653,7 @@ impl CurrentLineSession {
     fn to_executable_source(&self, profile: ExecutableSourceProfile) -> String {
         let v25 = profile == ExecutableSourceProfile::V1CoreV25;
         let mut lines = if v25 {
-            vec!["매마디:움직씨 := {".to_string()]
+            vec!["매마디:움직씨 := {".to_string(), "  채비 {".to_string()]
         } else {
             vec!["채비 {".to_string()]
         };
@@ -668,7 +664,7 @@ impl CurrentLineSession {
             if matches!(value, CellValue::Str(text) if text.parse::<i64>().is_ok()) {
                 continue;
             }
-            let indent = "  ";
+            let indent = if v25 { "    " } else { "  " };
             let binding = if v25 { ":=" } else { "<-" };
             lines.push(format!(
                 "{indent}{key}: {} {binding} {}.",
@@ -676,9 +672,7 @@ impl CurrentLineSession {
                 value.ddn_literal()
             ));
         }
-        if !v25 {
-            lines.push("}.".to_string());
-        }
+        lines.push(if v25 { "  }." } else { "}." }.to_string());
         lines.push(String::new());
         for output in &self.outputs {
             let indent = if v25 { "  " } else { "" };
@@ -1073,6 +1067,13 @@ mod tests {
     }
 
     #[test]
+    fn currentline_only_classifies_the_retired_boim_block_as_legacy() {
+        let err = apply_currentline_cell_v25("보임값.", None)
+            .expect_err("an unrelated current identifier must not be legacy syntax");
+        assert!(err.starts_with("E_EXECUTION_PREPROCESS:"));
+    }
+
+    #[test]
     fn currentline_uses_successor_async_and_fails_closed_for_rendezvous() {
         apply_currentline_cell("(1) 알림 ~> 관제탑.", None)
             .expect("successor async currentline surface");
@@ -1087,22 +1088,5 @@ mod tests {
         let error = apply_currentline_cell_v25("z = 1.", None)
             .expect_err("v25 unknown statement must fail closed");
         assert!(error.starts_with("E_EXECUTION_PREPROCESS:"));
-    }
-
-    #[test]
-    fn v25_currentline_emits_direct_definitions_and_rejects_legacy_chaebi() {
-        let current = apply_currentline_cell_v25("값 <- 1.", None).expect("v25 currentline source");
-        assert!(current.project_source.contains("값: 수 := 1."));
-        assert!(!current.project_source.contains("채비"));
-
-        for source in [
-            "채비 { 값:셈수 = 1. }.",
-            "채비 { 값:셈수 := 1. }.",
-            "값 <- 1.\n채비 { 다른값:셈수 = 2. }.",
-        ] {
-            let error = apply_currentline_cell_v25(source, None)
-                .expect_err("legacy chaebi must not enter a v25 currentline session");
-            assert!(error.starts_with("E_V25_DEFINITION_MIGRATION_REQUIRED:"));
-        }
     }
 }

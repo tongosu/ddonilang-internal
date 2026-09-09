@@ -1869,7 +1869,12 @@ pub fn build_project_edit_plan(
                     "모듈 이름은 비어 있지 않은 한 이름이어야 합니다",
                 ));
             }
-            let template = format!("# {module_name} 모듈\n드러냄 {{ 값. }}\n\n값 <- 0.\n");
+            // A newly authored module must be current V25 source, never a
+            // brace-form directive or legacy binding that would need a later
+            // migration pass before it can enter the shared frontdoor.
+            let template = format!(
+                "# {module_name} 모듈\n(값=값) 드러냄.\n\n값:수 := 0.\n"
+            );
             build_add_file_plan(
                 request.source,
                 &before_hash,
@@ -7423,7 +7428,11 @@ mod tests {
         .expect("add module");
         assert_eq!(added.operation, "add_module");
         assert!(added.project_source.files.iter().any(|file| {
-            file.path == "lib/힘.ddn" && file.utf8_text.contains("드러냄 { 값. }")
+            file.path == "lib/힘.ddn"
+                && file.utf8_text.contains("(값=값) 드러냄.")
+                && file.utf8_text.contains("값:수 := 0.")
+                && !file.utf8_text.contains("드러냄 {")
+                && !file.utf8_text.contains("채비 {")
         }));
 
         let duplicated = build_project_edit_plan(edit_request(

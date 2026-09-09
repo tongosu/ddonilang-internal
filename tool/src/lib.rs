@@ -9,6 +9,7 @@ pub mod bogae_bundle_workflow;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod bogae_playback_workflow;
 pub mod canon;
+pub mod completion;
 pub mod corpus_authoring;
 pub mod corpus_csv;
 #[cfg(not(target_arch = "wasm32"))]
@@ -96,7 +97,10 @@ pub mod gaji_plan_workflow;
 pub mod local_project;
 pub mod lint;
 pub mod lsp;
+pub use lsp::diagnostics;
+pub use lsp::hover;
 pub mod model_runtime;
+pub mod module_directive_analysis;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod numeric_workflow;
 #[cfg(not(target_arch = "wasm32"))]

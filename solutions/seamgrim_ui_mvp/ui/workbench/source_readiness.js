@@ -2,6 +2,7 @@ export const SOURCE_READINESS_SCHEMA = "seamgrim.workbench.source_readiness.v1";
 export const SOURCE_READINESS_DIAGNOSTIC_CODE = "W_BLOCK_HEADER_COLON_DEPRECATED";
 export const SOURCE_READINESS_FIX_ID = "FIX_SOURCE_REMOVE_SETUP_COLON";
 export const SOURCE_ANALYSIS_SNAPSHOT_SCHEMA = "ddn.source_analysis_snapshot.candidate.v1";
+export const MODULE_DIRECTIVE_ANALYSIS_SNAPSHOT_SCHEMA = "ddn.module_directive_analysis.candidate.v1";
 // Workbench single-file execution is the V1 supported ingress. Keep the
 // profile explicit so the preflight and the shared Rust/WASM runtime accept
 // exactly the same V25 source surface as the official native frontdoor.
@@ -122,7 +123,11 @@ export function projectAuthoritativeSourceAnalysis(snapshot, {
   sourceHash = "",
   sourceText = "",
 } = {}) {
-  if (!snapshot || snapshot.schema !== SOURCE_ANALYSIS_SNAPSHOT_SCHEMA) {
+  if (
+    !snapshot
+    || ![SOURCE_ANALYSIS_SNAPSHOT_SCHEMA, MODULE_DIRECTIVE_ANALYSIS_SNAPSHOT_SCHEMA]
+      .includes(snapshot.schema)
+  ) {
     throw new Error("E_SOURCE_ANALYSIS_SNAPSHOT_INVALID");
   }
   if (Number(snapshot.analysis_generation) !== Number(expectedAnalysisGeneration)) {
@@ -195,6 +200,9 @@ export function projectAuthoritativeSourceAnalysis(snapshot, {
     analysis_generation: Number(snapshot.analysis_generation),
     source_profile_identity: String(snapshot.source_profile_identity ?? ""),
     analysis_outcome: outcome,
+    module_directive_metadata: snapshot.schema === MODULE_DIRECTIVE_ANALYSIS_SNAPSHOT_SCHEMA
+      ? JSON.parse(JSON.stringify(snapshot.metadata ?? null))
+      : null,
     diagnostics,
     candidate,
     candidates,

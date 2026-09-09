@@ -1,6 +1,7 @@
 #![cfg(not(target_arch = "wasm32"))]
 
 mod detmath_assets;
+pub mod completion;
 mod fixed64_boundary;
 mod gate0_registry;
 pub mod lsp;

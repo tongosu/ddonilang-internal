@@ -1766,12 +1766,6 @@ impl Parser {
     fn parse_decl_block(&mut self, _kind: DeclKind) -> Result<Stmt, ParseError> {
         let s = self.current_span();
         let keyword = self.advance().raw.clone(); // consume keyword ident
-        if self.source_epoch == SourceEpoch::V25 && keyword == "채비" {
-            return Err(ParseError {
-                span: s,
-                message: "E_V25_DEFINITION_MIGRATION_REQUIRED: `채비 {}`는 현행 V25 source가 아니며 명시적 마이그레이션 입력으로 분리해야 합니다.".to_string(),
-            });
-        }
         if keyword != "채비" && !(keyword == "성질" && self.in_imja_seed_body()) {
             return Err(ParseError {
                 span: s,

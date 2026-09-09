@@ -16,6 +16,7 @@ use serde_json::{json, Map, Value as JsonValue};
 use wasm_bindgen::prelude::*;
 
 use crate::canon;
+use crate::completion;
 use crate::corpus_csv;
 use crate::ddn_runtime::{
     formula_from_resource_value, formula_summary_parts, resolve_supported_source_profile,
@@ -29,6 +30,7 @@ use crate::deterministic_debug::{
 use crate::fixed64_boundary::Fixed64FloatBoundary;
 use crate::host_resource;
 use crate::local_project;
+use crate::module_directive_analysis;
 use crate::project_authoring;
 use crate::runtime_surface;
 use crate::source_analysis;
@@ -162,6 +164,14 @@ pub fn wasm_preprocess_source(source: &str) -> Result<String, JsValue> {
 #[wasm_bindgen]
 pub fn wasm_source_analysis_snapshot_json(request_json: &str) -> Result<String, JsValue> {
     source_analysis::source_analysis_snapshot_json(request_json)
+        .map_err(|err| JsValue::from_str(&err))
+}
+
+/// Additive internal candidate carrier for lexer-backed RD-457 metadata.
+/// It deliberately does not alter the established source-analysis v1 export.
+#[wasm_bindgen]
+pub fn wasm_module_directive_analysis_snapshot_json(request_json: &str) -> Result<String, JsValue> {
+    module_directive_analysis::module_directive_analysis_snapshot_json(request_json)
         .map_err(|err| JsValue::from_str(&err))
 }
 
@@ -414,6 +424,13 @@ pub fn wasm_project_authoring_hover_json(request_json: &str) -> Result<String, J
 
 #[wasm_bindgen]
 pub fn wasm_project_authoring_completion_json(request_json: &str) -> Result<String, JsValue> {
+    let request_schema = serde_json::from_str::<Map<String, JsonValue>>(request_json)
+        .ok()
+        .and_then(|request| request.get("schema").and_then(JsonValue::as_str).map(str::to_owned));
+    if request_schema.as_deref() == Some(completion::SHARED_COMPLETION_SCHEMA) {
+        return completion::build_structured_completion_json(request_json)
+            .map_err(|err| JsValue::from_str(&err));
+    }
     project_authoring::build_project_authoring_completion_json(request_json)
         .map_err(|err| JsValue::from_str(&err.to_json_value().to_string()))
 }
@@ -2740,6 +2757,25 @@ mod tests {
             wasm_source_analysis_snapshot_json(&request).expect("WASM source analysis"),
             source_analysis::source_analysis_snapshot_json(&request)
                 .expect("native source analysis")
+        );
+
+        let module_request = serde_json::json!({
+            "schema": module_directive_analysis::MODULE_DIRECTIVE_ANALYSIS_SCHEMA,
+            "source_text": "(운동=\"./lib/😀\") 쓰임.\n(속도=중력) 드러냄.\n계산:움직씨 := {\n  값:수 := 1.\n}\n",
+            "path": "운동😀.ddn",
+            "analysis_generation": 202,
+            "source_profile_identity": "v1-core-v25",
+            "module_registry": {
+                "known_import_targets": ["./lib/😀"],
+                "public_definition_targets": ["중력"]
+            }
+        })
+        .to_string();
+        assert_eq!(
+            wasm_module_directive_analysis_snapshot_json(&module_request)
+                .expect("WASM module directive analysis"),
+            module_directive_analysis::module_directive_analysis_snapshot_json(&module_request)
+                .expect("native module directive analysis")
         );
     }
 
