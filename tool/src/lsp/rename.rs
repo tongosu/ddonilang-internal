@@ -143,6 +143,17 @@ pub fn rename_across_documents(
         return Ok(None);
     }
     if documents.iter().any(|document| {
+        if document.language_id != "ddn" {
+            return false;
+        }
+        let Ok(source) = document.text() else {
+            return true;
+        };
+        parse_v25(source, &document.uri).is_err()
+    }) {
+        return Ok(None);
+    }
+    if documents.iter().any(|document| {
         collect_document_symbols(document)
             .map(|symbols| {
                 symbols.iter().any(|candidate| {

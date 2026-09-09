@@ -841,6 +841,20 @@ def check_workspace_symbol_before_eof() -> None:
             "file:///workspace-a.ddn",
             "file:///workspace-b.ddn",
         ]
+        for request_id, query in [(3, ""), (4, "   ")]:
+            process.send(
+                frame(
+                    {
+                        "jsonrpc": "2.0",
+                        "id": request_id,
+                        "method": "workspace/symbol",
+                        "params": {"query": query},
+                    }
+                )
+            )
+            empty_response = process.frames.read_frame()
+            assert empty_response["id"] == request_id
+            assert empty_response["result"] == []
         assert process.process.poll() is None
         process.send(frame({"jsonrpc": "2.0", "method": "exit"}))
         assert process.wait() == 1
@@ -1143,7 +1157,7 @@ def check_rename_before_eof() -> None:
         process.send(frame(initialize_message()))
         initialize = process.frames.read_frame()
         assert_initialize(initialize)
-        assert initialize["result"]["capabilities"]["renameProvider"] is True
+        assert initialize["result"]["capabilities"]["renameProvider"]["prepareProvider"] is True
         for uri, version, source in [
             ("file:///lsp-rename-a.ddn", 1, source_a),
             ("file:///lsp-rename-b.ddn", 2, source_b),

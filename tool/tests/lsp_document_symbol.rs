@@ -90,6 +90,22 @@ fn workspace_symbols(server: &mut LspServer, id: i64, query: &str, documents: Va
     }
 }
 
+fn workspace_symbols_query(server: &mut LspServer, id: i64, query: &str) -> Value {
+    let event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(id),
+            method: "workspace/symbol".into(),
+            params: Some(json!({"query": query})),
+        })
+        .unwrap();
+    match &event.responses[0] {
+        RpcMessage::Response {
+            result: Ok(result), ..
+        } => result.clone(),
+        _ => panic!("workspace symbol request must return a success response: {event:?}"),
+    }
+}
+
 fn position(source: &str, byte: usize) -> Value {
     let position = byte_offset_to_position(source, byte, PositionEncoding::Utf16).unwrap();
     json!({"line": position.line, "character": position.character})
@@ -183,7 +199,8 @@ fn lsp12_workspace_symbol_is_open_document_bounded_and_snapshot_bound() {
     const URI_B: &str = "file:///workspace-b.ddn";
     const URI_C: &str = "file:///workspace-c.ddn";
     const SOURCE_A: &str = "첫함수:셈씨 := { 1 돌려줘. }\n";
-    const SOURCE_B: &str = "둘함수:셈씨 := { \"🙂\" 보여주기. }\n";
+    const SOURCE_B: &str =
+        "(값:새값, 앞:글 = \"🙂\") 둘함수:셈씨 := { \"🙂\" 보여주기. }\n";
     const SOURCE_C: &str = "첫함수:셈씨 := { 3 돌려줘. }\n";
 
     let mut server = LspServer::new();
@@ -216,6 +233,18 @@ fn lsp12_workspace_symbol_is_open_document_bounded_and_snapshot_bound() {
     assert_eq!(
         result[0]["location"]["range"]["start"],
         json!({"line": 0, "character": 0})
+    );
+    let second_start = SOURCE_B.find("둘함수").unwrap();
+    assert_eq!(
+        result[1]["location"]["range"],
+        json!({
+            "start": position(SOURCE_B, second_start),
+            "end": position(SOURCE_B, second_start + "둘함수".len())
+        })
+    );
+    assert_eq!(
+        result[1]["location"]["range"]["start"]["character"],
+        19
     );
     assert_eq!(result[0]["data"]["documentVersion"], 1);
     assert_eq!(
@@ -289,6 +318,42 @@ fn lsp12_workspace_symbol_is_open_document_bounded_and_snapshot_bound() {
         ),
         json!([])
     );
+}
+
+#[test]
+fn lsp24_workspace_symbol_query_limit_and_cancellation_contract() {
+    const URI: &str = "file:///workspace-limit.ddn";
+    let mut server = LspServer::new();
+    init(&mut server);
+
+    let mut source = String::new();
+    for index in 0..1001 {
+        source.push_str(&format!("값{index}:이름씨 := {index}.\n"));
+    }
+    open_uri(&mut server, URI, &source, 1);
+
+    assert_eq!(workspace_symbols_query(&mut server, 20, ""), json!([]));
+    assert_eq!(workspace_symbols_query(&mut server, 21, "   "), json!([]));
+
+    let limited = workspace_symbols_query(&mut server, 22, "값");
+    assert_eq!(limited.as_array().unwrap().len(), 1_000);
+    assert_eq!(limited[0]["name"], "값0");
+    assert_eq!(limited, workspace_symbols_query(&mut server, 23, "값"));
+
+    server.cancel_request(&json!(24));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(24),
+            method: "workspace/symbol".into(),
+            params: Some(json!({"query": "값"})),
+        })
+        .unwrap();
+    assert!(matches!(
+        cancelled.responses[0],
+        RpcMessage::Response {
+            result: Err(ref error), ..
+        } if error.code == -32800
+    ));
 }
 
 trait RpcMessageTestExt {

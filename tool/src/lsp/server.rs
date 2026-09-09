@@ -34,6 +34,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 
 const MAX_WORKSPACE_SYMBOLS: usize = 1_000;
+const MAX_REFERENCE_LOCATIONS: usize = 1_000;
+const MAX_CALL_HIERARCHY_ITEMS: usize = 1_000;
+const MAX_CALL_HIERARCHY_EDGES: usize = 10_000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServerState {
@@ -750,6 +753,9 @@ impl LspServer {
             .unwrap_or_default()
             .trim()
             .to_string();
+        if query.is_empty() {
+            return Ok(success_event(id, json!([])));
+        }
         if let Some(requested_documents) = params.get("documents") {
             let Some(requested_documents) = requested_documents.as_array() else {
                 return Ok(success_event(id, json!([])));
@@ -775,6 +781,9 @@ impl LspServer {
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
         let mut results = Vec::new();
         for (uri, snapshot) in self.documents.iter() {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
             let source = snapshot.text().map_err(ServerError::Document)?;
             let symbols =
                 document_symbols_snapshot(snapshot).map_err(ServerError::DocumentSymbols)?;
@@ -928,6 +937,9 @@ impl LspServer {
             .iter()
             .map(|(_, document)| document)
             .collect::<Vec<_>>();
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let Some(symbol) =
             resolve_symbol_across_documents(snapshot, position, encoding, &documents)
                 .map_err(ServerError::References)?
@@ -936,6 +948,9 @@ impl LspServer {
         };
         let mut definition_count = 0;
         for document in &documents {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
             definition_count += collect_document_symbols(document)
                 .map_err(ServerError::References)?
                 .into_iter()
@@ -947,6 +962,9 @@ impl LspServer {
         }
         let mut locations = Vec::new();
         for (target_uri, target) in self.documents.iter() {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
             let ranges = collect_local_references_for_identity(
                 target,
                 &symbol.identity,
@@ -968,7 +986,13 @@ impl LspServer {
                         "end": {"line": range.end.line, "character": range.end.character},
                     },
                 }));
+                if locations.len() >= MAX_REFERENCE_LOCATIONS {
+                    return Ok(success_event(id, json!(locations)));
+                }
             }
+        }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
         }
         Ok(success_event(id, json!(locations)))
     }
@@ -1026,7 +1050,13 @@ impl LspServer {
             Ok(cursor) => cursor,
             Err(_) => return Ok(success_event(id, Value::Null)),
         };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let symbols = self.call_hierarchy_symbols()?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let local_symbols = symbols
             .iter()
             .filter(|symbol| symbol.uri == uri)
@@ -1078,9 +1108,14 @@ impl LspServer {
             return Ok(success_event(id, json!([])));
         };
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
-        let edges = self.call_hierarchy_edges()?;
+        let Some(edges) = self.call_hierarchy_edges(&id)? else {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        };
         let mut grouped: Vec<(DocumentSymbolResolution, Vec<ByteRange>)> = Vec::new();
         for (caller, callee, range) in edges {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
             if callee.identity != target.identity {
                 continue;
             }
@@ -1095,7 +1130,14 @@ impl LspServer {
         }
         grouped.sort_by(|left, right| left.0.uri.cmp(&right.0.uri));
         let mut result = Vec::new();
+        let mut range_count = 0;
         for (caller, ranges) in grouped {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
+            if range_count >= MAX_CALL_HIERARCHY_ITEMS {
+                break;
+            }
             let from = self.call_hierarchy_item(&caller, encoding)?;
             let source = self
                 .documents
@@ -1105,9 +1147,14 @@ impl LspServer {
                 .map_err(ServerError::Document)?;
             let ranges = ranges
                 .into_iter()
+                .take(MAX_CALL_HIERARCHY_ITEMS.saturating_sub(range_count))
                 .map(|range| call_hierarchy_range(source, range, encoding))
                 .collect::<Result<Vec<_>, _>>()?;
+            range_count += ranges.len();
             result.push(json!({"from": from, "fromRanges": ranges}));
+        }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
         }
         Ok(success_event(id, json!(result)))
     }
@@ -1125,9 +1172,14 @@ impl LspServer {
             return Ok(success_event(id, json!([])));
         };
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
-        let edges = self.call_hierarchy_edges()?;
+        let Some(edges) = self.call_hierarchy_edges(&id)? else {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        };
         let mut grouped: Vec<(DocumentSymbolResolution, Vec<ByteRange>)> = Vec::new();
         for (edge_caller, callee, range) in edges {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
             if edge_caller.identity != caller.identity || edge_caller.uri != caller.uri {
                 continue;
             }
@@ -1148,13 +1200,25 @@ impl LspServer {
             .text()
             .map_err(ServerError::Document)?;
         let mut result = Vec::new();
+        let mut range_count = 0;
         for (callee, ranges) in grouped {
+            if self.cancelled.remove(&request_key(&id)) {
+                return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+            }
+            if range_count >= MAX_CALL_HIERARCHY_ITEMS {
+                break;
+            }
             let to = self.call_hierarchy_item(&callee, encoding)?;
             let ranges = ranges
                 .into_iter()
+                .take(MAX_CALL_HIERARCHY_ITEMS.saturating_sub(range_count))
                 .map(|range| call_hierarchy_range(source, range, encoding))
                 .collect::<Result<Vec<_>, _>>()?;
+            range_count += ranges.len();
             result.push(json!({"to": to, "fromRanges": ranges}));
+        }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
         }
         Ok(success_event(id, json!(result)))
     }
@@ -1174,15 +1238,19 @@ impl LspServer {
     }
 
     fn call_hierarchy_edges(
-        &self,
+        &mut self,
+        request_id: &Value,
     ) -> Result<
-        Vec<(
+        Option<Vec<(
             DocumentSymbolResolution,
             DocumentSymbolResolution,
             ByteRange,
-        )>,
+        )>>,
         ServerError,
     > {
+        if self.cancelled.remove(&request_key(request_id)) {
+            return Ok(None);
+        }
         let symbols = self.call_hierarchy_symbols()?;
         let mut counts = BTreeMap::<String, usize>::new();
         for symbol in &symbols {
@@ -1195,9 +1263,15 @@ impl LspServer {
             .collect::<BTreeMap<_, _>>();
         let mut edges = Vec::new();
         for (_, snapshot) in self.documents.iter() {
+            if self.cancelled.remove(&request_key(request_id)) {
+                return Ok(None);
+            }
             for call in
                 collect_call_hierarchy_calls(snapshot).map_err(ServerError::DocumentSymbols)?
             {
+                if self.cancelled.remove(&request_key(request_id)) {
+                    return Ok(None);
+                }
                 let Some(caller) = unique.get(&call.caller_identity) else {
                     continue;
                 };
@@ -1206,6 +1280,12 @@ impl LspServer {
                     continue;
                 };
                 edges.push((caller.clone(), callee.clone(), call.range));
+                if edges.len() >= MAX_CALL_HIERARCHY_EDGES {
+                    break;
+                }
+            }
+            if edges.len() >= MAX_CALL_HIERARCHY_EDGES {
+                break;
             }
         }
         edges.sort_by(|left, right| {
@@ -1215,7 +1295,7 @@ impl LspServer {
                 .then(left.2.start.cmp(&right.2.start))
                 .then(left.1.uri.cmp(&right.1.uri))
         });
-        Ok(edges)
+        Ok(Some(edges))
     }
 
     fn call_hierarchy_payload(&self, item: &Value) -> Option<DocumentSymbolResolution> {
@@ -2093,7 +2173,7 @@ impl LspServer {
                     "documentHighlightProvider": true,
                     "referencesProvider": true,
                     "callHierarchyProvider": true,
-                    "renameProvider": true,
+                    "renameProvider": {"prepareProvider": true},
                     "semanticTokensProvider": {
                         "full": {"delta": true},
                         "legend": {

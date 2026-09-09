@@ -69,7 +69,10 @@ fn request(server: &mut LspServer, id: i64, method: &str, params: Value) -> Valu
 fn lsp7_prepare_and_rename_reuses_local_identity_and_utf16_ranges() {
     let mut server = LspServer::new();
     let initialize = init(&mut server);
-    assert_eq!(initialize["capabilities"]["renameProvider"], true);
+    assert_eq!(
+        initialize["capabilities"]["renameProvider"]["prepareProvider"],
+        true
+    );
     open(&mut server, SOURCE, 1);
 
     let prepare = request(
@@ -228,6 +231,32 @@ fn lsp11_cross_open_document_rename_is_atomic_versioned_and_deterministic() {
         4
     );
 
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "textDocument/didClose".into(),
+            params: Some(json!({"textDocument": {"uri": URI_C}})),
+        })
+        .unwrap();
+    let closed_rename = request(
+        &mut server,
+        25,
+        "textDocument/rename",
+        json!({
+            "textDocument": {"uri": URI_B, "version": 4},
+            "position": position(changed_b, "첫함수", 0),
+            "newName": "닫힌문서제외"
+        }),
+    );
+    assert_eq!(
+        closed_rename["documentChanges"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|change| change["textDocument"]["uri"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        vec![URI_A, URI_B]
+    );
+
     let stale = server
         .handle_message(RpcMessage::Request {
             id: json!(23),
@@ -243,6 +272,50 @@ fn lsp11_cross_open_document_rename_is_atomic_versioned_and_deterministic() {
         &stale.responses[0],
         RpcMessage::Response { result: Err(error), .. } if error.code == -32801
     ));
+}
+
+#[test]
+fn lsp23_definition_position_and_unsafe_open_document_fail_closed() {
+    const URI_A: &str = "file:///lsp23-definition.ddn";
+    const URI_B: &str = "file:///lsp23-reference.ddn";
+    const URI_BROKEN: &str = "file:///lsp23-broken.ddn";
+    const SOURCE_A: &str = "한국함수:셈씨 := { 1 돌려줘. }\n";
+    const SOURCE_B: &str = "호출함수:셈씨 := { 한국함수. }\n";
+
+    let mut server = LspServer::new();
+    init(&mut server);
+    open_uri(&mut server, URI_A, SOURCE_A, 1);
+    open_uri(&mut server, URI_B, SOURCE_B, 1);
+
+    let prepare_at_definition = request(
+        &mut server,
+        40,
+        "textDocument/prepareRename",
+        json!({
+            "textDocument": {"uri": URI_A, "version": 1},
+            "position": position(SOURCE_A, "한국함수", 0)
+        }),
+    );
+    assert_eq!(prepare_at_definition["placeholder"], "한국함수");
+    assert_eq!(
+        prepare_at_definition["data"]["definitionIdentity"],
+        "definition:local:한국함수"
+    );
+
+    open_uri(&mut server, URI_BROKEN, ":=", 1);
+    assert_eq!(
+        request(
+            &mut server,
+            41,
+            "textDocument/rename",
+            json!({
+                "textDocument": {"uri": URI_B, "version": 1},
+                "position": position(SOURCE_B, "한국함수", 0),
+                "newName": "새한국함수"
+            }),
+        ),
+        Value::Null
+    );
 }
 
 #[test]

@@ -424,6 +424,73 @@ fn lsp15_call_hierarchy_rejects_duplicate_declaration_and_stale_payload() {
 }
 
 #[test]
+fn lsp26_call_hierarchy_is_bounded_and_cancellable() {
+    let mut server = LspServer::new();
+    let initialize = init(&mut server);
+    assert_eq!(initialize["capabilities"]["callHierarchyProvider"], true);
+    open(&mut server, DECL_URI, CALL_DECL_SOURCE, 1);
+
+    let mut source = String::from("호출함수:셈씨 := { ");
+    for _ in 0..1_001 {
+        source.push_str("() 공유함수. ");
+    }
+    source.push('}');
+    let caller_uri = "file:///lsp26-many-calls.ddn";
+    open(&mut server, caller_uri, &source, 1);
+
+    let declaration =
+        call_hierarchy_prepare(&mut server, DECL_URI, CALL_DECL_SOURCE, 1, "공유함수");
+    let caller = call_hierarchy_prepare(&mut server, caller_uri, &source, 1, "호출함수");
+    let outgoing = call_hierarchy_calls(&mut server, "callHierarchy/outgoingCalls", &caller);
+    assert_eq!(outgoing.as_array().unwrap().len(), 1);
+    assert_eq!(outgoing[0]["to"], declaration);
+    assert_eq!(outgoing[0]["fromRanges"].as_array().unwrap().len(), 1_000);
+
+    let incoming = call_hierarchy_calls(&mut server, "callHierarchy/incomingCalls", &declaration);
+    let external_incoming = incoming
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|entry| entry["from"]["uri"] == caller_uri)
+        .expect("cross-document incoming call");
+    let incoming_range_count = external_incoming["fromRanges"].as_array().unwrap().len();
+    assert!(incoming_range_count > 0 && incoming_range_count <= 1_000);
+
+    change(&mut server, caller_uri, &format!("{source}\n"), 2);
+    let stale_prepare = server
+        .handle_message(RpcMessage::Request {
+            id: json!(98),
+            method: "textDocument/prepareCallHierarchy".into(),
+            params: Some(json!({
+                "textDocument": {"uri": caller_uri, "version": 1},
+                "position": position(&source, "호출함수")
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &stale_prepare.responses[0],
+        RpcMessage::Response {
+            result: Err(error), ..
+        } if error.code == -32801
+    ));
+
+    server.cancel_request(&json!(99));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(99),
+            method: "callHierarchy/outgoingCalls".into(),
+            params: Some(json!({"item": caller})),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response {
+            result: Err(error), ..
+        } if error.code == -32800
+    ));
+}
+
+#[test]
 fn lsp16_folding_ranges_are_ast_bound_utf16_deterministic_and_current() {
     let mut server = LspServer::new();
     let initialize = init(&mut server);
