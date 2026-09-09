@@ -1,0 +1,20 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave2d_first_view_baseline_v1",
+  "kind": "seamgrim_wave2d_first_view_baseline",
+  "wave": "wave2d",
+  "gate": "G0",
+  "browser_runner": "tests/seamgrim_wave2d_first_view_authoring_runner.mjs",
+  "measurement_fixture": "pack/seamgrim_wave2d_first_view_baseline_v1/baseline_metrics.detjson",
+  "viewports": ["1440x900", "1280x720", "1024x768", "390x844"],
+  "captures_toolbar_client_scroll_width": true,
+  "captures_primary_visual_bounds": true,
+  "captures_ddn_editor_bounds": true,
+  "captures_card_preview_shift": true,
+  "captures_canvas_nonblank_pixels": true,
+  "product_behavior_change": false,
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "requires_docs_ssot_clean": true
+}

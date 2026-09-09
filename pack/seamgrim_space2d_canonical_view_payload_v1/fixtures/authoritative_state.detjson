@@ -1,0 +1,58 @@
+{
+  "schema": "seamgrim.state.v0",
+  "state_hash": "sha256:t5c-authoritative-state",
+  "source_hash": "sha256:t5c-authoritative-source",
+  "result_identity": "result:t5c:space2d:1",
+  "tick_id": 7,
+  "channels": [
+    { "key": "time", "dtype": "number", "role": "state" },
+    { "key": "theta", "dtype": "number", "role": "state" }
+  ],
+  "row": [2, 0.5],
+  "resources": {
+    "json": {},
+    "fixed64": {},
+    "handle": {},
+    "value": {}
+  },
+  "view_meta": {
+    "space2d": {
+      "schema": "seamgrim.space2d.v0",
+      "camera": {
+        "x_min": -2,
+        "x_max": 2,
+        "y_min": -2,
+        "y_max": 1
+      },
+      "points": [
+        { "id": "trajectory.start", "x": 0, "y": 0, "role": "trajectory_sample" },
+        { "id": "trajectory.end", "x": 1.5, "y": -0.5, "role": "trajectory_sample" }
+      ],
+      "shapes": [
+        {
+          "id": "pendulum.rod",
+          "kind": "line",
+          "role": "pendulum_rod",
+          "x1": 0,
+          "y1": 0,
+          "x2": 0.479426,
+          "y2": -0.877583,
+          "stroke": "#475569",
+          "width": 2
+        },
+        {
+          "id": "pendulum.bob",
+          "kind": "circle",
+          "role": "pendulum_bob",
+          "x": 0.479426,
+          "y": -0.877583,
+          "r": 0.08,
+          "fill": "#38bdf8"
+        }
+      ],
+      "meta": {
+        "title": "authoritative T5C space2d"
+      }
+    }
+  }
+}

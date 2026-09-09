@@ -1,0 +1,33 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "vendor/edu.physics/gaji.toml",
+      "role": "gaji_manifest",
+      "utf8_text": "id = \"edu.physics\"\nversion = \"0.1.0\"\n"
+    },
+    {
+      "path": "lib/운동.ddn",
+      "role": "ddn_source",
+      "utf8_text": "드러냄 {\n  속도구하기.\n}\n속도구하기 := 7.\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "쓰임 {\n  운동: \"./lib/운동\".\n}\n운동.속도구하기 보여주기.\n"
+    },
+    {
+      "path": "ddn.lock",
+      "role": "lock",
+      "utf8_text": "{\n  \"schema\": \"ddn.lock.v0\",\n  \"pins\": []\n}\n"
+    },
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  이름: \"포물선연구실\".\n  첫글: \"./app/main.ddn\".\n}\n"
+    }
+  ]
+}

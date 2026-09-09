@@ -1,0 +1,28 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "lib/운동.ddn",
+      "role": "ddn_source",
+      "utf8_text": "속도구하기 <- 7.\n드러냄 {\n  속도구하기.\n}\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "공식.속도구하기 보여주기.\n쓰임 {\n  공식: \"./lib/공식\".\n}\n"
+    },
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  첫글: \"./app/main.ddn\".\n  이름: \"재드러냄\".\n}.\n"
+    },
+    {
+      "path": "lib/공식.ddn",
+      "role": "ddn_source",
+      "utf8_text": "드러냄 {\n  속도구하기: 운동.속도구하기.\n}\n쓰임 {\n  운동: \"./lib/운동\".\n}\n"
+    }
+  ]
+}

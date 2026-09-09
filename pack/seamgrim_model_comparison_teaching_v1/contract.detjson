@@ -1,0 +1,18 @@
+{
+  "schema": "seamgrim.model_comparison_teaching.contract.v1",
+  "product_schema": "seamgrim.curriculum_model_comparison.v0",
+  "lesson_ids": [
+    "rep_math_function_line_v1",
+    "rep_phys_pendulum_wave1_v1",
+    "rep_phys_projectile_xy_v1",
+    "rep_phys_damped_oscillation_v1",
+    "rep_econ_supply_demand_tax_v1"
+  ],
+  "projectile_pair_source": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/representation_pair.detjson",
+  "claim_boundary": {
+    "declarative_runtime_completion_claim": false,
+    "observable_equivalence_claim_for_all": false,
+    "new_ddn_syntax": false,
+    "state_hash_formula_change": false
+  }
+}

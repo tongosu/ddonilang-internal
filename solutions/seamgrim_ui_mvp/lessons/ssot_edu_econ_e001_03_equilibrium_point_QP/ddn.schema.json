@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "Pstar", "type": "수" },
+    { "name": "Qstar", "type": "수" },
+    { "name": "a", "type": "수" },
+    { "name": "b", "type": "수" },
+    { "name": "c", "type": "수" },
+    { "name": "d", "type": "수" }
+  ]
+}

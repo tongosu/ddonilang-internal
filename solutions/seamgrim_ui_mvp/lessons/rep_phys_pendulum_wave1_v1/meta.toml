@@ -1,0 +1,15 @@
+title = "진자 보기 코어"
+description = "진자 운동의 위치, 각도, 그래프를 같은 마디에서 봅니다."
+grade = "middle"
+subject = "physics"
+level = "intro"
+goals = ["줄 길이와 중력이 각도 변화에 주는 영향을 관찰한다", "진자 추 위치와 각도 눈금을 같은 틱에서 비교한다"]
+required_views = ["space2d", "graph", "text"]
+first_delight_id = "pendulum"
+first_delight_controls = ["L", "g", "theta0", "dt"]
+first_delight_control_labels = {"L" = "줄 길이", "g" = "중력", "theta0" = "처음 각도", "dt" = "마디 간격"}
+first_delight_graph_axes = ["t", "theta"]
+view_roles = ["semantic_binding", "angle_measure", "same_tick_graph_cursor"]
+view_plan_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/view_plan.detjson"
+sealed_trace_reactions_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/sealed_trace_reactions.detjson"
+lesson_plan_path = "solutions/seamgrim_ui_mvp/lessons/rep_phys_pendulum_wave1_v1/lesson_plan.v0.toml"

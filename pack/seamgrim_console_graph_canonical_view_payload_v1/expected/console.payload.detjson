@@ -1,0 +1,40 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:ff442d2e",
+  "content": {
+    "ordered_entries": [
+      {
+        "kind": "output",
+        "line_no": 1,
+        "output_identity": "",
+        "provenance": "",
+        "text": "준비",
+        "tick": 6
+      },
+      {
+        "kind": "output",
+        "line_no": 2,
+        "output_identity": "",
+        "provenance": "",
+        "text": "위치 12.5",
+        "tick": 7
+      }
+    ]
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "console",
+  "identity": {
+    "observation_projection_identity": "",
+    "result_identity": "",
+    "source_hash": "sha256:t5b_source",
+    "state_hash": "blake3:t5b_state_7",
+    "tick_id": 7,
+    "view_hash": ""
+  },
+  "provenance": {
+    "input_authority": "native_authoritative_structured_input",
+    "source": "native_ordered_runtime_output"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

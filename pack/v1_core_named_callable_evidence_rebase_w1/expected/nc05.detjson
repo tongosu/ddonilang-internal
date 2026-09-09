@@ -1,0 +1,1 @@
+{"diagnostic":{"code":"E_RUNTIME_EXECUTION","offending_field":null,"phase":"runtime_execution","source_path":"pack/v1_core_named_callable_evidence_rebase_w1/fixtures/nc05_type_mismatch.ddn","source_span":null},"ok":false}

@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_constraint_reaction_v1",
+  "kind": "declarative_closure_constraint_reaction_red_umbrella",
+  "goal": "G7",
+  "runtime_claim": false,
+  "parser_landed_claim": false,
+  "product_code_change": false,
+  "ssot_edit_claim": false,
+  "new_language_block": false,
+  "state_hash_formula_change": false,
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "reaction_vocabulary": [
+    "멈춤",
+    "튕김(e)",
+    "조임",
+    "감쌈"
+  ],
+  "subpacks": [
+    "sim_mageum_floor_v1",
+    "sim_mageum_box_v1",
+    "sim_mageum_chain_v1",
+    "lang_mageum_diag_v1"
+  ],
+  "artifact": "constraint_reaction_catalog.detjson"
+}

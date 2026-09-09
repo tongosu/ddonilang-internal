@@ -1,0 +1,30 @@
+// 출력은 숫자만. (r, θc_deg) 순서.
+
+pi <- 3.1415926535.
+
+r_min <- 0.10.
+r_max <- 0.99.
+dr <- 0.01.
+
+k목록 <- (1, 8, 1) 범위.
+
+(시작)할때 {
+  r <- r_min.
+}.
+
+(매마디)마다 {
+  { r <= r_max }인것 일때 {
+    theta <- r.   // 초기값(라디안, 작은 r에서 근사)
+
+    (k) k목록에 대해: {
+      s <- (theta) sin.
+      c <- (theta) cos.
+      // Newton: theta <- theta - (sin(theta)-r)/cos(theta)
+      theta <- theta - (s - r) / c.
+    }.
+
+    deg <- theta * 180 / pi.
+
+    r <- r + dr.
+  }.
+}.

@@ -1,0 +1,24 @@
+{
+  "schema": "ddn.beta_user_bundle.round0.manifest.v1",
+  "round": 0,
+  "knowledge_isolation": "use only files inside this bundle",
+  "contains_internal_docs": false,
+  "files": [
+    "START_HERE.md",
+    "CLI_ONE_PAGER.md",
+    "TASKS.md",
+    "FRICTION_LOG_TEMPLATE.detjson",
+    "MANIFEST.detjson",
+    "samples/pendulum_edit.ddn",
+    "samples/falling_ball_starter.ddn",
+    "samples/econ_demand_curve.ddn",
+    "samples/grid_maze_probe.ddn",
+    "fixtures/T4/syntax_bad_identifier.ddn",
+    "fixtures/T4/type_bad_iterable.ddn",
+    "fixtures/T4/contract_bad_mode.ddn",
+    "fixtures/T4/expected_diagnostics.md",
+    "session_prompts/P_TEACHER.md",
+    "session_prompts/P_STUDENT.md",
+    "session_prompts/P_DEVELOPER.md"
+  ]
+}

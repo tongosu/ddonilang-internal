@@ -1,0 +1,36 @@
+{
+  "schema": "seamgrim.runner_lifecycle_reliability.g4_matrix_contract.v1",
+  "pack": "seamgrim_runner_lifecycle_reliability_v1",
+  "gate": "G4",
+  "purpose": "first-run reliability closure matrix",
+  "required_sequences": {
+    "lineage_consecutive": 20,
+    "public_wedge_consecutive": 5,
+    "durable_workbench_consecutive": 5,
+    "private_pilot_local_rehearsal_consecutive": 3,
+    "four_viewport_workflow_consecutive": 2,
+    "parallel_lineage_4x_consecutive": 3,
+    "bounded_contention_consecutive": 3
+  },
+  "failure_policy": {
+    "single_failure_resets_sequence": true,
+    "rerun_masked_failures_allowed": false,
+    "stop_on_first_failure": true
+  },
+  "resource_leak_policy": {
+    "count_owned_pid_tree_only": true,
+    "compare_global_node_python_counts": false,
+    "owned_residual_processes": 0,
+    "owned_residual_temp_dirs": 0,
+    "double_slash_project_requests": 0
+  },
+  "checker": "tests/run_seamgrim_first_run_reliability_matrix_check.py",
+  "runtime_evidence_path": "out/seamgrim_runner_lifecycle_reliability_v1/g4_matrix_latest.detjson",
+  "reliability_closed_claim_allowed_after_checker_pass": true,
+  "actual_container_claim": false,
+  "private_idc_claim": false,
+  "external_user_success_claim": false,
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false
+}

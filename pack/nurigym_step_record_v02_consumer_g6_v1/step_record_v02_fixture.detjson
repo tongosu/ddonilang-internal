@@ -1,0 +1,260 @@
+{
+  "schema": "ddn.nurigym.step_record.v0.2.additive_fixture.v1",
+  "compat_base_schema": "nurigym.step.v1",
+  "settings_source": "설정 { 누리 { 시앗: 17. 시앗묶음: \"gym;rollout\". }. 실행 { 마디수: 4. }. 문서 { 이름: \"G6\". }. }.",
+  "legacy_v01_required_fields": [
+    "schema",
+    "episode_id",
+    "agent_id",
+    "madi",
+    "observation",
+    "action",
+    "reward",
+    "next_observation",
+    "done"
+  ],
+  "v02_additive_field_candidates": [
+    "raw_action",
+    "resolved_action",
+    "normalized_action",
+    "action_status",
+    "merge_candidates",
+    "merged_action",
+    "applied_action",
+    "missing_input",
+    "run_config_hash",
+    "settings_hash",
+    "x_g6_unknown_additive_probe"
+  ],
+  "records": [
+    {
+      "id": "valid",
+      "schema": "nurigym.step.v1",
+      "episode_id": 7,
+      "env_slot": 0,
+      "agent_id": 1,
+      "madi": 0,
+      "observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          0.0,
+          0.0
+        ]
+      },
+      "action": {
+        "schema": "nurigym.action.v1",
+        "value": 1
+      },
+      "reward": 1.0,
+      "next_observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          1.0,
+          0.0
+        ]
+      },
+      "done": false,
+      "raw_action": 1,
+      "resolved_action": 1,
+      "normalized_action": 1,
+      "action_status": "맞음",
+      "merge_candidates": [
+        1
+      ],
+      "merged_action": 1,
+      "applied_action": 1,
+      "missing_input": false,
+      "run_config_hash": "computed_by_checker",
+      "settings_hash": "computed_by_checker",
+      "x_g6_unknown_additive_probe": {
+        "ignored_by_legacy_reader": true,
+        "case": "valid"
+      }
+    },
+    {
+      "id": "noop_missing",
+      "schema": "nurigym.step.v1",
+      "episode_id": 7,
+      "env_slot": 0,
+      "agent_id": 2,
+      "madi": 0,
+      "observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          0.0,
+          0.0
+        ]
+      },
+      "action": {
+        "schema": "nurigym.action.v1",
+        "value": 0
+      },
+      "reward": 0.0,
+      "next_observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          0.0,
+          0.0
+        ]
+      },
+      "done": false,
+      "raw_action": null,
+      "resolved_action": 0,
+      "normalized_action": 0,
+      "action_status": "가만히",
+      "merge_candidates": [
+        0
+      ],
+      "merged_action": 0,
+      "applied_action": 0,
+      "missing_input": true,
+      "run_config_hash": "computed_by_checker",
+      "settings_hash": "computed_by_checker",
+      "x_g6_unknown_additive_probe": {
+        "ignored_by_legacy_reader": true,
+        "case": "noop_missing"
+      }
+    },
+    {
+      "id": "clip",
+      "schema": "nurigym.step.v1",
+      "episode_id": 7,
+      "env_slot": 0,
+      "agent_id": 1,
+      "madi": 1,
+      "observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          1.0,
+          0.0
+        ]
+      },
+      "action": {
+        "schema": "nurigym.action.v1",
+        "value": 1
+      },
+      "reward": 0.5,
+      "next_observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          2.0,
+          0.0
+        ]
+      },
+      "done": false,
+      "raw_action": 99,
+      "resolved_action": 99,
+      "normalized_action": 1,
+      "action_status": "잘림",
+      "merge_candidates": [
+        1
+      ],
+      "merged_action": 1,
+      "applied_action": 1,
+      "missing_input": false,
+      "run_config_hash": "computed_by_checker",
+      "settings_hash": "computed_by_checker",
+      "x_g6_unknown_additive_probe": {
+        "ignored_by_legacy_reader": true,
+        "case": "clip"
+      }
+    },
+    {
+      "id": "reject",
+      "schema": "nurigym.step.v1",
+      "episode_id": 7,
+      "env_slot": 1,
+      "agent_id": 3,
+      "madi": 0,
+      "observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          0.0,
+          1.0
+        ]
+      },
+      "action": {
+        "schema": "nurigym.action.v1",
+        "value": 0
+      },
+      "reward": -1.0,
+      "next_observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          0.0,
+          1.0
+        ]
+      },
+      "done": false,
+      "raw_action": 99,
+      "resolved_action": 99,
+      "normalized_action": null,
+      "action_status": "거부",
+      "merge_candidates": [],
+      "merged_action": null,
+      "applied_action": 0,
+      "missing_input": false,
+      "run_config_hash": "computed_by_checker",
+      "settings_hash": "computed_by_checker",
+      "x_g6_unknown_additive_probe": {
+        "ignored_by_legacy_reader": true,
+        "case": "reject"
+      }
+    },
+    {
+      "id": "shared_merge",
+      "schema": "nurigym.step.v1",
+      "episode_id": 7,
+      "env_slot": 1,
+      "agent_id": 4,
+      "madi": 1,
+      "observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          0.0,
+          1.0
+        ]
+      },
+      "action": {
+        "schema": "nurigym.action.v1",
+        "value": 1
+      },
+      "reward": 0.25,
+      "next_observation": {
+        "schema": "nurigym.obs.v1",
+        "slot_count": 2,
+        "values": [
+          1.0,
+          1.0
+        ]
+      },
+      "done": false,
+      "raw_action": 1,
+      "resolved_action": 1,
+      "normalized_action": 1,
+      "action_status": "맞음",
+      "merge_candidates": [
+        1,
+        -1
+      ],
+      "merged_action": 1,
+      "applied_action": 1,
+      "missing_input": false,
+      "run_config_hash": "computed_by_checker",
+      "settings_hash": "computed_by_checker",
+      "x_g6_unknown_additive_probe": {
+        "ignored_by_legacy_reader": true,
+        "case": "shared_merge"
+      }
+    }
+  ]
+}

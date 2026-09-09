@@ -1,0 +1,147 @@
+{
+  "schema": "seamgrim.workbench_recovery.gate_evidence.v1",
+  "gate": "G14",
+  "status": "PASS",
+  "base_head_before_gate_commit": "df6315f",
+  "claim_level": "behavior-closed",
+  "goal": {
+    "summary": "Close the Seamgrim Workbench attack/order/race matrix with actual product browser paths and injected negative controls.",
+    "required_negative_controls": [
+      "run double-click creates one loop/run",
+      "pause/resume spam creates no duplicate step",
+      "stale callback after stop creates no additional commit",
+      "project switch during live does not leak old callbacks into the new project",
+      "source edit during live keeps the active sealed run immutable",
+      "import/reopen during live follows explicit cancel/clear transition rules",
+      "server checkpoint delay/failure does not duplicate world steps",
+      "archive finalize retry finalizes once",
+      "stale WASM manifest fails freshness",
+      "string/comment tick surface is not misclassified as live",
+      "legacy selected_view tamper does not change world state",
+      "overlay/magnifier visibility changes do not change runtime state hash"
+    ]
+  },
+  "implementation": {
+    "product_changes": [
+      "Expanded the Workbench debug snapshot with sealed run source_hash, source_kind, execution_mode, and server_archive_status so browser gates can assert race boundaries without inferring from UI text."
+    ],
+    "test_changes": [
+      "Added tests/seamgrim_workbench_race_matrix_runner.mjs for actual server-backed Chromium race coverage.",
+      "Added tests/run_seamgrim_workbench_race_matrix_check.py to validate runner output, freshness negative controls, and docs/ssot cleanliness."
+    ]
+  },
+  "artifacts": {
+    "summary": "out/seamgrim_workbench_g14/summary.detjson",
+    "wrapper_summary": "out/seamgrim_workbench_g14/wrapper_summary.detjson",
+    "committed": false
+  },
+  "runner_cases": [
+    {
+      "id": "run_double_click_one_loop_one_run",
+      "results": [true, false],
+      "run_id": "run_001",
+      "committed_step_count": 2
+    },
+    {
+      "id": "source_edit_during_live_preserves_sealed_run",
+      "run_id": "run_001",
+      "source_hash": "candidate:fnv1a32:373ad640",
+      "source_kind": "single_file_source"
+    },
+    {
+      "id": "overlay_magnifier_visibility_state_hash_invariant",
+      "state_hash": "blake3:bb583e44f9c327285b12c59bb5ea36ce969cd6933c58d85e2385d5a93ada997b",
+      "roles": ["primary", "side", "overlay", "magnifier"]
+    },
+    {
+      "id": "legacy_selected_view_tamper_and_import_cancel_world_invariant",
+      "diagnostic": "E_PORTABLE_CANONICAL_MISMATCH",
+      "state_hash": "blake3:bb583e44f9c327285b12c59bb5ea36ce969cd6933c58d85e2385d5a93ada997b"
+    },
+    {
+      "id": "pause_resume_spam_no_duplicate_steps",
+      "pause_results": [true, false, false, false],
+      "resume_results": [true, false, false, false],
+      "committed_before_resume": 5,
+      "committed_after_resume": 6
+    },
+    {
+      "id": "stop_stale_callback_and_finalize_retry_guard",
+      "stop_results": [true, false, false],
+      "final_status": "stopped",
+      "finalize_attempts": 1
+    },
+    {
+      "id": "project_switch_during_live_drops_old_callbacks",
+      "old_run_id": "run_002",
+      "new_project_id": "rep_phys_projectile_xy_v1"
+    },
+    {
+      "id": "string_comment_tick_surface_not_live",
+      "execution_mode": "oneshot",
+      "committed_step_count": 1
+    },
+    {
+      "id": "reopen_during_live_explicitly_clears_run_and_pump",
+      "old_run_id": "run_004"
+    },
+    {
+      "id": "server_checkpoint_delay_failure_no_world_step_duplication",
+      "delayed_failed_checkpoint_posts": 3,
+      "committed_step_count": 2,
+      "frame_count": 3,
+      "server_archive_status": "checkpoint-error"
+    }
+  ],
+  "freshness_negative_controls": [
+    {
+      "label": "stale_wasm_manifest_negative",
+      "returncode": 1,
+      "expected_token": "wasm_sha256 mismatch"
+    },
+    {
+      "label": "dirty_source_tree_negative",
+      "returncode": 1,
+      "expected_token": "source_tree_sha256 mismatch"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node tests/seamgrim_workbench_race_matrix_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "python tests/run_seamgrim_workbench_race_matrix_check.py",
+      "status": "PASS"
+    },
+    {
+      "command": "node tests/seamgrim_workbench_live_step_pump_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node tests/seamgrim_workbench_execution_lifecycle_browser_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node tests/seamgrim_workbench_view_instances_browser_runner.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m json.tool out/seamgrim_workbench_g14/summary.detjson; python -m json.tool out/seamgrim_workbench_g14/wrapper_summary.detjson",
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASS"
+    },
+    {
+      "command": "git status --short -- docs/ssot",
+      "status": "PASS_EMPTY"
+    }
+  ],
+  "known_non_claims": [
+    "G15 approved regression battery is not claimed by this gate.",
+    "G16 final ready evidence is not claimed by this gate.",
+    "External deployment, production hosting, and SSOT text changes are not claimed."
+  ]
+}

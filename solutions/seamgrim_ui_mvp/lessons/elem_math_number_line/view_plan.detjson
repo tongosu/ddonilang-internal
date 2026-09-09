@@ -1,0 +1,17 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "elem_math_number_line",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "graph",
+  "required_anchor_ids": ["obs.time", "obs.position", "obs.target", "obs.distance"],
+  "anchors": [
+    {"anchor_id": "obs.time", "source_ref": {"kind": "observation", "key": "t"}, "value_type": "scalar", "unit": "tick", "label": "마디", "accessibility_name": "수직선 마디", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn", "source_span": "t <- t + 1"}},
+    {"anchor_id": "obs.position", "source_ref": {"kind": "observation", "key": "위치"}, "value_type": "scalar", "unit": "칸", "label": "위치", "accessibility_name": "수직선 현재 위치", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn", "source_span": "위치 <- 위치 + 방향 * 이동량"}},
+    {"anchor_id": "obs.target", "source_ref": {"kind": "observation", "key": "목표값"}, "value_type": "scalar", "unit": "칸", "label": "목표값", "accessibility_name": "수직선 목표 위치", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn", "source_span": "목표값: 목표값"}},
+    {"anchor_id": "obs.distance", "source_ref": {"kind": "observation", "key": "거리"}, "value_type": "scalar", "unit": "칸", "label": "거리", "accessibility_name": "목표까지 거리", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_number_line/lesson.ddn", "source_span": "거리 <- 위치 - 목표값"}}
+  ],
+  "measures": [],
+  "graph_cursor": {"cursor_id": "graph.current.position", "x_anchor": "obs.time", "y_anchor": "obs.position", "series_id": "위치", "label": "현재 위치"},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

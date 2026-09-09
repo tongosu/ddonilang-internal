@@ -1,0 +1,44 @@
+{
+  "schema": "ddn.ganada.ma.assessment_workflow.v1",
+  "pack": "ganada_ma_assessment_workflow_v1",
+  "cell_id": "마-2",
+  "status": "product_pass_gate",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "workflow": {
+    "lesson_run_result_source": "seamgrim_lesson_run_preset_rail_v1",
+    "product_runner": "tests/ganada_ma_assessment_workflow_runner.mjs",
+    "required_selectors": [
+      "assessment-panel",
+      "assessment-run",
+      "assessment-result",
+      "assessment-feedback"
+    ],
+    "required_boundaries": [
+      "gradebook_write:false",
+      "student_personal_data_collection:false",
+      "remote_classroom_sync:false"
+    ]
+  },
+  "required_commands": [
+    {
+      "kind": "pack_golden_pass",
+      "command": ["python", "tests/run_pack_golden.py", "ganada_ma_assessment_workflow_v1"],
+      "expect_stdout_contains": "Pack golden PASS"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/ganada_ma_assessment_workflow_runner.mjs"],
+      "expect_stdout_contains": "ganada_ma_assessment_workflow: ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/education_assessment_pack_runner.mjs"],
+      "expect_stdout_contains": "education_assessment_pack: ok"
+    }
+  ]
+}

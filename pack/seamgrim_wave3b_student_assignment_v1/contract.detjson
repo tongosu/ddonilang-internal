@@ -1,0 +1,21 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave3b_student_assignment_v1",
+  "contract_kind": "seamgrim_wave3b_student_assignment_product_gate",
+  "product_behavior_claim": true,
+  "foundation_lesson_count": 12,
+  "student_assignment_schema": "seamgrim.student_assignment_version.v0",
+  "bundle_import_required": true,
+  "prediction_run_control_explanation_required": true,
+  "ddn_source_access_required": true,
+  "student_version_save_reopen_required": true,
+  "profile_allowed_controls_enforced": true,
+  "browser_runner": "tests/seamgrim_wave3b_student_assignment_runner.mjs",
+  "no_runtime_role_toggle": true,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false,
+  "server_account_claim": false,
+  "public_upload_claim": false
+}

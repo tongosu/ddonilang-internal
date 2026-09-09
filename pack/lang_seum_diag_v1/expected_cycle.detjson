@@ -1,0 +1,67 @@
+{
+  "diagnostics": [
+    {
+      "code": "E_SEUM_CYCLE",
+      "message": "cyclic or unsupported explicit algebra",
+      "severity": "error"
+    }
+  ],
+  "lowering": {
+    "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "method": "unsupported_deferred_v1",
+  "relations": [
+    {
+      "defines": "x",
+      "depends_on": [
+        "y"
+      ],
+      "id": "r1",
+      "kind": "explicit_algebra",
+      "source_order": 0,
+      "text": "x =:= y"
+    },
+    {
+      "defines": "y",
+      "depends_on": [
+        "x"
+      ],
+      "id": "r2",
+      "kind": "explicit_algebra",
+      "source_order": 1,
+      "text": "y =:= x"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:54e01af8838f36d857fb7565913821a77028f501238241723ec5c2aa55fa4879",
+  "stage": "S3",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "x",
+    "y"
+  ]
+}

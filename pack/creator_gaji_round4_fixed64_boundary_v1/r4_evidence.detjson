@@ -1,0 +1,147 @@
+{
+  "boundary_audit": {
+    "chosen_repair": "decision_2_and_3_move_binary_float_to_product_boundary_add_integer_ratio_and_decimal_text",
+    "core_after": {
+      "fixed64_lint_allow_outside_gate": 0,
+      "from_f64_lossy": 0,
+      "scale_f64": 0
+    },
+    "decimal_paths": [
+      "lang/src/parser.rs:TokenKind::Float -> Fixed64::parse_decimal",
+      "lang/src/runtime.rs:string_to_number -> Fixed64::parse_decimal",
+      "tool/src/main.rs:parse_fixed64_decimal -> Fixed64::parse_decimal",
+      "tool/src/ddn_runtime.rs:string/formula coercion -> Fixed64::parse_decimal",
+      "tool/src/wasm_api.rs:JSON string -> Fixed64::parse_decimal"
+    ],
+    "initial_findings": {
+      "core_temperature_callers": true,
+      "lang_literal_and_runtime_callers": true,
+      "production_callers_absent": false,
+      "teul_cli_json_binary_float_caller": true,
+      "tool_math_and_wasm_binary_float_callers": true
+    },
+    "remaining_binary_float_paths": [
+      "tool/src/fixed64_boundary.rs:host math and WASM numeric boundary",
+      "tools/teul-cli/src/cli/nurigym.rs:JSON reward weight boundary"
+    ]
+  },
+  "claims": {
+    "docs_ssot_change": false,
+    "external_creator_pilot_success_count": 0,
+    "overall_goal_complete": false,
+    "r0_through_r7_complete": false,
+    "r4_complete": true
+  },
+  "clean_context": {
+    "base_head": "88dd727",
+    "required_untracked_compile_input": "docs/context/notes/dialect/DDONIRANG_dialect_keywords_full_v8_20260215.tsv",
+    "target_diff_only": true,
+    "worktree": "I:/home/urihanl/ddn/codex/build/r4_clean_88dd727_20260717"
+  },
+  "cross_platform": {
+    "cli_wasm_equality": "PASS",
+    "freshness": "PASS",
+    "profile": "release",
+    "target": "web",
+    "windows_host": true
+  },
+  "determinism_vectors": {
+    "decimal_raw": {
+      "-0.8": -3435973836,
+      "0.00000000023283064365386962890625": 1,
+      "0.5": 2147483648,
+      "1.25e2": 536870912000,
+      "1e-10": 0,
+      "3.14": 13486197309
+    },
+    "determinism_vector_v1": [
+      6442450944,
+      2147483648,
+      -2147483648,
+      2147483648,
+      8589934592,
+      2147483648,
+      0
+    ],
+    "negative_saturation": -9223372036854775808,
+    "positive_saturation": 9223372036854775807,
+    "ratio_raw": {
+      "-5/9": -2386092942,
+      "1/2": 2147483648,
+      "27315/100": 1173170316902
+    }
+  },
+  "reproduction": {
+    "initial_main_workspace_freshness": "FAIL_EXPECTED_SOURCE_FINGERPRINT_MISMATCH",
+    "reason": "unrelated dirty source and working-tree line-ending bytes must not enter committed WASM",
+    "repair": "release WASM and manifest regenerated in target-diff-only clean worktree"
+  },
+  "schema": "ddn.creator_gaji_round4_fixed64_boundary.evidence.v1",
+  "state_hash_invariant": {
+    "committed_fixture_tests": 12,
+    "result": "PASS",
+    "tests": [
+      "w23_network_sam_state_hash_is_stable",
+      "w24_ecs_archetype_state_hash_is_stable",
+      "w25_query_batch_state_hash_is_stable",
+      "w26_econ_seeds_state_hash_is_stable",
+      "w27_invariant_hook_state_hash_is_stable",
+      "w28_indicators_state_hash_is_stable",
+      "w29_reactive_limit_state_hash_is_stable",
+      "w30_qchain_approval_state_hash_is_stable",
+      "w31_shared_stage_state_hash_is_stable",
+      "w32_diff_viewer_state_hash_is_stable",
+      "w33_market_integration_state_hash_is_stable",
+      "container_resource_state_hash_is_stable"
+    ]
+  },
+  "tests": [
+    {
+      "command": "cargo test -p ddonirang-core fixed64 -- --nocapture",
+      "passed": 14,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-lang q32_32_raw_value -- --nocapture",
+      "passed": 2,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-tool fixed64_boundary -- --nocapture",
+      "passed": 2,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo test -p ddonirang-tool state_hash_is_stable -- --nocapture",
+      "passed": 12,
+      "result": "PASS"
+    },
+    {
+      "command": "cargo check --manifest-path tools/teul-cli/Cargo.toml",
+      "result": "PASS"
+    },
+    {
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/build_wasm_tool.ps1 -Profile release -Target web",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_freshness_check.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python tests/run_ddn_cli_wasm_true_parity_equality_check.py",
+      "result": "PASS"
+    }
+  ],
+  "wasm_artifact": {
+    "js_binding_hash_mode": "crlf_to_lf_then_sha256",
+    "js_binding_sha256": "0bd5406824717ce8e06835531e850b81a1c9766fd3bb81bd0a69d7d0889a8fbd",
+    "manifest_sha256": "934d2dca8c06ab21beb38f2a26c77e0e62365e91448913c95cec98927469cdfa",
+    "source_hash_mode": "crlf_to_lf_then_sha256",
+    "source_file_count": 76,
+    "source_tree_sha256": "1d10c6161335fcbf3373c4df79ba0dc28804ae5c1622aad9d336eac80d031f57",
+    "wasm_hash_mode": "raw_bytes_sha256",
+    "wasm_sha256": "b04585a7b7357565f1891827524937be85c1713784c34644b67eb28fcdb4f7d8",
+    "wasm_size": 3942200
+  }
+}

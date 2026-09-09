@@ -1,0 +1,12 @@
+{
+  "name": "ddonilang",
+  "ssot_requires": "20.12.0",
+  "ssot_bundle_hash": "sha256:7871e6c4582462863f14d5e3d7841af1221d47813acc19da64311367f3f4834a",
+  "age_target": "AGE2",
+  "det_tier": "D-STRICT",
+  "openness": "closed",
+  "toolchain": {
+    "teul_cli_bin": "I:/home/urihanl/ddn/codex/target/debug/teul-cli.exe"
+  },
+  "deps": []
+}

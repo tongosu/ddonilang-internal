@@ -1,0 +1,48 @@
+{
+  "schema": "ddn.seamgrim_workbench_recovery.g16_clean_detached_verification.v1",
+  "finished_at_utc": "2026-07-17T19:12:48Z",
+  "verified_commit": "582be2e",
+  "worktree": "I:/home/urihanl/ddn/codex/build/worktrees/g16_582be2e",
+  "closure_claim": "clean-detached verification partial: product/browser gates closed; full local-SSOT-dependent core_lang remains environment-gated",
+  "clean_setup": [
+    "git worktree add --detach I:/home/urihanl/ddn/codex/build/worktrees/g16_582be2e 582be2e",
+    "node_modules junction to I:/dev/ddonilang/codex/node_modules for Playwright package resolution",
+    "DDN_VOL4_BUNDLE_PATH=I:/dev/ddonilang/codex/docs/ssot/walks/ddonirang_grammar_textbook/2/ddonirang_vol4_project_currentline_bundle_20260502.zip for local ignored SSOT bundle input"
+  ],
+  "passes": [
+    "git rev-parse --short HEAD => 582be2e",
+    "git status --short => clean before verification",
+    "python tests/run_ddn_cli_wasm_freshness_check.py",
+    "python tests/run_seamgrim_approved_workbench_shell_check.py",
+    "python tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+    "python tests/run_seamgrim_approved_workbench_semantic_verticals_check.py",
+    "python tests/run_seamgrim_approved_workbench_runtime_lineage_check.py",
+    "python tests/run_seamgrim_workbench_animation_oneshot_gate_check.py",
+    "python tests/run_seamgrim_workbench_four_viewport_recovery_gate_check.py",
+    "python tests/run_seamgrim_workbench_race_matrix_check.py",
+    "python tests/run_ddn_cli_wasm_sync_gate_check.py with DDN_VOL4_BUNDLE_PATH",
+    "python tests/run_seamgrim_public_physics_wedge_quality_gate_check.py with DDN_VOL4_BUNDLE_PATH",
+    "python tests/run_seamgrim_workbench_durable_quality_gate_check.py",
+    "python tests/run_seamgrim_portable_project_workbench_check.py",
+    "python tests/run_seamgrim_portable_project_artifact_check.py",
+    "python tests/run_seamgrim_multifile_project_workbench_check.py",
+    "python tests/run_seamgrim_multifile_portable_roundtrip_check.py",
+    "python tests/run_ddn_project_workbench_boundary_matrix_check.py",
+    "cargo check",
+    "cargo check --manifest-path tools/teul-cli/Cargo.toml",
+    "cargo test -p ddonirang-tool -- --skip ai_prompt::tests::ai_prompt_output_matches_golden --skip ai_prompt::tests::ai_prompt_output_invariants_hold",
+    "git diff --check",
+    "git status --short => clean after verification"
+  ],
+  "non_code_failures_or_retries": [
+    "First clean approved shell wrapper attempt timed out in run_pack_golden after 120s during fresh worktree warm-up; direct pack golden passed in 1.8s and wrapper retry passed.",
+    "First clean animation one-shot attempt failed projectile progression timing; immediate retry passed.",
+    "First clean public wedge attempt failed because the local Vol4 SSOT zip bundle is not tracked in the detached worktree; rerun with DDN_VOL4_BUNDLE_PATH passed.",
+    "Full cargo test -p ddonirang-tool failed only in ai_prompt tests because clean detached worktree lacks local docs/ssot data; all remaining package tests passed when those two SSOT-local-data tests were skipped.",
+    "python tests/run_ci_sanity_gate.py --profile core_lang stopped at ssot_sync_dr173_177_check with E_SSOT_SYNC_VERSION_SSOT_DIR_MISSING because docs/ssot/ssot is not present in the detached clean worktree."
+  ],
+  "open_scope": [
+    "A fully clean core_lang run requires an approved way to provide local docs/ssot/ssot data to detached worktrees without modifying docs/ssot in the repository checkout.",
+    "The verification worktree was left in build/worktrees for audit; it has no tracked changes."
+  ]
+}

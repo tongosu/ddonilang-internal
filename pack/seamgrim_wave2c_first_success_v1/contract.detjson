@@ -1,0 +1,33 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave2c_first_success_v1",
+  "kind": "seamgrim_wave2c_first_external_success_product_flow",
+  "wave": "wave2c",
+  "gates": ["G2", "G3", "G4"],
+  "browser_runner": "tests/seamgrim_wave2c_first_success_runner.mjs",
+  "product_url": "solutions/seamgrim_ui_mvp/ui/index.html",
+  "worlds": [
+    "rep_phys_pendulum_wave1_v1",
+    "rep_phys_projectile_xy_v1",
+    "rep_math_function_line_v1"
+  ],
+  "checks": [
+    "first_lesson_open_from_cards",
+    "learn_lab_entrypoints_separated",
+    "desktop_ddn_readable_editable",
+    "mobile_ddn_toggle",
+    "primary_view_before_console_fallback",
+    "first_control_change_updates_hash",
+    "committed_observation_payload_updates",
+    "semantic_cursor_source_link",
+    "view_objects_not_world_state",
+    "product_editor_three_layer_diagnostic",
+    "product_fixit_apply_and_run"
+  ],
+  "product_behavior_claim": true,
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "server_login_cloud_claim": false,
+  "requires_docs_ssot_clean": true
+}

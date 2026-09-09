@@ -1,0 +1,38 @@
+{
+  "schema": "ddn.virtual_project_source.v1",
+  "kind": "seamgrim.local_project_tree.v0",
+  "root_path": "뿌리.ddn",
+  "entry_path": "app/main.ddn",
+  "files": [
+    {
+      "path": "뿌리.ddn",
+      "role": "root",
+      "utf8_text": "프로젝트 {\n  이름: \"가지잠금\".\n  첫글: \"./app/main.ddn\".\n  가지 {\n    물리: \"vendor/edu.physics\".\n  }\n}.\n"
+    },
+    {
+      "path": "app/main.ddn",
+      "role": "ddn_source",
+      "utf8_text": "\"gaji-lock\" 보여주기.\n"
+    },
+    {
+      "path": "vendor/edu.physics/gaji.toml",
+      "role": "gaji_manifest",
+      "utf8_text": "id = \"edu.physics\"\nversion = \"0.1.0\"\ndependencies = { \"edu.units\" = \"0.1.0\" }\n"
+    },
+    {
+      "path": "vendor/edu.physics/ddn/constants.ddn",
+      "role": "ddn_source",
+      "utf8_text": "드러냄 {\n  중력.\n}\n중력 <- 10.\n"
+    },
+    {
+      "path": "vendor/edu.units/gaji.toml",
+      "role": "gaji_manifest",
+      "utf8_text": "id = \"edu.units\"\nversion = \"0.1.0\"\n"
+    },
+    {
+      "path": "vendor/edu.units/ddn/constants.ddn",
+      "role": "ddn_source",
+      "utf8_text": "드러냄 {\n  미터.\n}\n미터 <- 1.\n"
+    }
+  ]
+}

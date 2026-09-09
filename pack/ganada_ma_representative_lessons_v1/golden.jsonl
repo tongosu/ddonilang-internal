@@ -1,0 +1,5 @@
+{"id":"c00_representative_lessons_marker","cmd":["run","pack/ganada_ma_representative_lessons_v1/input.ddn"],"stdout":["GANADA_MA_REPRESENTATIVE_LESSONS_V1","lessons=4","math=math_parabola","physics=physics_projectile","econ=econ_supply_demand","science=rep_science_phase_change_timeline_v1","product_smoke_golden=true"],"exit_code":0}
+{"id":"c01_math_parabola_product_smoke","smoke_golden":"../seamgrim_curriculum_batch_smoke_v1/smoke_math_parabola.v1.json","exit_code":0}
+{"id":"c02_physics_projectile_product_smoke","smoke_golden":"../seamgrim_curriculum_batch_smoke_v1/smoke_physics_projectile.v1.json","exit_code":0}
+{"id":"c03_econ_supply_demand_product_smoke","smoke_golden":"../seamgrim_curriculum_batch_smoke_v1/smoke_econ_supply_demand.v1.json","exit_code":0}
+{"id":"c04_science_phase_change_timeline_product_smoke","smoke_golden":"smoke_rep_science_phase_change_timeline.v1.json","exit_code":0}

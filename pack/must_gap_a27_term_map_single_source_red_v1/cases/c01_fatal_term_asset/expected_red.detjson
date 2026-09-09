@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "TERM_MAP_SINGLE_SOURCE_FATAL",
+  "expected_future_diag": "TERM-FATAL-001",
+  "notes": [
+    "SSOT TERM-MAP fatal_terms에서 자산 -> 쓸감 치명 금지어를 읽어야 한다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

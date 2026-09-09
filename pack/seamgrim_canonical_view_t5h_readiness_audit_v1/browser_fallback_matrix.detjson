@@ -1,0 +1,224 @@
+{
+  "schema": "seamgrim.canonical_view.t5h_browser_fallback_readiness.v1",
+  "canonical_owner": "solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js",
+  "surface_universe": ["run", "workbench", "playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"],
+  "browser_groups": [
+    {
+      "id": "T5BC_BROWSER",
+      "runner": "tests/seamgrim_console_graph_space2d_canonical_view_payload_browser_runner.mjs",
+      "families": ["console", "graph", "space2d"],
+      "scope": "canonical_payload_and_existing_graph_space2d_presentation_module_browser_probe"
+    },
+    {
+      "id": "T5D_BROWSER",
+      "runner": "tests/seamgrim_table_text_structure_canonical_view_payload_browser_runner.mjs",
+      "families": ["table", "text", "structure"],
+      "scope": "canonical_payload_and_existing_table_text_structure_presentation_module_browser_probe"
+    },
+    {
+      "id": "T5E_BROWSER",
+      "runner": "tests/seamgrim_console_grid_grid2d_canonical_view_payload_browser_runner.mjs",
+      "families": ["console-grid", "grid2d"],
+      "scope": "canonical_payload_and_existing_cell_grid_renderer_browser_probe"
+    },
+    {
+      "id": "T5F_BROWSER",
+      "runner": "tests/seamgrim_workbench_committed_view_verticals_browser_runner.mjs",
+      "families": ["workbench-line", "workbench-pendulum", "workbench-projectile", "workbench-grid"],
+      "scope": "actual_workbench_committed_view_product_browser_vertical"
+    },
+    {
+      "id": "T5G_BROWSER",
+      "runner": "tests/seamgrim_scene_curriculum_canonical_view_payload_browser_runner.mjs",
+      "families": ["scene-summary", "curriculum-semantic-scene"],
+      "scope": "actual_product_and_authoritative_fixture_browser_vertical"
+    }
+  ],
+  "supplemental_browser_runners": [
+    {
+      "id": "T5G_REPRESENTATIVE_BROWSER",
+      "runner": "tests/seamgrim_representative_curriculum_product_gate_runner.mjs",
+      "scope": "five_representative_curriculum_product_flows"
+    }
+  ],
+  "fallback_groups": [
+    {
+      "id": "T5B_FALLBACK",
+      "families": ["console", "graph"],
+      "aggregate_runner_ids": ["T5B_GOLDEN", "T5B_MUTATION"],
+      "evidence_runner": "tests/seamgrim_console_graph_canonical_view_payload_mutation_runner.mjs",
+      "required_source_marker": "M1_LEGACY_GRAPH_SYNTHESIS_REINTRODUCED"
+    },
+    {
+      "id": "T5C_FALLBACK",
+      "families": ["space2d"],
+      "aggregate_runner_ids": ["T5C_GOLDEN", "T5C_MUTATION"],
+      "evidence_runner": "tests/seamgrim_space2d_canonical_view_payload_runner.mjs",
+      "required_source_marker": "active_semantic_synthesis: 0"
+    },
+    {
+      "id": "T5D_FALLBACK",
+      "families": ["table", "text", "structure"],
+      "aggregate_runner_ids": ["T5D_GOLDEN", "T5D_MUTATION"],
+      "evidence_runner": "tests/seamgrim_table_text_structure_canonical_view_payload_runner.mjs",
+      "required_source_marker": "hidden_text_fallback: 0"
+    },
+    {
+      "id": "T5E_FALLBACK",
+      "families": ["console-grid", "grid2d"],
+      "aggregate_runner_ids": ["T5E_GOLDEN", "T5E_MUTATION"],
+      "evidence_runner": "tests/seamgrim_console_grid_grid2d_canonical_view_payload_runner.mjs",
+      "required_source_marker": "hidden_semantic_fallback: 0"
+    },
+    {
+      "id": "T5F_FALLBACK",
+      "families": ["workbench-line", "workbench-pendulum", "workbench-projectile", "workbench-grid"],
+      "aggregate_runner_ids": ["T5F_GOLDEN", "T5F_MUTATION"],
+      "evidence_runner": "tests/seamgrim_workbench_four_family_canonical_view_payload_mutation_runner.mjs",
+      "required_source_marker": "M5 raw-only decoy regained renderer success"
+    },
+    {
+      "id": "T5G_FALLBACK",
+      "families": ["scene-summary", "curriculum-semantic-scene"],
+      "aggregate_runner_ids": ["T5G_GOLDEN", "T5G_MUTATION"],
+      "evidence_runner": "tests/seamgrim_scene_curriculum_canonical_view_payload_runner.mjs",
+      "required_source_marker": "graph_default_semantic_success: 0"
+    }
+  ],
+  "families": [
+    {
+      "key": "console",
+      "family": "console",
+      "browser_group": "T5BC_BROWSER",
+      "fallback_group": "T5B_FALLBACK",
+      "applicable_surfaces": ["run", "workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "console_grid",
+      "family": "console-grid",
+      "browser_group": "T5E_BROWSER",
+      "fallback_group": "T5E_FALLBACK",
+      "applicable_surfaces": ["run", "workbench", "bogae"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "graph",
+      "family": "graph",
+      "browser_group": "T5BC_BROWSER",
+      "fallback_group": "T5B_FALLBACK",
+      "applicable_surfaces": ["run", "workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "space2d",
+      "family": "space2d",
+      "browser_group": "T5BC_BROWSER",
+      "fallback_group": "T5C_FALLBACK",
+      "applicable_surfaces": ["run", "bogae"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["workbench", "playground", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "table",
+      "family": "table",
+      "browser_group": "T5D_BROWSER",
+      "fallback_group": "T5D_FALLBACK",
+      "applicable_surfaces": ["run", "workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "text",
+      "family": "text",
+      "browser_group": "T5D_BROWSER",
+      "fallback_group": "T5D_FALLBACK",
+      "applicable_surfaces": ["run", "workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "structure",
+      "family": "structure",
+      "browser_group": "T5D_BROWSER",
+      "fallback_group": "T5D_FALLBACK",
+      "applicable_surfaces": ["run", "workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "grid2d",
+      "family": "grid2d",
+      "browser_group": "T5E_BROWSER",
+      "fallback_group": "T5E_FALLBACK",
+      "applicable_surfaces": ["run", "workbench", "nurimaker"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["playground", "bogae", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "workbench_line",
+      "family": "workbench-line",
+      "browser_group": "T5F_BROWSER",
+      "fallback_group": "T5F_FALLBACK",
+      "applicable_surfaces": ["workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["run", "playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "workbench_pendulum",
+      "family": "workbench-pendulum",
+      "browser_group": "T5F_BROWSER",
+      "fallback_group": "T5F_FALLBACK",
+      "applicable_surfaces": ["workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["run", "playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "workbench_projectile",
+      "family": "workbench-projectile",
+      "browser_group": "T5F_BROWSER",
+      "fallback_group": "T5F_FALLBACK",
+      "applicable_surfaces": ["workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["run", "playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "workbench_grid",
+      "family": "workbench-grid",
+      "browser_group": "T5F_BROWSER",
+      "fallback_group": "T5F_FALLBACK",
+      "applicable_surfaces": ["workbench"],
+      "compatibility_surfaces": ["playground"],
+      "not_applicable_surfaces": ["run", "playground", "bogae", "nurimaker", "app", "scene_session", "project_snapshot"]
+    },
+    {
+      "key": "scene_summary",
+      "family": "scene-summary",
+      "browser_group": "T5G_BROWSER",
+      "fallback_group": "T5G_FALLBACK",
+      "applicable_surfaces": ["app", "scene_session"],
+      "compatibility_surfaces": [],
+      "not_applicable_surfaces": ["run", "workbench", "playground", "bogae", "nurimaker", "project_snapshot"]
+    },
+    {
+      "key": "curriculum_semantic_scene",
+      "family": "curriculum-semantic-scene",
+      "browser_group": "T5G_BROWSER",
+      "fallback_group": "T5G_FALLBACK",
+      "applicable_surfaces": ["run", "project_snapshot"],
+      "compatibility_surfaces": [],
+      "not_applicable_surfaces": ["workbench", "playground", "bogae", "nurimaker", "app", "scene_session"]
+    }
+  ],
+  "claim_boundaries": {
+    "browser_family_probe_required": 14,
+    "semantic_fallback_family_evidence_required": 14,
+    "actual_product_surface_parity": "CLOSED_BY_EXECUTABLE_EVIDENCE_MATRIX",
+    "playground_compatibility_boundary": "OPTION_B_LEGACY_COMPATIBILITY_ONLY",
+    "t5h_status_totality": "CLOSED",
+    "t5g_independent_pass": "BOUND"
+  }
+}

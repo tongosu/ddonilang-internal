@@ -1,0 +1,10 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "Q_max", "type": "수" },
+    { "name": "Q_min", "type": "수" },
+    { "name": "Q목록", "type": "수" },
+    { "name": "a", "type": "수" },
+    { "name": "dQ", "type": "수" }
+  ]
+}

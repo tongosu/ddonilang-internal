@@ -1,0 +1,238 @@
+{
+  "schema": "ddn.ganada.execution_evidence_registry.v1",
+  "pack": "ganada_execution_evidence_registry_v1",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "scope": "Ganada Product Advancement Week1 touched cells",
+  "matrix_cells_total": 90,
+  "tracked_cells_count": 8,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "docs_only_behavior_closure_allowed": false,
+  "strong_evidence_required_for_behavior_close": true,
+  "strong_evidence_kinds": [
+    "pack_golden_pass",
+    "product_cli_or_runtime_pass",
+    "browser_or_ui_runner_pass",
+    "tooling_runner_or_ci_pass"
+  ],
+  "weak_evidence_kinds": [
+    "doc_report",
+    "proposal",
+    "markdown_existence_checker_only",
+    "status_token_only"
+  ],
+  "tracked_cells": [
+    {
+      "cell_id": "마-0",
+      "branch": "마",
+      "maru": 0,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma0_reaudit_aggregate",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_branch_execution_reaudit_check.py"],
+          "expect_stdout_contains": "[ganada-ma-branch-execution-reaudit] OK"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:17",
+        "pack/ganada_ma_branch_execution_reaudit_v1/golden.jsonl:1",
+        "tests/run_ganada_ma_branch_execution_reaudit_check.py:184"
+      ],
+      "notes": "Legacy matrix status gate is still separated from product execution evidence."
+    },
+    {
+      "cell_id": "마-1",
+      "branch": "마",
+      "maru": 1,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma1_representative_lessons",
+          "kind": "product_cli_or_runtime_pass",
+          "command": ["python", "tests/run_ganada_ma_representative_lessons_check.py"],
+          "expect_stdout_contains": "[ganada-ma-representative-lessons] OK"
+        },
+        {
+          "id": "ma1_lesson_workflow_browser",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/seamgrim_lesson_run_preset_rail_runner.mjs"],
+          "expect_stdout_contains": "seamgrim_lesson_run_preset_rail: ok"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_representative_lessons_v1/contract.detjson:5",
+        "pack/ganada_ma_representative_lessons_v1/contract.detjson:45",
+        "tests/seamgrim_lesson_run_preset_rail_runner.mjs:177",
+        "tests/seamgrim_lesson_run_preset_rail_runner.mjs:200"
+      ],
+      "notes": "Representative lesson product smoke and catalog-to-result browser workflow pass."
+    },
+    {
+      "cell_id": "마-2",
+      "branch": "마",
+      "maru": 2,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma2_reaudit_aggregate",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_branch_execution_reaudit_check.py"],
+          "expect_stdout_contains": "[ganada-ma-branch-execution-reaudit] OK"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:17",
+        "pack/ganada_ma_branch_execution_reaudit_v1/golden.jsonl:1"
+      ],
+      "notes": "Assessment evidence remains routed through the ma branch re-audit aggregate."
+    },
+    {
+      "cell_id": "마-3",
+      "branch": "마",
+      "maru": 3,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma3_authoring_flow_browser",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/seamgrim_lesson_authoring_flow_browser_runner.mjs"],
+          "expect_stdout_contains": "seamgrim_lesson_authoring_flow_browser: ok"
+        },
+        {
+          "id": "ma3_studio_integration_browser",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/studio_lesson_authoring_run_integration_runner.mjs"],
+          "expect_stdout_contains": "studio_lesson_authoring_run_integration: ok"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:149",
+        "tests/seamgrim_lesson_run_preset_rail_runner.mjs:183",
+        "tests/seamgrim_lesson_run_preset_rail_runner.mjs:203"
+      ],
+      "notes": "Lesson catalog/run UI workflow now has stable selectors and browser PASS evidence."
+    },
+    {
+      "cell_id": "마-4",
+      "branch": "마",
+      "maru": 4,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma4_reaudit_aggregate",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_branch_execution_reaudit_check.py"],
+          "expect_stdout_contains": "[ganada-ma-branch-execution-reaudit] OK"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:194",
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:232"
+      ],
+      "notes": "Publication product runners pass inside the ma branch re-audit; stale DEV_SUMMARY token checks remain separated."
+    },
+    {
+      "cell_id": "마-5",
+      "branch": "마",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ma5_reaudit_aggregate",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_ganada_ma_branch_execution_reaudit_check.py"],
+          "expect_stdout_contains": "[ganada-ma-branch-execution-reaudit] OK"
+        }
+      ],
+      "file_line_refs": [
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:246",
+        "pack/ganada_ma_branch_execution_reaudit_v1/reaudit.detjson:269"
+      ],
+      "notes": "LTS candidate evidence is product/tooling pass evidence, not external release or certification."
+    },
+    {
+      "cell_id": "자-3",
+      "branch": "자",
+      "maru": 3,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ja3_proposal_ui_browser",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/seulgi_proposal_ui_runner.mjs"],
+          "expect_stdout_contains": "seulgi_proposal_ui: ok"
+        },
+        {
+          "id": "ja3_proposal_ui_checker",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_roadmap_v2_ja3_seulgi_proposal_ui_check.py"],
+          "expect_stdout_contains": "[roadmap-v2-ja3-seulgi-proposal-ui] OK"
+        }
+      ],
+      "file_line_refs": [
+        "tests/seulgi_proposal_ui_runner.mjs:118",
+        "tests/seulgi_proposal_ui_runner.mjs:119",
+        "tests/seulgi_proposal_ui_runner.mjs:120",
+        "tests/seulgi_proposal_ui_runner.mjs:121",
+        "solutions/seamgrim_ui_mvp/ui/seulgi_proposal_ui.js:185"
+      ],
+      "notes": "Fixture/provenance-only Seulgi proposal UI displays proposal, approve, reject, and boundary warning selectors."
+    },
+    {
+      "cell_id": "자-5",
+      "branch": "자",
+      "maru": 5,
+      "behavior_closed_claim": false,
+      "behavior_evidence_status": "product_pass_recorded",
+      "matrix_upgrade_claim": false,
+      "commands": [
+        {
+          "id": "ja5_replay_safe_browser",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/seulgi_replay_safe_workflow_runner.mjs"],
+          "expect_stdout_contains": "seulgi_replay_safe_workflow: ok"
+        },
+        {
+          "id": "ja5_replay_safe_checker",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_roadmap_v2_ja5_replay_safe_ai_workflow_check.py"],
+          "expect_stdout_contains": "[roadmap-v2-ja5-replay-safe-ai-workflow] OK"
+        }
+      ],
+      "file_line_refs": [
+        "tests/seulgi_replay_safe_workflow_runner.mjs:118",
+        "tests/seulgi_replay_safe_workflow_runner.mjs:193",
+        "solutions/seamgrim_ui_mvp/ui/seulgi_replay_safe_workflow.js:208"
+      ],
+      "notes": "Replay-safe workflow records no AI recall and exposes the replay log selector."
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "docs_only_behavior_close_block",
+      "evidence_kinds": ["doc_report", "proposal"],
+      "attempted_behavior_closed_claim": true,
+      "expected_checker_result": "reject"
+    }
+  ]
+}

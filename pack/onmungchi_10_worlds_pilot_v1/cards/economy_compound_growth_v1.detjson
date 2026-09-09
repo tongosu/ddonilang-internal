@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "economy_compound_growth_v1",
+  "world_concept_id": "economy.compound_growth",
+  "name": "복리 성장과 생산성",
+  "one_line": "성장률이 누적될 때 자본과 산출이 어떻게 벌어지는지 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["채비", "매김", "매마디마다", "조건"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "economy", "age_band": "high", "textbook_candidates": ["3권 상태와 마디", "4권 세계 모델"]},
+  "source": {"lesson_id": "rep_econ_growth_compound_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_econ_growth_compound_v1/lesson.ddn", "existing_pack_id": null, "representative_madi": 16},
+  "surfaces": ["설정", "채비", "매김", "시작할때", "매마디마다", "조건", "보여주기"],
+  "execution_evidence": {"state_hash": "blake3:8c14148b5d9114f85f1dedf0d30cf21ba8c142ebc90fb8aa26b3c42284fb7f40", "trace_hash": "blake3:dafd74fb1c512f0795136b7582fb333c26755c0e8d63a34651aa9ebae57f6df3", "pilot_case_id": "economy_compound_growth_v1"},
+  "few_shot": [{"audience": "child", "intent": "돈이 매번 같은 비율로 불어나면 얼마나 커지는지 보여줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "자본 복리 누적과 생산성에 따른 산출 경로를 마디별로 비교하는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "성장률", "range": "0..0.2", "effect": "자본 곡선이 벌어지는 속도가 달라진다."}, {"parameter": "생산성", "range": "0.5..3.0", "effect": "같은 자본에서 산출 수준이 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_econ_growth_compound_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

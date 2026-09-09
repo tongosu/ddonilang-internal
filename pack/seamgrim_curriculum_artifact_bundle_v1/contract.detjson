@@ -1,0 +1,18 @@
+{
+  "schema": "seamgrim.curriculum_artifact_bundle.contract.v1",
+  "artifact_schema": "seamgrim.curriculum_artifact_bundle.v0",
+  "artifact_kinds": ["prediction", "experiment", "explanation"],
+  "lesson_ids": [
+    "rep_math_function_line_v1",
+    "rep_phys_pendulum_wave1_v1",
+    "rep_phys_projectile_xy_v1",
+    "rep_phys_damped_oscillation_v1",
+    "rep_econ_supply_demand_tax_v1"
+  ],
+  "claim_boundary": {
+    "canonical_curriculum_alignment": false,
+    "external_student_success_claim": false,
+    "state_hash_formula_change": false,
+    "runtime_role_toggle": false
+  }
+}

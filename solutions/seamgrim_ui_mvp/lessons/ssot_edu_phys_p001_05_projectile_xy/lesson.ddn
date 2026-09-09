@@ -1,0 +1,35 @@
+(매마디)마다 {
+  // 출력은 숫자만. (x, y) 순서.
+  // NOTE: y<0(지면 아래)면 출력하지 않고 종료한다.
+
+  v0 <- 20.
+  angle_deg <- 45.
+  g <- 9.8.
+  dt <- 0.05.
+  pi <- 3.1415926535.
+
+  // deg → rad
+  angle_rad <- (deg=angle_deg, pi=pi) (#ascii) 수식{ deg*pi/180 }.
+
+  cos_a <- (angle_rad) cos.
+  sin_a <- (angle_rad) sin.
+
+  t <- 0.
+
+  반복: {
+    x <- (v0=v0, c=cos_a, t=t) (#ascii) 수식{ v0*c*t }.
+    y <- (v0=v0, s=sin_a, g=g, t=t) (#ascii) 수식{ v0*s*t - (g*t^2)/2 }.
+
+    { y < 0 }인것 일때 {
+      멈추기.
+    }.
+
+    // (x, y)
+    보임 {
+      값1: x.
+      값2: y.
+    }.
+
+    t <- t + dt.
+  }.
+}.

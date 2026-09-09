@@ -1,0 +1,60 @@
+{
+  "schema": "ddn.ganada.stale_checker_repair.v1",
+  "pack": "ganada_stale_checker_repair_v1",
+  "status": "product_evidence_checker_repair",
+  "legacy_markdown_dependency_removed": true,
+  "dev_summary_token_dependency_removed": true,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "baseline_failures_before_repair": [
+    {
+      "command": ["python", "tests/run_malblock_authoring_ui_check.py"],
+      "observed_failure": "E_MALBLOCK_AUTHORING_UI_MISSING: legacy root markdown files"
+    },
+    {
+      "command": ["python", "tests/run_studio_malblock_workbench_integration_check.py"],
+      "observed_failure": "DEV_SUMMARY missing historic tokens"
+    },
+    {
+      "command": ["python", "tests/run_seamgrim_malblock_roundtrip_subset_check.py"],
+      "observed_failure": "missing SEAMGRIM_MALBLOCK_ROUNDTRIP_SUBSET_V1.md"
+    }
+  ],
+  "repaired_checkers": [
+    {
+      "id": "malblock_authoring_ui",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_malblock_authoring_ui_check.py"],
+      "expect_stdout_contains": "[malblock-authoring-ui-v1] OK",
+      "file_line_refs": [
+        "tests/run_malblock_authoring_ui_check.py:1",
+        "tests/malblock_authoring_ui_browser_runner.mjs:1",
+        "pack/malblock_authoring_ui_v1/contract.detjson:1"
+      ]
+    },
+    {
+      "id": "studio_malblock_workbench",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_studio_malblock_workbench_integration_check.py"],
+      "expect_stdout_contains": "studio_malblock_workbench_integration_check: ok",
+      "file_line_refs": [
+        "tests/run_studio_malblock_workbench_integration_check.py:1",
+        "tests/studio_malblock_workbench_integration_runner.mjs:1",
+        "pack/studio_malblock_workbench_integration_v1/contract.detjson:1"
+      ]
+    },
+    {
+      "id": "malblock_roundtrip_subset",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_seamgrim_malblock_roundtrip_subset_check.py"],
+      "expect_stdout_contains": "[seamgrim-malblock-roundtrip-subset] ok",
+      "file_line_refs": [
+        "tests/run_seamgrim_malblock_roundtrip_subset_check.py:1",
+        "tests/block_editor_roundtrip_runner.mjs:1",
+        "pack/seamgrim_malblock_roundtrip_subset_v1/expected/malblock_roundtrip_subset.detjson:1"
+      ]
+    }
+  ]
+}

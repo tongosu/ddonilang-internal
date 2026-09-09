@@ -1,0 +1,4 @@
+"SEAMGRIM_UI_V2_PRODUCT_SHELL_V1" 보여주기.
+"global shell and L0/L1 product flow verified by browser runner" 보여주기.
+"desktop and mobile layout smoke verified" 보여주기.
+"no parser runtime state_hash semantics change claimed" 보여주기.

@@ -1,0 +1,110 @@
+{
+  "schema": "ddn.nurigym.step_record.v0.2.roundtrip_pack.contract.v1",
+  "pack_id": "nurigym_step_record_v02_roundtrip_v1",
+  "evidence_tier": "runner_golden",
+  "closure_claim": "no",
+  "closure_grade": "wire_schema_evidence_only",
+  "source_annex": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md",
+  "source_refs": [
+    "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:13",
+    "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:20",
+    "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:55",
+    "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:61"
+  ],
+  "field_definitions": [
+    {
+      "name": "raw_action",
+      "type": "action_value|null",
+      "required": "v0.2 MUST; v0.1 backward-read fallback null"
+    },
+    {
+      "name": "resolved_action",
+      "type": "action_value|null",
+      "required": "SHOULD"
+    },
+    {
+      "name": "normalized_action",
+      "type": "action_value|null",
+      "required": "v0.2 MUST; v0.1 backward-read fallback null"
+    },
+    {
+      "name": "action_status",
+      "type": "enum(맞음,가만히,잘림,거부)|미상",
+      "required": "v0.2 MUST; v0.1 backward-read fallback 미상"
+    },
+    {
+      "name": "merge_candidates",
+      "type": "array<action_value>",
+      "required": "shared SHOULD"
+    },
+    {
+      "name": "merged_action",
+      "type": "action_value|null",
+      "required": "shared MUST; single SHOULD"
+    },
+    {
+      "name": "applied_action",
+      "type": "action_value",
+      "required": "MUST"
+    },
+    {
+      "name": "missing_input",
+      "type": "array<slot_path>",
+      "required": "SHOULD",
+      "consumer_sample_compat_types": [
+        "array<slot_path>",
+        "boolean"
+      ]
+    }
+  ],
+  "required_statuses": [
+    "맞음",
+    "가만히",
+    "잘림",
+    "거부"
+  ],
+  "diagnostic_contracts": [
+    {
+      "code": "E_STEP_RECORD_REJECTED_IN_MERGE",
+      "severity": "error",
+      "fatal": true,
+      "trigger": "action_status=거부 while rejected action is present in merge_candidates",
+      "source_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:36"
+    },
+    {
+      "code": "E_STEP_RECORD_CLIP_NOOP",
+      "severity": "warning",
+      "fatal": false,
+      "trigger": "action_status=잘림 while normalized_action equals raw_action",
+      "source_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:37"
+    },
+    {
+      "code": "E_STEP_RECORD_MISSING_STATUS_MISMATCH",
+      "severity": "error",
+      "fatal": true,
+      "trigger": "missing_input is non-empty while action_status is not 가만히",
+      "source_ref": "docs/context/proposals/PROPOSAL_NURIGYM_STEP_RECORD_V02_COMPAT_AND_ROUNDTRIP_V1_20260707_ANNEX_A.md:39"
+    }
+  ],
+  "case_files": [
+    "fixtures/c01_valid.detjson",
+    "fixtures/c02_noop_missing.detjson",
+    "fixtures/c03_clip.detjson",
+    "fixtures/c04_reject.detjson",
+    "fixtures/c05_shared_merge.detjson",
+    "fixtures/c06_v01_backward_read.detjson"
+  ],
+  "golden": "golden.jsonl",
+  "crosscheck_sources": {
+    "consumer_pack": "pack/nurigym_step_record_v02_consumer_g6_v1",
+    "consumer_field_name_source": "pack/nurigym_step_record_v02_consumer_g6_v1/step_record_v02_fixture.detjson:v02_additive_field_candidates",
+    "shared_sync_field_name_source": "pack/nurigym_shared_sync_action_pipeline_v1/contract.detjson:required_pipeline_fields",
+    "shared_sync_status_source": "pack/nurigym_shared_sync_action_pipeline_v1/contract.detjson:required_statuses"
+  },
+  "additive_only": true,
+  "new_language_syntax_count": 0,
+  "parser_frontdoor_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_change": false,
+  "gymnasium_compatible_consumer_claim": false
+}

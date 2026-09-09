@@ -1,0 +1,61 @@
+{
+  "claims": {
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g4_status": "G4_DETERMINISTIC_LIVE_STEP_PUMP_COMPLETE",
+    "state_hash_formula_change": false
+  },
+  "configured_done_case": {
+    "committed_step_count": 3,
+    "configured_madi": 3,
+    "final_status": "completed",
+    "mode": "live",
+    "status": "PASS"
+  },
+  "input_snapshot": {
+    "applied_commit_count": 1,
+    "stable_input_id": true,
+    "status": "PASS"
+  },
+  "pump_contract": {
+    "automatic_and_manual_shared_function": "commitNextLiveStep",
+    "automatic_progress_without_click": "PASS",
+    "generation_cancellation": [
+      "new_run",
+      "project_switch",
+      "history_cursor",
+      "stop_requested",
+      "runtime_done",
+      "runtime_failed"
+    ],
+    "interval_ms": 32,
+    "interval_participates_in_state_hash": false,
+    "max_in_flight_observed": 1,
+    "serial_one_step": true
+  },
+  "runtime_surface": {
+    "configured_madi_authority": "original_source_wasm_execution_envelope",
+    "execution_mode_authority": "original_source_wasm_execution_envelope",
+    "js_source_regex_authority": false,
+    "legacy_lowered_vm_configured_madi_negative_control": 0,
+    "original_pendulum_configured_madi": 240
+  },
+  "schema": "seamgrim.workbench_recovery.g4_deterministic_live_step_pump.v1",
+  "sealed_run": {
+    "active_run_source_hash_changed_after_editor_edit": false,
+    "active_vm_source_changed_after_editor_edit": false,
+    "candidate_edit_requires_new_run": true,
+    "status": "PASS"
+  },
+  "verification": {
+    "execution_lifecycle_browser_runner": "PASS",
+    "execution_lifecycle_unit": "PASS",
+    "git_diff_check": "PASS",
+    "live_step_pump_browser_runner": "PASS",
+    "node_syntax": "PASS",
+    "pause_boundary_no_extra_commit_180ms": "PASS",
+    "preprocessed_surface_runner": "PASS",
+    "resume_same_run": "PASS",
+    "wasm_vm_runtime_runner": "PASS"
+  }
+}

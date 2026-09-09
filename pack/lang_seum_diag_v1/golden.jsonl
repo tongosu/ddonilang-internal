@@ -1,0 +1,5 @@
+{"cmd":["run","pack/lang_seum_diag_v1/source_cycle.ddn","--solveplan-out","build/declarative_closure_g2/lang_seum_diag_v1_cycle.detjson"],"exit_code":0,"stdout":[]}
+{"cmd":["run","pack/lang_seum_diag_v1/source_assign_conflict.ddn","--solveplan-out","build/declarative_closure_g2/lang_seum_diag_v1_assign_conflict.detjson"],"exit_code":0,"stdout":[]}
+{"cmd":["run","pack/lang_seum_diag_v1/source_underdetermined.ddn","--solveplan-out","build/declarative_closure_g2/lang_seum_diag_v1_underdetermined.detjson"],"exit_code":0,"stdout":[]}
+{"cmd":["run","pack/lang_seum_diag_v1/source_overdetermined.ddn","--solveplan-out","build/declarative_closure_g2/lang_seum_diag_v1_overdetermined.detjson"],"exit_code":0,"stdout":[]}
+{"cmd":["run","pack/lang_seum_diag_v1/source_unsupported_n9.ddn","--solveplan-out","build/declarative_closure_g2/lang_seum_diag_v1_unsupported_n9.detjson"],"exit_code":0,"stdout":[]}

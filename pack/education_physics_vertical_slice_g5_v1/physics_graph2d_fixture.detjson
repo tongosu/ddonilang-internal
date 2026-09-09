@@ -1,0 +1,64 @@
+{
+  "schema": "ddn.education_physics_vertical_slice_g5.physics_graph2d_fixture.v1",
+  "source_pack": "stdlib_l1_integrators_g1_v1",
+  "parameters": {
+    "theta0": 0.2,
+    "omega0": 0.0,
+    "dt": 0.1,
+    "steps": 5,
+    "acceleration_rule": "acceleration = -theta"
+  },
+  "integrators": [
+    {
+      "series_id": "explicit_euler_theta",
+      "label": "theta",
+      "ddn_surface": "적분.오일러",
+      "algorithm": "explicit_euler"
+    },
+    {
+      "series_id": "semi_implicit_euler_theta",
+      "label": "theta",
+      "ddn_surface": "적분.반암시적오일러",
+      "algorithm": "semi_implicit_euler"
+    }
+  ],
+  "graph2d": {
+    "profile": "std_bogae_graph2d_v1",
+    "domain": {
+      "x": [
+        0,
+        5
+      ],
+      "y": [
+        -0.05,
+        0.25
+      ]
+    },
+    "ticks": {
+      "x_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "y_values": [
+        -0.05,
+        0.0,
+        0.05,
+        0.1,
+        0.15,
+        0.2,
+        0.25
+      ]
+    },
+    "series_order": {
+      "rule": "sort_by_series_id"
+    },
+    "label_collision": {
+      "candidate_policy": "append #2, #3 by sorted series order",
+      "finalized": false
+    }
+  }
+}

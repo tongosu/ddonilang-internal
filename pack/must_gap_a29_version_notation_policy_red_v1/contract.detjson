@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a29_version_notation_policy_red_v1",
+  "track": "A",
+  "item": "A29",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:1355",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER1_V1.md:28",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A29_version_notation_policy_V1.md",
+  "cases": [
+    {
+      "id": "c01_revision_notation",
+      "input": "cases/c01_revision_notation/input.md",
+      "expected_red": "cases/c01_revision_notation/expected_red.detjson"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave2e_durable_project_failures_v1",
+  "kind": "seamgrim_wave2e_durable_project_failure_baseline",
+  "wave": "wave2e",
+  "gates": ["G0"],
+  "browser_runner": "tests/seamgrim_wave2e_durable_project_failure_capture_runner.mjs",
+  "checker": "tests/run_seamgrim_wave2e_durable_project_failures_check.py",
+  "baseline_fixture": "pack/seamgrim_wave2e_durable_project_failures_v1/baseline.detjson",
+  "checks": [
+    "server_save_share_not_ready_capture",
+    "capability_leak_failure_vector",
+    "stale_editor_save_failure_vector",
+    "conflict_overwrite_failure_vector",
+    "view_escalation_failure_vector",
+    "restart_loss_failure_vector",
+    "docs_ssot_clean_at_start"
+  ],
+  "product_behavior_change": false,
+  "docs_closed_claim": false,
+  "behavior_closed_claim": false,
+  "baseline_only": true,
+  "docs_ssot_change": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false,
+  "server_login_cloud_claim": false
+}

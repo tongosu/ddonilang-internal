@@ -1,0 +1,10 @@
+{"case":"00_any_sender_builtin_success","mode":"run","outcome":"success","output_log_texts":["7"]}
+{"case":"01_exact_sender_success","mode":"run","outcome":"success","output_log_texts":["7"]}
+{"case":"02_sender_mismatch_unhandled","mode":"run","outcome":"failure","diagnostic":"E_ASYNC_ENDPOINT_UNHANDLED_CANDIDATE","phase":"async_route"}
+{"case":"03_sender_type_matrix_success","mode":"run","outcome":"success","output_log_texts":["1"]}
+{"case":"04_top_level_sender_missing","mode":"run","outcome":"failure","diagnostic":"E_ASYNC_SENDER_IDENTITY_UNRESOLVED_CANDIDATE","phase":"async_sender_identity"}
+{"case":"05_owner_context_sender_success","mode":"run","outcome":"success","output_log_texts":["7"]}
+{"case":"06_historical_hook_not_successor","mode":"run","outcome":"failure","diagnostic":"E_ASYNC_ENDPOINT_UNHANDLED_CANDIDATE","phase":"async_route"}
+{"case":"07_duplicate_route_ambiguity","mode":"run","outcome":"failure","diagnostic":"E_ASYNC_ENDPOINT_AMBIGUOUS_CANDIDATE","phase":"async_route"}
+{"case":"08_user_alert_type_success","mode":"run","outcome":"success","output_log_texts":["9"]}
+{"case":"09_exact_surface_canon_roundtrip","mode":"canon","outcome":"success","canonical_contains":"철수에게서 (받은수:수)를 받으면"}

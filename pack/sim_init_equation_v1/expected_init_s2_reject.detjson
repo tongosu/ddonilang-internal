@@ -1,0 +1,66 @@
+{
+  "diagnostics": [
+    {
+      "code": "E_INIT_UNSUPPORTED",
+      "message": "채비 안 세움 초기화는 S0/S1 SolvePlan만 허용합니다",
+      "severity": "error"
+    }
+  ],
+  "init_plan": {
+    "allowed_stages": [
+      "S0",
+      "S1"
+    ],
+    "apply": "before_madi_0",
+    "kind": "t0_one_shot",
+    "source": "chaebi_inner_seum"
+  },
+  "lowering": {
+    "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "method": "init_unsupported_v1",
+  "relations": [
+    {
+      "defines": "위치'",
+      "depends_on": [
+        "속도"
+      ],
+      "id": "r1",
+      "kind": "explicit_algebra",
+      "source_order": 0,
+      "text": "위치' =:= 속도"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:f346fbf0269215b7c2bd2957d05a63e6f9565d4ceb90322af1ba781f70d99591",
+  "stage": "S3",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "위치'",
+    "속도"
+  ]
+}

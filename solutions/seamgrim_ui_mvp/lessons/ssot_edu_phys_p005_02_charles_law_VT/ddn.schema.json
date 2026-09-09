@@ -1,0 +1,12 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "P", "type": "수" },
+    { "name": "R", "type": "수" },
+    { "name": "T_max", "type": "수" },
+    { "name": "T_min", "type": "수" },
+    { "name": "T목록", "type": "수" },
+    { "name": "dT", "type": "수" },
+    { "name": "n", "type": "수" }
+  ]
+}

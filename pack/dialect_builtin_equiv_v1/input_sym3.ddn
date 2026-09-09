@@ -1,0 +1,10 @@
+x <- -9.
+abs <- (x) abs.
+max <- (abs, 5) max.
+min <- (abs, 5) min.
+항목 <- ("a", "b", "c") 차림.
+len <- (항목) 길이세기.
+{ 참 } 인것 ?=> {
+    out <- abs + max + min + len.
+}
+out 보여주기.

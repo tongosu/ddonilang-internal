@@ -1,0 +1,14 @@
+money0 <- 1000.
+money1 <- 1200.
+velocity <- 2.
+output <- 500.
+
+price0 <- (money0 * velocity) / output.
+price1 <- (money1 * velocity) / output.
+inflation_rate <- (price1 - price0) / price0.
+
+"econ_model_first" 보여주기.
+"money_supply" 보여주기.
+price0 보여주기.
+price1 보여주기.
+inflation_rate 보여주기.

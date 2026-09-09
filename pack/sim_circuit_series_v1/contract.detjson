@@ -1,0 +1,11 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "sim_circuit_series_v1",
+  "kind": "declarative_closure_g4_circuit_relation_demo",
+  "product_entrypoint": "teul-cli run --solveplan-out",
+  "artifact_schema": "ddn.solveplan.v1",
+  "stage": "S1",
+  "method": "connect_desugar_to_seum_rows_v1",
+  "expected_artifact_source": "pack/lang_connect_lowering_v1/expected_solveplan_connect.detjson",
+  "full_circuit_solver_claim": false
+}

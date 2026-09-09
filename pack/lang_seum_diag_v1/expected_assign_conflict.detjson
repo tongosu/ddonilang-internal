@@ -1,0 +1,62 @@
+{
+  "diagnostics": [
+    {
+      "code": "E_SEUM_ASSIGN_CONFLICT",
+      "message": "duplicate definition: x",
+      "severity": "error"
+    }
+  ],
+  "lowering": {
+    "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "method": "unsupported_deferred_v1",
+  "relations": [
+    {
+      "defines": "x",
+      "depends_on": [],
+      "id": "r1",
+      "kind": "explicit_algebra",
+      "source_order": 0,
+      "text": "x =:= 1"
+    },
+    {
+      "defines": "x",
+      "depends_on": [],
+      "id": "r2",
+      "kind": "explicit_algebra",
+      "source_order": 1,
+      "text": "x =:= 2"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:ac54aeb9d01db55f65f9b8883ea234d0255e96f7f0d050a5a5577c8ac0d8acfd",
+  "stage": "S3",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "x"
+  ]
+}

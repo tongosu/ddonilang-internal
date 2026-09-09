@@ -1,0 +1,56 @@
+{
+  "schema": "ddn.r3n_wasm_toolchain_root_remap_candidate_custody.v1",
+  "status": "IMPLEMENTED_UNDER_REVIEW_NOT_TRACKED_NOT_PUBLIC_MEMBERSHIP",
+  "starting_parent": "c177f5e9829c5d5d5baab8f1beb39718423e05e7",
+  "product_test_fixed_head": "5c4a7684e3a041a4e5775ec14fac93aa40db0f09",
+  "source_tree": "49f280bc93ea0733100772f316987f1f8f314f5b",
+  "correction_commits": [
+    "613a59fbd7ae9ca2fa509b6d2582cd2ea0d47492",
+    "2393c61fa84ab79189f70f557ae5f61f8f8d1e54",
+    "f55eb52490089c4f1997099ee09a7605b682180b",
+    "5c4a7684e3a041a4e5775ec14fac93aa40db0f09"
+  ],
+  "remap_policy_identity": "sha256:d80fdb94b79cbab3ac4fd580c701a0dc5947676706964cf0252111237ed6646a",
+  "build_entrypoint_git_blob_sha256": "33b2db4e0707c034ce8ac239dc85e90b05829e73293ac9fa3405ca8cd645636a",
+  "cargo_lock_git_blob_sha256": "69defff8a2c3e955fb0983db1b1327a2ebabfa302b60b8bb52a704cecf6c586e",
+  "candidate_receipt_semantic_identity": "sha256:77e707bc2733ef4d7914455b9436e6d23704b19070fb1fd3cbd76e8a1b75a5d1",
+  "candidate_receipt_file_sha256": "cadd95936df28274cf505da4be3206d840ec916b4894f21744df52cf4fc4c9ed",
+  "candidate_artifacts": {
+    ".gitignore": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+    "ddonirang_tool.d.ts": "3f7f02aaffc0fb50146f47c4350bcaadb607d26ab2dd88e9b03bb82d9a3f1fec",
+    "ddonirang_tool.js": "16b4de4cac8bfebbc7d7f881ab1241b0d22d652ff8ad00b9045f40c81d7c90a9",
+    "ddonirang_tool_bg.wasm": "48be0af0f5cdb3cae78414b42d7cb519961994b9df387cdcc2dbc985487e043f",
+    "ddonirang_tool_bg.wasm.d.ts": "64b741262887ee24dc5101a0a36a2a8e29d238277f315c2bf1bf4c2cb389bcb4",
+    "package.json": "223687f3faa5ab0f3552070ca639ba343186ded73627b712cc2a5e27ef439fa3"
+  },
+  "a_b_c_raw_equal": true,
+  "candidate_family_scan": {
+    "target_file_count": 7,
+    "internal_absolute_path_count": 0,
+    "private_include_count": 0,
+    "official_store_path_count": 0,
+    "unknown_path_count": 0
+  },
+  "projection": {
+    "total_projected_files": 895,
+    "security_scanned_files": 895,
+    "scanned_role_count": 18,
+    "unscanned_security_relevant_files": 0,
+    "public_tree_identity": "sha256:7f2bcb7ddc3689f013d1757ab4c7b91422dee4173c447cb1226a79443a12ab6c",
+    "validation_receipt_identity": "sha256:c63d09f7c08916e08400edf4f090d69cf732fa9d7a0d8f79ba79510224e72351",
+    "candidate_substitution_receipt_identity": "sha256:0cf3d7739fe304a7ba4bf0cd5ad74564d889a265d5470261b60bd76ef7bcc306"
+  },
+  "tracked_family": {
+    "wasm_sha256": "77c787961f2902745845d907c8f2528d56e063d4a41373f4e7d605e195269f34",
+    "manifest_sha256": "034aa833ee1a96ae3dfbef6c311f8bb7d2a096bab159a0019e4c5e0ddab8fe14",
+    "diff_count": 0,
+    "write_count": 0
+  },
+  "toolchain": {
+    "rustc": "rustc 1.92.0 (ded5c06cf 2025-12-08)",
+    "cargo": "cargo 1.92.0 (344c4567c 2025-10-21)",
+    "wasm_tool": "wasm-pack 0.14.0"
+  },
+  "network_download_count": 0,
+  "public_membership": false
+}

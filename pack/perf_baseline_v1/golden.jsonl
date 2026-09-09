@@ -1,0 +1,1 @@
+{"id":"c01_perf_baseline_v1_marker","cmd":["run","pack/perf_baseline_v1/input.ddn"],"stdout":["PERF_BASELINE_V1","deterministic performance baseline contract sealed","axes: tick_throughput / wasm_load_first_frame / gym_rollout_step_per_sec","source pack: benchmark_baseline_v1","closure_claim: no","next: first measurement values and regression gate calibration"],"exit_code":0}

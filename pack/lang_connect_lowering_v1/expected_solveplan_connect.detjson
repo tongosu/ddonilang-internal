@@ -1,0 +1,68 @@
+{
+  "diagnostics": [],
+  "lowering": {
+    "connect_desugar": {
+      "pure_desugar": true,
+      "rows": [
+        "전지.양극.전압 =:= 전구.왼핀.전압.",
+        "전지.양극.전류 + 전구.왼핀.전류 =:= 0."
+      ],
+      "runtime_path": "seum_solveplan",
+      "sign_convention": "incoming_positive_v1",
+      "surface": "전지.양극과 전구.왼핀을 (전압은 같게, 전류는 흐르게) 잇기."
+    },
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "method": "connect_desugar_to_seum_rows_v1",
+  "relations": [
+    {
+      "depends_on": [
+        "전구.왼핀.전압"
+      ],
+      "id": "r1",
+      "kind": "linear",
+      "source_order": 0,
+      "text": "전지.양극.전압 =:= 전구.왼핀.전압"
+    },
+    {
+      "depends_on": [],
+      "id": "r2",
+      "kind": "linear",
+      "source_order": 1,
+      "text": "전지.양극.전류 + 전구.왼핀.전류 =:= 0"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:567aedd40275ac706c68950faf60bb3b83fb5d96bdff00912057d92cc7761c8c",
+  "stage": "S1",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "전지.양극.전압",
+    "전구.왼핀.전압",
+    "전지.양극.전류",
+    "전구.왼핀.전류"
+  ]
+}

@@ -1,0 +1,17 @@
+{"case":"LSP0-FRAME-01","expected":"pass"}
+{"case":"LSP0-FRAME-02","expected":"pass"}
+{"case":"LSP0-FRAME-03","expected":"pass"}
+{"case":"LSP0-LIFECYCLE-01","expected":"pass"}
+{"case":"LSP0-LIFECYCLE-02","expected":"pass"}
+{"case":"LSP0-DOC-01","expected":"pass"}
+{"case":"LSP0-DOC-02","expected":"pass"}
+{"case":"LSP0-DOC-03","expected":"pass"}
+{"case":"LSP0-POS-01","expected":"pass"}
+{"case":"LSP0-POS-02","expected":"pass"}
+{"case":"LSP0-POS-03","expected":"pass"}
+{"case":"LSP0-POS-04","expected":"pass"}
+{"case":"LSP0-POS-05","expected":"pass"}
+{"case":"LSP0-STALE-01","expected":"pass"}
+{"case":"LSP0-CANCEL-01","expected":"pass"}
+{"case":"LSP0-REPEAT-01","expected":"pass"}
+{"case":"LSP0-NATIVE-01","expected":"pass"}

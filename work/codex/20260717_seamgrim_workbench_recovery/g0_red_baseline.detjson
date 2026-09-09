@@ -1,0 +1,129 @@
+{
+  "browser": {
+    "console_error_count": 0,
+    "first_viewport": {
+      "height": 900,
+      "management_input_count": 8,
+      "portable_metadata_panel_top": 302,
+      "project_server_panel_top": 205,
+      "source_and_bogae_top": 803,
+      "width": 1440
+    },
+    "pendulum": {
+      "after_1500ms_canvas_pixel_fnv1a32": "f63ec492",
+      "after_1500ms_madi": 0,
+      "after_run_canvas_pixel_fnv1a32": "f63ec492",
+      "after_run_madi": 0,
+      "canvas_auto_changed": false,
+      "madi_auto_advanced": false,
+      "run_status": "sealed runtime: running",
+      "source_has_every_madi_hook": true
+    },
+    "playwright_version": "1.44.0",
+    "probe": "work/codex/20260717_seamgrim_workbench_recovery/g0_browser_probe.mjs",
+    "projectile": {
+      "after_uncommitted_edit_canvas_pixel_fnv1a32": "3c8296aa",
+      "after_uncommitted_edit_observations": "가로속도18.0 m/s세로속도15.0 m/s중력가속도20.0 m/s^2최대높이10.0 m",
+      "before_uncommitted_edit_canvas_pixel_fnv1a32": "25da9ab6",
+      "before_uncommitted_edit_observations": "가로속도8.0 m/s세로속도15.0 m/s중력가속도9.8 m/s^2최대높이12.2 m",
+      "run_status": "sealed runtime: idle",
+      "source_has_every_madi_hook": true,
+      "uncommitted_source_changed_canvas": true,
+      "view_artifact_hash_after": "candidate:fnv1a32:bogae_view:02df7afd",
+      "view_artifact_hash_before": "candidate:fnv1a32:bogae_view:02df7afd"
+    },
+    "screenshots": [
+      {
+        "bytes": 120047,
+        "path": "output/playwright/g0-pendulum-after-run.png",
+        "sha256": "8839660927c80775995ac3c12250128b531ab53db8c3484bcbb4e6ff10bd63b5"
+      },
+      {
+        "bytes": 122100,
+        "path": "output/playwright/g0-projectile-uncommitted-source-view.png",
+        "sha256": "a62005df982ce1bf49b523a2cc99798f1a37663c8d93e78d082b3c3d5a2fad72"
+      },
+      {
+        "bytes": 121905,
+        "path": "output/playwright/g0-workbench-first-viewport.png",
+        "sha256": "7546feba0c59374635b6adc0f48e781a3c8936b6b127040804d39b71833ccf79"
+      }
+    ]
+  },
+  "freshness": {
+    "actual_source_file_count": 76,
+    "actual_source_tree_sha256": "1d10c6161335fcbf3373c4df79ba0dc28804ae5c1622aad9d336eac80d031f57",
+    "changed_source_rows": [
+      "lang/src/stdlib.rs",
+      "tool/src/ai_prompt.rs"
+    ],
+    "command": "python tests/run_ddn_cli_wasm_freshness_check.py",
+    "expected_source_file_count": 76,
+    "expected_source_tree_sha256": "d55e787f291710aabe383b6fe2fd90d4e51799cf74a3359f2eeaa48be151ec06",
+    "failures": [
+      "source_tree_sha256 mismatch",
+      "source_files mismatch"
+    ],
+    "status": "FAIL_REPRODUCED"
+  },
+  "goal": {
+    "attachment_and_repo_copy_sha256": "d09c61db5059c84589ca9b6771de283b766209db451d1d4fa4c57237b005f990",
+    "external_user_success_count": 0,
+    "id": "CODEX_ULTRALONG_GOAL_SEAMGRIM_WORKBENCH_LIVE_EXECUTION_VIEW_ROLE_UI_RECOVERY_V1_20260717",
+    "product_external_state": "BLOCK_EXTERNAL_ROUND0",
+    "result": "G0_RED_BASELINE_REPRODUCED"
+  },
+  "ownership": {
+    "clean_implementation_candidates": [
+      "tool/src/wasm_api.rs",
+      "tool/src/lib.rs",
+      "solutions/seamgrim_ui_mvp/ui/runtime/wasm_vm_runtime.js",
+      "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+      "solutions/seamgrim_ui_mvp/ui/workbench/workbench.css",
+      "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js",
+      "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js",
+      "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.manifest.detjson",
+      "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
+      "tests/run_ddn_cli_wasm_freshness_check.py"
+    ],
+    "goal_owned_new": [
+      "docs/context/roadmap/CODEX_ULTRALONG_GOAL_SEAMGRIM_WORKBENCH_LIVE_EXECUTION_VIEW_ROLE_UI_RECOVERY_V1_20260717.md",
+      "docs/reports/audit/SEAMGRIM_WORKBENCH_RECOVERY_RED_BASELINE_V1_20260717.md",
+      "work/_session_deltas/20260717_codex_seamgrim_workbench_live_view_recovery.md",
+      "work/codex/20260717_seamgrim_workbench_recovery/g0_browser_probe.mjs",
+      "work/codex/20260717_seamgrim_workbench_recovery/g0_red_baseline.detjson"
+    ],
+    "preserve_preexisting_dirty": [
+      "docs/context/all/DEV_SUMMARY.md",
+      "docs/reports/audit/INDEX.md",
+      "lang/src/stdlib.rs",
+      "tools/teul-cli/src/canon.rs",
+      "tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+      "tests/run_seamgrim_approved_workbench_runtime_lineage_check.py",
+      "tests/run_seamgrim_approved_workbench_semantic_verticals_check.py",
+      "tests/run_seamgrim_approved_workbench_shell_check.py",
+      "tests/seamgrim_approved_workbench_quality_gate_runner.mjs",
+      "tests/seamgrim_approved_workbench_runtime_lineage_runner.mjs",
+      "tests/seamgrim_approved_workbench_semantic_verticals_runner.mjs"
+    ],
+    "prohibited": [
+      "docs/ssot/**"
+    ]
+  },
+  "schema": "seamgrim.workbench_recovery.g0_red_baseline.v1",
+  "source_counterexamples": {
+    "pendulum_fixed_theta": "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js:2162",
+    "projectile_js_physics": "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js:2278",
+    "single_view_role_state": "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js:320",
+    "single_view_role_switch": "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js:2767"
+  },
+  "start": {
+    "branch": "codex/queue-20260706",
+    "docs_ssot_status_count": 0,
+    "head": "56862318cae8f1b43bb36d1513c3dcec3cba7ccd",
+    "status_line_count": 183,
+    "status_sha256": "9cca7d4095ba112886433f967d05f1520281c665ac35e4a6f4c6d6363c24cb5e",
+    "tracked_dirty_count": 27,
+    "untracked_file_count": 1913
+  }
+}

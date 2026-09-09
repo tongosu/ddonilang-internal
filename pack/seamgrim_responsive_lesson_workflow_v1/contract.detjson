@@ -1,0 +1,38 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_responsive_lesson_workflow_v1",
+  "kind": "seamgrim_responsive_product_browser_smoke",
+  "product_behavior_claim": true,
+  "closed_by": "SEAMGRIM_RESPONSIVE_LESSON_WORKFLOW_V1",
+  "browser_runner": "tests/seamgrim_responsive_lesson_workflow_runner.mjs",
+  "lesson_id": "rep_phys_pendulum_wave1_v1",
+  "viewports": [
+    "1440x900",
+    "1280x720",
+    "1024x768",
+    "390x844"
+  ],
+  "checks": [
+    "pendulum_lesson_open",
+    "first_run",
+    "space_canvas_nonblank_pixels",
+    "graph_canvas_nonblank_pixels",
+    "selected_graph_inside_visible_graph_host",
+    "angle_label_visible",
+    "pause_resume_step",
+    "control_change_lineage_reset",
+    "live_reaction_visible",
+    "semantic_cursor_select",
+    "four_lesson_plan_activities",
+    "lesson_plan_editor_roundtrip",
+    "publish_space_entry",
+    "no_major_overlap",
+    "no_horizontal_overflow",
+    "first_delight_timings_recorded"
+  ],
+  "docs_ssot_change": false,
+  "state_hash_formula_change": false,
+  "parser_runtime_semantics_change": false,
+  "public_deploy_claim": false,
+  "requires_docs_ssot_clean": true
+}

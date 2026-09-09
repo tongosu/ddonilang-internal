@@ -1,0 +1,37 @@
+{
+  "candidate_payload_hash": "candidate:fnv1a32:canonical_view_payload:c0bbf079",
+  "content": {
+    "column_identities": ["time", "position"],
+    "family_contract_version": "table.v1_candidate",
+    "table": {
+      "columns": [
+        { "key": "time", "label": "시간", "type": "number" },
+        { "key": "position", "label": "위치", "type": "number" }
+      ],
+      "meta": { "source_input_hash": "sha256:t5d-input", "title": "위치 표" },
+      "rows": [
+        { "position": 0, "time": 0 },
+        { "position": 12, "time": 1 }
+      ],
+      "schema": "seamgrim.table.v0"
+    }
+  },
+  "contract_status": "product_local_candidate",
+  "diagnostic": null,
+  "family": "table",
+  "identity": {
+    "observation_projection_identity": "observation:t5d:11",
+    "result_identity": "result:t5d:11",
+    "source_hash": "sha256:t5d-source",
+    "state_hash": "sha256:t5d-state-11",
+    "tick_id": 11,
+    "view_hash": "sha256:t5d-view-11"
+  },
+  "provenance": {
+    "classification": "AUTHORITATIVE_STRUCTURED",
+    "input_authority": "native_authoritative_structured_input",
+    "source": "structured_view_meta"
+  },
+  "schema": "seamgrim.semantic_view_payload.v1_candidate",
+  "status": "available"
+}

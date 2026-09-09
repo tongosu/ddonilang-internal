@@ -1,0 +1,1 @@
+{"id":"c01_seamgrim_wave3b_classroom_exchange_marker","cmd":["run","pack/seamgrim_wave3b_classroom_exchange_v1/input.ddn"],"stdout":["SEAMGRIM_WAVE3B_CLASSROOM_EXCHANGE_V1","classroom_exchange.v0 lesson_bundle export import","deployment profile and payload hash tamper diagnostics","no new DDN syntax, state_hash formula change, or runtime role toggle"],"exit_code":0}

@@ -1,0 +1,1 @@
+{"id":"c00_ganada_execution_evidence_registry_v3_marker","cmd":["run","pack/ganada_execution_evidence_registry_v3/input.ddn"],"stdout":["GANADA_EXECUTION_EVIDENCE_REGISTRY_V3","inherited_tracked_cells=8","tracked_new_cells=9","total_tracked_cells=17","matrix_upgrade_claim=false","docs_only_behavior_closure_allowed=false"],"exit_code":0}

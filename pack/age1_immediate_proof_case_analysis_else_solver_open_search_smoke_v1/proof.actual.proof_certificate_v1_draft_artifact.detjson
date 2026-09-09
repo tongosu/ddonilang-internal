@@ -1,0 +1,40 @@
+{
+  "candidate_manifest": {
+    "canonical_body_hash": "sha256:7c0ac72e3aa10334af275051d337d7cbfa7c8699c95e10fa19307de1f3d880ca",
+    "cert_algo": "sha256-proto",
+    "cert_manifest_schema": "ddn.cert_manifest.v1",
+    "contract_diag_count": 0,
+    "profile": "abort",
+    "proof_runtime_hash": "sha256:84edd1baa4e9a69af9305a1a932a06bbc6726671b2071cf48d9c1ca404578e61",
+    "proof_subject_hash": "sha256:1a569de7e590f4b67910dc88cbf4dd27e6f3bf15137133bb16e532c6b2ff4e8b",
+    "schema": "ddn.proof_certificate_v1_runtime_candidate.v1",
+    "solver_translation_hash": "sha256:a0385f892501b5101534984a4518d41a99f51ab9801514c7200993bc477676b2",
+    "source_proof_kind": "run_contract_certificate_v1",
+    "source_proof_path": "pack/age1_immediate_proof_case_analysis_else_solver_open_search_smoke_v1/proof.actual.detjson",
+    "source_proof_schema": "ddn.proof.detjson.v0",
+    "state_hash": "blake3:23bd38196ca3c8e8d7d4c69a21c6def1aebafc9eface7a1fd76f3d2f1721dd5b",
+    "trace_hash": "blake3:d12269c8992099649b52d13b7ca18db2e66f3ffdd560b41a56cdd6c210b9c244",
+    "verified": false
+  },
+  "profile": "abort",
+  "schema": "ddn.proof_certificate_v1_runtime_draft_artifact.v1",
+  "shared_shell": {
+    "cert_algo": "sha256-proto",
+    "cert_manifest_schema": "ddn.cert_manifest.v1",
+    "proof_runtime_hash": "sha256:84edd1baa4e9a69af9305a1a932a06bbc6726671b2071cf48d9c1ca404578e61",
+    "solver_translation_hash": "sha256:a0385f892501b5101534984a4518d41a99f51ab9801514c7200993bc477676b2",
+    "source_proof_kind": "run_contract_certificate_v1",
+    "source_proof_schema": "ddn.proof.detjson.v0"
+  },
+  "shared_shell_key_count": 6,
+  "source_proof_path": "pack/age1_immediate_proof_case_analysis_else_solver_open_search_smoke_v1/proof.actual.detjson",
+  "state_delta": {
+    "canonical_body_hash": "sha256:7c0ac72e3aa10334af275051d337d7cbfa7c8699c95e10fa19307de1f3d880ca",
+    "contract_diag_count": 0,
+    "proof_subject_hash": "sha256:1a569de7e590f4b67910dc88cbf4dd27e6f3bf15137133bb16e532c6b2ff4e8b",
+    "state_hash": "blake3:23bd38196ca3c8e8d7d4c69a21c6def1aebafc9eface7a1fd76f3d2f1721dd5b",
+    "trace_hash": "blake3:d12269c8992099649b52d13b7ca18db2e66f3ffdd560b41a56cdd6c210b9c244",
+    "verified": false
+  },
+  "state_delta_key_count": 6
+}

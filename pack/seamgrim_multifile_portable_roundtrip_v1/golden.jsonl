@@ -1,0 +1,1 @@
+{"case_id":"portable_roundtrip_minimal_ddn","cmd":["run","pack/seamgrim_multifile_portable_roundtrip_v1/input.ddn"],"stdout":["1"],"exit_code":0}

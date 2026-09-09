@@ -1,0 +1,24 @@
+{
+  "schema": "ddn.declarative_closure.mageum.diagnostics.red.v1",
+  "pack": "lang_mageum_diag_v1",
+  "diagnostics": [
+    {
+      "code": "E_MAGEUM_RUNTIME_UNLANDED",
+      "severity": "error",
+      "message": "막음/막기 runtime is not landed in this batch"
+    },
+    {
+      "code": "E_MAGEUM_UNSUPPORTED_REACTION",
+      "severity": "error",
+      "message": "reaction must be one of 멈춤, 튕김(e), 조임, 감쌈"
+    },
+    {
+      "code": "E_MAGEUM_BLOCK_UNLANDED",
+      "severity": "error",
+      "message": "no 막음 block syntax is accepted in this batch"
+    }
+  ],
+  "accepted_product_surface": false,
+  "runtime_landed": false,
+  "parser_landed": false
+}

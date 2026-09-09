@@ -1,0 +1,22 @@
+{
+  "schema": "seamgrim.external_success_bundle.v0",
+  "status": "prepared_not_run",
+  "required_files": [
+    "FIRST_EXTERNAL_SUCCESS_PROTOCOL_V1.md",
+    "ROUND0_OPERATIONS_PACKET_V1_20260713.md",
+    "PARTICIPANT_TASK_CARD.md",
+    "MODERATOR_GUIDE.md",
+    "SESSION_CHECKLIST.md",
+    "OBSERVATION_LOG_TEMPLATE.detjson",
+    "RESULT_SUMMARY_TEMPLATE.detjson"
+  ],
+  "minimum_participants": 3,
+  "personal_data_required": false,
+  "screen_recording_required": false,
+  "server_login_required": false,
+  "durable_server_required": true,
+  "reliability_closed_required": true,
+  "private_idc_deployed_required": false,
+  "invitation_approval_required": true,
+  "external_success_claim": false
+}

@@ -1,0 +1,49 @@
+{
+  "name": "ddn-language",
+  "displayName": "Ddonilang (ddn)",
+  "description": "Ddonilang language registration, syntax highlighting, and offline LSP configuration",
+  "version": "0.0.1",
+  "publisher": "ddonilang",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": ["Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "ddonilang",
+        "aliases": ["DDN", "ddn", "Ddonilang", "또니랑"],
+        "extensions": [".ddn", ".ddl", ".옮김"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ddonilang",
+        "scopeName": "source.ddn",
+        "path": "./syntaxes/ddn.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "ddn",
+        "path": "./snippets/ddn.code-snippets"
+      }
+    ],
+    "configuration": {
+      "title": "Ddonilang",
+      "properties": {
+        "ddonilang.lsp.executable": {
+          "type": "string",
+          "default": "",
+          "description": "Exact local path to ddonirang-lsp. Used by the future stdio client; empty means bounded local discovery."
+        },
+        "ddonilang.lsp.autoDiscover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow bounded local discovery of a Cargo-built ddonirang-lsp executable."
+        }
+      }
+    }
+  }
+}

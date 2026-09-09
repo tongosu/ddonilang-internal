@@ -1,0 +1,11 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "MULTI_DISPATCH_INCOMPARABLE_TIE",
+  "expected_future_diag": "E_MULTI_DISPATCH_AMBIGUOUS",
+  "notes": [
+    "비교 불가 후보는 선언 순서로 고르면 안 되고 오류여야 한다.",
+    "현재 제품 경로에 type specificity 비교와 tie error가 없다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

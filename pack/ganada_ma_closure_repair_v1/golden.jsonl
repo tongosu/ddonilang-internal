@@ -1,0 +1,1 @@
+{"id":"c00_ganada_ma_closure_repair_marker","cmd":["run","pack/ganada_ma_closure_repair_v1/input.ddn"],"stdout":["GANADA_MA_CLOSURE_REPAIR_V1","repaired_checkers=3","cells=마-0,마-1,마-4","matrix_upgrade_claim=false","docs_only_behavior_closure_allowed=false","checker=tests/run_ganada_ma_closure_repair_check.py"],"exit_code":0}
