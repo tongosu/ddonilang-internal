@@ -187,7 +187,15 @@ if ($buildExitCode -ne 0) {
     throw "cargo wasm build failed with exit code $buildExitCode"
 }
 
-$wasmIn = Join-Path $repoRoot ("target\\wasm32-unknown-unknown\\{0}\\ddonirang_tool.wasm" -f $Profile)
+# Cargo honors CARGO_TARGET_DIR, so the bindgen input must be resolved from
+# the same target root.  Looking only in the worktree target directory could
+# otherwise bind a stale artifact after a clean isolated build.
+$cargoTargetRoot = if ([string]::IsNullOrWhiteSpace($env:CARGO_TARGET_DIR)) {
+    Join-Path $repoRoot "target"
+} else {
+    $env:CARGO_TARGET_DIR
+}
+$wasmIn = Join-Path $cargoTargetRoot ("wasm32-unknown-unknown\\{0}\\ddonirang_tool.wasm" -f $Profile)
 if (-not (Test-Path $wasmIn)) {
     Write-Error "WASM not found: $wasmIn"
     exit 1

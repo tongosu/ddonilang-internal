@@ -140,6 +140,9 @@ def build_manifest() -> dict[str, object]:
     wasm_pack_version = run_text(["wasm-pack", "--version"])
     build_script = ROOT / "scripts" / "build_wasm_tool.ps1"
     copy_script = ROOT / "scripts" / "copy_wasm_tool_to_ui.ps1"
+    build_text = build_script.read_text(encoding="utf-8")
+    if "$cargoTargetRoot" not in build_text or "Join-Path $cargoTargetRoot" not in build_text:
+        raise RuntimeError("WASM build input must resolve from CARGO_TARGET_DIR when configured")
     return {
         "schema": SCHEMA,
         "artifact_id": "ddonirang_tool.web.release",

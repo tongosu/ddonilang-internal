@@ -1,6 +1,6 @@
 {
   "artifact_id": "ddonirang_tool.web.release",
-  "build_script_sha256": "4b1e0fe9e72d805dd08001bc56434af49e2760951e98042ae6f5c6ebf7ff9dbe",
+  "build_script_sha256": "78248b7308e59ff30a2c1a2a7555f521563207a1ec7a992b87c98a7d58b402e9",
   "cargo_lock_sha256": "fc50a6b123f86a5001e3347c4fe1aaa6c735887a9825d90d1f75e66bce00f3b0",
   "cargo_version": "cargo 1.92.0 (344c4567c 2025-10-21)",
   "closure_claim": "freshness_only_no_full_cli_wasm_equivalence",
@@ -465,9 +465,9 @@
       "sha256": "0b3e77a6590dad66987ce86cfc172f1627713118d4f6e3d58f4d911c19530351"
     },
     {
-      "bytes": 8580,
+      "bytes": 8944,
       "path": "scripts/build_wasm_tool.ps1",
-      "sha256": "4b1e0fe9e72d805dd08001bc56434af49e2760951e98042ae6f5c6ebf7ff9dbe"
+      "sha256": "78248b7308e59ff30a2c1a2a7555f521563207a1ec7a992b87c98a7d58b402e9"
     },
     {
       "bytes": 1263,
@@ -1049,7 +1049,7 @@
     "symbolic/src",
     "tool/src"
   ],
-  "source_tree_sha256": "5cfed92febb190c869d1d8c0e5808f31bf8128d8f93d8c679732e15bb27a5f9e",
+  "source_tree_sha256": "0ca5649d2b63947a5da16dda4b9bb6d4df7b8024158c9792c8b1d899fbfa5c6a",
   "state_schema": "seamgrim.engine_response.v0",
   "target": "web",
   "wasm_bindgen_or_pack_version": "wasm-pack 0.14.0",
