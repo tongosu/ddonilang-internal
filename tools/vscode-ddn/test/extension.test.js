@@ -12,7 +12,8 @@ try {
   assert.strictEqual(manifest.main, "./extension.js");
   assert.deepStrictEqual(manifest.activationEvents, ["onLanguage:ddonilang"]);
   assert.strictEqual(manifest.dependencies["vscode-languageclient"], "8.1.0");
-  assert.deepStrictEqual(manifest.contributes.languages[0].extensions, [".ddn", ".ddl", ".옮김"]);
+  assert.strictEqual(manifest.contributes.snippets[0].language, "ddonilang");
+  assert.deepStrictEqual(manifest.contributes.languages[0].extensions, [".ddn", ".또니", ".ddl", ".옮김"]);
   assert.deepStrictEqual(extension.documentSelector(), [
     { scheme: "file", language: "ddonilang" },
     { scheme: "untitled", language: "ddonilang" },

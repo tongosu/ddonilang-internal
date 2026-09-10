@@ -9,7 +9,7 @@ This folder is the single owner for the local Ddonilang VS Code language contrib
 
 ## Current Surface
 - Language id: `ddonilang`.
-- File extensions: `.ddn`, `.ddl`, `.옮김`.
+- File extensions: `.ddn`, `.또니`, `.ddl`, `.옮김`.
 - Syntax highlighting for the registered Ddonilang surfaces.
 - Starter snippets for `설정 {}`, `(시작)할때`, `(매마디)마다`, `보임 {}` 구조화 관찰, 조사/핀 예시.
 - Fix-it rail stays in Seamgrim studio autofix. This package does not run semantic rewrite locally.

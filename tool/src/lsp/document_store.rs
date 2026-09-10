@@ -27,9 +27,58 @@ impl SourceSnapshotIdentity {
 pub struct DocumentSnapshot {
     pub uri: String,
     pub language_id: String,
+    pub source_kind: SourceKind,
     pub version: i64,
     pub bytes: Vec<u8>,
     pub identity: SourceSnapshotIdentity,
+}
+
+/// LSP physical-source admission is owned here so every consumer sees the
+/// same extension/profile decision. The exact multilingual profile registry
+/// is still open; only the product-admitted surfaces are represented.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SourceKind {
+    DdnKoreanDefault,
+    Ddl,
+    Unsupported,
+}
+
+impl SourceKind {
+    pub fn canonical_language_id(self) -> &'static str {
+        match self {
+            Self::DdnKoreanDefault => "ddn",
+            Self::Ddl => "ddl",
+            Self::Unsupported => "unsupported",
+        }
+    }
+
+    pub fn is_ddl(self) -> bool {
+        matches!(self, Self::Ddl)
+    }
+
+    pub fn profile_identity(self) -> Option<&'static str> {
+        match self {
+            Self::DdnKoreanDefault => Some("v25"),
+            Self::Ddl | Self::Unsupported => None,
+        }
+    }
+}
+
+/// Classifies an opened document by its exact URI extension and client
+/// language id. Extension matching is case-sensitive and does not normalize
+/// Unicode, inspect directory names, or fall back for unknown suffixes.
+pub fn classify_source(uri: &str, language_id: &str) -> Option<SourceKind> {
+    let path = uri.split(['?', '#']).next()?;
+    let file_name = path.rsplit('/').next()?;
+    let extension = file_name.rsplit_once('.')?.1;
+    match extension {
+        "ddn" | "또니" if matches!(language_id, "ddn" | "ddonilang") => {
+            Some(SourceKind::DdnKoreanDefault)
+        }
+        "ddl" if matches!(language_id, "ddl" | "ddonilang") => Some(SourceKind::Ddl),
+        "옮김" if matches!(language_id, "옮김" | "ddonilang") => Some(SourceKind::Ddl),
+        _ => None,
+    }
 }
 
 impl DocumentSnapshot {
@@ -120,6 +169,8 @@ impl DocumentStore {
         if uri.is_empty() {
             return Err(DocumentStoreError::InvalidUri);
         }
+        let language_id = language_id.into();
+        let source_kind = classify_source(&uri, &language_id).unwrap_or(SourceKind::Unsupported);
         if self.documents.contains_key(&uri) {
             return Err(DocumentStoreError::DuplicateOpen);
         }
@@ -129,7 +180,8 @@ impl DocumentStore {
             uri.clone(),
             DocumentSnapshot {
                 uri,
-                language_id: language_id.into(),
+                language_id: source_kind.canonical_language_id().to_string(),
+                source_kind,
                 version,
                 bytes,
                 identity: identity.clone(),
@@ -195,11 +247,13 @@ impl DocumentStore {
         std::str::from_utf8(&bytes).map_err(|_| DocumentStoreError::InvalidUtf8)?;
         let identity = SourceSnapshotIdentity::derive(uri, version, &bytes);
         let language_id = current.language_id.clone();
+        let source_kind = current.source_kind;
         self.documents.insert(
             uri.to_string(),
             DocumentSnapshot {
                 uri: uri.to_string(),
                 language_id,
+                source_kind,
                 version,
                 bytes,
                 identity: identity.clone(),
@@ -304,5 +358,55 @@ mod tests {
         let snapshot = store.get("file:///a.ddn").unwrap();
         assert_eq!(snapshot.version, 1);
         assert_eq!(snapshot.text().unwrap(), "abc");
+    }
+
+    #[test]
+    fn source_admission_is_exact_and_profile_bound() {
+        assert_eq!(
+            classify_source("file:///한국.또니", "ddonilang"),
+            Some(SourceKind::DdnKoreanDefault)
+        );
+        assert_eq!(
+            classify_source("file:///surface.ddn", "ddonilang"),
+            Some(SourceKind::DdnKoreanDefault)
+        );
+        assert_eq!(
+            classify_source("file:///surface.옮김", "ddonilang"),
+            Some(SourceKind::Ddl)
+        );
+        assert_eq!(classify_source("file:///surface.DDN", "ddonilang"), None);
+        assert_eq!(classify_source("file:///surface.ddn.txt", "ddonilang"), None);
+        assert_eq!(classify_source("file:///surface.ddn", "ddl"), None);
+        assert_eq!(classify_source("file:///surface.또니", "ddl"), None);
+    }
+
+    #[test]
+    fn admitted_surface_uses_canonical_semantic_language_id() {
+        let mut store = DocumentStore::new();
+        store
+            .open(
+                "file:///한국.또니",
+                "ddonilang",
+                1,
+                "값:수 := 1.".as_bytes().to_vec(),
+            )
+            .unwrap();
+        assert_eq!(store.get("file:///한국.또니").unwrap().language_id, "ddn");
+        assert_eq!(
+            store.get("file:///한국.또니").unwrap().source_kind,
+            SourceKind::DdnKoreanDefault
+        );
+        store
+            .open(
+                "file:///unknown.txt",
+                "ddonilang",
+                1,
+                "값:수 := 1.".as_bytes().to_vec(),
+            )
+            .unwrap();
+        assert_eq!(
+            store.get("file:///unknown.txt").unwrap().source_kind,
+            SourceKind::Unsupported
+        );
     }
 }

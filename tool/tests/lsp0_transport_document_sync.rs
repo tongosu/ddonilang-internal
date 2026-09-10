@@ -4,7 +4,7 @@ use ddonirang_tool::lsp::protocol::{
 use ddonirang_tool::lsp::{
     byte_offset_to_position, encode_message, position_to_byte_offset, ByteRange, DocumentChange,
     DocumentStore, FrameDecoder, FrameError, LspPosition, LspRange, LspServer, PositionEncoding,
-    PublishRejection, RpcMessage, ServerState,
+    PublishRejection, RpcMessage, ServerState, SourceKind,
 };
 use serde_json::json;
 
@@ -548,4 +548,66 @@ fn lsp0_server_lifecycle_and_projection_boundary() {
         })
         .unwrap();
     assert_eq!(exit.exit_status, Some(0));
+}
+
+#[test]
+fn lsp38_source_extension_and_profile_admission_is_fail_closed() {
+    let mut server = LspServer::new();
+    initialize(&mut server, &["utf-16", "utf-8"]);
+
+    for (uri, language_id) in [
+        ("file:///korean.또니", "ddonilang"),
+        ("file:///technical.ddn", "ddonilang"),
+        ("file:///korean.옮김", "ddonilang"),
+        ("file:///technical.ddl", "ddonilang"),
+    ] {
+        server
+            .handle_message(RpcMessage::Notification {
+                method: "textDocument/didOpen".into(),
+                params: Some(json!({
+                    "textDocument": {
+                        "uri": uri,
+                        "languageId": language_id,
+                        "version": 1,
+                        "text": "값:수 := 1."
+                    }
+                })),
+            })
+            .unwrap();
+        assert!(server.documents().get(uri).is_some());
+    }
+
+    let rejected = server.handle_message(RpcMessage::Notification {
+        method: "textDocument/didOpen".into(),
+        params: Some(json!({
+            "textDocument": {
+                "uri": "file:///unknown.txt",
+                "languageId": "ddonilang",
+                "version": 1,
+                "text": "값:수 := 1."
+            }
+        })),
+    });
+    assert!(rejected.is_ok());
+    assert_eq!(
+        server.documents().get("file:///unknown.txt").unwrap().source_kind,
+        SourceKind::Unsupported
+    );
+
+    let mismatch = server.handle_message(RpcMessage::Notification {
+        method: "textDocument/didOpen".into(),
+        params: Some(json!({
+            "textDocument": {
+                "uri": "file:///mismatch.또니",
+                "languageId": "ddl",
+                "version": 1,
+                "text": "값:수 := 1."
+            }
+        })),
+    });
+    assert!(mismatch.is_ok());
+    assert_eq!(
+        server.documents().get("file:///mismatch.또니").unwrap().source_kind,
+        SourceKind::Unsupported
+    );
 }

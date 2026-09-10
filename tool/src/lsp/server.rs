@@ -990,7 +990,7 @@ impl LspServer {
         if self.cancelled.remove(&request_key(&id)) {
             return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
         }
-        let is_ddl = uri.ends_with(".ddl") || uri.ends_with(".옮김");
+        let is_ddl = snapshot.source_kind.is_ddl();
         if (!is_ddl && language_id != "ddn")
             || (is_ddl && !matches!(language_id.as_str(), "ddn" | "ddl" | "옮김"))
         {
@@ -1105,7 +1105,7 @@ impl LspServer {
                 Ok(range) if range.start < range.end => range,
                 _ => return Ok(success_event(id, json!([]))),
             };
-        let is_ddl = uri.ends_with(".ddl") || uri.ends_with(".옮김");
+        let is_ddl = snapshot.source_kind.is_ddl();
         let language_id = snapshot.language_id.as_str();
         if (!is_ddl && language_id != "ddn")
             || (is_ddl && !matches!(language_id, "ddn" | "ddl" | "옮김"))

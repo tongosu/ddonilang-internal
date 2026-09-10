@@ -26,6 +26,7 @@
         ],
         "extensions": [
           ".ddn",
+          ".또니",
           ".ddl",
           ".옮김"
         ],
@@ -41,7 +42,7 @@
     ],
     "snippets": [
       {
-        "language": "ddn",
+        "language": "ddonilang",
         "path": "./snippets/ddn.code-snippets"
       }
     ],

@@ -23,7 +23,10 @@ pub use crate::completion::{
     CompletionResult,
 };
 pub use definition::{definition_snapshot, DefinitionError, DefinitionResult};
-pub use document_store::{DocumentChange, DocumentSnapshot, DocumentStore, SourceSnapshotIdentity};
+pub use document_store::{
+    classify_source, DocumentChange, DocumentSnapshot, DocumentStore, DocumentStoreError,
+    SourceKind, SourceSnapshotIdentity,
+};
 pub use hover::{hover_snapshot, HoverError, HoverResult};
 pub use position::{
     byte_offset_to_position, byte_range_to_lsp_range, position_to_byte_offset, range_to_byte_range,
