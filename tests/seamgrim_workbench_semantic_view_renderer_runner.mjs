@@ -8,7 +8,10 @@ import {
   buildCanonicalViewPayloadSet,
   buildCommittedSemanticViewPayload,
 } from "../solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js";
-import { buildSemanticRenderModel } from "../solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_renderer.js";
+import {
+  buildSemanticRenderModel,
+  renderCommittedSemanticView,
+} from "../solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_renderer.js";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -84,6 +87,24 @@ function payloadFor(primaryView, frames, activeIndex = frames.length - 1, role =
   });
 }
 
+function payloadWithoutRendererIdentity(frames, activeIndex = frames.length - 1) {
+  const run = { run_id: "run_missing_renderer_identity", source_hash: "sha256:semantic_renderer", frames };
+  const canonicalViewHistory = frames.slice(0, activeIndex + 1).map((row) => ({
+    frame_id: row.frame_id,
+    madi: row.madi,
+    state_hash: row.state_hash,
+    canonical_views: canonicalFor(run, row),
+  }));
+  return buildCommittedSemanticViewPayload({
+    project: { id: "missing_renderer_identity" },
+    run,
+    frame: frames[activeIndex],
+    viewConfig: { role: "primary", mode: "ddn-main" },
+    canonicalViewPayloads: canonicalViewHistory.at(-1).canonical_views,
+    canonicalViewHistory,
+  });
+}
+
 const pendulumPrimary = buildSemanticRenderModel(payloadFor("pendulum", [
   frame(0, { theta: 99, omega: 99, energy: 99, L: 99 }, {
     workbench: authoritativeResultSet("pendulum", {
@@ -125,13 +146,13 @@ assert(pendulumPrimary.labels.some((row) => row.key === "omega" && row.value ===
 
 const projectileFrames = [
   frame(0, { t: 99, x: 99, y: 99, vx: 99, vy: 99 }, {
-    workbench: authoritativeResultSet("projectile", { current: { t: 0, x: 0, y: 0, vx: 8, vy: 15 } }),
+    workbench: authoritativeResultSet("projectile", { current: { t: 0, x: 0, y: 0, vx: 8, vy: 15 }, camera: { x_min: -1, x_max: 3, y_min: -1, y_max: 4 } }),
   }),
   frame(1, { t: 99, x: 99, y: 99, vx: 99, vy: 99 }, {
-    workbench: authoritativeResultSet("projectile", { current: { t: 1, x: 0.8, y: 1.5, vx: 8, vy: 14.02 } }),
+    workbench: authoritativeResultSet("projectile", { current: { t: 1, x: 0.8, y: 1.5, vx: 8, vy: 14.02 }, camera: { x_min: -1, x_max: 3, y_min: -1, y_max: 4 } }),
   }),
   frame(2, { t: 99, x: 99, y: 99, vx: 99, vy: 99 }, {
-    workbench: authoritativeResultSet("projectile", { current: { t: 2, x: 1.6, y: 2.902, vx: 8, vy: 13.04 } }),
+    workbench: authoritativeResultSet("projectile", { current: { t: 2, x: 1.6, y: 2.902, vx: 8, vy: 13.04 }, camera: { x_min: -1, x_max: 3, y_min: -1, y_max: 4 } }),
   }),
 ];
 const projectilePayload = payloadFor("projectile", projectileFrames, 1);
@@ -173,14 +194,43 @@ assert(grid.tick === 7, "grid renderer did not use committed tick");
 assert(grid.position.x === 1 && grid.position.y === 1, "grid renderer did not use committed piece position");
 assert(grid.geometry_source === "canonical_workbench_grid_result", "grid renderer geometry was not canonical runtime data");
 
+const missingGridCameraPayload = payloadFor("grid", [frame(7, { tick: 8 }, {
+  workbench: authoritativeResultSet("grid", {
+    position: { x: 1, y: 1 },
+    dimensions: { columns: 3, rows: 3 },
+    space2d: {
+      schema: "seamgrim.space2d.v0",
+      drawlist: [{ kind: "circle", x: 1.5, y: 1.5, r: 0.25 }],
+    },
+  }),
+})]);
+const missingGridCamera = buildSemanticRenderModel(missingGridCameraPayload);
+assert(missingGridCamera.status === "canonical_unsupported", "geometry must not synthesize a grid camera");
+assert(missingGridCamera.canonical_diagnostic?.reason === "projection_camera_missing_or_invalid", "grid missing camera diagnostic drift");
+
 const line = buildSemanticRenderModel(payloadFor("line", [frame(0, { a: 99, b: 99, x: 99, y: 99 }, {
   workbench: authoritativeResultSet("line", {
     current: { x: 2, y: 5 },
     equation: { a: 2, b: 1 },
+    camera: { x_min: -2, x_max: 4, y_min: -3, y_max: 9 },
   }),
 })]));
 assert(line.status === "ready" && line.current.x === 2 && line.current.y === 5, "static graph did not use committed result point");
 assert(line.labels.map((row) => row.key).join(",") === "x,y,a,b", "static graph semantic labels missing");
+assert(JSON.stringify(line.camera) === JSON.stringify({ minX: -2, maxX: 4, minY: -3, maxY: 9 }), "line renderer did not retain explicit camera");
+
+const missingCameraPayload = payloadFor("line", [frame(0, { x: 9, y: 12 }, {
+  workbench: authoritativeResultSet("line", {
+    current: { x: 2, y: 5 },
+    equation: { a: 2, b: 1 },
+  }),
+})]);
+const missingCameraBefore = JSON.stringify(missingCameraPayload);
+const missingCamera = buildSemanticRenderModel(missingCameraPayload);
+assert(missingCamera.status === "canonical_unsupported", "missing explicit camera must fail closed");
+assert(missingCamera.canonical_diagnostic?.reason === "projection_camera_missing_or_invalid", "missing camera diagnostic drift");
+assert(!Object.hasOwn(missingCamera, "camera") && !Object.hasOwn(missingCamera, "current"), "missing camera published a projection model");
+assert(JSON.stringify(missingCameraPayload) === missingCameraBefore, "missing camera projection mutated semantic payload");
 for (const model of [pendulumPrimary, pendulumOverlay, projectile, grid, line]) {
   assert(model.data_source === "canonical_workbench_result", `${model.family}: raw-state authority remains active`);
 }
@@ -190,6 +240,67 @@ const awaiting = buildSemanticRenderModel(buildCommittedSemanticViewPayload({
   viewConfig: { primary_view: "pendulum", role: "primary", mode: "ddn-main" },
 }));
 assert(awaiting.status === "awaiting_committed_frame", "pre-run preview fabricated a runtime frame");
+
+const missingRendererIdentityPayload = payloadWithoutRendererIdentity([frame(0, { x: 9, y: 12, a: 4, b: 2 }, {
+  workbench: authoritativeResultSet("line", {
+    current: { x: 2, y: 5 },
+    equation: { a: 2, b: 1 },
+  }),
+})]);
+const missingRendererIdentityBefore = JSON.stringify(missingRendererIdentityPayload);
+const missingRendererIdentity = buildSemanticRenderModel(missingRendererIdentityPayload);
+assert(missingRendererIdentityPayload.view_config.primary_view === "", "missing renderer identity must not default to line");
+assert(missingRendererIdentity.status === "canonical_unsupported", "numeric observations must not select line without renderer identity");
+assert(missingRendererIdentity.canonical_diagnostic?.reason === "unsupported_renderer_family", "missing renderer identity failure drift");
+assert(!Object.hasOwn(missingRendererIdentity, "current"), "missing renderer identity created a line model");
+assert(JSON.stringify(missingRendererIdentityPayload) === missingRendererIdentityBefore, "missing renderer identity mutated semantic payload");
+
+function failureCanvas() {
+  const calls = [];
+  return {
+    calls,
+    fillText(...args) { calls.push(["fillText", ...args]); },
+    set fillStyle(value) { calls.push(["fillStyle", value]); },
+    set font(value) { calls.push(["font", value]); },
+  };
+}
+
+function assertUnsupportedRendererFamily(family) {
+  const payload = payloadFor(family, [frame(0, { x: 9, y: 12 }, {
+    workbench: authoritativeResultSet("line", {
+      current: { x: 2, y: 5 },
+      equation: { a: 2, b: 1 },
+    }),
+  })]);
+  const before = JSON.stringify(payload);
+  const first = buildSemanticRenderModel(payload);
+  const second = buildSemanticRenderModel(payload);
+  assert(first.status === "canonical_unsupported", `${JSON.stringify(family)} must fail as an unsupported projection`);
+  assert(first.canonical_diagnostic?.code === "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE", `${JSON.stringify(family)} diagnostic drift`);
+  assert(first.canonical_diagnostic?.reason === "unsupported_renderer_family", `${JSON.stringify(family)} must preserve projection failure cause`);
+  assert(first.canonical_diagnostic?.actual_schema === family, `${JSON.stringify(family)} renderer identity drift`);
+  assert(!Object.hasOwn(first, "current") && !Object.hasOwn(first, "points") && !Object.hasOwn(first, "trajectory"), `${JSON.stringify(family)} must not create a line/default model`);
+  assert(JSON.stringify(first) === JSON.stringify(second), `${JSON.stringify(family)} failure must be deterministic`);
+  assert(JSON.stringify(payload) === before, `${JSON.stringify(family)} renderer mutated the semantic payload`);
+  const ctx = failureCanvas();
+  const rendered = renderCommittedSemanticView(ctx, 320, 180, payload);
+  assert(rendered.status === "canonical_unsupported", `${JSON.stringify(family)} renderer silently succeeded`);
+  assert(!Object.hasOwn(rendered, "canvas_projection"), `${JSON.stringify(family)} renderer published a canvas success projection`);
+  assert(ctx.calls.some(([name]) => name === "fillText"), `${JSON.stringify(family)} failure was swallowed instead of rendered as a failure`);
+  assert(JSON.stringify(payload) === before, `${JSON.stringify(family)} renderer mutated payload during projection`);
+}
+
+for (const unsupportedFamily of [
+  "unknown_renderer",
+  "",
+  "line-compatible",
+  "LINE",
+  "prefix-line",
+  "line-suffix",
+  "grid2d",
+]) {
+  assertUnsupportedRendererFamily(unsupportedFamily);
+}
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workbenchSource = await fs.readFile(path.join(root, "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js"), "utf8");

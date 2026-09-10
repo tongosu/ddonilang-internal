@@ -1056,6 +1056,12 @@ function canonicalHistoryRows(primaryView, canonicalViewHistory) {
   });
 }
 
+function explicitPrimaryView(viewConfig, project) {
+  const configured = String(viewConfig?.primary_view ?? "").trim();
+  if (configured) return configured;
+  return String(project?.primaryView ?? "").trim();
+}
+
 export function buildCommittedSemanticViewPayload({
   project = {},
   run = null,
@@ -1064,7 +1070,7 @@ export function buildCommittedSemanticViewPayload({
   canonicalViewPayloads = null,
   canonicalViewHistory = null,
 } = {}) {
-  const primaryView = String(viewConfig.primary_view ?? project.primaryView ?? "line");
+  const primaryView = explicitPrimaryView(viewConfig, project);
   const observations = frame ? orderedObservationsFromWasmState(frame.wasm_state) : [];
   const committedResources = frame ? committedResourcesFromWasmState(frame.wasm_state) : {};
   const binding = resolveViewBinding(primaryView, canonicalViewPayloads);

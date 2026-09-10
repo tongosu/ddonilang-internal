@@ -32,8 +32,42 @@ function canonicalMissingModel(model, authority) {
   };
 }
 
+function unsupportedRendererModel(payload, family) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      // Reuse the existing typed canonical-projection failure taxonomy.  A
+      // renderer token is capability selection, not semantic input, so it
+      // must never select a different successful renderer.
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "unsupported_renderer_family",
+      actual_schema: family,
+    },
+  });
+}
+
+function projectionCamera(camera) {
+  const minX = finiteNumber(camera?.x_min);
+  const maxX = finiteNumber(camera?.x_max);
+  const minY = finiteNumber(camera?.y_min);
+  const maxY = finiteNumber(camera?.y_max);
+  if (minX === null || maxX === null || minY === null || maxY === null || minX >= maxX || minY >= maxY) return null;
+  return { minX, maxX, minY, maxY };
+}
+
+function missingProjectionCameraModel(payload, family) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "projection_camera_missing_or_invalid",
+      actual_schema: family,
+    },
+  });
+}
+
 function baseModel(payload) {
-  const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "line");
+  const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
   return {
     schema: SEMANTIC_RENDER_MODEL_SCHEMA,
     family,
@@ -90,6 +124,8 @@ function projectileModel(payload) {
   const model = baseModel(payload);
   const authority = canonicalWorkbenchResult(payload, "projectile");
   if (authority.status !== "available") return canonicalMissingModel(model, authority);
+  const camera = projectionCamera(authority.result.camera);
+  if (!camera) return missingProjectionCameraModel(payload, "projectile");
   const current = projectilePoint(authority.result.current, payload?.committed_frame);
   const trajectory = (payload?.committed_trajectory ?? [])
     .map((row) => projectilePoint(row.values, row))
@@ -100,6 +136,7 @@ function projectileModel(payload) {
     data_source: "canonical_workbench_result",
     current,
     trajectory,
+    camera,
     overlay: current.vx === null || current.vy === null
       ? null
       : { origin: { x: current.x, y: current.y }, velocity: { x: current.vx, y: current.vy } },
@@ -118,6 +155,8 @@ function gridModel(payload) {
   const authority = canonicalWorkbenchResult(payload, "grid");
   if (authority.status !== "available") return canonicalMissingModel(model, authority);
   const result = authority.result;
+  const camera = projectionCamera(result.space2d?.camera);
+  if (!camera) return missingProjectionCameraModel(payload, "grid");
   const tick = finiteNumber(payload?.committed_frame?.madi);
   return {
     ...model,
@@ -126,6 +165,7 @@ function gridModel(payload) {
     tick,
     position: result.position,
     space2d: result.space2d,
+    camera,
     dimensions: result.dimensions,
     draw_list: result.space2d.drawlist,
     geometry_source: "canonical_workbench_grid_result",
@@ -137,6 +177,8 @@ function lineModel(payload) {
   const model = baseModel(payload);
   const authority = canonicalWorkbenchResult(payload, "line");
   if (authority.status !== "available") return canonicalMissingModel(model, authority);
+  const camera = projectionCamera(authority.result.camera);
+  if (!camera) return missingProjectionCameraModel(payload, "line");
   const current = projectilePoint(authority.result.current, payload?.committed_frame);
   const points = (payload?.committed_trajectory ?? [])
     .map((row) => projectilePoint(row.values, row))
@@ -150,6 +192,7 @@ function lineModel(payload) {
     current,
     points,
     equation: a === null || b === null ? null : { a, b },
+    camera,
     labels: [
       label("x", current?.x),
       label("y", current?.y),
@@ -161,11 +204,12 @@ function lineModel(payload) {
 
 export function buildSemanticRenderModel(payload) {
   if (!payload?.committed_frame) return baseModel(payload);
-  const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "line");
+  const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
   if (family === "pendulum") return pendulumModel(payload);
   if (family === "projectile") return projectileModel(payload);
   if (family === "grid") return gridModel(payload);
-  return lineModel(payload);
+  if (family === "line") return lineModel(payload);
+  return unsupportedRendererModel(payload, family);
 }
 
 function formatNumber(value) {
@@ -242,16 +286,6 @@ function drawPendulum(ctx, width, height, model) {
   return { canvas_bob: { x: bx, y: by }, overlay_origin: { x: cx, y: cy } };
 }
 
-function boundsForPoints(points) {
-  const xs = points.map((point) => point.x);
-  const ys = points.map((point) => point.y);
-  const minX = Math.min(0, ...xs);
-  const maxX = Math.max(1, ...xs);
-  const minY = Math.min(0, ...ys);
-  const maxY = Math.max(1, ...ys);
-  return { minX, maxX, minY, maxY };
-}
-
 function drawAxes(ctx, width, height, bounds, margin = 46) {
   const plotWidth = Math.max(1, width - margin * 2);
   const plotHeight = Math.max(1, height - margin * 2);
@@ -272,8 +306,7 @@ function drawAxes(ctx, width, height, bounds, margin = 46) {
 
 function drawProjectile(ctx, width, height, model) {
   const points = model.trajectory.length ? model.trajectory : [model.current];
-  const bounds = boundsForPoints([...points, model.current]);
-  const { sx, sy, margin } = drawAxes(ctx, width, height, bounds);
+  const { sx, sy, margin } = drawAxes(ctx, width, height, model.camera);
   ctx.fillStyle = "#475569";
   ctx.font = "600 13px Segoe UI, sans-serif";
   ctx.fillText("x (m)", width - margin - 34, height - margin + 28);
@@ -310,16 +343,7 @@ function normalizeKind(item) {
 
 function drawSpace2d(ctx, width, height, model) {
   const drawList = model.draw_list;
-  const camera = model.space2d?.camera ?? {};
-  const xs = drawList.flatMap((item) => [finiteNumber(item.x), finiteNumber(item.x1), finiteNumber(item.x2)]).filter((value) => value !== null);
-  const ys = drawList.flatMap((item) => [finiteNumber(item.y), finiteNumber(item.y1), finiteNumber(item.y2)]).filter((value) => value !== null);
-  const bounds = {
-    minX: finiteNumber(camera.x_min) ?? Math.min(0, ...xs),
-    maxX: finiteNumber(camera.x_max) ?? Math.max(1, ...xs),
-    minY: finiteNumber(camera.y_min) ?? Math.min(0, ...ys),
-    maxY: finiteNumber(camera.y_max) ?? Math.max(1, ...ys),
-  };
-  const { sx, sy } = drawAxes(ctx, width, height, bounds, 38);
+  const { sx, sy } = drawAxes(ctx, width, height, model.camera, 38);
   drawList.forEach((item) => {
     const kind = normalizeKind(item);
     ctx.strokeStyle = String(item.stroke ?? item.선색 ?? "#0e7490");
@@ -406,8 +430,7 @@ function drawLine(ctx, width, height, model) {
   if (!points.length && model.equation) {
     points = [-2, 2].map((x) => ({ x, y: model.equation.a * x + model.equation.b }));
   }
-  const bounds = boundsForPoints(points);
-  const { sx, sy } = drawAxes(ctx, width, height, bounds);
+  const { sx, sy } = drawAxes(ctx, width, height, model.camera);
   ctx.strokeStyle = "#0e7490";
   ctx.lineWidth = 4;
   ctx.beginPath();
