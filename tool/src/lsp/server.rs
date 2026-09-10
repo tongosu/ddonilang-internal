@@ -37,6 +37,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 
 const MAX_WORKSPACE_SYMBOLS: usize = 1_000;
+const MAX_DIAGNOSTICS: usize = 1_000;
 const MAX_REFERENCE_LOCATIONS: usize = 1_000;
 const MAX_CALL_HIERARCHY_ITEMS: usize = 1_000;
 const MAX_CALL_HIERARCHY_EDGES: usize = 10_000;
@@ -2399,9 +2400,18 @@ impl LspServer {
         if let Some(response) = stale_diagnostic_snapshot(id.clone(), document, snapshot) {
             return Ok(response);
         }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
         let report = analyze_snapshot(snapshot, encoding).map_err(ServerError::Diagnostics)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let items = diagnostic_values(snapshot, &report);
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let result_id = diagnostic_result_id(snapshot, &items);
         let previous_result_id = params.get("previousResultId").and_then(Value::as_str);
         let result = if previous_result_id == Some(result_id.as_str()) {
@@ -2413,6 +2423,9 @@ impl LspServer {
                 "resultId": result_id,
             })
         };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         Ok(success_event(id, result))
     }
 
@@ -2661,6 +2674,7 @@ fn diagnostic_values(
     report
         .diagnostics
         .iter()
+        .take(MAX_DIAGNOSTICS)
         .map(|diagnostic| {
             json!({
                 "range": {

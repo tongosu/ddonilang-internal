@@ -430,6 +430,55 @@ fn d15_workspace_pull_is_open_only_and_uri_deterministic() {
     assert_eq!(after_close_items[0]["uri"], URI_B);
 }
 
+#[test]
+fn d16_pull_result_id_is_uri_bound_bounded_and_cancellable() {
+    const URI_A: &str = "file:///a-pull-bound.ddn";
+    const URI_B: &str = "file:///b-pull-bound.ddn";
+    let mut server = LspServer::new();
+    init(&mut server);
+    open_uri(&mut server, URI_A, LEGACY_EQUALS, 1);
+    open_uri(&mut server, URI_B, LEGACY_EQUALS, 1);
+
+    let first = pull_diagnostics_uri(&mut server, 70, URI_A, Some(1), None);
+    let second = pull_diagnostics_uri(&mut server, 71, URI_B, Some(1), None);
+    assert_eq!(first["kind"], "full");
+    assert_eq!(second["kind"], "full");
+    assert_ne!(first["resultId"], second["resultId"]);
+    assert!(first["items"].as_array().unwrap().len() <= 1_000);
+
+    change_full_uri(&mut server, URI_A, LEGACY_EQUALS, 2);
+    let same_source_new_version = pull_diagnostics_uri(&mut server, 74, URI_A, Some(2), None);
+    assert_ne!(first["resultId"], same_source_new_version["resultId"]);
+
+    server.cancel_request(&json!(72));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(72),
+            method: "textDocument/diagnostic".into(),
+            params: Some(json!({
+                "textDocument": {"uri": URI_A, "version": 1}
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
+
+    close_uri(&mut server, URI_A);
+    let closed = server
+        .handle_message(RpcMessage::Request {
+            id: json!(73),
+            method: "textDocument/diagnostic".into(),
+            params: Some(json!({"textDocument": {"uri": URI_A}})),
+        })
+        .unwrap();
+    assert!(matches!(
+        &closed.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32602
+    ));
+}
+
 fn close_uri(server: &mut LspServer, uri: &str) {
     server
         .handle_message(RpcMessage::Notification {
@@ -453,6 +502,48 @@ fn open_uri(server: &mut LspServer, uri: &str, source: &str, version: i64) -> Se
             })),
         })
         .unwrap()
+}
+
+fn change_full_uri(server: &mut LspServer, uri: &str, source: &str, version: i64) -> ServerEvent {
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "textDocument/didChange".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": version},
+                "contentChanges": [{"text": source}],
+            })),
+        })
+        .unwrap()
+}
+
+fn pull_diagnostics_uri(
+    server: &mut LspServer,
+    id: i64,
+    uri: &str,
+    version: Option<i64>,
+    previous_result_id: Option<&str>,
+) -> Value {
+    let mut document = json!({"uri": uri});
+    if let Some(version) = version {
+        document["version"] = json!(version);
+    }
+    let mut params = json!({"textDocument": document});
+    if let Some(previous_result_id) = previous_result_id {
+        params["previousResultId"] = json!(previous_result_id);
+    }
+    let event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(id),
+            method: "textDocument/diagnostic".into(),
+            params: Some(params),
+        })
+        .unwrap();
+    match &event.responses[0] {
+        RpcMessage::Response {
+            result: Ok(result), ..
+        } => result.clone(),
+        _ => panic!("pull diagnostic response missing: {event:?}"),
+    }
 }
 
 #[test]
