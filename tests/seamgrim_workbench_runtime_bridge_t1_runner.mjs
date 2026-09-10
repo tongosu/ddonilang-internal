@@ -127,6 +127,10 @@ const wasmModule = {
   },
   wasm_project_edit_plan_json(json) { wasmCalls.push(["edit", json]); return JSON.stringify({ kind: "edit" }); },
   wasm_project_source_sha256_json(json) { wasmCalls.push(["hash", json]); return "sha256-fixed"; },
+  wasm_run_summary_with_source_profile_json(sourceText, sourcePath, requestedTicks, sourceProfileIdentity) {
+    wasmCalls.push(["runSummary", sourceText, sourcePath, requestedTicks, sourceProfileIdentity]);
+    return JSON.stringify({ sourceText, sourcePath, requestedTicks, sourceProfileIdentity });
+  },
   wasm_canon_maegim_plan(sourceText) { wasmCalls.push(["canon", sourceText]); return JSON.stringify({ sourceText }); },
   wasm_gaji_extraction_plan_json(json) { wasmCalls.push(["extract", json]); return json; },
   wasm_local_gaji_artifact_json(json) { wasmCalls.push(["artifact", json]); return json; },
@@ -144,6 +148,39 @@ assert.deepEqual(await wasmAdapter.sourceAnalysis(adapterInput), {
   schema: "ddn.source_analysis_snapshot.candidate.v1",
   request: adapterInput,
 });
+const rawV25Source = "값:수 := 1.\n값 보여주기.\n";
+assert.deepEqual(await wasmAdapter.runSummaryWithSourceProfile({
+  sourceText: rawV25Source,
+  sourcePath: "lesson.ddn",
+  requestedTicks: 1,
+  sourceProfileIdentity: "v1-core-v25",
+}), {
+  sourceText: rawV25Source,
+  sourcePath: "lesson.ddn",
+  requestedTicks: 1,
+  sourceProfileIdentity: "v1-core-v25",
+});
+assert.deepEqual(wasmCalls.at(-1), [
+  "runSummary",
+  rawV25Source,
+  "lesson.ddn",
+  1,
+  "v1-core-v25",
+], "raw V25 source/profile must reach shared WASM unchanged");
+const { wasm_run_summary_with_source_profile_json: omittedRunSummary, ...missingRunSummaryModule } = wasmModule;
+const missingRunSummaryAdapter = new WasmRuntimeAdapter({
+  createWasmVmImpl: async () => ({ client: { wasmModule: missingRunSummaryModule } }),
+});
+await assert.rejects(
+  () => missingRunSummaryAdapter.runSummaryWithSourceProfile({
+    sourceText: rawV25Source,
+    sourcePath: "lesson.ddn",
+    requestedTicks: 1,
+    sourceProfileIdentity: "v1-core-v25",
+  }),
+  /E_WASM_RUN_SUMMARY_REQUIRED/u,
+  "missing shared run-summary export must not fall back locally",
+);
 assert.deepEqual(await wasmAdapter.canonMaegimPlan("원문"), { sourceText: "원문" });
 assert.deepEqual(await wasmAdapter.planGajiExtraction(adapterInput), adapterInput);
 assert.equal(await wasmAdapter.projectSourceSha256(adapterInput), "sha256-fixed");
@@ -159,7 +196,7 @@ assert.deepEqual(await wasmAdapter.planProjectEdit(adapterInput), { kind: "edit"
 assert.equal(await wasmAdapter.projectGajiLock(adapterInput), `lock:${JSON.stringify(adapterInput)}`);
 assert.deepEqual(await wasmAdapter.publishLocalGotgan(adapterInput), adapterInput);
 assert.deepEqual(await wasmAdapter.searchLocalGotgan(adapterInput), adapterInput);
-assert.equal(wasmCalls.length, 13, "adapter must perform one raw call per operation");
+assert.equal(wasmCalls.length, 14, "adapter must perform one raw call per operation");
 
 const storageRows = new Map();
 const storage = {

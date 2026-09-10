@@ -148,7 +148,7 @@ export class WasmRuntimeAdapter {
       "E_WASM_RUN_SUMMARY_REQUIRED 공통 Rust/WASM 실행 결과와 영수증 기능이 필요합니다",
     );
     return JSON.parse(String(operation(
-      String(sourceText ?? ""),
+      sourceText,
       String(sourcePath ?? "lesson.ddn"),
       Number(requestedTicks ?? 1),
       String(sourceProfileIdentity ?? ""),

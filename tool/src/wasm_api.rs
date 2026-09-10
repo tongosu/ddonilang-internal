@@ -3860,6 +3860,26 @@ a.기준점 <- b.꼭짓점.
     }
 
     #[test]
+    fn bogae_kind_mapping_requires_an_exact_existing_identity() {
+        assert_eq!(map_bogae_kind("선"), "line");
+        assert_eq!(map_bogae_kind("사각형"), "rect");
+        assert_eq!(map_bogae_kind("다각형"), "polygon");
+        assert_eq!(map_bogae_kind("화살표"), "arrow");
+
+        for unsupported in [
+            "prefix-line",
+            "line-suffix",
+            "LINE",
+            "사각형처럼",
+            "원형",
+            "sprite",
+            "",
+        ] {
+            assert_eq!(map_bogae_kind(unsupported), unsupported);
+        }
+    }
+
+    #[test]
     fn unit_value_wire_v2_is_explicit_and_roundtrips_ninth_axis() {
         let value = ResourceValue::Unit(ddonirang_core::UnitValue::new(
             Fixed64::from_i64(2),
@@ -4839,56 +4859,20 @@ fn resource_value_to_json(value: &ResourceValue) -> JsonValue {
 }
 
 fn map_bogae_kind(raw: &str) -> String {
-    let lower = raw.to_lowercase();
-    if lower.contains("rect") {
-        return "rect".to_string();
+    // A draw kind is an existing typed projection identity.  Do not infer it
+    // from a display label, case-folded spelling, or a substring: unknown
+    // values are deliberately preserved for the projection boundary to reject.
+    match raw {
+        "rect" | "사각형" => "rect".to_string(),
+        "text" | "글" => "text".to_string(),
+        "circle" | "원" => "circle".to_string(),
+        "polygon" | "다각형" => "polygon".to_string(),
+        "polyline" | "선들" => "polyline".to_string(),
+        "line" | "선" => "line".to_string(),
+        "point" | "점" => "point".to_string(),
+        "arrow" | "화살표" => "arrow".to_string(),
+        _ => raw.to_string(),
     }
-    if lower.contains("text") {
-        return "text".to_string();
-    }
-    if lower.contains("circle") {
-        return "circle".to_string();
-    }
-    if lower.contains("polygon") {
-        return "polygon".to_string();
-    }
-    if lower.contains("poly") {
-        return "polyline".to_string();
-    }
-    if lower.contains("line") {
-        return "line".to_string();
-    }
-    if lower.contains("point") {
-        return "point".to_string();
-    }
-    if lower.contains("arrow") {
-        return "arrow".to_string();
-    }
-    if lower.contains("sprite") {
-        return "rect".to_string();
-    }
-    if lower.contains("사각") || lower.contains("네모") {
-        return "rect".to_string();
-    }
-    if lower.contains("동그라미") || lower == "원" || lower.contains("원형") {
-        return "circle".to_string();
-    }
-    if lower.contains("선분") || lower == "선" {
-        return "line".to_string();
-    }
-    if lower == "점" || lower.contains("점형") {
-        return "point".to_string();
-    }
-    if lower.contains("화살") || lower.contains("살표") {
-        return "arrow".to_string();
-    }
-    if lower == "글" || lower.contains("글자") || lower.contains("문자") {
-        return "text".to_string();
-    }
-    if lower.contains("다각") {
-        return "polygon".to_string();
-    }
-    raw.to_string()
 }
 
 fn fixed64_to_f64(value: Fixed64) -> f64 {

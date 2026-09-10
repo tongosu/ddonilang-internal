@@ -208,6 +208,27 @@ const missingGridCamera = buildSemanticRenderModel(missingGridCameraPayload);
 assert(missingGridCamera.status === "canonical_unsupported", "geometry must not synthesize a grid camera");
 assert(missingGridCamera.canonical_diagnostic?.reason === "projection_camera_missing_or_invalid", "grid missing camera diagnostic drift");
 
+const unknownBogaeKindPayload = payloadFor("grid", [frame(8, { tick: 9 }, {
+  workbench: authoritativeResultSet("grid", {
+    position: { x: 1, y: 1 },
+    dimensions: { columns: 3, rows: 3 },
+    space2d: {
+      schema: "seamgrim.space2d.v0",
+      camera: { x_min: 0, x_max: 3, y_min: 0, y_max: 3 },
+      drawlist: [{ kind: "prefix-line", x1: 0, y1: 0, x2: 1, y2: 1 }],
+    },
+  }),
+})]);
+const unknownBogaeKindBefore = JSON.stringify(unknownBogaeKindPayload);
+const unknownBogaeKind = buildSemanticRenderModel(unknownBogaeKindPayload);
+assert(unknownBogaeKind.status === "canonical_unsupported", "unknown Bogae kind must fail closed");
+assert(unknownBogaeKind.canonical_diagnostic?.reason === "unsupported_bogae_kind", "unknown Bogae kind diagnostic drift");
+assert(!Object.hasOwn(unknownBogaeKind, "draw_list"), "unknown Bogae kind published a render model");
+const unknownBogaeKindCanvas = failureCanvas();
+const unknownBogaeKindRendered = renderCommittedSemanticView(unknownBogaeKindCanvas, 320, 180, unknownBogaeKindPayload);
+assert(!Object.hasOwn(unknownBogaeKindRendered, "canvas_projection"), "unknown Bogae kind published canvas output");
+assert(JSON.stringify(unknownBogaeKindPayload) === unknownBogaeKindBefore, "unknown Bogae kind mutated semantic payload");
+
 const line = buildSemanticRenderModel(payloadFor("line", [frame(0, { a: 99, b: 99, x: 99, y: 99 }, {
   workbench: authoritativeResultSet("line", {
     current: { x: 2, y: 5 },

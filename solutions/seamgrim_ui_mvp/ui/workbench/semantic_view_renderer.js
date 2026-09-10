@@ -66,6 +66,17 @@ function missingProjectionCameraModel(payload, family) {
   });
 }
 
+function unsupportedDrawItemModel(payload, family) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "unsupported_bogae_kind",
+      actual_schema: family,
+    },
+  });
+}
+
 function baseModel(payload) {
   const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
   return {
@@ -157,6 +168,10 @@ function gridModel(payload) {
   const result = authority.result;
   const camera = projectionCamera(result.space2d?.camera);
   if (!camera) return missingProjectionCameraModel(payload, "grid");
+  if (!Array.isArray(result.space2d?.drawlist)
+    || result.space2d.drawlist.some((item) => !isExactBogaeKind(item?.kind))) {
+    return unsupportedDrawItemModel(payload, "grid");
+  }
   const tick = finiteNumber(payload?.committed_frame?.madi);
   return {
     ...model,
@@ -338,7 +353,12 @@ function drawProjectile(ctx, width, height, model) {
 }
 
 function normalizeKind(item) {
-  return String(item?.kind ?? item?.결 ?? item?.shape ?? item?.도형 ?? "").toLowerCase();
+  return String(item?.kind ?? "");
+}
+
+function isExactBogaeKind(kind) {
+  return new Set(["line", "rect", "circle", "point", "polygon", "polyline", "text", "arrow"])
+    .has(String(kind ?? ""));
 }
 
 function drawSpace2d(ctx, width, height, model) {
@@ -349,7 +369,7 @@ function drawSpace2d(ctx, width, height, model) {
     ctx.strokeStyle = String(item.stroke ?? item.선색 ?? "#0e7490");
     ctx.fillStyle = String(item.fill ?? item.색 ?? item.채움색 ?? "#22c55e");
     ctx.lineWidth = Math.max(1, finiteNumber(item.line_width ?? item.굵기) ?? 2);
-    if (kind.includes("line") || kind.includes("선")) {
+    if (kind === "line") {
       const x1 = finiteNumber(item.x1);
       const y1 = finiteNumber(item.y1);
       const x2 = finiteNumber(item.x2);
@@ -360,7 +380,7 @@ function drawSpace2d(ctx, width, height, model) {
         ctx.lineTo(sx(x2), sy(y2));
         ctx.stroke();
       }
-    } else if (kind.includes("rect") || kind.includes("사각")) {
+    } else if (kind === "rect") {
       const x = finiteNumber(item.x);
       const y = finiteNumber(item.y);
       const itemWidth = finiteNumber(item.w ?? item.width ?? item.가로);
@@ -373,7 +393,7 @@ function drawSpace2d(ctx, width, height, model) {
         ctx.fillRect(left, top, canvasWidth, canvasHeight);
         ctx.strokeRect(left, top, canvasWidth, canvasHeight);
       }
-    } else if (kind.includes("circle") || kind.includes("원") || kind.includes("point") || kind.includes("점")) {
+    } else if (kind === "circle" || kind === "point") {
       const x = finiteNumber(item.x);
       const y = finiteNumber(item.y);
       if (x !== null && y !== null) {
