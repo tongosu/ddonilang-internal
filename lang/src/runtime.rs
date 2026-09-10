@@ -455,6 +455,11 @@ mod tests {
             string_to_number(&Value::String("not-a-number".to_string())),
             Ok(Value::None)
         );
+        assert_eq!(
+            string_to_number(&Value::String("2147483648".to_string())),
+            Ok(Value::None),
+            "current textual ingress must reject Fixed64 overflow rather than saturate"
+        );
     }
 
     #[test]
