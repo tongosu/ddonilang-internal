@@ -5763,6 +5763,13 @@ struct CurrentModuleDirectives {
     exports: Vec<ParsedExport>,
 }
 
+#[derive(Debug, Clone)]
+pub(crate) struct ProjectModuleDirectives {
+    pub imports: Vec<ParsedImport>,
+    pub exports: Vec<ParsedExport>,
+    pub typed_current: bool,
+}
+
 fn current_module_directives(
     text: &str,
     path: &str,
@@ -5869,7 +5876,7 @@ fn current_module_directives(
                     }
                     Ok(ParsedExport {
                         external_name: entry.local_name.clone(),
-                        internal_name: entry.target.clone(),
+                    internal_name: entry.target.clone(),
                     })
                 })
                 .collect::<Result<Vec<_>, _>>()
@@ -5877,6 +5884,29 @@ fn current_module_directives(
         .transpose()?
         .unwrap_or_default();
     Ok(Some(CurrentModuleDirectives { imports, exports }))
+}
+
+/// Resolve a module's import/export metadata through the current typed
+/// directive owner when the source begins with the current parenthesized
+/// surface. Historical block custody remains explicit and never becomes a
+/// fallback for a typed document.
+pub(crate) fn resolve_project_module_directives(
+    text: &str,
+    path: &str,
+    text_by_path: &BTreeMap<String, String>,
+) -> Result<ProjectModuleDirectives, LocalProjectError> {
+    match current_module_directives(text, path, text_by_path)? {
+        Some(current) => Ok(ProjectModuleDirectives {
+            imports: current.imports,
+            exports: current.exports,
+            typed_current: true,
+        }),
+        None => Ok(ProjectModuleDirectives {
+            imports: parse_imports(text, path)?,
+            exports: parse_exports(text, path)?,
+            typed_current: false,
+        }),
+    }
 }
 
 pub(crate) fn parse_imports(
@@ -6168,11 +6198,8 @@ fn collect_module_info(
         ));
     }
     stack.push(path.to_string());
-    let current_directives = current_module_directives(text, path, text_by_path)?;
-    let parsed_imports = current_directives
-        .as_ref()
-        .map(|directives| directives.imports.clone())
-        .unwrap_or(parse_imports(text, path)?);
+    let directives = resolve_project_module_directives(text, path, text_by_path)?;
+    let parsed_imports = directives.imports;
     let mut seen_aliases = BTreeSet::new();
     let mut imports = Vec::new();
     for import in parsed_imports {
@@ -6227,9 +6254,7 @@ fn collect_module_info(
             .then(a.resolved_path.cmp(&b.resolved_path))
     });
     let mut exports = BTreeMap::new();
-    let parsed_exports = current_directives
-        .map(|directives| directives.exports)
-        .unwrap_or(parse_exports(text, path)?);
+    let parsed_exports = directives.exports;
     for export in parsed_exports {
         if exports
             .insert(export.external_name.clone(), export.internal_name.clone())
@@ -6558,6 +6583,36 @@ mod tests {
                 },
             ],
         }
+    }
+
+    #[test]
+    fn empty_project_current_callable_runs_through_the_shared_frontdoor() {
+        let mut source = sample_source();
+        source
+            .files
+            .iter_mut()
+            .find(|file| file.path == "뿌리.ddn")
+            .expect("empty-project root")
+            .utf8_text = "프로젝트 { 이름: \"새 DDN 프로젝트\". 첫글: \"./app/main.ddn\". 목표 { 앱: \"./app/main.ddn\". } 모듈길 { 로컬: \"./lib\". } }.".to_string();
+        source
+            .files
+            .iter_mut()
+            .find(|file| file.path == "app/main.ddn")
+            .expect("empty-project entry")
+            .utf8_text = "값:수 := 0.\n값 보여주기.\n".to_string();
+
+        let first = build_project_run_summary_with_supported_profile(
+            source.clone(),
+            "앱",
+            false,
+            false,
+        )
+        .expect("current empty-project callable runs");
+        let second = build_project_run_summary_with_supported_profile(source, "앱", false, false)
+            .expect("repeated current empty-project callable runs");
+        assert_eq!(first.runtime_output_log_texts, vec!["0"]);
+        assert_eq!(first.runtime_state_hash, second.runtime_state_hash);
+        assert_eq!(first.summary_sha256, second.summary_sha256);
     }
 
     #[test]

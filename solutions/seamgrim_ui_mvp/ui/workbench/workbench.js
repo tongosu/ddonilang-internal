@@ -754,10 +754,10 @@ function nativeProjectFiles(name, template = "physics") {
       {
         path: "app/main.ddn",
         role: "ddn_source",
-        utf8_text: `매마디:움직씨 := {
-  값:수 := 0.
-  값 보여주기.
-}
+        // Local Project owns the shared V25 execution callable.  Its entry
+        // file must contribute the callable body, not a second nested callable.
+        utf8_text: `값:수 := 0.
+값 보여주기.
 `,
       },
     ];

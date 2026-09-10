@@ -1566,9 +1566,10 @@ pub fn build_project_authoring_snapshot(
         ) {
             continue;
         }
-        match local_project::parse_imports(source, path) {
-            Ok(rows) => {
-                for row in rows {
+        match local_project::resolve_project_module_directives(source, path, &source_by_path) {
+            Ok(directives) => {
+                let typed_current = directives.typed_current;
+                for row in directives.imports {
                     let range =
                         local_project::find_named_block_key_spans(source, "쓰임", &row.alias)
                             .into_iter()
@@ -1596,12 +1597,7 @@ pub fn build_project_authoring_snapshot(
                         }
                     }
                 }
-            }
-            Err(err) => diagnostics.push(diagnostic_from_local_error(&err, &request.source)),
-        }
-        match local_project::parse_exports(source, path) {
-            Ok(rows) => {
-                for row in rows {
+                for row in directives.exports {
                     let span = local_project::find_named_block_key_spans(
                         source,
                         "드러냄",
@@ -1622,7 +1618,11 @@ pub fn build_project_authoring_snapshot(
                         module_path: path.clone(),
                         external_name: row.external_name,
                         internal_name: row.internal_name,
-                        name_range: span.and_then(|span| source_range(source, span.0, span.1)),
+                        name_range: if typed_current {
+                            None
+                        } else {
+                            span.and_then(|span| source_range(source, span.0, span.1))
+                        },
                     });
                 }
             }
@@ -4182,6 +4182,47 @@ mod tests {
             definition.declaration.expect("imported declaration").path,
             "lib/운동.ddn"
         );
+    }
+
+    #[test]
+    fn current_typed_directives_reach_the_authoring_symbol_frontdoor() {
+        // This is the exact current physics-project source emitted by the
+        // tracked Workbench generator.  It must cross the same typed resolver
+        // as an AddModule project; no test-only source lowering is involved.
+        let main = "(힘=\"./lib/힘\") 쓰임.\n\n운동:움직씨 := {\n  위치초기:수 := 0.\n  속도초기:수 := 20.\n  시간간격:수 := 0.1.\n  중력가속도:수 := 힘.중력.\n  속도:수 := 속도초기 - 중력가속도 * 시간간격.\n  위치:수 := 위치초기 + 속도 * 시간간격.\n  위치 보여주기.\n  속도 보여주기.\n  힘.중력 보여주기.\n}\n";
+        let source = project(
+            vec![
+                ("뿌리.ddn", "root", &root("app/main.ddn")),
+                ("app/main.ddn", "ddn_source", main),
+                (
+                    "lib/힘.ddn",
+                    "ddn_source",
+                    "(중력=중력) 드러냄.\n\n중력:수 := 9.8.\n",
+                ),
+            ],
+            "app/main.ddn",
+        );
+        let snapshot = build_project_authoring_snapshot(ProjectAuthoringSnapshotRequest {
+            schema: PROJECT_AUTHORING_SNAPSHOT_REQUEST_SCHEMA.to_string(),
+            source,
+            source_version: "rd457-current-directive-1".to_string(),
+        })
+        .expect("typed authoring snapshot");
+
+        assert!(snapshot.diagnostics.iter().all(|row| {
+            row.code != "E_PROJECT_BLOCK_UNSUPPORTED" && row.code != "E_SYMBOL_NOT_EXPORTED"
+        }));
+        assert!(snapshot.imports.iter().any(|row| {
+            row.importer_path == "app/main.ddn"
+                && row.alias == "힘"
+                && row.source == "./lib/힘"
+                && row.resolved_path == "lib/힘.ddn"
+        }));
+        assert!(snapshot.exports.iter().any(|row| {
+            row.module_path == "lib/힘.ddn"
+                && row.external_name == "중력"
+                && row.internal_name == "중력"
+        }));
     }
 
     #[test]

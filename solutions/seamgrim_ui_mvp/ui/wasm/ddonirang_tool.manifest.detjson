@@ -745,9 +745,9 @@
       "sha256": "6b6422c256d92d997c96dffffab52bf23e8950b0b39c0790261381b8b9f79632"
     },
     {
-      "bytes": 304560,
+      "bytes": 305394,
       "path": "tool/src/local_project.rs",
-      "sha256": "820241c6c3aeb826f93f694b27285c694fadd7e1d70ebaea81b9869e53f1b62f"
+      "sha256": "0de6c5e73b58d7ae6bd656fc221309c69407747b02fd36f24981f5e7bb511f31"
     },
     {
       "bytes": 1322,
@@ -875,9 +875,9 @@
       "sha256": "60b96128d555f5e0702570567feeff07f280991b91d93fae7f7ce8396bb37010"
     },
     {
-      "bytes": 165729,
+      "bytes": 167846,
       "path": "tool/src/project_authoring.rs",
-      "sha256": "a9b8f9127d8cf98c7d0ec5ab13cc7f7c327466bc88dfdb4f8df7040d9f2ee30c"
+      "sha256": "e7a3953daea2481c1c57f82d00eb6ac82f2886365f4715ccbade26cf24c3cf45"
     },
     {
       "bytes": 10102,
@@ -1049,12 +1049,12 @@
     "symbolic/src",
     "tool/src"
   ],
-  "source_tree_sha256": "8f30b267370b2441da355f8888b875baf9c049e482806e0ebbd3cf1593bffe0e",
+  "source_tree_sha256": "d016c0a2281703580afd0c14fd421f452e37d3c4f8ec219b102de372b0cc00c7",
   "state_schema": "seamgrim.engine_response.v0",
   "target": "web",
   "wasm_bindgen_or_pack_version": "wasm-pack 0.14.0",
   "wasm_hash_mode": "raw_bytes_sha256",
   "wasm_path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
-  "wasm_sha256": "866b10e2c185bf60284484057fb46ba03c7e09eac4ccbdfc3f5ec870b1750f15",
-  "wasm_size": 5674478
+  "wasm_sha256": "16e9687f2784f0b1a713a67f8a47fd8e198bdfa411374a18e41a1a14eb7ada1d",
+  "wasm_size": 5674526
 }
