@@ -9,6 +9,7 @@ import {
   projectAuthoritativeSourceAnalysis,
   projectSourceAnalysisUnavailable,
   SOURCE_ANALYSIS_SNAPSHOT_SCHEMA,
+  SOURCE_ANALYSIS_PROFILE_IDENTITY,
 } from "../solutions/seamgrim_ui_mvp/ui/workbench/source_readiness.js";
 import {
   RuntimeBridgeV1,
@@ -23,7 +24,7 @@ function snapshot({ outcome = "ACCEPTED", generation = 4, diagnostics = [] } = {
     schema: SOURCE_ANALYSIS_SNAPSHOT_SCHEMA,
     source_revision_identity: "blake3:authoritative-revision",
     analysis_generation: generation,
-    source_profile_identity: "strict",
+    source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
     outcome,
     diagnostics,
   };
@@ -134,7 +135,7 @@ const bridgeInput = Object.freeze({
   source_text: "값:수 <- 1.",
   path: "lesson.ddn",
   analysis_generation: 11,
-  source_profile_identity: "strict",
+  source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
 });
 const bridgeSnapshot = Object.freeze(snapshot({ generation: 11 }));
 const calls = [];
@@ -206,7 +207,7 @@ if (sourceWasmDir) {
       source_text: sourceText,
       path: "lesson.ddn",
       analysis_generation: analysisGeneration,
-      source_profile_identity: "strict",
+      source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
     })),
   );
   const sourceAccepted = analyze("매틱:움직씨 = { 채비 { 값:수 <- 0. }. }", 21);

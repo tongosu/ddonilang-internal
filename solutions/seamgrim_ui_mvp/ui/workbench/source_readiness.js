@@ -120,6 +120,7 @@ function cloneDiagnostic(row, statusAxis) {
 
 export function projectAuthoritativeSourceAnalysis(snapshot, {
   expectedAnalysisGeneration,
+  expectedSourceProfileIdentity = SOURCE_ANALYSIS_PROFILE_IDENTITY,
   sourceHash = "",
   sourceText = "",
 } = {}) {
@@ -147,6 +148,12 @@ export function projectAuthoritativeSourceAnalysis(snapshot, {
       candidate: null,
       candidates: [],
     };
+  }
+  if (String(snapshot.source_profile_identity ?? "") !== String(expectedSourceProfileIdentity)) {
+    return projectSourceAnalysisUnavailable("E_SOURCE_ANALYSIS_PROFILE_MISMATCH", {
+      analysisGeneration: expectedAnalysisGeneration,
+      sourceHash,
+    });
   }
   const outcome = String(snapshot.outcome ?? "UNKNOWN");
   if (!["ACCEPTED", "REJECTED", "UNSUPPORTED"].includes(outcome)) {
@@ -237,6 +244,29 @@ export function projectSourceAnalysisUnavailable(error, {
     candidate: null,
     candidates: [],
   };
+}
+
+// Workbench receives this only from the shared RuntimeBridge.  Keep every
+// value in the already-versioned run-summary envelope exact: a browser-side
+// projection must never publish a receipt for different raw source bytes,
+// profile, or committed state.
+export function sharedRunSummaryBindingValid(summary, {
+  sourceProfileIdentity = SOURCE_ANALYSIS_PROFILE_IDENTITY,
+  sourceBytesSha256 = "",
+  stateHash = "",
+} = {}) {
+  return Boolean(
+    summary
+    && typeof summary === "object"
+    && String(sourceProfileIdentity ?? "")
+    && String(summary.source_profile_identity ?? "") === String(sourceProfileIdentity)
+    && String(sourceBytesSha256 ?? "")
+    && String(summary.execution_envelope?.source_bytes_sha256 ?? "") === String(sourceBytesSha256)
+    && String(stateHash ?? "")
+    && String(summary.state_hash ?? "") === String(stateHash)
+    && summary.work_cost_receipt
+    && typeof summary.work_cost_receipt === "object"
+  );
 }
 
 export function applySourceReadinessFix(sourceText, candidate) {

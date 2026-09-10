@@ -2,6 +2,8 @@
 
 import { extractCanonicalViewAuthorityInputsFromState } from "../solutions/seamgrim_ui_mvp/ui/seamgrim_runtime_state.js";
 import {
+  buildCanonicalConsoleViewPayload,
+  buildCanonicalSpace2dViewPayload,
   buildCanonicalViewPayloadSet,
   buildCommittedSemanticViewPayload,
   orderedObservationsFromWasmState,
@@ -11,6 +13,40 @@ import {
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
+
+const resultOnlyIdentity = buildCanonicalConsoleViewPayload({
+  identity: { result_identity: "result:without-committed-state" },
+  projection: {
+    status: "available",
+    entries: [{ tick: 0, line_no: 1, kind: "output", text: "must not publish" }],
+  },
+});
+assert(
+  resultOnlyIdentity.status === "unavailable" && resultOnlyIdentity.content === null,
+  "result identity without committed state identity was accepted for projection",
+);
+const whitespaceStateIdentity = buildCanonicalConsoleViewPayload({
+  identity: { state_hash: "  ", result_identity: "result:blank-state" },
+  projection: {
+    status: "available",
+    entries: [{ tick: 0, line_no: 1, kind: "output", text: "must not publish" }],
+  },
+});
+assert(
+  whitespaceStateIdentity.status === "unavailable" && whitespaceStateIdentity.content === null,
+  "blank state identity was accepted for projection",
+);
+const sourceLessSpace2dIdentity = buildCanonicalSpace2dViewPayload({
+  identity: { state_hash: "blake3:committed-state" },
+  projection: {
+    status: "available",
+    space2d: { drawlist: [{ kind: "circle", x: 1, y: 2, r: 0.5 }] },
+  },
+});
+assert(
+  sourceLessSpace2dIdentity.status !== "available" && sourceLessSpace2dIdentity.content === null,
+  "source-less space2d entity received a derived identity",
+);
 
 function wasmState(tick, theta, omega, energy) {
   const length = 2;
@@ -59,6 +95,13 @@ function wasmState(tick, theta, omega, energy) {
 const run = {
   run_id: "run_semantic",
   source_hash: "sha256:source",
+  shared_runtime_result: {
+    schema: "ddn.runtime.run_summary.v1_candidate",
+    source_profile_identity: "v1-core-v25",
+    source_identity: "sha256:source",
+    state_hash: "blake3:state_1",
+  },
+  work_cost_receipt: { schema: "ddonirang.work_cost.v1-candidate" },
   frames: [
     {
       frame_id: 0,
@@ -111,6 +154,7 @@ assert(first.semantic_payload_hash === repeated.semantic_payload_hash, "same fra
 assert(first.committed_frame.run_id === "run_semantic", "committed run identity missing");
 assert(first.committed_frame.frame_id === 1 && first.committed_frame.madi === 1, "committed frame identity mismatch");
 assert(first.committed_frame.state_hash === "blake3:state_1", "committed state hash mismatch");
+assert(first.execution_receipt.state_hash === first.committed_frame.state_hash, "shared execution receipt state binding mismatch");
 assert(first.ordered_observations.map((row) => row.name).join(",") === "theta,omega,energy", "observation order changed");
 assert(first.view_binding.resolved_channels.length === 0, "raw channel binding remained active");
 assert(first.view_binding.resolution === "canonical_workbench_result", "pendulum canonical binding resolution mismatch");

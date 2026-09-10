@@ -106,7 +106,7 @@ function canonicalOutcome(family, status, identity, projection, content = null, 
 
 function requiredIdentityAvailable(identity = {}) {
   const normalized = normalizeExistingViewIdentity(identity);
-  return Boolean(normalized.state_hash || normalized.result_identity);
+  return Boolean(normalized.state_hash);
 }
 
 export function buildCanonicalConsoleViewPayload({ identity = {}, projection = null } = {}) {
@@ -181,17 +181,11 @@ function space2dEntityRows(space2d) {
   return collections.flatMap(([collection, rows]) => rows.map((row) => {
     const primitiveType = collection === "points" ? "point" : String(row?.kind ?? "").trim().toLowerCase();
     const sourceIdentity = String(row?.id ?? row?.group_id ?? "").trim();
-    const entityIdentity = sourceIdentity || [
-      "derived",
-      collection,
-      primitiveType || "unknown",
-      fnv1a32(stableSemanticJson(row)),
-    ].join(":");
     const identityRow = {
-      entity_id: entityIdentity,
+      entity_id: sourceIdentity,
       collection,
       primitive_type: primitiveType,
-      identity_source: sourceIdentity ? "source" : "canonical_structural_hash_candidate",
+      identity_source: "source",
     };
     const semanticRole = String(row?.role ?? "").trim();
     if (semanticRole) identityRow.semantic_role = semanticRole;
@@ -677,6 +671,10 @@ export function buildCanonicalWorkbenchViewPayload({
   }
   return canonicalOutcome(payloadFamily, "available", identity, projection, {
     family_contract_version: `${canonicalFamily}.v1_candidate`,
+    // Keep the already-validated typed producer identity with the canonical
+    // result so the renderer can reject a replay under another provider.
+    provider_identity: result.producer,
+    provider_provenance: result.provenance,
     result: result.content,
   });
 }
@@ -1023,14 +1021,31 @@ function resolveViewBinding(primaryView, canonicalViewPayloads) {
   };
 }
 
-function frameIdentity(run, frame) {
+function frameIdentity(run, frame, project) {
   if (!run || !frame) return null;
   return {
     run_id: String(run.run_id ?? ""),
+    // `project.id` is the existing Local Workspace identity.  Carry it with
+    // the committed frame so a projection cannot be replayed into another
+    // workspace that happens to have the same source/state hashes.
+    workspace_identity: String(project?.id ?? "").trim(),
     frame_id: Number(frame.frame_id ?? -1),
     madi: Number(frame.madi ?? 0),
     state_hash: String(frame.state_hash ?? ""),
     source_hash: String(frame.source_hash ?? run.source_hash ?? ""),
+  };
+}
+
+function executionReceiptBinding(run) {
+  const summary = run?.shared_runtime_result;
+  const receipt = run?.work_cost_receipt;
+  if (!summary || typeof summary !== "object" || !receipt || typeof receipt !== "object") return null;
+  return {
+    summary_schema: String(summary.schema ?? ""),
+    source_profile_identity: String(summary.source_profile_identity ?? ""),
+    source_identity: String(summary.source_identity ?? ""),
+    state_hash: String(summary.state_hash ?? ""),
+    work_cost_receipt: canonicalValue(receipt),
   };
 }
 
@@ -1076,7 +1091,8 @@ export function buildCommittedSemanticViewPayload({
   const binding = resolveViewBinding(primaryView, canonicalViewPayloads);
   const payload = {
     schema: SEMANTIC_VIEW_PAYLOAD_SCHEMA,
-    committed_frame: frameIdentity(run, frame),
+    committed_frame: frameIdentity(run, frame, project),
+    execution_receipt: executionReceiptBinding(run),
     ordered_observations: observations,
     committed_resources: committedResources,
     committed_view_meta: frame?.wasm_state?.view_meta && typeof frame.wasm_state.view_meta === "object"

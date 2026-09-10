@@ -158,7 +158,7 @@ export function reconcileViewWorkspace(workspace, project, committedFrame = null
   next.instances = next.instances.map((instance) => ({ ...instance, family }));
   const selectedHash = String(next.selected_target?.state_hash ?? "");
   const committedHash = String(committedFrame?.state_hash ?? "");
-  if (selectedHash && selectedHash !== committedHash) {
+  if (next.selected_target && (!selectedHash || !committedHash || selectedHash !== committedHash)) {
     next.selected_target = null;
     next.instances = next.instances.filter((instance) => !instance.temporary);
   }

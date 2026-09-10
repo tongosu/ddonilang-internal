@@ -96,6 +96,19 @@ assert(legacyFamily.workspace.active_view_instance_id === legacyFamily.workspace
 workspace = reconcileViewWorkspace(workspace, project, { state_hash: "blake3:frame_3" });
 assert(workspace.selected_target === null, "frame change did not clear stale selected target");
 assert(!workspace.instances.some((instance) => instance.temporary), "frame change did not close temporary magnifier");
+let missingHashWorkspace = createViewWorkspace(project);
+missingHashWorkspace = selectViewTarget(missingHashWorkspace, {
+  target_id: "pendulum:unbound",
+  kind: "committed_renderer_current",
+  frame_id: 2,
+});
+missingHashWorkspace = openMagnifierView(missingHashWorkspace, project, capabilities);
+missingHashWorkspace = reconcileViewWorkspace(missingHashWorkspace, project, { state_hash: "blake3:frame_3" });
+assert(missingHashWorkspace.selected_target === null, "unbound target was retained across a committed frame");
+assert(
+  !missingHashWorkspace.instances.some((instance) => instance.temporary),
+  "unbound target retained a temporary magnifier",
+);
 workspace = closeViewInstance(workspace, sides[0].view_instance_id);
 assert(sideViewInstances(workspace).filter((instance) => instance.role === "side").length === 1, "individual side close failed");
 workspace = closeAllSideViews(workspace);

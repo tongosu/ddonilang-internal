@@ -7,6 +7,7 @@ import { extractCanonicalViewAuthorityInputsFromState } from "../solutions/seamg
 import {
   buildCanonicalViewPayloadSet,
   buildCommittedSemanticViewPayload,
+  semanticViewPayloadHash,
 } from "../solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js";
 import {
   buildSemanticRenderModel,
@@ -70,7 +71,19 @@ function canonicalFor(run, row) {
 }
 
 function payloadFor(primaryView, frames, activeIndex = frames.length - 1, role = "primary") {
-  const run = { run_id: `run_${primaryView}`, source_hash: "sha256:semantic_renderer", frames };
+  const run = {
+    run_id: `run_${primaryView}`,
+    source_hash: "sha256:semantic_renderer",
+    shared_runtime_result: {
+      schema: "ddn.runtime.run_summary.v1_candidate",
+      source_profile_identity: "v1-core-v25",
+      source_identity: "sha256:semantic_renderer",
+      state_hash: String(frames[activeIndex]?.state_hash ?? ""),
+    },
+    work_cost_receipt: { schema: "ddonirang.work_cost.v1-candidate" },
+    frames,
+  };
+  const projectId = primaryView || "missing_renderer_identity";
   const canonicalViewHistory = frames.slice(0, activeIndex + 1).map((row) => ({
     frame_id: row.frame_id,
     madi: row.madi,
@@ -78,7 +91,7 @@ function payloadFor(primaryView, frames, activeIndex = frames.length - 1, role =
     canonical_views: canonicalFor(run, row),
   }));
   return buildCommittedSemanticViewPayload({
-    project: { id: primaryView, primaryView },
+    project: { id: projectId, primaryView },
     run,
     frame: frames[activeIndex],
     viewConfig: { primary_view: primaryView, role, mode: "ddn-main" },
@@ -88,7 +101,18 @@ function payloadFor(primaryView, frames, activeIndex = frames.length - 1, role =
 }
 
 function payloadWithoutRendererIdentity(frames, activeIndex = frames.length - 1) {
-  const run = { run_id: "run_missing_renderer_identity", source_hash: "sha256:semantic_renderer", frames };
+  const run = {
+    run_id: "run_missing_renderer_identity",
+    source_hash: "sha256:semantic_renderer",
+    shared_runtime_result: {
+      schema: "ddn.runtime.run_summary.v1_candidate",
+      source_profile_identity: "v1-core-v25",
+      source_identity: "sha256:semantic_renderer",
+      state_hash: String(frames[activeIndex]?.state_hash ?? ""),
+    },
+    work_cost_receipt: { schema: "ddonirang.work_cost.v1-candidate" },
+    frames,
+  };
   const canonicalViewHistory = frames.slice(0, activeIndex + 1).map((row) => ({
     frame_id: row.frame_id,
     madi: row.madi,
@@ -240,6 +264,44 @@ const line = buildSemanticRenderModel(linePayload);
 assert(line.status === "ready" && line.current.x === 2 && line.current.y === 5, "static graph did not use committed result point");
 assert(line.labels.map((row) => row.key).join(",") === "x,y,a,b", "static graph semantic labels missing");
 assert(JSON.stringify(line.camera) === JSON.stringify({ minX: -2, maxX: 4, minY: -3, maxY: 9 }), "line renderer did not retain explicit camera");
+assert(
+  linePayload.canonical_views.workbench_line.content.provider_identity === "ddonirang_tool.wasm_runtime",
+  "canonical result did not preserve its existing provider identity",
+);
+assert(
+  linePayload.canonical_views.workbench_line.content.provider_provenance === "native_authoritative_structured_result",
+  "canonical result did not preserve its existing provider provenance",
+);
+assert(
+  linePayload.execution_receipt?.state_hash === linePayload.committed_frame.state_hash,
+  "committed semantic payload did not bind its existing shared execution receipt",
+);
+assert(
+  linePayload.committed_frame.workspace_identity === "line",
+  "committed frame did not bind the existing Local Workspace identity",
+);
+
+const missingWorkspaceIdentity = structuredClone(linePayload);
+missingWorkspaceIdentity.committed_frame.workspace_identity = "";
+const { semantic_payload_hash: missingWorkspaceHash, ...missingWorkspaceInput } = missingWorkspaceIdentity;
+missingWorkspaceIdentity.semantic_payload_hash = semanticViewPayloadHash(missingWorkspaceInput);
+const missingWorkspaceBefore = JSON.stringify(missingWorkspaceIdentity);
+const missingWorkspaceModel = buildSemanticRenderModel(missingWorkspaceIdentity);
+assert(missingWorkspaceModel.status === "canonical_unsupported", "missing Local Workspace identity must fail before projection");
+assert(missingWorkspaceModel.canonical_diagnostic?.reason === "committed_frame_identity_missing_or_invalid", "workspace identity failure drift");
+assert(!Object.hasOwn(missingWorkspaceModel, "current") && !Object.hasOwn(missingWorkspaceModel, "canvas_projection"), "missing workspace identity published a projection");
+assert(JSON.stringify(missingWorkspaceIdentity) === missingWorkspaceBefore, "missing workspace identity mutated semantic payload");
+
+const missingViewIdentity = structuredClone(linePayload);
+missingViewIdentity.view_config.primary_view = "";
+const { semantic_payload_hash: missingViewHash, ...missingViewInput } = missingViewIdentity;
+missingViewIdentity.semantic_payload_hash = semanticViewPayloadHash(missingViewInput);
+const missingViewBefore = JSON.stringify(missingViewIdentity);
+const missingViewModel = buildSemanticRenderModel(missingViewIdentity);
+assert(missingViewModel.status === "canonical_unsupported", "missing view identity must fail before projection");
+assert(missingViewModel.canonical_diagnostic?.reason === "view_binding_identity_missing_or_mismatch", "view identity failure drift");
+assert(!Object.hasOwn(missingViewModel, "current") && !Object.hasOwn(missingViewModel, "canvas_projection"), "missing view identity published a projection");
+assert(JSON.stringify(missingViewIdentity) === missingViewBefore, "missing view identity mutated semantic payload");
 
 const stalePayloadHash = structuredClone(linePayload);
 stalePayloadHash.semantic_payload_hash = "candidate:fnv1a32:semantic_view:stale";
@@ -249,6 +311,81 @@ assert(stalePayloadHashModel.status === "canonical_unsupported", "stale semantic
 assert(stalePayloadHashModel.canonical_diagnostic?.reason === "semantic_payload_hash_mismatch", "stale semantic payload hash diagnostic drift");
 assert(!Object.hasOwn(stalePayloadHashModel, "current") && !Object.hasOwn(stalePayloadHashModel, "canvas_projection"), "stale semantic payload hash published a projection");
 assert(JSON.stringify(stalePayloadHash) === stalePayloadHashBefore, "stale semantic payload hash mutated semantic payload");
+
+const mismatchedViewBinding = structuredClone(linePayload);
+mismatchedViewBinding.view_binding.view_family = "grid";
+const { semantic_payload_hash: mismatchedViewBindingHash, ...mismatchedViewBindingInput } = mismatchedViewBinding;
+mismatchedViewBinding.semantic_payload_hash = semanticViewPayloadHash(mismatchedViewBindingInput);
+const mismatchedViewBindingBefore = JSON.stringify(mismatchedViewBinding);
+const mismatchedViewBindingModel = buildSemanticRenderModel(mismatchedViewBinding);
+assert(mismatchedViewBindingModel.status === "canonical_unsupported", "hash-valid mismatched view binding must fail before projection");
+assert(mismatchedViewBindingModel.canonical_diagnostic?.reason === "view_binding_identity_missing_or_mismatch", "view binding mismatch diagnostic drift");
+assert(!Object.hasOwn(mismatchedViewBindingModel, "current") && !Object.hasOwn(mismatchedViewBindingModel, "canvas_projection"), "mismatched view binding published a projection");
+assert(JSON.stringify(mismatchedViewBinding) === mismatchedViewBindingBefore, "mismatched view binding mutated semantic payload");
+
+const staleViewBindingStatus = structuredClone(linePayload);
+staleViewBindingStatus.view_binding.canonical_payload_status = "unavailable";
+const { semantic_payload_hash: staleViewBindingHash, ...staleViewBindingInput } = staleViewBindingStatus;
+staleViewBindingStatus.semantic_payload_hash = semanticViewPayloadHash(staleViewBindingInput);
+const staleViewBindingBefore = JSON.stringify(staleViewBindingStatus);
+const staleViewBindingModel = buildSemanticRenderModel(staleViewBindingStatus);
+assert(staleViewBindingModel.status === "canonical_unsupported", "stale canonical view-binding status must fail before projection");
+assert(staleViewBindingModel.canonical_diagnostic?.reason === "view_binding_identity_missing_or_mismatch", "stale view-binding status failure drift");
+assert(!Object.hasOwn(staleViewBindingModel, "current") && !Object.hasOwn(staleViewBindingModel, "canvas_projection"), "stale view-binding status published a projection");
+assert(JSON.stringify(staleViewBindingStatus) === staleViewBindingBefore, "stale view-binding status mutated semantic payload");
+
+const mismatchedCanonicalIdentity = structuredClone(linePayload);
+mismatchedCanonicalIdentity.canonical_views.workbench_line.identity.state_hash = "blake3:stale-canonical-frame";
+const { semantic_payload_hash: mismatchedCanonicalIdentityHash, ...mismatchedCanonicalIdentityInput } = mismatchedCanonicalIdentity;
+mismatchedCanonicalIdentity.semantic_payload_hash = semanticViewPayloadHash(mismatchedCanonicalIdentityInput);
+const mismatchedCanonicalIdentityBefore = JSON.stringify(mismatchedCanonicalIdentity);
+const mismatchedCanonicalIdentityModel = buildSemanticRenderModel(mismatchedCanonicalIdentity);
+assert(mismatchedCanonicalIdentityModel.status === "canonical_unsupported", "hash-valid canonical identity mismatch must fail before projection");
+assert(mismatchedCanonicalIdentityModel.canonical_diagnostic?.reason === "canonical_result_identity_mismatch", "canonical identity mismatch diagnostic drift");
+assert(!Object.hasOwn(mismatchedCanonicalIdentityModel, "current") && !Object.hasOwn(mismatchedCanonicalIdentityModel, "canvas_projection"), "canonical identity mismatch published a projection");
+assert(JSON.stringify(mismatchedCanonicalIdentity) === mismatchedCanonicalIdentityBefore, "canonical identity mismatch mutated semantic payload");
+
+const mismatchedProviderIdentity = structuredClone(linePayload);
+mismatchedProviderIdentity.canonical_views.workbench_line.content.provider_identity = "other.provider";
+const { semantic_payload_hash: mismatchedProviderHash, ...mismatchedProviderInput } = mismatchedProviderIdentity;
+mismatchedProviderIdentity.semantic_payload_hash = semanticViewPayloadHash(mismatchedProviderInput);
+const mismatchedProviderBefore = JSON.stringify(mismatchedProviderIdentity);
+const mismatchedProviderModel = buildSemanticRenderModel(mismatchedProviderIdentity);
+assert(mismatchedProviderModel.status === "canonical_unsupported", "hash-valid provider mismatch must fail before projection");
+assert(mismatchedProviderModel.canonical_diagnostic?.reason === "canonical_result_provider_identity_mismatch", "provider identity failure drift");
+assert(!Object.hasOwn(mismatchedProviderModel, "current") && !Object.hasOwn(mismatchedProviderModel, "canvas_projection"), "provider mismatch published a projection");
+assert(JSON.stringify(mismatchedProviderIdentity) === mismatchedProviderBefore, "provider mismatch mutated semantic payload");
+
+const staleExecutionReceipt = structuredClone(linePayload);
+staleExecutionReceipt.execution_receipt.state_hash = "blake3:stale-receipt-state";
+const { semantic_payload_hash: staleReceiptHash, ...staleReceiptInput } = staleExecutionReceipt;
+staleExecutionReceipt.semantic_payload_hash = semanticViewPayloadHash(staleReceiptInput);
+const staleExecutionReceiptBefore = JSON.stringify(staleExecutionReceipt);
+const staleExecutionReceiptModel = buildSemanticRenderModel(staleExecutionReceipt);
+assert(staleExecutionReceiptModel.status === "canonical_unsupported", "stale execution receipt state must fail before projection");
+assert(staleExecutionReceiptModel.canonical_diagnostic?.reason === "committed_frame_identity_missing_or_invalid", "stale execution receipt failure drift");
+assert(!Object.hasOwn(staleExecutionReceiptModel, "current") && !Object.hasOwn(staleExecutionReceiptModel, "canvas_projection"), "stale execution receipt published a projection");
+assert(JSON.stringify(staleExecutionReceipt) === staleExecutionReceiptBefore, "stale execution receipt mutated semantic payload");
+
+const missingCommittedFrameIdentity = structuredClone(linePayload);
+missingCommittedFrameIdentity.committed_frame.run_id = "";
+const { semantic_payload_hash: missingCommittedFrameHash, ...missingCommittedFrameInput } = missingCommittedFrameIdentity;
+missingCommittedFrameIdentity.semantic_payload_hash = semanticViewPayloadHash(missingCommittedFrameInput);
+const missingCommittedFrameBefore = JSON.stringify(missingCommittedFrameIdentity);
+const missingCommittedFrameModel = buildSemanticRenderModel(missingCommittedFrameIdentity);
+assert(missingCommittedFrameModel.status === "canonical_unsupported", "hash-valid payload without a run identity must fail before projection");
+assert(missingCommittedFrameModel.canonical_diagnostic?.reason === "committed_frame_identity_missing_or_invalid", "committed frame identity diagnostic drift");
+assert(!Object.hasOwn(missingCommittedFrameModel, "current") && !Object.hasOwn(missingCommittedFrameModel, "canvas_projection"), "invalid committed frame published a projection");
+assert(JSON.stringify(missingCommittedFrameIdentity) === missingCommittedFrameBefore, "invalid committed frame mutated semantic payload");
+
+const missingCommittedSourceIdentity = structuredClone(linePayload);
+missingCommittedSourceIdentity.committed_frame.source_hash = "";
+const { semantic_payload_hash: missingCommittedSourceHash, ...missingCommittedSourceInput } = missingCommittedSourceIdentity;
+missingCommittedSourceIdentity.semantic_payload_hash = semanticViewPayloadHash(missingCommittedSourceInput);
+const missingCommittedSourceModel = buildSemanticRenderModel(missingCommittedSourceIdentity);
+assert(missingCommittedSourceModel.status === "canonical_unsupported", "hash-valid payload without a source identity must fail before projection");
+assert(missingCommittedSourceModel.canonical_diagnostic?.reason === "committed_frame_identity_missing_or_invalid", "committed source identity diagnostic drift");
+assert(!Object.hasOwn(missingCommittedSourceModel, "current"), "invalid committed source identity published a projection");
 
 const missingCameraPayload = payloadFor("line", [frame(0, { x: 9, y: 12 }, {
   workbench: authoritativeResultSet("line", {
@@ -282,7 +419,7 @@ const missingRendererIdentityBefore = JSON.stringify(missingRendererIdentityPayl
 const missingRendererIdentity = buildSemanticRenderModel(missingRendererIdentityPayload);
 assert(missingRendererIdentityPayload.view_config.primary_view === "", "missing renderer identity must not default to line");
 assert(missingRendererIdentity.status === "canonical_unsupported", "numeric observations must not select line without renderer identity");
-assert(missingRendererIdentity.canonical_diagnostic?.reason === "unsupported_renderer_family", "missing renderer identity failure drift");
+assert(missingRendererIdentity.canonical_diagnostic?.reason === "view_binding_identity_missing_or_mismatch", "missing renderer identity failure drift");
 assert(!Object.hasOwn(missingRendererIdentity, "current"), "missing renderer identity created a line model");
 assert(JSON.stringify(missingRendererIdentityPayload) === missingRendererIdentityBefore, "missing renderer identity mutated semantic payload");
 
@@ -306,10 +443,13 @@ function assertUnsupportedRendererFamily(family) {
   const before = JSON.stringify(payload);
   const first = buildSemanticRenderModel(payload);
   const second = buildSemanticRenderModel(payload);
+  const expectedReason = family === ""
+    ? "view_binding_identity_missing_or_mismatch"
+    : "unsupported_renderer_family";
   assert(first.status === "canonical_unsupported", `${JSON.stringify(family)} must fail as an unsupported projection`);
   assert(first.canonical_diagnostic?.code === "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE", `${JSON.stringify(family)} diagnostic drift`);
-  assert(first.canonical_diagnostic?.reason === "unsupported_renderer_family", `${JSON.stringify(family)} must preserve projection failure cause`);
-  assert(first.canonical_diagnostic?.actual_schema === family, `${JSON.stringify(family)} renderer identity drift`);
+  assert(first.canonical_diagnostic?.reason === expectedReason, `${JSON.stringify(family)} must preserve projection failure cause`);
+  if (family !== "") assert(first.canonical_diagnostic?.actual_schema === family, `${JSON.stringify(family)} renderer identity drift`);
   assert(!Object.hasOwn(first, "current") && !Object.hasOwn(first, "points") && !Object.hasOwn(first, "trajectory"), `${JSON.stringify(family)} must not create a line/default model`);
   assert(JSON.stringify(first) === JSON.stringify(second), `${JSON.stringify(family)} failure must be deterministic`);
   assert(JSON.stringify(payload) === before, `${JSON.stringify(family)} renderer mutated the semantic payload`);

@@ -53,6 +53,7 @@ function createClient({
     })();
   const client = {
     _updates: [],
+    _inputSteps: [],
     parseWarningsParsed() {
       return warnings;
     },
@@ -79,15 +80,6 @@ function createClient({
         throw new Error("step-fail");
       }
       return sharedState;
-    },
-    stepOneWithInputParsed(keys, lastKey, px, py, dt) {
-      if (!supportsStepWithInput) {
-        throw new Error("stepOneWithInputParsed unavailable");
-      }
-      return {
-        ...sharedState,
-        input: { keys, lastKey, px, py, dt },
-      };
     },
     columnsParsed() {
       if (columnsThrows) {
@@ -129,6 +121,15 @@ function createClient({
       return "blake3:test";
     },
   };
+  if (supportsStepWithInput) {
+    client.stepOneWithInputParsed = function stepOneWithInputParsed(keys, lastKey, px, py, dt) {
+      this._inputSteps.push({ keys, lastKey, px, py, dt });
+      return {
+        ...sharedState,
+        input: { keys, lastKey, px, py, dt },
+      };
+    };
+  }
   if (supportsSeed) {
     client.setRngSeed = function setRngSeed(seed) {
       if (seedThrows) {
@@ -372,6 +373,113 @@ async function main() {
   assert(
     failHandle.getDebugInfo().runtimeDiags?.some((row) => row?.code === "E_WASM_STEP_FAILED"),
     "wasm vm handle: step failure diag",
+  );
+
+  const incompleteInputClient = createClient({ warnings: [] });
+  const incompleteInputHandle = new WasmVmHandle({
+    loader: {
+      async ensure() {
+        return incompleteInputClient;
+      },
+      reset() {},
+      getLastBuildInfo() {
+        return "";
+      },
+      getLastBuildInfoDiag() {
+        return null;
+      },
+      getLastInitDiag() {
+        return null;
+      },
+      getLastPreprocessed() {
+        return "";
+      },
+      getLastPreprocessDiag() {
+        return null;
+      },
+      getCacheBust() {
+        return 19;
+      },
+    },
+    defaultSourceText: "매틱:움직씨 = { x <- 1. }.",
+  });
+  let incompleteInputRejected = false;
+  try {
+    await incompleteInputHandle.step({
+      n: 1,
+      input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8 },
+    });
+  } catch (_) {
+    incompleteInputRejected = true;
+  }
+  assert(incompleteInputRejected, "wasm vm handle: incomplete typed input rejected before dispatch");
+  assert(
+    incompleteInputClient._inputSteps.length === 0,
+    "wasm vm handle: incomplete typed input has no frame publication",
+  );
+  assert(
+    incompleteInputHandle.getDebugInfo().runtimeDiags?.some(
+      (row) => row?.code === "E_WASM_STEP_FAILED",
+    ),
+    "wasm vm handle: incomplete typed input uses existing step failure",
+  );
+  const validInputState = await incompleteInputHandle.step({
+    n: 1,
+    input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8, dt: 0.016 },
+  });
+  assert(
+    validInputState?.input?.dt === 0.016 && incompleteInputClient._inputSteps.length === 1,
+    "wasm vm handle: complete typed input dispatches exactly once",
+  );
+  const frozenInput = Object.freeze({ keys: 2, lastKey: "ArrowLeft", px: 3, py: 5, dt: 0.032 });
+  const frozenInputBefore = JSON.stringify(frozenInput);
+  await incompleteInputHandle.step({ n: 1, input: frozenInput });
+  assert(
+    JSON.stringify(frozenInput) === frozenInputBefore,
+    "wasm vm handle: typed input payload remains immutable",
+  );
+
+  const noTypedInputApiClient = createClient({ warnings: [], supportsStepWithInput: false });
+  const noTypedInputApiHandle = new WasmVmHandle({
+    loader: {
+      async ensure() {
+        return noTypedInputApiClient;
+      },
+      reset() {},
+      getLastBuildInfo() {
+        return "";
+      },
+      getLastBuildInfoDiag() {
+        return null;
+      },
+      getLastInitDiag() {
+        return null;
+      },
+      getLastPreprocessed() {
+        return "";
+      },
+      getLastPreprocessDiag() {
+        return null;
+      },
+      getCacheBust() {
+        return 31;
+      },
+    },
+    defaultSourceText: "매틱:움직씨 = { x <- 1. }.",
+  });
+  let noTypedInputApiRejected = false;
+  try {
+    await noTypedInputApiHandle.step({
+      n: 1,
+      input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8, dt: 0.016 },
+    });
+  } catch (_) {
+    noTypedInputApiRejected = true;
+  }
+  assert(noTypedInputApiRejected, "wasm vm handle: typed input API absence rejects before fallback");
+  assert(
+    noTypedInputApiClient._inputSteps.length === 0,
+    "wasm vm handle: typed input API absence has no frame publication",
   );
 
   let columnsFailed = false;

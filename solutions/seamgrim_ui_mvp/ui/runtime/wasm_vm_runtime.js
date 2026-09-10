@@ -73,6 +73,30 @@ function requireNativeObservationManifest(payload, operation) {
   return inspected.manifest;
 }
 
+function requireTypedFrameInput(input) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    throw new Error("typed frame input is required");
+  }
+  const hasOwn = (key) => Object.prototype.hasOwnProperty.call(input, key);
+  if (
+    !hasOwn("keys") ||
+    !hasOwn("lastKey") ||
+    !hasOwn("px") ||
+    !hasOwn("py") ||
+    !hasOwn("dt") ||
+    !Number.isInteger(input.keys) ||
+    input.keys < 0 ||
+    typeof input.lastKey !== "string" ||
+    !Number.isFinite(input.px) ||
+    !Number.isFinite(input.py) ||
+    !Number.isFinite(input.dt) ||
+    input.dt < 0
+  ) {
+    throw new Error("typed frame input is invalid");
+  }
+  return input;
+}
+
 export class WasmVmHandle {
   constructor({
     loader,
@@ -335,19 +359,23 @@ export class WasmVmHandle {
     const countRaw = Number(configuredMadi > 0 ? configuredMadi : n);
     const count = Number.isFinite(countRaw) && countRaw > 0 ? Math.floor(countRaw) : 1;
     let state = null;
-    const hasFrameInput = Boolean(input && typeof input === "object");
+    const hasFrameInput = input !== null && input !== undefined;
     try {
       if (!hasFrameInput && typeof client.runTicksParsed === "function") {
         state = client.runTicksParsed(count);
       } else {
+        const frameInput = hasFrameInput ? requireTypedFrameInput(input) : null;
+        if (frameInput && typeof client.stepOneWithInputParsed !== "function") {
+          throw new Error("typed frame input API is unavailable");
+        }
         for (let i = 0; i < count; i += 1) {
-          if (hasFrameInput && typeof client.stepOneWithInputParsed === "function") {
+          if (frameInput) {
             state = client.stepOneWithInputParsed(
-              Number(input.keys ?? 0),
-              String(input.lastKey ?? ""),
-              Number(input.px ?? 0),
-              Number(input.py ?? 0),
-            Number(input.dt ?? 0),
+              frameInput.keys,
+              frameInput.lastKey,
+              frameInput.px,
+              frameInput.py,
+              frameInput.dt,
           );
           } else {
             state = client.stepOneParsed();

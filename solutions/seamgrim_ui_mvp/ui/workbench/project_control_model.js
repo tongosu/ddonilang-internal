@@ -79,16 +79,15 @@ export function normalizeMaegimPlans(planRows = []) {
 }
 
 function normalizeAction(raw) {
-  const actionId = String(raw?.action_id ?? raw?.id ?? "").trim();
+  const actionId = String(raw?.action_id ?? "").trim();
   const snapshot = raw?.input_snapshot && typeof raw.input_snapshot === "object"
     ? raw.input_snapshot
-    : raw?.input && typeof raw.input === "object"
-      ? raw.input
-      : {};
-  const intent = String(snapshot.intent ?? raw?.intent ?? actionId).trim();
-  const keys = asFiniteNumber(snapshot.keys ?? raw?.keys, 0);
-  const lastKey = String(snapshot.last_key ?? snapshot.lastKey ?? raw?.last_key ?? raw?.lastKey ?? "").trim();
-  if (!actionId || !intent || keys === null) return null;
+    : null;
+  const intent = String(snapshot?.intent ?? "").trim();
+  const rawKeys = snapshot?.keys;
+  const keys = typeof rawKeys === "number" && Number.isFinite(rawKeys) ? rawKeys : null;
+  const lastKey = String(snapshot?.last_key ?? "").trim();
+  if (!snapshot || !actionId || !intent || keys === null || !Number.isInteger(keys) || keys < 0) return null;
   return {
     action_id: actionId,
     label: String(raw?.label ?? actionId).trim() || actionId,
@@ -97,8 +96,8 @@ function normalizeAction(raw) {
       intent,
       keys: Math.max(0, Math.trunc(keys)),
       last_key: lastKey,
-      pointer_x: asFiniteNumber(snapshot.pointer_x ?? snapshot.px, 0),
-      pointer_y: asFiniteNumber(snapshot.pointer_y ?? snapshot.py, 0),
+      pointer_x: asFiniteNumber(snapshot.pointer_x, 0),
+      pointer_y: asFiniteNumber(snapshot.pointer_y, 0),
       dt: asFiniteNumber(snapshot.dt, 0.015625),
     },
   };
@@ -108,18 +107,21 @@ export function normalizeActionMap(payload, projectId = "") {
   if (!payload || typeof payload !== "object" || String(payload.schema ?? "") !== ACTION_MAP_SCHEMA) {
     return null;
   }
+  const currentProjectId = String(projectId).trim();
+  const declaredProjectId = String(payload.project_id ?? "").trim();
+  if (currentProjectId && (!declaredProjectId || declaredProjectId !== currentProjectId)) return null;
   const actions = [];
   const seen = new Set();
   for (const raw of Array.isArray(payload.actions) ? payload.actions : []) {
     const action = normalizeAction(raw);
-    if (!action || seen.has(action.action_id)) continue;
+    if (!action || seen.has(action.action_id)) return null;
     seen.add(action.action_id);
     actions.push(action);
   }
   if (!actions.length) return null;
   const normalized = {
     schema: ACTION_MAP_SCHEMA,
-    project_id: String(payload.project_id ?? projectId).trim() || String(projectId),
+    project_id: declaredProjectId || currentProjectId,
     actions,
   };
   return {

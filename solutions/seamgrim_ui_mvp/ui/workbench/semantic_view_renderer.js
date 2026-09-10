@@ -18,6 +18,39 @@ function canonicalWorkbenchResult(payload, family) {
   if (!canonicalPayload || typeof canonicalPayload !== "object") {
     return { status: "unavailable", result: null, diagnostic: null };
   }
+  const committed = payload?.committed_frame;
+  const identity = canonicalPayload.identity;
+  if (
+    !committed
+    || !identity
+    || String(identity.state_hash ?? "") !== String(committed.state_hash ?? "")
+    || String(identity.source_hash ?? "") !== String(committed.source_hash ?? "")
+    || Number(identity.tick_id) !== Number(committed.madi)
+  ) {
+    return {
+      status: "unsupported",
+      result: null,
+      diagnostic: {
+        code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+        reason: "canonical_result_identity_mismatch",
+        actual_schema: String(canonicalPayload.schema ?? ""),
+      },
+    };
+  }
+  if (
+    String(canonicalPayload?.content?.provider_identity ?? "") !== "ddonirang_tool.wasm_runtime"
+    || String(canonicalPayload?.content?.provider_provenance ?? "") !== "native_authoritative_structured_result"
+  ) {
+    return {
+      status: "unsupported",
+      result: null,
+      diagnostic: {
+        code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+        reason: "canonical_result_provider_identity_mismatch",
+        actual_schema: String(canonicalPayload.schema ?? ""),
+      },
+    };
+  }
   return {
     status: String(canonicalPayload.status ?? "unavailable"),
     result: canonicalPayload?.content?.result ?? null,
@@ -90,10 +123,79 @@ function staleSemanticPayloadModel(payload) {
   });
 }
 
+function invalidCommittedFrameModel(payload) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "committed_frame_identity_missing_or_invalid",
+      actual_schema: String(payload?.schema ?? ""),
+    },
+  });
+}
+
+function invalidViewBindingModel(payload) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "view_binding_identity_missing_or_mismatch",
+      actual_schema: String(payload?.view_binding?.schema ?? ""),
+    },
+  });
+}
+
 function semanticPayloadHashMatches(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
   const { semantic_payload_hash: declaredHash, ...hashInput } = payload;
   return typeof declaredHash === "string" && declaredHash === semanticViewPayloadHash(hashInput);
+}
+
+function committedFrameIdentityValid(payload) {
+  const frame = payload?.committed_frame;
+  return Boolean(
+    frame &&
+    typeof frame === "object" &&
+    String(frame.run_id ?? "").trim() &&
+    String(frame.workspace_identity ?? "").trim() &&
+    Number.isInteger(frame.frame_id) && frame.frame_id >= 0 &&
+    Number.isInteger(frame.madi) && frame.madi >= 0 &&
+    String(frame.state_hash ?? "").trim() &&
+    String(frame.source_hash ?? "").trim(),
+  );
+}
+
+function executionReceiptBindingValid(payload) {
+  const binding = payload?.execution_receipt;
+  const frame = payload?.committed_frame;
+  return Boolean(
+    binding
+    && typeof binding === "object"
+    && String(binding.summary_schema ?? "").trim()
+    && String(binding.source_profile_identity ?? "").trim()
+    && String(binding.source_identity ?? "").trim()
+    && String(binding.state_hash ?? "") === String(frame?.state_hash ?? "")
+    && binding.work_cost_receipt
+    && typeof binding.work_cost_receipt === "object"
+    && String(binding.work_cost_receipt.schema ?? "").trim()
+  );
+}
+
+function viewBindingIdentityValid(payload) {
+  const primaryView = String(payload?.view_config?.primary_view ?? "").trim();
+  const binding = payload?.view_binding;
+  const canonicalKey = `workbench_${primaryView}`;
+  const canonicalStatus = String(payload?.canonical_views?.[canonicalKey]?.status ?? "unavailable");
+  return Boolean(
+    primaryView
+    &&
+    binding
+    && typeof binding === "object"
+    && binding.schema === "seamgrim.workbench.semantic_view_binding.v1"
+    && String(binding.view_family ?? "").trim() === primaryView
+    && String(binding.canonical_payload_key ?? "").trim() === canonicalKey
+    && String(binding.canonical_payload_status ?? "") === canonicalStatus
+  );
 }
 
 function baseModel(payload) {
@@ -239,6 +341,9 @@ function lineModel(payload) {
 export function buildSemanticRenderModel(payload) {
   if (!payload?.committed_frame) return baseModel(payload);
   if (!semanticPayloadHashMatches(payload)) return staleSemanticPayloadModel(payload);
+  if (!committedFrameIdentityValid(payload)) return invalidCommittedFrameModel(payload);
+  if (!executionReceiptBindingValid(payload)) return invalidCommittedFrameModel(payload);
+  if (!viewBindingIdentityValid(payload)) return invalidViewBindingModel(payload);
   const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
   if (family === "pendulum") return pendulumModel(payload);
   if (family === "projectile") return projectileModel(payload);

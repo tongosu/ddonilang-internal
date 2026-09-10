@@ -7,6 +7,7 @@ import {
   applySourceReadinessFix,
   projectAuthoritativeSourceAnalysis,
   projectSourceAnalysisUnavailable,
+  sharedRunSummaryBindingValid,
   SOURCE_ANALYSIS_PROFILE_IDENTITY,
   SOURCE_READINESS_DIAGNOSTIC_CODE,
   SOURCE_READINESS_FIX_ID,
@@ -4067,8 +4068,44 @@ async function refreshGeneratedProjectLockForRun(projectSource) {
   };
 }
 
-function makeSnapshot(intent = "none", input = state.nextInput) {
+function inputSnapshotRequestBinding(project = currentProject(), source = activeRuntimeSourceText(project)) {
+  const entryPath = localProjectEntryPath(project);
+  const primaryView = primaryViewInstance(state.viewWorkspace);
+  const sourceIdentity = currentVirtualProjectSourceHash(project)
+    || `candidate:fnv1a32:${stableHash(String(source ?? ""))}`;
   return {
+    workspace_identity: String(project?.id ?? ""),
+    document_identity: `seamgrim://${encodeURIComponent(String(project?.id ?? ""))}/${encodeURIComponent(entryPath)}`,
+    document_version: Number(state.completionDocumentVersion),
+    source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+    view_identity: String(primaryView?.view_instance_id ?? ""),
+    bogae_identity: String(primaryView?.family ?? ""),
+    provider_identity: "ddonirang_tool.wasm_runtime",
+    request_source_identity: sourceIdentity,
+  };
+}
+
+function inputSnapshotRequestHash(binding) {
+  return `candidate:fnv1a32:input_snapshot_request:${stableHash(stableCanonicalJson(binding))}`;
+}
+
+function queuedInputBindingValid(input, binding) {
+  if (!input || typeof input !== "object") return true;
+  return String(input.workspace_identity ?? "") === binding.workspace_identity
+    && String(input.document_identity ?? "") === binding.document_identity
+    && Number(input.document_version) === binding.document_version
+    && String(input.source_profile_identity ?? "") === binding.source_profile_identity
+    && String(input.view_identity ?? "") === binding.view_identity
+    && String(input.bogae_identity ?? "") === binding.bogae_identity
+    && String(input.provider_identity ?? "") === binding.provider_identity
+    && String(input.request_source_identity ?? "") === binding.request_source_identity
+    && String(input.input_binding_hash ?? "") === inputSnapshotRequestHash(binding);
+}
+
+function makeSnapshot(intent = "none", input = state.nextInput, run = activeRun(), wasmState = null) {
+  const project = currentProject();
+  const requestBinding = inputSnapshotRequestBinding(project, run?.execution_source ?? activeRuntimeSourceText(project));
+  const snapshot = {
     schema: "seamgrim.input_snapshot.ui.v1",
     madi: activeRun()?.frames.length ?? 0,
     intent,
@@ -4079,6 +4116,13 @@ function makeSnapshot(intent = "none", input = state.nextInput) {
     lastKey: String(input?.lastKey ?? ""),
     pointer: { x: Number(input?.px ?? 0), y: Number(input?.py ?? 0) },
     dt: Number(input?.dt ?? 0.015625),
+    ...requestBinding,
+    source_identity: String(run?.shared_runtime_result?.source_identity ?? run?.source_hash ?? ""),
+    world_state_identity: readStateHash(wasmState, ""),
+  };
+  return {
+    ...snapshot,
+    snapshot_hash: `candidate:fnv1a32:input_snapshot:${stableHash(stableCanonicalJson(snapshot))}`,
   };
 }
 
@@ -4375,6 +4419,9 @@ async function startRun({ branchFrom = null } = {}) {
       pushDiagnostic("E_SOURCE_EMPTY", "DDN 원문이 비어 있습니다. 실행할 원문을 입력해 주세요.", "error");
       return false;
     }
+    if (state.nextInput && !queuedInputBindingValid(state.nextInput, inputSnapshotRequestBinding(project, source))) {
+      throw new Error("E_INPUT_SNAPSHOT_BINDING_REQUIRED");
+    }
     if (projectSource) {
       markCurrentProjectExecutionStale("new_project_run");
       state.projectExecution.failure = null;
@@ -4468,7 +4515,7 @@ async function startRun({ branchFrom = null } = {}) {
       firstFrame = appendFrame(
         run,
         executedState,
-        makeSnapshot(branchFrom ? "project_branch_start" : "project_run_start", queuedInput),
+        makeSnapshot(branchFrom ? "project_branch_start" : "project_run_start", queuedInput, run, executedState),
       );
       run.committed_step_count = 1;
       if (queuedInput?.input_id && state.nextInput?.input_id === queuedInput.input_id) {
@@ -4539,12 +4586,13 @@ async function startRun({ branchFrom = null } = {}) {
       });
       assertExecutionGeneration(executionGeneration, projectIdAtStart);
       const committedStateHash = readStateHash(committedState, "");
-      if (
-        String(sharedRunSummary?.source_profile_identity ?? "") !== SOURCE_ANALYSIS_PROFILE_IDENTITY
-        || !committedStateHash
-        || String(sharedRunSummary?.state_hash ?? "") !== committedStateHash
-        || !sharedRunSummary?.work_cost_receipt
-      ) {
+      const sourceBytesSha256 = await sha256HexUtf8(source);
+      assertExecutionGeneration(executionGeneration, projectIdAtStart);
+      if (!sharedRunSummaryBindingValid(sharedRunSummary, {
+        sourceProfileIdentity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+        sourceBytesSha256,
+        stateHash: committedStateHash,
+      })) {
         throw new Error("E_WORKBENCH_RUN_RECEIPT_BINDING_REQUIRED");
       }
       run.shared_runtime_result = {
@@ -4560,7 +4608,7 @@ async function startRun({ branchFrom = null } = {}) {
       firstFrame = appendFrame(
         run,
         committedState,
-        makeSnapshot(branchFrom ? "branch_start" : "run_start", queuedInput),
+        makeSnapshot(branchFrom ? "branch_start" : "run_start", queuedInput, run, committedState),
       );
       run.committed_step_count = isOneshot ? 1 : 0;
       if (queuedInput?.input_id && state.nextInput?.input_id === queuedInput.input_id) {
@@ -4661,7 +4709,6 @@ async function commitNextLiveStep({ origin = "auto", token = livePumpToken() } =
         dt: queuedInput.dt,
       }
     : null;
-  const snapshot = makeSnapshot(queuedInput?.intent ?? (origin === "manual" ? "step" : "auto_step"), queuedInput);
   try {
     const plan = run.source_kind === "virtual_project_source"
       && run.project_execution_plan
@@ -4674,6 +4721,17 @@ async function commitNextLiveStep({ origin = "auto", token = livePumpToken() } =
     if (!executionSource.trim()) {
       throw new Error("E_RUN_EXECUTION_SOURCE_MISSING: 봉인된 실행 원문이 없습니다");
     }
+    if (queuedInput && !queuedInputBindingValid(
+      queuedInput,
+      inputSnapshotRequestBinding(currentProject(), executionSource),
+    )) {
+      throw new Error("E_INPUT_SNAPSHOT_BINDING_REQUIRED");
+    }
+    const snapshot = makeSnapshot(
+      queuedInput?.intent ?? (origin === "manual" ? "step" : "auto_step"),
+      queuedInput,
+      run,
+    );
     const wasm = state.wasm;
     if (!wasm) throw new Error("E_RUN_VM_MISSING: 활성 실행의 봉인 VM이 없습니다");
     const wasmState = await wasm.step({
@@ -4882,6 +4940,7 @@ function setNextAction(actionId) {
   const action = actionById(state.projectControls, actionId);
   if (!action || state.projectControls?.project_id !== state.projectId) return null;
   const input = action.input_snapshot;
+  const binding = inputSnapshotRequestBinding();
   state.actionSeq += 1;
   state.nextInput = {
     input_id: `input_${String(state.actionSeq).padStart(6, "0")}`,
@@ -4894,6 +4953,8 @@ function setNextAction(actionId) {
     px: input.pointer_x,
     py: input.pointer_y,
     dt: input.dt,
+    ...binding,
+    input_binding_hash: inputSnapshotRequestHash(binding),
   };
   renderAll();
   return state.nextInput;

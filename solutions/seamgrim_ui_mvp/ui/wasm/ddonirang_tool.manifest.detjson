@@ -1015,9 +1015,9 @@
       "sha256": "4ff23f4ffda9a448bf75e9d74af959fb492bdf5cc4847392027c408cd03ade1e"
     },
     {
-      "bytes": 177531,
+      "bytes": 177366,
       "path": "tool/src/wasm_api.rs",
-      "sha256": "4dc1e6391b14266f88e73a0f46ce21872bdaa4e43a9d5e39769e8a715965d338"
+      "sha256": "ecf1cc2fb381dfe5f092c706411b9d4e6de7382f115fe3b2666ade0fac298ef0"
     },
     {
       "bytes": 46199,
@@ -1049,12 +1049,12 @@
     "symbolic/src",
     "tool/src"
   ],
-  "source_tree_sha256": "1669a4a8080b1d2034bcb5eaeaf68276dbc5c36c38df7a8293bfa14df7ca2881",
+  "source_tree_sha256": "5cfed92febb190c869d1d8c0e5808f31bf8128d8f93d8c679732e15bb27a5f9e",
   "state_schema": "seamgrim.engine_response.v0",
   "target": "web",
   "wasm_bindgen_or_pack_version": "wasm-pack 0.14.0",
   "wasm_hash_mode": "raw_bytes_sha256",
   "wasm_path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
-  "wasm_sha256": "b77b2ebebd47f6fe241c612b0a6a038e9b4dd401588b0f3a9ee493d817f00095",
-  "wasm_size": 5677136
+  "wasm_sha256": "ffc82a6e97ba5a3af72b090f222f7f808d982d63c4297bf075d16cfd334a9f83",
+  "wasm_size": 5676788
 }

@@ -4,8 +4,10 @@ import {
   analyzeSourceReadiness,
   applySourceReadinessFix,
   projectAuthoritativeSourceAnalysis,
+  sharedRunSummaryBindingValid,
   REPAIR_PROPOSAL_SCHEMA,
   SOURCE_ANALYSIS_SNAPSHOT_SCHEMA,
+  SOURCE_ANALYSIS_PROFILE_IDENTITY,
   SOURCE_READINESS_DIAGNOSTIC_CODE,
   SOURCE_READINESS_FIX_ID,
 } from "../solutions/seamgrim_ui_mvp/ui/workbench/source_readiness.js";
@@ -38,7 +40,7 @@ const snapshot = {
   schema: SOURCE_ANALYSIS_SNAPSHOT_SCHEMA,
   source_revision_identity: "blake3:authoritative-chaebi-revision",
   analysis_generation: 17,
-  source_profile_identity: "strict",
+  source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
   outcome: "ACCEPTED",
   diagnostics: [{
     code: SOURCE_READINESS_DIAGNOSTIC_CODE,
@@ -90,6 +92,56 @@ assert.equal(readiness.candidates.length, 1);
 assert.equal(readiness.candidate.source_revision_identity, snapshot.source_revision_identity);
 assert.equal(readiness.candidate.analysis_generation, snapshot.analysis_generation);
 assert.equal(readiness.candidate.start_offset_utf16, source.lastIndexOf(":"));
+
+const wrongProfile = projectAuthoritativeSourceAnalysis({
+  ...snapshot,
+  source_profile_identity: "wrong-profile",
+  diagnostics: [],
+}, {
+  expectedAnalysisGeneration: 17,
+  sourceHash: localIdentity.source_hash,
+  sourceText: source,
+});
+assert.equal(wrongProfile.ready, false, "wrong source profile must not authorize readiness");
+assert.equal(wrongProfile.blocked, true, "wrong source profile must fail closed");
+assert.equal(wrongProfile.authority_status, "shared_frontend_unavailable");
+assert.equal(wrongProfile.diagnostics[0].code, "E_SOURCE_ANALYSIS_UNAVAILABLE");
+
+const profilePrefix = projectAuthoritativeSourceAnalysis({
+  ...snapshot,
+  source_profile_identity: `${SOURCE_ANALYSIS_PROFILE_IDENTITY}-compat`,
+  diagnostics: [],
+}, {
+  expectedAnalysisGeneration: 17,
+  sourceHash: localIdentity.source_hash,
+  sourceText: source,
+});
+assert.equal(profilePrefix.ready, false, "profile prefixes must not become aliases");
+assert.equal(profilePrefix.blocked, true, "profile prefixes must fail closed");
+
+const sharedSummary = {
+  source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+  execution_envelope: { source_bytes_sha256: "a".repeat(64) },
+  state_hash: "blake3:committed-state",
+  work_cost_receipt: { schema: "ddn.work_cost_receipt.v1" },
+};
+assert.equal(sharedRunSummaryBindingValid(sharedSummary, {
+  sourceProfileIdentity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+  sourceBytesSha256: "a".repeat(64),
+  stateHash: "blake3:committed-state",
+}), true, "exact shared run summary binding must remain valid");
+for (const [label, mutated] of [
+  ["source", { ...sharedSummary, execution_envelope: { source_bytes_sha256: "b".repeat(64) } }],
+  ["profile", { ...sharedSummary, source_profile_identity: `${SOURCE_ANALYSIS_PROFILE_IDENTITY}-compat` }],
+  ["state", { ...sharedSummary, state_hash: "blake3:stale-state" }],
+  ["receipt", { ...sharedSummary, work_cost_receipt: null }],
+]) {
+  assert.equal(sharedRunSummaryBindingValid(mutated, {
+    sourceProfileIdentity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+    sourceBytesSha256: "a".repeat(64),
+    stateHash: "blake3:committed-state",
+  }), false, `shared run summary ${label} mismatch must fail closed`);
+}
 
 const applied = applySourceReadinessFix(source, readiness.candidate);
 assert.equal(applied.status, "applied");
