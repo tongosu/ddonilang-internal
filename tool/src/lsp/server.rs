@@ -337,6 +337,7 @@ impl LspServer {
             "workspace/symbol" => self.workspace_symbol(id, params),
             "textDocument/formatting" => self.formatting(id, params),
             "textDocument/rangeFormatting" => self.range_formatting(id, params),
+            "textDocument/willSaveWaitUntil" => self.will_save_wait_until(id, params),
             "textDocument/documentHighlight" => self.document_highlights(id, params),
             "textDocument/references" => self.references(id, params),
             "textDocument/prepareCallHierarchy" => self.prepare_call_hierarchy(id, params),
@@ -1031,6 +1032,14 @@ impl LspServer {
                 "newText": canonical,
             }]),
         ))
+    }
+
+    fn will_save_wait_until(
+        &mut self,
+        id: Value,
+        params: Option<Value>,
+    ) -> Result<ServerEvent, ServerError> {
+        self.formatting(id, params)
     }
 
     fn range_formatting(
@@ -2446,7 +2455,11 @@ impl LspServer {
             json!({
                 "capabilities": {
                     "positionEncoding": encoding.as_lsp_name(),
-                    "textDocumentSync": {"openClose": true, "change": 1},
+                    "textDocumentSync": {
+                        "openClose": true,
+                        "change": 1,
+                        "willSaveWaitUntil": true
+                    },
                     "completionProvider": {"resolveProvider": false},
                     "definitionProvider": true,
                     "typeDefinitionProvider": true,

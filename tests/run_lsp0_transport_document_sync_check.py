@@ -234,7 +234,9 @@ def assert_initialize(response: dict, message_id: int = 1) -> None:
     assert response["id"] == message_id
     capabilities = response["result"]["capabilities"]
     assert capabilities["positionEncoding"] == "utf-16"
-    assert capabilities["textDocumentSync"] == {"openClose": True, "change": 1}
+    assert capabilities["textDocumentSync"]["openClose"] is True
+    assert capabilities["textDocumentSync"]["change"] == 1
+    assert capabilities["textDocumentSync"]["willSaveWaitUntil"] is True
 
 
 def lifecycle_messages() -> list[dict]:

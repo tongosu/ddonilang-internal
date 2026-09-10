@@ -6,6 +6,7 @@ use serde_json::{json, Value};
 
 const URI: &str = "file:///lsp-formatting.ddn";
 const DDL_URI: &str = "file:///lsp-formatting.ddl";
+const ONGIM_URI: &str = "file:///lsp-formatting.옮김";
 const LARGE_URI: &str = "file:///lsp-formatting-large.ddn";
 
 fn init(server: &mut LspServer) -> Value {
@@ -76,6 +77,39 @@ fn format_uri(
             result: Ok(value), ..
         } => value.clone(),
         _ => panic!("formatting must return success: {event:?}"),
+    }
+}
+
+fn will_save_wait_until(
+    server: &mut LspServer,
+    id: i64,
+    uri: &str,
+    version: Option<i64>,
+    identity: Option<&str>,
+    reason: i64,
+) -> Value {
+    let mut document = json!({"uri": uri});
+    if let Some(version) = version {
+        document["version"] = json!(version);
+    }
+    if let Some(identity) = identity {
+        document["snapshotIdentity"] = json!(identity);
+    }
+    let event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(id),
+            method: "textDocument/willSaveWaitUntil".into(),
+            params: Some(json!({
+                "textDocument": document,
+                "reason": reason
+            })),
+        })
+        .unwrap();
+    match &event.responses[0] {
+        RpcMessage::Response {
+            result: Ok(value), ..
+        } => value.clone(),
+        _ => panic!("willSaveWaitUntil must return success: {event:?}"),
     }
 }
 
@@ -321,6 +355,139 @@ fn lsp32_formatting_is_bounded_and_cancellation_is_atomic() {
         .to_string();
     assert_eq!(
         format_uri(&mut server, 31, LARGE_URI, Some(2), Some(&large_identity)),
+        json!([])
+    );
+}
+
+#[test]
+fn lsp37_will_save_wait_until_reuses_safe_formatting_for_live_surfaces() {
+    let source = "첫함수 : 셈씨 := {\n\"🙂\" 보여주기.\n}\n문자 : 글 := \"🙂\".";
+    let expected = canonical(source);
+    assert_ne!(expected, source);
+
+    let mut server = LspServer::new();
+    let initialized = init(&mut server);
+    assert_eq!(initialized["capabilities"]["textDocumentSync"]["willSaveWaitUntil"], true);
+    open(&mut server, source, 1);
+    let identity = server
+        .documents()
+        .get(URI)
+        .unwrap()
+        .identity
+        .as_str()
+        .to_string();
+    assert_eq!(
+        will_save_wait_until(&mut server, 60, URI, Some(1), Some(&identity), 1),
+        json!([{
+            "range": {
+                "start": {"line": 0, "character": 0},
+                "end": {"line": 3, "character": 15}
+            },
+            "newText": expected.clone()
+        }])
+    );
+    assert_eq!(
+        will_save_wait_until(&mut server, 601, URI, Some(0), Some(&identity), 1),
+        json!([])
+    );
+    assert_eq!(
+        will_save_wait_until(&mut server, 602, URI, Some(1), Some("sha256:stale"), 1),
+        json!([])
+    );
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "textDocument/didChange".into(),
+            params: Some(json!({
+                "textDocument": {"uri": URI, "version": 2},
+                "contentChanges": [{"text": expected}]
+            })),
+        })
+        .unwrap();
+    let current_identity = server
+        .documents()
+        .get(URI)
+        .unwrap()
+        .identity
+        .as_str()
+        .to_string();
+    assert_eq!(
+        will_save_wait_until(
+            &mut server,
+            61,
+            URI,
+            Some(2),
+            Some(&current_identity),
+            1
+        ),
+        json!([])
+    );
+    assert_eq!(
+        will_save_wait_until(&mut server, 611, URI, Some(1), Some(&current_identity), 1),
+        json!([])
+    );
+    assert_eq!(
+        will_save_wait_until(&mut server, 612, URI, Some(2), Some("sha256:stale"), 1),
+        json!([])
+    );
+
+    let ddl_source =
+        "#!한국어\n  원주율:셈수 :={...}.  \n\n\n#!日本語\n円周率:数値 :={...}.\n\n";
+    let ongim_source =
+        "#!한국어\n  원주율:셈수 :={...}.  \n\n\n#!日本語\n円周率:数値 :={...}.\n\n";
+    open_uri(&mut server, DDL_URI, "ddl", ddl_source, 3);
+    open_uri(&mut server, ONGIM_URI, "옮김", ongim_source, 4);
+    assert_eq!(
+        will_save_wait_until(&mut server, 62, DDL_URI, Some(3), None, 1)
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+    assert_eq!(
+        will_save_wait_until(&mut server, 63, ONGIM_URI, Some(4), None, 1)
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "$/cancelRequest".into(),
+            params: Some(json!({"id": 66})),
+        })
+        .unwrap();
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(66),
+            method: "textDocument/willSaveWaitUntil".into(),
+            params: Some(json!({
+                "textDocument": {"uri": ONGIM_URI, "version": 4},
+                "reason": 1
+            })),
+        })
+        .unwrap();
+    match &cancelled.responses[0] {
+        RpcMessage::Response {
+            result: Err(error), ..
+        } => assert_eq!(error.code, -32800),
+        other => panic!("cancelled willSaveWaitUntil must not publish edits: {other:?}"),
+    }
+
+    let malformed = "첫함수 : 셈씨 := {";
+    open_uri(&mut server, "file:///lsp-formatting.txt", "plaintext", malformed, 1);
+    assert_eq!(
+        will_save_wait_until(&mut server, 64, "file:///lsp-formatting.txt", Some(1), None, 1),
+        json!([])
+    );
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "textDocument/didClose".into(),
+            params: Some(json!({"textDocument": {"uri": URI}})),
+        })
+        .unwrap();
+    assert_eq!(
+        will_save_wait_until(&mut server, 65, URI, None, None, 1),
         json!([])
     );
 }
