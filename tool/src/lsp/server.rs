@@ -29,7 +29,8 @@ use super::symbol::{
 };
 use crate::completion::{complete_snapshot, CompletionCandidate, CompletionCandidateKind};
 use ddonirang_lang::{
-    canonicalize, normalize, parse_v25, validate_no_legacy_boim_surface, NormalizationLevel,
+    canonicalize, canonicalize_ddl_wave1, normalize, parse_ddl_wave1, parse_v25,
+    validate_no_legacy_boim_surface, NormalizationLevel,
 };
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
@@ -43,6 +44,8 @@ const MAX_CALL_HIERARCHY_ITEMS: usize = 1_000;
 const MAX_CALL_HIERARCHY_EDGES: usize = 10_000;
 const MAX_SELECTION_POSITIONS: usize = 100;
 const MAX_FOLDING_RANGES: usize = 1_000;
+const MAX_FORMATTING_SOURCE_BYTES: usize = 1_000_000;
+const MAX_INLAY_HINTS: usize = 1_000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServerState {
@@ -940,28 +943,104 @@ impl LspServer {
         let Some(snapshot) = self.documents.get(uri) else {
             return Ok(success_event(id, json!([])));
         };
-        if snapshot.language_id != "ddn"
-            || (document.contains_key("version")
-                && document.get("version").and_then(Value::as_i64) != Some(snapshot.version))
-            || (document.contains_key("snapshotIdentity")
-                && document.get("snapshotIdentity").and_then(Value::as_str)
-                    != Some(snapshot.identity.as_str()))
-        {
-            return Ok(success_event(id, json!([])));
-        }
+        let version = snapshot.version;
+        let snapshot_identity = snapshot.identity.clone();
+        let language_id = snapshot.language_id.clone();
         let Ok(source) = snapshot.text() else {
             return Ok(success_event(id, json!([])));
         };
-        if validate_no_legacy_boim_surface(source).is_err() {
-            return Ok(success_event(id, json!([])));
-        }
-        let Ok(mut program) = parse_v25(source, uri) else {
+        if source.len() > MAX_FORMATTING_SOURCE_BYTES {
             return Ok(success_event(id, json!([])));
         };
-        if canonicalize(&mut program).is_err() {
+        if (document.contains_key("version")
+            && document.get("version").and_then(Value::as_i64) != Some(version))
+            || (document.contains_key("snapshotIdentity")
+                && document.get("snapshotIdentity").and_then(Value::as_str)
+                    != Some(snapshot_identity.as_str()))
+        {
             return Ok(success_event(id, json!([])));
         }
-        let canonical = normalize(&program, NormalizationLevel::N1);
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        let is_ddl = uri.ends_with(".ddl") || uri.ends_with(".옮김");
+        if (!is_ddl && language_id != "ddn")
+            || (is_ddl && !matches!(language_id.as_str(), "ddn" | "ddl" | "옮김"))
+        {
+            return Ok(success_event(id, json!([])));
+        }
+        if !is_ddl && validate_no_legacy_boim_surface(source).is_err() {
+            return Ok(success_event(id, json!([])));
+        }
+        let original_ddl_identity = if is_ddl {
+            let Ok(document) = parse_ddl_wave1(source, uri) else {
+                return Ok(success_event(id, json!([])));
+            };
+            Some(
+                document
+                    .sections
+                    .iter()
+                    .map(|section| {
+                        (
+                            section.projection.definition_identity.clone(),
+                            section.projection.type_identity.clone(),
+                        )
+                    })
+                    .collect::<Vec<_>>(),
+            )
+        } else {
+            None
+        };
+        let canonical = if is_ddl {
+            let Ok(document) = parse_ddl_wave1(source, uri) else {
+                return Ok(success_event(id, json!([])));
+            };
+            canonicalize_ddl_wave1(&document)
+        } else {
+            let Ok(mut program) = parse_v25(source, uri) else {
+                return Ok(success_event(id, json!([])));
+            };
+            if canonicalize(&mut program).is_err() {
+                return Ok(success_event(id, json!([])));
+            }
+            normalize(&program, NormalizationLevel::N1)
+        };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        let stable = if is_ddl {
+            let Ok(document) = parse_ddl_wave1(&canonical, uri) else {
+                return Ok(success_event(id, json!([])));
+            };
+            let identity = document
+                .sections
+                .iter()
+                .map(|section| {
+                    (
+                        section.projection.definition_identity.clone(),
+                        section.projection.type_identity.clone(),
+                    )
+                })
+                .collect::<Vec<_>>();
+            if original_ddl_identity.as_deref() != Some(identity.as_slice()) {
+                return Ok(success_event(id, json!([])));
+            }
+            canonicalize_ddl_wave1(&document)
+        } else {
+            let Ok(mut program) = parse_v25(&canonical, uri) else {
+                return Ok(success_event(id, json!([])));
+            };
+            if canonicalize(&mut program).is_err() {
+                return Ok(success_event(id, json!([])));
+            }
+            normalize(&program, NormalizationLevel::N1)
+        };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        if stable != canonical {
+            return Ok(success_event(id, json!([])));
+        }
         if canonical == source {
             return Ok(success_event(id, json!([])));
         }
@@ -976,6 +1055,9 @@ impl LspServer {
         ) else {
             return Ok(success_event(id, json!([])));
         };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         Ok(success_event(
             id,
             json!([{
@@ -2053,10 +2135,14 @@ impl LspServer {
                 ));
             }
         }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
         let hints = inlay_hints_snapshot(snapshot, encoding)
             .map_err(ServerError::SignatureHelp)?
             .into_iter()
+            .take(MAX_INLAY_HINTS)
             .map(|hint| {
                 json!({
                     "position": lsp_position_value(hint.position),
@@ -2073,6 +2159,9 @@ impl LspServer {
                 })
             })
             .collect::<Vec<_>>();
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         Ok(success_event(id, json!(hints)))
     }
 

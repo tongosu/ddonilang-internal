@@ -195,8 +195,8 @@ fn lsp18_inlay_hints_reuse_param_identity_and_live_snapshot() {
     let hints = inlay_hints(&mut server, 8, Some(1));
     let hints = hints.as_array().unwrap();
     assert_eq!(hints.len(), 2);
-    assert_eq!(hints[0]["label"], "왼:");
-    assert_eq!(hints[1]["label"], "오른:");
+    assert_eq!(hints[0]["label"], "왼:수");
+    assert_eq!(hints[1]["label"], "오른:수");
     assert_eq!(
         hints[0]["data"]["definitionIdentity"],
         "definition:local:더하"
@@ -275,4 +275,75 @@ fn lsp18_inlay_hints_reuse_param_identity_and_live_snapshot() {
     ));
     close(&mut server);
     assert_eq!(inlay_hints(&mut server, 15, None), json!([]));
+}
+
+#[test]
+fn lsp33_inlay_hints_require_explicit_types_and_preserve_utf16() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    let explicit =
+        "(왼:글, 오른:수) 더하:셈씨 := { 0 돌려줘. }\n호출:셈씨 := { (\"🙂\", 2) 더하. }";
+    open(&mut server, explicit, 1);
+    let hints = inlay_hints(&mut server, 20, Some(1));
+    assert_eq!(hints.as_array().unwrap().len(), 2);
+    assert_eq!(hints[0]["label"], "왼:글");
+    assert_eq!(hints[1]["label"], "오른:수");
+    let first_position = byte_offset_to_position(
+        explicit,
+        explicit.rfind("\"🙂\"").unwrap(),
+        PositionEncoding::Utf16,
+    )
+    .unwrap();
+    let second_position = byte_offset_to_position(
+        explicit,
+        explicit.rfind('2').unwrap(),
+        PositionEncoding::Utf16,
+    )
+    .unwrap();
+    assert_eq!(
+        hints[0]["position"],
+        json!({"line": first_position.line, "character": first_position.character})
+    );
+    assert_eq!(
+        hints[1]["position"],
+        json!({"line": second_position.line, "character": second_position.character})
+    );
+    assert_eq!(hints[0]["data"]["paramPinId"].is_u64(), true);
+
+    let inferred =
+        "(왼=0, 오른=0) 더하:셈씨 := { 0 돌려줘. }\n호출:셈씨 := { (1, 2) 더하. }";
+    change(&mut server, inferred, 2);
+    assert_eq!(inlay_hints(&mut server, 21, Some(2)), json!([]));
+
+    let stale = server
+        .handle_message(RpcMessage::Request {
+            id: json!(22),
+            method: "textDocument/inlayHint".into(),
+            params: Some(json!({
+                "textDocument": {"uri": URI, "version": 1}
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &stale.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32801
+    ));
+
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "$/cancelRequest".into(),
+            params: Some(json!({"id": 23})),
+        })
+        .unwrap();
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(23),
+            method: "textDocument/inlayHint".into(),
+            params: Some(json!({"textDocument": {"uri": URI, "version": 2}})),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
 }

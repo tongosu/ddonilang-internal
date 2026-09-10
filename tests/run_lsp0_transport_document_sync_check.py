@@ -1061,7 +1061,7 @@ def check_inlay_hint_before_eof() -> None:
         response = process.frames.read_frame()
         assert response["id"] == 2
         hints = response["result"]
-        assert [hint["label"] for hint in hints] == ["왼:", "오른:"]
+        assert [hint["label"] for hint in hints] == ["왼:수", "오른:수"]
         assert [hint["position"] for hint in hints] == [
             {"line": 1, "character": 12},
             {"line": 1, "character": 15},

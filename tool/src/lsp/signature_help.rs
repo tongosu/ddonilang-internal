@@ -107,11 +107,14 @@ pub fn inlay_hints_snapshot(
             let Some(param) = seed.params.iter().find(|param| param.pin_name == pin_name) else {
                 continue;
             };
+            if matches!(param.type_ref, ddonirang_lang::TypeRef::Infer) {
+                continue;
+            }
             let position = byte_offset_to_position(source, arg.span.start, encoding)
                 .map_err(SignatureHelpError::InvalidPosition)?;
             hints.push(InlayHintResolution {
                 position,
-                label: format!("{}:", param.pin_name),
+                label: format!("{}:{}", param.pin_name, type_surface(&param.type_ref)),
                 definition_identity: identity.clone(),
                 param_pin_id: param.id,
                 document_version: snapshot.version,
