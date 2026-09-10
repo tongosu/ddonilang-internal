@@ -79,6 +79,42 @@ fn format_uri(
     }
 }
 
+fn range_format(server: &mut LspServer, id: i64, uri: &str, range: Value) -> Value {
+    let event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(id),
+            method: "textDocument/rangeFormatting".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri},
+                "range": range,
+                "options": {}
+            })),
+        })
+        .unwrap();
+    match &event.responses[0] {
+        RpcMessage::Response {
+            result: Ok(value), ..
+        } => value.clone(),
+        _ => panic!("range formatting must return success: {event:?}"),
+    }
+}
+
+fn document_symbol_ranges(server: &mut LspServer, id: i64, uri: &str) -> Vec<Value> {
+    let event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(id),
+            method: "textDocument/documentSymbol".into(),
+            params: Some(json!({"textDocument": {"uri": uri}})),
+        })
+        .unwrap();
+    match &event.responses[0] {
+        RpcMessage::Response {
+            result: Ok(value), ..
+        } => value.as_array().cloned().unwrap_or_default(),
+        _ => panic!("document symbols must return success: {event:?}"),
+    }
+}
+
 fn canonical(source: &str) -> String {
     let mut program = parse_v25(source, URI).expect("formatting fixture must parse");
     canonicalize(&mut program).expect("formatting fixture must canonicalize");
@@ -285,6 +321,164 @@ fn lsp32_formatting_is_bounded_and_cancellation_is_atomic() {
         .to_string();
     assert_eq!(
         format_uri(&mut server, 31, LARGE_URI, Some(2), Some(&large_identity)),
+        json!([])
+    );
+}
+
+#[test]
+fn lsp36_range_formatting_accepts_one_complete_ddn_declaration_only() {
+    let source = "첫함수 : 셈씨 := {\n\"🙂\" 보여주기.\n}\n문자 : 글 := \"🙂\".";
+    let mut server = LspServer::new();
+    let initialized = init(&mut server);
+    assert_eq!(
+        initialized["capabilities"]["documentRangeFormattingProvider"],
+        true
+    );
+    open(&mut server, source, 1);
+    let symbols = document_symbol_ranges(&mut server, 40, URI);
+    assert_eq!(symbols.len(), 2);
+    let first_range = symbols[0]["range"].clone();
+    let first_start = source.find("첫함수").unwrap();
+    let first_end = source.find("}\n").unwrap() + 1;
+    assert_eq!(
+        first_range,
+        json!({
+            "start": {"line": 0, "character": 0},
+            "end": {"line": 2, "character": 1}
+        })
+    );
+    assert_eq!(
+        range_format(&mut server, 41, URI, first_range.clone()),
+        json!([{
+            "range": first_range,
+            "newText": canonical(&source[first_start..first_end])
+        }])
+    );
+    assert_eq!(
+        range_format(
+            &mut server,
+            42,
+            URI,
+            json!({
+                "start": {"line": 0, "character": 1},
+                "end": {"line": 2, "character": 1}
+            })
+        ),
+        json!([])
+    );
+    let second_range = symbols[1]["range"].clone();
+    let second_start = source.find("문자").unwrap();
+    assert_eq!(
+        range_format(&mut server, 43, URI, second_range.clone()),
+        json!([{
+            "range": second_range,
+            "newText": canonical(&source[second_start..])
+        }])
+    );
+
+    let updated = "첫함수 : 셈씨 := {\n\"🙂\" 보여주기.\n}\n  문자 : 글 := \"🙂\".  ";
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "textDocument/didChange".into(),
+            params: Some(json!({
+                "textDocument": {"uri": URI, "version": 2},
+                "contentChanges": [{"text": updated}]
+            })),
+        })
+        .unwrap();
+    let updated_symbols = document_symbol_ranges(&mut server, 44, URI);
+    let updated_range = updated_symbols[1]["range"].clone();
+    let updated_start = updated.find("문자").unwrap();
+    assert_eq!(
+        range_format(&mut server, 45, URI, updated_range.clone()),
+        json!([{
+            "range": updated_range,
+            "newText": canonical(&updated[updated_start..])
+        }])
+    );
+}
+
+#[test]
+fn lsp36_range_formatting_supports_ddl_sections_and_lifecycle_guards() {
+    let source = "#!한국어\n  원주율:셈수 :={...}.  \n\n\n#!日本語\n円周率:数値 :={...}.\n\n";
+    let mut server = LspServer::new();
+    init(&mut server);
+    open_uri(&mut server, DDL_URI, "ddl", source, 3);
+    let second_header = source.find("#!日本語").unwrap();
+    let section_end =
+        byte_offset_to_position(source, second_header, PositionEncoding::Utf16).unwrap();
+    let first_section_range = json!({
+        "start": {"line": 0, "character": 0},
+        "end": {"line": section_end.line, "character": section_end.character}
+    });
+    let edits = range_format(&mut server, 50, DDL_URI, first_section_range.clone());
+    assert_eq!(edits.as_array().unwrap().len(), 1);
+    assert_eq!(edits[0]["range"], first_section_range);
+    assert_eq!(edits[0]["newText"], {
+        let canonical = ddl_canonical(source);
+        let canonical_second_header = canonical.find("#!日本語").unwrap();
+        canonical[..canonical_second_header].to_string()
+    });
+
+    let stale = server
+        .handle_message(RpcMessage::Request {
+            id: json!(51),
+            method: "textDocument/rangeFormatting".into(),
+            params: Some(json!({
+                "textDocument": {"uri": DDL_URI, "version": 2},
+                "range": first_section_range.clone(),
+                "options": {}
+            })),
+        })
+        .unwrap();
+    match &stale.responses[0] {
+        RpcMessage::Response {
+            result: Err(error), ..
+        } => assert_eq!(error.code, -32801),
+        other => panic!("stale range formatting must fail closed: {other:?}"),
+    }
+    let stale_identity = server
+        .documents()
+        .get(DDL_URI)
+        .unwrap()
+        .identity
+        .as_str()
+        .to_string();
+    let stale_identity_event = server
+        .handle_message(RpcMessage::Request {
+            id: json!(53),
+            method: "textDocument/rangeFormatting".into(),
+            params: Some(json!({
+                "textDocument": {
+                    "uri": DDL_URI,
+                    "version": 3,
+                    "snapshotIdentity": "sha256:stale"
+                },
+                "range": first_section_range.clone(),
+                "options": {}
+            })),
+        })
+        .unwrap();
+    assert_ne!(stale_identity, "sha256:stale");
+    match &stale_identity_event.responses[0] {
+        RpcMessage::Response {
+            result: Err(error), ..
+        } => assert_eq!(error.code, -32802),
+        other => panic!("stale range snapshot must fail closed: {other:?}"),
+    }
+    server
+        .handle_message(RpcMessage::Notification {
+            method: "textDocument/didClose".into(),
+            params: Some(json!({"textDocument": {"uri": DDL_URI}})),
+        })
+        .unwrap();
+    assert_eq!(
+        range_format(
+            &mut server,
+            52,
+            DDL_URI,
+            json!({"start": {"line": 0, "character": 0}, "end": {"line": 1, "character": 0}})
+        ),
         json!([])
     );
 }

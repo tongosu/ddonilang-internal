@@ -34,7 +34,7 @@ use super::symbol::{
 use crate::completion::{complete_snapshot, CompletionCandidate, CompletionCandidateKind};
 use ddonirang_lang::{
     canonicalize, canonicalize_ddl_wave1, normalize, parse_ddl_wave1, parse_v25,
-    validate_no_legacy_boim_surface, NormalizationLevel,
+    validate_no_legacy_boim_surface, NormalizationLevel, TopLevelItem,
 };
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
@@ -336,6 +336,7 @@ impl LspServer {
             "textDocument/selectionRange" => self.selection_ranges(id, params),
             "workspace/symbol" => self.workspace_symbol(id, params),
             "textDocument/formatting" => self.formatting(id, params),
+            "textDocument/rangeFormatting" => self.range_formatting(id, params),
             "textDocument/documentHighlight" => self.document_highlights(id, params),
             "textDocument/references" => self.references(id, params),
             "textDocument/prepareCallHierarchy" => self.prepare_call_hierarchy(id, params),
@@ -997,74 +998,11 @@ impl LspServer {
         if !is_ddl && validate_no_legacy_boim_surface(source).is_err() {
             return Ok(success_event(id, json!([])));
         }
-        let original_ddl_identity = if is_ddl {
-            let Ok(document) = parse_ddl_wave1(source, uri) else {
-                return Ok(success_event(id, json!([])));
-            };
-            Some(
-                document
-                    .sections
-                    .iter()
-                    .map(|section| {
-                        (
-                            section.projection.definition_identity.clone(),
-                            section.projection.type_identity.clone(),
-                        )
-                    })
-                    .collect::<Vec<_>>(),
-            )
-        } else {
-            None
-        };
-        let canonical = if is_ddl {
-            let Ok(document) = parse_ddl_wave1(source, uri) else {
-                return Ok(success_event(id, json!([])));
-            };
-            canonicalize_ddl_wave1(&document)
-        } else {
-            let Ok(mut program) = parse_v25(source, uri) else {
-                return Ok(success_event(id, json!([])));
-            };
-            if canonicalize(&mut program).is_err() {
-                return Ok(success_event(id, json!([])));
-            }
-            normalize(&program, NormalizationLevel::N1)
-        };
-        if self.cancelled.remove(&request_key(&id)) {
-            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
-        }
-        let stable = if is_ddl {
-            let Ok(document) = parse_ddl_wave1(&canonical, uri) else {
-                return Ok(success_event(id, json!([])));
-            };
-            let identity = document
-                .sections
-                .iter()
-                .map(|section| {
-                    (
-                        section.projection.definition_identity.clone(),
-                        section.projection.type_identity.clone(),
-                    )
-                })
-                .collect::<Vec<_>>();
-            if original_ddl_identity.as_deref() != Some(identity.as_slice()) {
-                return Ok(success_event(id, json!([])));
-            }
-            canonicalize_ddl_wave1(&document)
-        } else {
-            let Ok(mut program) = parse_v25(&canonical, uri) else {
-                return Ok(success_event(id, json!([])));
-            };
-            if canonicalize(&mut program).is_err() {
-                return Ok(success_event(id, json!([])));
-            }
-            normalize(&program, NormalizationLevel::N1)
-        };
-        if self.cancelled.remove(&request_key(&id)) {
-            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
-        }
-        if stable != canonical {
+        let Some(canonical) = canonical_formatting_source(source, uri, is_ddl) else {
             return Ok(success_event(id, json!([])));
+        };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
         }
         if canonical == source {
             return Ok(success_event(id, json!([])));
@@ -1091,6 +1029,108 @@ impl LspServer {
                     "end": {"line": range.end.line, "character": range.end.character},
                 },
                 "newText": canonical,
+            }]),
+        ))
+    }
+
+    fn range_formatting(
+        &mut self,
+        id: Value,
+        params: Option<Value>,
+    ) -> Result<ServerEvent, ServerError> {
+        let params = object_params(params)?;
+        let document = text_document(&params)?;
+        let uri = string_field(document, "uri")?;
+        let requested_range = parse_range(
+            params
+                .get("range")
+                .ok_or_else(|| ServerError::InvalidParams("range가 없습니다".into()))?,
+        )?;
+        let Some(snapshot) = self.documents.get(uri) else {
+            return Ok(success_event(id, json!([])));
+        };
+        let version = snapshot.version;
+        let snapshot_identity = snapshot.identity.clone();
+        if let Some(requested_version) = document.get("version").and_then(Value::as_i64) {
+            if requested_version != version {
+                return Ok(error_event(
+                    id,
+                    RpcError::with_data(
+                        -32801,
+                        "range formatting document version이 stale합니다",
+                        json!({
+                            "requestedVersion": requested_version,
+                            "currentVersion": version,
+                            "snapshotIdentity": snapshot_identity.as_str(),
+                        }),
+                    ),
+                ));
+            }
+        }
+        if let Some(requested_identity) = document.get("snapshotIdentity").and_then(Value::as_str) {
+            if requested_identity != snapshot_identity.as_str() {
+                return Ok(error_event(
+                    id,
+                    RpcError::with_data(
+                        -32802,
+                        "range formatting snapshot identity가 stale합니다",
+                        json!({
+                            "requestedSnapshotIdentity": requested_identity,
+                            "currentSnapshotIdentity": snapshot_identity.as_str(),
+                            "currentVersion": version,
+                        }),
+                    ),
+                ));
+            }
+        }
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        let source = snapshot.text().map_err(ServerError::Document)?;
+        if source.len() > MAX_FORMATTING_SOURCE_BYTES {
+            return Ok(success_event(id, json!([])));
+        }
+        let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
+        let byte_range =
+            match super::position::range_to_byte_range(source, requested_range, encoding) {
+                Ok(range) if range.start < range.end => range,
+                _ => return Ok(success_event(id, json!([]))),
+            };
+        let is_ddl = uri.ends_with(".ddl") || uri.ends_with(".옮김");
+        let language_id = snapshot.language_id.as_str();
+        if (!is_ddl && language_id != "ddn")
+            || (is_ddl && !matches!(language_id, "ddn" | "ddl" | "옮김"))
+        {
+            return Ok(success_event(id, json!([])));
+        }
+        if !is_ddl && validate_no_legacy_boim_surface(source).is_err() {
+            return Ok(success_event(id, json!([])));
+        }
+
+        let Some((target_range, new_text)) =
+            range_formatting_target(snapshot, source, uri, is_ddl, byte_range)
+        else {
+            return Ok(success_event(id, json!([])));
+        };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        if source[target_range.start..target_range.end] == new_text {
+            return Ok(success_event(id, json!([])));
+        }
+        let Ok(lsp_range) =
+            super::position::byte_range_to_lsp_range(source, target_range, encoding)
+        else {
+            return Ok(success_event(id, json!([])));
+        };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        Ok(success_event(
+            id,
+            json!([{
+                "range": lsp_range_value(lsp_range),
+                "newText": new_text,
             }]),
         ))
     }
@@ -2416,6 +2456,7 @@ impl LspServer {
                     "selectionRangeProvider": true,
                     "workspaceSymbolProvider": true,
                     "documentFormattingProvider": true,
+                    "documentRangeFormattingProvider": true,
                     "documentHighlightProvider": true,
                     "referencesProvider": true,
                     "callHierarchyProvider": true,
@@ -2666,6 +2707,126 @@ fn object_params(params: Option<Value>) -> Result<serde_json::Map<String, Value>
         .as_object()
         .cloned()
         .ok_or_else(|| ServerError::InvalidParams("params가 object가 아닙니다".into()))
+}
+
+fn range_formatting_target(
+    snapshot: &super::document_store::DocumentSnapshot,
+    source: &str,
+    uri: &str,
+    is_ddl: bool,
+    requested: ByteRange,
+) -> Option<(ByteRange, String)> {
+    if is_ddl {
+        let original = parse_ddl_wave1(source, uri).ok()?;
+        let section_index = original.sections.iter().position(|section| {
+            ByteRange {
+                start: section.header_span.start,
+                end: section.content_span.end,
+            } == requested
+        })?;
+        let canonical = canonical_formatting_source(source, uri, true)?;
+        let canonical_document = parse_ddl_wave1(&canonical, uri).ok()?;
+        let profile = &original.sections[section_index].language_profile_identity;
+        let canonical_section = canonical_document
+            .sections
+            .iter()
+            .find(|section| &section.language_profile_identity == profile)?;
+        let canonical_range = ByteRange {
+            start: canonical_section.header_span.start,
+            end: canonical_section.content_span.end,
+        };
+        return Some((
+            requested,
+            canonical
+                .get(canonical_range.start..canonical_range.end)?
+                .to_owned(),
+        ));
+    }
+
+    let symbols = collect_document_symbols(snapshot).ok()?;
+    if !symbols
+        .iter()
+        .any(|symbol| symbol.full_range == requested)
+    {
+        return None;
+    }
+    let fragment = source.get(requested.start..requested.end)?;
+    let canonical = canonical_formatting_source(fragment, uri, false)?;
+    if canonical == fragment {
+        return Some((requested, canonical));
+    }
+    if !canonical_fragment_has_same_definition(fragment, &canonical, uri) {
+        return None;
+    }
+    Some((requested, canonical))
+}
+
+fn canonical_formatting_source(source: &str, uri: &str, is_ddl: bool) -> Option<String> {
+    if is_ddl {
+        let original = parse_ddl_wave1(source, uri).ok()?;
+        let original_identity = original
+            .sections
+            .iter()
+            .map(|section| {
+                (
+                    section.language_profile_identity.clone(),
+                    section.projection.definition_identity.clone(),
+                    section.projection.type_identity.clone(),
+                )
+            })
+            .collect::<Vec<_>>();
+        let canonical = canonicalize_ddl_wave1(&original);
+        let stable_document = parse_ddl_wave1(&canonical, uri).ok()?;
+        let stable_identity = stable_document
+            .sections
+            .iter()
+            .map(|section| {
+                (
+                    section.language_profile_identity.clone(),
+                    section.projection.definition_identity.clone(),
+                    section.projection.type_identity.clone(),
+                )
+            })
+            .collect::<Vec<_>>();
+        if original_identity != stable_identity
+            || canonicalize_ddl_wave1(&stable_document) != canonical
+        {
+            return None;
+        }
+        return Some(canonical);
+    }
+
+    let mut program = parse_v25(source, uri).ok()?;
+    canonicalize(&mut program).ok()?;
+    let canonical = normalize(&program, NormalizationLevel::N1);
+    if !canonical_fragment_has_same_definition(source, &canonical, uri) {
+        return None;
+    }
+    let mut stable_program = parse_v25(&canonical, uri).ok()?;
+    canonicalize(&mut stable_program).ok()?;
+    let stable = normalize(&stable_program, NormalizationLevel::N1);
+    (stable == canonical).then_some(canonical)
+}
+
+fn canonical_fragment_has_same_definition(source: &str, canonical: &str, uri: &str) -> bool {
+    let Ok(original) = parse_v25(source, uri) else {
+        return false;
+    };
+    let Ok(canonical_program) = parse_v25(canonical, uri) else {
+        return false;
+    };
+    let identities = |program: &ddonirang_lang::CanonProgram| {
+        program
+            .items
+            .iter()
+            .map(|item| match item {
+                TopLevelItem::SeedDef(seed) => {
+                    (seed.canonical_name.clone(), format!("{:?}", seed.seed_kind))
+                }
+            })
+            .collect::<Vec<_>>()
+    };
+    identities(&original) == identities(&canonical_program)
 }
 
 fn text_document<'a>(
