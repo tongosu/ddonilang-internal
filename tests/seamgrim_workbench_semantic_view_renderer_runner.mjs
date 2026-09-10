@@ -229,16 +229,26 @@ const unknownBogaeKindRendered = renderCommittedSemanticView(unknownBogaeKindCan
 assert(!Object.hasOwn(unknownBogaeKindRendered, "canvas_projection"), "unknown Bogae kind published canvas output");
 assert(JSON.stringify(unknownBogaeKindPayload) === unknownBogaeKindBefore, "unknown Bogae kind mutated semantic payload");
 
-const line = buildSemanticRenderModel(payloadFor("line", [frame(0, { a: 99, b: 99, x: 99, y: 99 }, {
+const linePayload = payloadFor("line", [frame(0, { a: 99, b: 99, x: 99, y: 99 }, {
   workbench: authoritativeResultSet("line", {
     current: { x: 2, y: 5 },
     equation: { a: 2, b: 1 },
     camera: { x_min: -2, x_max: 4, y_min: -3, y_max: 9 },
   }),
-})]));
+})]);
+const line = buildSemanticRenderModel(linePayload);
 assert(line.status === "ready" && line.current.x === 2 && line.current.y === 5, "static graph did not use committed result point");
 assert(line.labels.map((row) => row.key).join(",") === "x,y,a,b", "static graph semantic labels missing");
 assert(JSON.stringify(line.camera) === JSON.stringify({ minX: -2, maxX: 4, minY: -3, maxY: 9 }), "line renderer did not retain explicit camera");
+
+const stalePayloadHash = structuredClone(linePayload);
+stalePayloadHash.semantic_payload_hash = "candidate:fnv1a32:semantic_view:stale";
+const stalePayloadHashBefore = JSON.stringify(stalePayloadHash);
+const stalePayloadHashModel = buildSemanticRenderModel(stalePayloadHash);
+assert(stalePayloadHashModel.status === "canonical_unsupported", "stale semantic payload hash must fail before projection");
+assert(stalePayloadHashModel.canonical_diagnostic?.reason === "semantic_payload_hash_mismatch", "stale semantic payload hash diagnostic drift");
+assert(!Object.hasOwn(stalePayloadHashModel, "current") && !Object.hasOwn(stalePayloadHashModel, "canvas_projection"), "stale semantic payload hash published a projection");
+assert(JSON.stringify(stalePayloadHash) === stalePayloadHashBefore, "stale semantic payload hash mutated semantic payload");
 
 const missingCameraPayload = payloadFor("line", [frame(0, { x: 9, y: 12 }, {
   workbench: authoritativeResultSet("line", {

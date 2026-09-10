@@ -1,3 +1,5 @@
+import { semanticViewPayloadHash } from "./semantic_view_payload.js";
+
 export const SEMANTIC_RENDER_MODEL_SCHEMA = "seamgrim.workbench.semantic_render_model.v1";
 
 function finiteNumber(value) {
@@ -75,6 +77,23 @@ function unsupportedDrawItemModel(payload, family) {
       actual_schema: family,
     },
   });
+}
+
+function staleSemanticPayloadModel(payload) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "semantic_payload_hash_mismatch",
+      actual_schema: String(payload?.schema ?? ""),
+    },
+  });
+}
+
+function semanticPayloadHashMatches(payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+  const { semantic_payload_hash: declaredHash, ...hashInput } = payload;
+  return typeof declaredHash === "string" && declaredHash === semanticViewPayloadHash(hashInput);
 }
 
 function baseModel(payload) {
@@ -219,6 +238,7 @@ function lineModel(payload) {
 
 export function buildSemanticRenderModel(payload) {
   if (!payload?.committed_frame) return baseModel(payload);
+  if (!semanticPayloadHashMatches(payload)) return staleSemanticPayloadModel(payload);
   const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
   if (family === "pendulum") return pendulumModel(payload);
   if (family === "projectile") return projectileModel(payload);
