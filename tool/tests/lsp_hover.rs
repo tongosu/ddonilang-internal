@@ -21,11 +21,15 @@ fn init(server: &mut LspServer) -> ServerEvent {
 }
 
 fn open(server: &mut LspServer, source: &str, version: i64) -> ServerEvent {
+    open_uri(server, URI, source, version)
+}
+
+fn open_uri(server: &mut LspServer, uri: &str, source: &str, version: i64) -> ServerEvent {
     server
         .handle_message(RpcMessage::Notification {
             method: "textDocument/didOpen".into(),
             params: Some(json!({
-                "textDocument": {"uri": URI, "languageId": "ddn", "version": version, "text": source}
+                "textDocument": {"uri": uri, "languageId": "ddn", "version": version, "text": source}
             })),
         })
         .unwrap()
@@ -44,10 +48,14 @@ fn change(server: &mut LspServer, source: &str, version: i64) -> ServerEvent {
 }
 
 fn close(server: &mut LspServer) -> ServerEvent {
+    close_uri(server, URI)
+}
+
+fn close_uri(server: &mut LspServer, uri: &str) -> ServerEvent {
     server
         .handle_message(RpcMessage::Notification {
             method: "textDocument/didClose".into(),
-            params: Some(json!({"textDocument": {"uri": URI}})),
+            params: Some(json!({"textDocument": {"uri": uri}})),
         })
         .unwrap()
 }
@@ -205,6 +213,46 @@ fn h09_h11_live_snapshot_close_and_byte_stability() {
         ),
         Value::Null
     );
+}
+
+#[test]
+fn lsp35_cross_open_document_hover_is_exact_and_current() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    let declaration_uri = "file:///lsp-hover-declaration.ddn";
+    let declaration = "한함수:셈씨 := { 1 돌려줘. }";
+    let reference = "호출:셈씨 := { (\"🙂\") 한함수. }";
+    open_uri(&mut server, declaration_uri, declaration, 1);
+    open(&mut server, reference, 1);
+
+    let result = hover(&mut server, 20, reference, "한함수", Some(1));
+    assert_eq!(result["data"]["definitionIdentity"], "definition:local:한함수");
+    assert_eq!(result["data"]["documentVersion"], 1);
+    assert_eq!(result["range"]["start"], json!({"line": 0, "character": 18}));
+    assert_eq!(result, hover(&mut server, 21, reference, "한함수", Some(1)));
+
+    close_uri(&mut server, declaration_uri);
+    assert_eq!(hover(&mut server, 22, reference, "한함수", Some(1)), Value::Null);
+
+    open_uri(&mut server, declaration_uri, declaration, 2);
+    open_uri(&mut server, "file:///lsp-hover-duplicate.ddn", declaration, 1);
+    assert_eq!(hover(&mut server, 23, reference, "한함수", Some(1)), Value::Null);
+
+    server.cancel_request(&json!(24));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(24),
+            method: "textDocument/hover".into(),
+            params: Some(json!({
+                "textDocument": {"uri": URI, "version": 1},
+                "position": {"line": 0, "character": 18}
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
 }
 
 #[test]

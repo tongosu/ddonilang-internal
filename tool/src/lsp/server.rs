@@ -9,7 +9,7 @@ use super::document_store::{
 use super::document_link::{document_links_snapshot, DocumentLinkError, MAX_DOCUMENT_LINKS};
 use super::document_symbol::{document_symbols_snapshot, SymbolError as DocumentSymbolError};
 use super::folding_range::{folding_ranges_snapshot, FoldingRangeError};
-use super::hover::{hover_snapshot, HoverError};
+use super::hover::HoverError;
 use super::position::{ByteRange, LspPosition, LspRange, PositionEncoding};
 use super::protocol::{RpcError, RpcMessage};
 use super::references::SymbolError as ReferencesError;
@@ -21,11 +21,15 @@ use super::semantic_tokens::{
     semantic_tokens_delta, semantic_tokens_snapshot, SemanticTokensError, SemanticTokensResolution,
     LEGEND_TOKEN_TYPES,
 };
-use super::signature_help::{inlay_hints_snapshot, signature_help_snapshot, SignatureHelpError};
+use super::signature_help::{
+    explicit_param_type_name_at_position, inlay_hints_snapshot, signature_help_snapshot,
+    SignatureHelpError,
+};
 use super::symbol::{
     call_hierarchy_call_at_position, collect_call_hierarchy_calls, collect_document_symbols,
     collect_local_references_for_identity, resolve_symbol_across_documents,
-    resolve_type_definition_across_documents, DocumentSymbolResolution,
+    resolve_type_definition_across_documents, resolve_type_definition_by_name_across_documents,
+    DocumentSymbolResolution,
 };
 use crate::completion::{complete_snapshot, CompletionCandidate, CompletionCandidateKind};
 use ddonirang_lang::{
@@ -394,6 +398,9 @@ impl LspServer {
             }
         }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let documents = self
             .documents
             .iter()
@@ -502,20 +509,38 @@ impl LspServer {
             }
         }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let documents = self
             .documents
             .iter()
             .map(|(_, document)| document)
             .collect::<Vec<_>>();
-        let Some(result) = resolve_type_definition_across_documents(
+        let result = resolve_type_definition_across_documents(
             snapshot,
             position,
             encoding,
             &documents,
         )
-        .map_err(ServerError::Definition)? else {
+        .map_err(ServerError::Definition)?;
+        let result = if result.is_some() {
+            result
+        } else {
+            let type_name = explicit_param_type_name_at_position(snapshot, position, encoding)
+                .map_err(ServerError::SignatureHelp)?;
+            let Some(type_name) = type_name else {
+                return Ok(success_event(id, Value::Null));
+            };
+            resolve_type_definition_by_name_across_documents(&type_name, &documents)
+                .map_err(ServerError::Definition)?
+        };
+        let Some(result) = result else {
             return Ok(success_event(id, Value::Null));
         };
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let source = self
             .documents
             .get(&result.uri)
@@ -1120,6 +1145,9 @@ impl LspServer {
             }
         }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let documents = self
             .documents
             .iter()
@@ -1687,6 +1715,9 @@ impl LspServer {
             }
         }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let documents = self
             .documents
             .iter()
@@ -2209,12 +2240,24 @@ impl LspServer {
             }
         }
         let encoding = self.position_encoding.ok_or(ServerError::NotInitialized)?;
-        let result = hover_snapshot(snapshot, position, encoding).map_err(ServerError::Hover)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
+        let documents = self
+            .documents
+            .iter()
+            .map(|(_, document)| document)
+            .collect::<Vec<_>>();
+        let result = resolve_symbol_across_documents(snapshot, position, encoding, &documents)
+            .map_err(ServerError::Hover)?;
+        if self.cancelled.remove(&request_key(&id)) {
+            return Ok(error_event(id, RpcError::new(-32800, "Request cancelled")));
+        }
         let result = result
             .map(|result| {
                 let source = snapshot.text().map_err(ServerError::Document)?;
                 let range =
-                    super::position::byte_range_to_lsp_range(source, result.range, encoding)
+                    super::position::byte_range_to_lsp_range(source, result.reference_range, encoding)
                         .map_err(|error| {
                             ServerError::InvalidParams(format!(
                                 "hover range가 잘못되었습니다: {error}"

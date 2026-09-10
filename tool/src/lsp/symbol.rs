@@ -228,6 +228,13 @@ pub fn resolve_type_definition_across_documents(
         return Ok(None);
     }
 
+    resolve_type_definition_by_name_across_documents(type_name, documents)
+}
+
+pub(crate) fn resolve_type_definition_by_name_across_documents(
+    type_name: &str,
+    documents: &[&DocumentSnapshot],
+) -> Result<Option<TypeDefinitionResolution>, SymbolError> {
     let mut candidates = Vec::new();
     for document in documents {
         for (name, identity, range) in collect_local_type_definitions(document)? {

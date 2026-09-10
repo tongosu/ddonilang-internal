@@ -1054,3 +1054,42 @@ fn lsp19_type_definition_rejects_duplicate_and_current_snapshot_only() {
         RpcMessage::Response { result: Err(error), .. } if error.code == -32801
     ));
 }
+
+#[test]
+fn lsp34_type_definition_resolves_callable_param_type_identity() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    let type_uri = "file:///lsp34-type.ddn";
+    let use_uri = "file:///lsp34-use.ddn";
+    let type_source = "새값:이름씨 := 2.";
+    let use_source = "(값:새값) 사용:셈씨 := { 1 돌려줘. }\n호출:셈씨 := { (2) 사용. }";
+    open(&mut server, type_uri, type_source, 1);
+    open(&mut server, use_uri, use_source, 1);
+
+    let result = type_definition(&mut server, use_uri, use_source, 1, "2", json!({}));
+    assert_eq!(result["uri"], type_uri);
+    assert_eq!(result["data"]["typeIdentity"], "type:local:새값");
+    assert_eq!(result["range"]["start"], json!({"line": 0, "character": 0}));
+
+    close(&mut server, type_uri);
+    assert_eq!(
+        type_definition(&mut server, use_uri, use_source, 1, "2", json!({})),
+        Value::Null
+    );
+
+    server.cancel_request(&json!(24));
+    let cancelled = server
+        .handle_message(RpcMessage::Request {
+            id: json!(24),
+            method: "textDocument/typeDefinition".into(),
+            params: Some(json!({
+                "textDocument": {"uri": use_uri, "version": 1},
+                "position": position(use_source, "2")
+            })),
+        })
+        .unwrap();
+    assert!(matches!(
+        &cancelled.responses[0],
+        RpcMessage::Response { result: Err(error), .. } if error.code == -32800
+    ));
+}

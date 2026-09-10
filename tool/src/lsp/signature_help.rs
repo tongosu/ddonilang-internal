@@ -4,7 +4,9 @@ use super::position::{
 };
 use super::symbol::{local_signature, type_surface, SOURCE_PROFILE_V25};
 use ddonirang_lang::stdlib::{canonicalize_stdlib_alias, minimal_stdlib_sigs};
-use ddonirang_lang::{parse_v25, ArgBinding, Body, Expr, ExprKind, ParamPin, Stmt, TopLevelItem};
+use ddonirang_lang::{
+    parse_v25, ArgBinding, Body, Expr, ExprKind, ParamPin, Stmt, TopLevelItem, TypeRef,
+};
 use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -264,6 +266,41 @@ pub fn signature_help_snapshot(
         active_parameter: active_parameter as u32,
         source_profile: SOURCE_PROFILE_V25,
     }))
+}
+
+pub(crate) fn explicit_param_type_name_at_position(
+    snapshot: &DocumentSnapshot,
+    position: LspPosition,
+    encoding: PositionEncoding,
+) -> Result<Option<String>, SignatureHelpError> {
+    let Some(signature) = signature_help_snapshot(snapshot, position, encoding)? else {
+        return Ok(None);
+    };
+    let Some(seed_name) = signature.identity.strip_prefix("definition:local:") else {
+        return Ok(None);
+    };
+    let source = snapshot
+        .text()
+        .map_err(|_| SignatureHelpError::InvalidUtf8)?;
+    let program = match parse_v25(source, &snapshot.uri) {
+        Ok(program) => program,
+        Err(_) => return Ok(None),
+    };
+    let Some(seed) = program.items.iter().find_map(|item| {
+        let TopLevelItem::SeedDef(seed) = item;
+        (seed.canonical_name == seed_name).then_some(seed)
+    }) else {
+        return Ok(None);
+    };
+    let Some(param) = seed.params.get(signature.active_parameter as usize) else {
+        return Ok(None);
+    };
+    let type_name = match &param.type_ref {
+        TypeRef::Named(name) => name.clone(),
+        TypeRef::Applied { name, .. } => name.clone(),
+        TypeRef::Function { .. } | TypeRef::Infer => return Ok(None),
+    };
+    Ok(Some(type_name))
 }
 
 fn collect_body_calls<'a>(body: &'a Body, calls: &mut Vec<CallCandidate<'a>>) {
