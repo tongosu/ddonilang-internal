@@ -12,7 +12,7 @@ use ddonirang_core::{
     SeulgiIntent,
 };
 use ddonirang_lang::runtime::Value;
-use ddonirang_lang::{ExecutionModeDecision, ParseMode};
+use ddonirang_lang::{ExecutionModeDecision, Lexer, ParseMode, TokenKind};
 use serde_json::{json, Map, Value as JsonValue};
 
 use crate::canon::CanonOutput;
@@ -26,8 +26,8 @@ use crate::deterministic_debug::{
     public_observation_events_json,
 };
 use crate::gate0_registry::ProjectAssetRegistry;
-use crate::input_tape::{encode_input_tape, mask_from_bytes, tape_mask_to_runtime_keys, InputTape};
 use crate::host_resource::PreparedHostResources;
+use crate::input_tape::{encode_input_tape, mask_from_bytes, tape_mask_to_runtime_keys, InputTape};
 use crate::preprocess::{
     execution_mode_decision_from_source_with_path, preprocess_source_for_parse, split_file_meta,
     validate_no_legacy_boim_surface, validate_no_legacy_header, ExecutionDiagnostic,
@@ -116,6 +116,42 @@ pub struct PreparedSource {
     pub execution_mode_decision: ExecutionModeDecision,
 }
 
+fn source_uses_v25_definition_epoch(source: &str) -> bool {
+    Lexer::new(source)
+        .tokenize()
+        .map(|tokens| {
+            tokens
+                .iter()
+                .any(|token| matches!(token.kind, TokenKind::Define))
+        })
+        .unwrap_or(false)
+}
+
+fn program_from_current_epoch_source(
+    source: &str,
+    source_path: &str,
+    mode: ParseMode,
+) -> Result<DdnProgram, String> {
+    if source_uses_v25_definition_epoch(source) {
+        DdnProgram::from_v25_source_with_mode(source, source_path, mode)
+    } else {
+        DdnProgram::from_source_with_mode(source, source_path, mode)
+    }
+}
+
+fn program_from_current_epoch_source_with_age_target(
+    source: &str,
+    source_path: &str,
+    mode: ParseMode,
+    age_target: AgeTarget,
+) -> Result<DdnProgram, String> {
+    if source_uses_v25_definition_epoch(source) {
+        DdnProgram::from_v25_source_with_mode_and_age_target(source, source_path, mode, age_target)
+    } else {
+        DdnProgram::from_source_with_mode_and_age_target(source, source_path, mode, age_target)
+    }
+}
+
 pub fn prepare_source_for_execution(source: &str) -> Result<PreparedSource, String> {
     prepare_source_for_execution_with_path(source, "<execution-source>")
         .map_err(|err| err.to_string())
@@ -176,7 +212,10 @@ pub fn prepare_source_for_execution_with_path(
     })?;
     let execution_mode_decision =
         execution_mode_decision_from_source_with_path(&meta.stripped, source_path)?;
-    let preprocessed =
+    let v25 = source_uses_v25_definition_epoch(&meta.stripped);
+    let preprocessed = if v25 {
+        meta.stripped.clone()
+    } else {
         preprocess_source_for_parse(&meta.stripped).map_err(|message| ExecutionDiagnostic {
             code: "E_EXECUTION_PREPROCESS",
             message,
@@ -187,11 +226,18 @@ pub fn prepare_source_for_execution_with_path(
             offending_field: None,
             expected: None,
             actual: None,
-        })?;
-    let execution_source = ddonirang_lang::preprocess_frontdoor_source(&preprocessed);
-    if let Err(err) =
+        })?
+    };
+    let execution_source = if v25 {
+        preprocessed.clone()
+    } else {
+        ddonirang_lang::preprocess_frontdoor_source(&preprocessed)
+    };
+    if let Err(err) = if source_uses_v25_definition_epoch(&execution_source) {
+        ddonirang_lang::parse_v25_with_mode(&execution_source, source_path, ParseMode::Strict)
+    } else {
         ddonirang_lang::parse_with_mode(&execution_source, source_path, ParseMode::Strict)
-    {
+    } {
         if matches!(
             err.code(),
             "E_FIELD_MISSING" | "E_FIELD_TARGET_TYPE" | "E_FIELD_POSSESSIVE_SURFACE_FORBIDDEN"
@@ -214,7 +260,7 @@ pub fn prepare_source_for_execution_with_path(
             });
         }
     }
-    let canonical_ddn = DdnProgram::from_source_with_mode(source, source_path, ParseMode::Strict)
+    let canonical_ddn = program_from_current_epoch_source(source, source_path, ParseMode::Strict)
         .map_err(|message| ExecutionDiagnostic {
             code: "E_SHARED_CANONICAL",
             message,
@@ -296,7 +342,7 @@ pub fn canonicalize_shared_source(source: &str) -> Result<CanonOutput, String> {
     }
     let meta = crate::file_meta::split_file_meta(source);
     let program =
-        DdnProgram::from_source_with_mode(source, "<shared-canonical>", ParseMode::Strict)?;
+        program_from_current_epoch_source(source, "<shared-canonical>", ParseMode::Strict)?;
     let warnings = program
         .parse_warnings()
         .iter()
@@ -449,7 +495,7 @@ pub fn execution_envelope_from_source_with_path(
         });
     }
     let prepared = prepare_source_for_execution_with_path(source, source_path)?;
-    let program = DdnProgram::from_source_with_mode(source, source_path, ParseMode::Strict)
+    let program = program_from_current_epoch_source(source, source_path, ParseMode::Strict)
         .map_err(|message| ExecutionDiagnostic {
             code: "E_EXECUTION_PARSE",
             message,
@@ -670,6 +716,34 @@ pub fn run_summary_from_supported_source_profile_diagnostic(
         Some(profile),
         None,
         0,
+    )
+}
+
+/// Runs a current source through the supported profile using the caller's
+/// already-selected update callable.  Local Project targets are typed source
+/// identities, not a request to rewrite that callable to the legacy default.
+pub fn run_summary_from_supported_source_profile_with_update_name_diagnostic(
+    source: &str,
+    file_path: &str,
+    requested_ticks: Option<u32>,
+    source_profile_identity: Option<&str>,
+    update_name: &str,
+    project_asset_registry: Option<Arc<ProjectAssetRegistry>>,
+) -> Result<JsonValue, ExecutionDiagnostic> {
+    let profile = resolve_supported_source_profile(source_profile_identity).map_err(|error| {
+        run_summary_diagnostic(error.code, error.message, file_path, "source_profile")
+    })?;
+    run_summary_from_source_with_assets_diagnostic_with_update_name(
+        source,
+        file_path,
+        requested_ticks,
+        project_asset_registry,
+        None,
+        None,
+        Some(profile),
+        None,
+        0,
+        update_name,
     )
 }
 
@@ -939,6 +1013,32 @@ fn run_summary_from_source_with_assets_diagnostic(
     input_tape: Option<&InputTape>,
     rng_base_seed: u64,
 ) -> Result<JsonValue, ExecutionDiagnostic> {
+    run_summary_from_source_with_assets_diagnostic_with_update_name(
+        source,
+        file_path,
+        requested_ticks,
+        project_asset_registry,
+        standard_limits,
+        age_target,
+        source_profile,
+        input_tape,
+        rng_base_seed,
+        DEFAULT_UPDATE_NAME,
+    )
+}
+
+fn run_summary_from_source_with_assets_diagnostic_with_update_name(
+    source: &str,
+    file_path: &str,
+    requested_ticks: Option<u32>,
+    project_asset_registry: Option<Arc<ProjectAssetRegistry>>,
+    standard_limits: Option<StandardResourceLimitsV1>,
+    age_target: Option<AgeTarget>,
+    source_profile: Option<SupportedSourceProfile>,
+    input_tape: Option<&InputTape>,
+    rng_base_seed: u64,
+    update_name: &str,
+) -> Result<JsonValue, ExecutionDiagnostic> {
     #[cfg(test)]
     RUN_SUMMARY_DIAGNOSTIC_INVOCATIONS.with(|count| count.set(count.get() + 1));
 
@@ -987,7 +1087,7 @@ fn run_summary_from_source_with_assets_diagnostic(
         }
         None => {
             let prepared = prepare_source_for_execution_with_path(source, file_path)?;
-            let program = DdnProgram::from_source_with_mode_and_age_target(
+            let program = program_from_current_epoch_source_with_age_target(
                 source,
                 file_path,
                 ParseMode::Strict,
@@ -1094,7 +1194,7 @@ fn run_summary_from_source_with_assets_diagnostic(
             })?
             .as_bytes(),
     );
-    let mut runner = DdnRunner::new(program, DEFAULT_UPDATE_NAME);
+    let mut runner = DdnRunner::new(program, update_name);
     if let Some(limits) = standard_limits {
         runner = runner.with_standard_resource_limits(limits);
     }
@@ -1376,7 +1476,7 @@ fn run_summary_from_source_with_assets_diagnostic(
     let mut summary = json!({
         "schema": "ddn.ddonirang_tool.shared_run_summary.v1",
         "runtime_schema": ENGINE_RESPONSE_SCHEMA,
-        "update_name": DEFAULT_UPDATE_NAME,
+        "update_name": update_name,
         "source_path": file_path,
         "source_profile_identity": source_profile_identity,
         "canonical_ddn": prepared.canonical_ddn,

@@ -102,7 +102,7 @@ try {
   assert(labels.some((text) => text.includes("뿌리.ddn")), "missing 뿌리.ddn");
   assert(labels.some((text) => text.includes("app/main.ddn")), "missing app/main.ddn");
   assert(labels.some((text) => text.includes("lib/힘.ddn")), "missing lib/힘.ddn");
-  assert((await page.getByTestId("source-editor").inputValue()).includes("쓰임 { 힘:"), "entry source not active");
+  assert((await page.getByTestId("source-editor").inputValue()).includes('(힘="./lib/힘") 쓰임.'), "current typed import is not active");
   await page.getByTestId("project-graph-drawer").click();
   await page.waitForTimeout(1000);
   const graphSummary = await page.getByTestId("project-graph-summary").textContent();
@@ -123,7 +123,7 @@ try {
   await page.getByTestId("project-edit-cancel").click();
   await page.getByTestId("source-editor").fill((await page.getByTestId("source-editor").inputValue()).replace("\n// concurrent edit", ""));
 
-  const mainWithControls = `${(await page.getByTestId("source-editor").inputValue()).replace("설정 { 제목:", "설정 { 설명: \"./lib/힘\". 제목:")}\n// ./lib/힘 주석`;
+  const mainWithControls = `${await page.getByTestId("source-editor").inputValue()}\n설명:글 := "./lib/힘".\n// ./lib/힘 주석`;
   await page.getByTestId("source-editor").fill(mainWithControls);
 
   await page.getByTestId("lifecycle-run").click();
@@ -149,8 +149,8 @@ try {
   await page.getByTestId("project-edit-apply").click();
   await page.getByRole("button", { name: "lib/중력.ddn 이름 변경" }).waitFor();
   const renamedMain = await page.getByTestId("source-editor").inputValue();
-  assert(renamedMain.includes("쓰임 { 힘: \"./lib/중력\""), "structured import not renamed");
-  assert(renamedMain.includes("설명: \"./lib/힘\""), "ordinary string was incorrectly renamed");
+  assert(renamedMain.includes('(힘="./lib/중력") 쓰임.'), "typed import not renamed");
+  assert(renamedMain.includes('설명:글 := "./lib/힘".'), "ordinary string was incorrectly renamed");
   assert(renamedMain.includes("// ./lib/힘 주석"), "comment was incorrectly renamed");
 
   await page.getByTestId("lifecycle-run").click();

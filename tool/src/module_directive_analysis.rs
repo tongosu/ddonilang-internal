@@ -277,7 +277,7 @@ mod tests {
 
     #[test]
     fn workbench_physics_template_uses_the_same_typed_carrier_without_chaebi() {
-        let source = "(힘=\"./lib/힘\") 쓰임.\n\n운동:움직씨 := {\n  위치:수 := 0.\n  속도:수 := 20.\n  dt:수 := 0.1.\n  위치 <- 위치 + 속도 * dt.\n  속도 <- 속도 - 9.8 * dt.\n  위치 보여주기.\n  속도 보여주기.\n  힘.중력 보여주기.\n}\n";
+        let source = "(힘=\"./lib/힘\") 쓰임.\n\n초기속도x:수 := 0.\n초기속도y:수 := 20.\n시간간격:수 := 0.1.\n중력가속도:수 := 힘.중력.\n속도:수 := 초기속도y - 중력가속도 * 시간간격.\n위치:수 := 초기속도x + 속도 * 시간간격.\n";
         assert!(!source.contains("채비 {"));
         let snapshot = analyze_module_directive_source(ModuleDirectiveAnalysisRequest {
             schema: MODULE_DIRECTIVE_ANALYSIS_SCHEMA.to_string(),

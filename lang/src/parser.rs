@@ -121,6 +121,12 @@ impl Parser {
                     ),
                 });
             }
+            if self.source_epoch == SourceEpoch::V25 && self.peek_legacy_l11_brace_block() {
+                return Err(ParseError {
+                    span: self.current_span(),
+                    message: "E_V25_DEFINITION_MIGRATION_REQUIRED: V25에서는 이전 brace형 L11 선언을 사용할 수 없습니다. `(<항목>=value) 쓰임.` 또는 `(<항목>=value) 드러냄.`처럼 현재 typed directive를 사용하세요".to_string(),
+                });
+            }
             if matches!(self.current().kind, TokenKind::BogeaMadangBlock(_)) {
                 let _ = self.parse_bogae_madang_block_stmt()?;
                 continue;
@@ -533,6 +539,12 @@ impl Parser {
             return Err(ParseError {
                 span: self.current_span(),
                 message: "E_BOIM_LEGACY_REMOVED: `보임 {}` 블록은 제거되었습니다. `(<이름>: <식>, ...) 보임.`을 사용하세요".to_string(),
+            });
+        }
+        if self.source_epoch == SourceEpoch::V25 && self.peek_legacy_l11_brace_block() {
+            return Err(ParseError {
+                span: self.current_span(),
+                message: "E_V25_DEFINITION_MIGRATION_REQUIRED: V25에서는 이전 brace형 L11 선언을 사용할 수 없습니다. `(<항목>=value) 쓰임.` 또는 `(<항목>=value) 드러냄.`처럼 현재 typed directive를 사용하세요".to_string(),
             });
         }
         if self.peek_meta_block_kind().is_some() {
@@ -3129,6 +3141,12 @@ impl Parser {
             .get(self.pos + 1)
             .map(|t| matches!(t.kind, TokenKind::Equals))
             .unwrap_or(false)
+    }
+    fn peek_legacy_l11_brace_block(&self) -> bool {
+        self.peek_kind_n_is(1, |kind| matches!(kind, TokenKind::LBrace))
+            && ["쓰임", "드러냄", "공개"]
+                .iter()
+                .any(|name| Self::token_text_is(&self.current().kind, name))
     }
     fn peek_kind_n_is(&self, n: usize, f: impl FnOnce(&TokenKind) -> bool) -> bool {
         self.tokens

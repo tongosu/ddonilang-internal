@@ -137,3 +137,26 @@ fn v25_typed_local_legacy_equals_targeted_matrix() {
     assert_ne!(malformed.code(), DEFINITION_MIGRATION_DIAGNOSTIC);
     assert!(!malformed.message.contains(DEFINITION_MIGRATION_DIAGNOSTIC));
 }
+
+#[test]
+fn v25_current_frontdoor_rejects_legacy_l11_brace_blocks_without_lexical_false_positives() {
+    for source in [
+        "쓰임 { 운동: \"./lib/운동\". }",
+        "드러냄 { 값. }",
+        "공개 { 값. }",
+    ] {
+        let error = parse_v25(source, "legacy_l11.ddn")
+            .expect_err("current V25 frontdoor must reject a legacy brace block");
+        assert_eq!(error.code(), DEFINITION_MIGRATION_DIAGNOSTIC, "{source}");
+    }
+
+    let source = local_source("    글값:글 := \"쓰임 { 드러냄 { 공개 {\".\n    값:수 := 1.");
+    parse_v25(&source, "literal_and_comment.ddn")
+        .expect("string text must not trigger legacy brace rejection");
+
+    let comment_source = local_source(
+        "    값:수 := 1. // 쓰임 { 드러냄 { 공개 { 는 주석 텍스트입니다\n    다음값:수 := 값.",
+    );
+    parse_v25(&comment_source, "comment_only_legacy_text.ddn")
+        .expect("comment text must not trigger legacy brace rejection");
+}

@@ -4189,7 +4189,7 @@ mod tests {
         // This is the exact current physics-project source emitted by the
         // tracked Workbench generator.  It must cross the same typed resolver
         // as an AddModule project; no test-only source lowering is involved.
-        let main = "(힘=\"./lib/힘\") 쓰임.\n\n운동:움직씨 := {\n  위치초기:수 := 0.\n  속도초기:수 := 20.\n  시간간격:수 := 0.1.\n  중력가속도:수 := 힘.중력.\n  속도:수 := 속도초기 - 중력가속도 * 시간간격.\n  위치:수 := 위치초기 + 속도 * 시간간격.\n  위치 보여주기.\n  속도 보여주기.\n  힘.중력 보여주기.\n}\n";
+        let main = "(힘=\"./lib/힘\") 쓰임.\n\n위치초기:수 := 0.\n속도초기:수 := 20.\n시간간격:수 := 0.1.\n중력가속도:수 := 힘.중력.\n속도:수 := 속도초기 - 중력가속도 * 시간간격.\n위치:수 := 위치초기 + 속도 * 시간간격.\n위치 보여주기.\n속도 보여주기.\n힘.중력 보여주기.\n";
         let source = project(
             vec![
                 ("뿌리.ddn", "root", &root("app/main.ddn")),

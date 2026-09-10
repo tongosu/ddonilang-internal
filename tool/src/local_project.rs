@@ -2008,7 +2008,8 @@ fn build_bind_sealed_dataset_plan(
     } else {
         (body_start, newline, "  ")
     };
-    let statement = format!("{prefix}{indent}{binding_name} <- {exact_resource_call}.{newline}");
+    let statement =
+        format!("{prefix}{indent}{binding_name}:묶음 := {exact_resource_call}.{newline}");
     entry.utf8_text.insert_str(insert_at, &statement);
     let modified_path = entry.path.clone();
     let modified_text = entry.utf8_text.clone();
@@ -2039,19 +2040,8 @@ fn build_bind_sealed_dataset_plan(
 }
 
 fn validate_dataset_binding_name(binding_name: &str) -> Result<(), LocalProjectError> {
-    let probe = format!("매틱:움직씨 = {{\n  {binding_name} <- 0.\n}}\n");
-    let prepared = runtime_surface::prepare_source_for_execution(&probe).map_err(|err| {
-        LocalProjectError::new(
-            "E_PROJECT_DATASET_BINDING_NAME_INVALID",
-            format!("자료 이름 전처리에 실패했습니다: {err}"),
-        )
-    })?;
-    let program = ddonirang_lang::parse_with_mode(
-        &prepared.execution_source,
-        "<dataset-binding-name>",
-        ParseMode::Strict,
-    )
-    .map_err(|err| {
+    let probe = format!("앱:움직씨 := {{\n  {binding_name}:묶음 := 0.\n}}\n");
+    let program = ddonirang_lang::parse_v25(&probe, "<dataset-binding-name>").map_err(|err| {
         LocalProjectError::new(
             "E_PROJECT_DATASET_BINDING_NAME_INVALID",
             format!("DDN 이름으로 사용할 수 없습니다: {}", err.message),
@@ -2063,13 +2053,7 @@ fn validate_dataset_binding_name(binding_name: &str) -> Result<(), LocalProjectE
             body.stmts.iter().any(|stmt| {
                 matches!(
                     stmt,
-                    Stmt::Mutate {
-                        target: Expr {
-                            kind: ExprKind::Var(name),
-                            ..
-                        },
-                        ..
-                    } if name == binding_name
+                    Stmt::Definition { name, .. } if name == binding_name
                 )
             })
         })
@@ -2083,6 +2067,32 @@ fn validate_dataset_binding_name(binding_name: &str) -> Result<(), LocalProjectE
     Ok(())
 }
 
+fn source_uses_v25_definition_epoch(source: &str) -> bool {
+    Lexer::new(source)
+        .tokenize()
+        .map(|tokens| {
+            tokens
+                .iter()
+                .any(|token| matches!(token.kind, TokenKind::Define))
+        })
+        .unwrap_or(false)
+}
+
+fn v25_source_declares_update_target(source: &str, target: &str) -> bool {
+    ddonirang_lang::parse_v25_with_mode(source, "<project-target>", ParseMode::Strict)
+        .map(|program| {
+            program.items.iter().any(|item| {
+                matches!(
+                    item,
+                    TopLevelItem::SeedDef(seed)
+                        if seed.canonical_name == target
+                            && matches!(seed.seed_kind, ddonirang_lang::SeedKind::Umjikssi)
+                )
+            })
+        })
+        .unwrap_or(false)
+}
+
 fn entry_declares_name(text: &str, path: &str, name: &str) -> Result<bool, LocalProjectError> {
     let prepared = runtime_surface::prepare_source_for_execution(text).map_err(|err| {
         LocalProjectError::with_path(
@@ -2091,15 +2101,18 @@ fn entry_declares_name(text: &str, path: &str, name: &str) -> Result<bool, Local
             format!("entry DDN 전처리 실패: {err}"),
         )
     })?;
-    let program =
+    let program = if source_uses_v25_definition_epoch(&prepared.execution_source) {
+        ddonirang_lang::parse_v25_with_mode(&prepared.execution_source, path, ParseMode::Strict)
+    } else {
         ddonirang_lang::parse_with_mode(&prepared.execution_source, path, ParseMode::Strict)
-            .map_err(|err| {
-                LocalProjectError::with_path(
-                    "E_PROJECT_ENTRY_PARSE",
-                    path,
-                    format!("entry DDN 파싱 실패: {}", err.message),
-                )
-            })?;
+    }
+    .map_err(|err| {
+        LocalProjectError::with_path(
+            "E_PROJECT_ENTRY_PARSE",
+            path,
+            format!("entry DDN 파싱 실패: {}", err.message),
+        )
+    })?;
     Ok(program.items.iter().any(|item| {
         let TopLevelItem::SeedDef(seed) = item;
         seed.body.as_ref().is_some_and(|body| {
@@ -2113,6 +2126,7 @@ fn entry_declares_name(text: &str, path: &str, name: &str) -> Result<bool, Local
                     ..
                 } => current == name,
                 Stmt::DeclBlock { items, .. } => items.iter().any(|item| item.name == name),
+                Stmt::Definition { name: current, .. } => current == name,
                 _ => false,
             })
         })
@@ -3295,7 +3309,11 @@ struct LinkedExecutionSource {
 }
 
 fn wrap_linked_execution_source_for_supported_project_run(linked: &mut LinkedProject) {
-    const PREFIX: &str = "매틱:움직씨 := {\n";
+    // The supported V25 runtime dispatches the shared update callable named
+    // `매마디`.  Keep the generated project wrapper on that same authority;
+    // `매틱` is a historical producer spelling and would leave a valid V25
+    // project with no runnable update callable.
+    const PREFIX: &str = "매마디:움직씨 := {\n";
     const SUFFIX: &str = "}\n";
     let mut text =
         String::with_capacity(PREFIX.len() + linked.execution_source.len() + SUFFIX.len());
@@ -3431,35 +3449,7 @@ fn remove_named_block_mapped(
     name: &str,
 ) -> Result<MappedSourceText, LocalProjectError> {
     let text = &mapped.text;
-    let mut removals = Vec::new();
-    let mut cursor = 0usize;
-    while let Some(relative) = text[cursor..].find(name) {
-        let start = cursor + relative;
-        if !is_name_boundary(text, start, name.len()) {
-            cursor = start + name.len();
-            continue;
-        }
-        let mut open = start + name.len();
-        while let Some(ch) = text[open..].chars().next() {
-            if ch.is_whitespace() {
-                open += ch.len_utf8();
-            } else {
-                break;
-            }
-        }
-        if !text[open..].starts_with('{') {
-            cursor = open;
-            continue;
-        }
-        let end = find_block_end(text, open).ok_or_else(|| {
-            LocalProjectError::new(
-                "E_PROJECT_METADATA_BLOCK",
-                format!("{name} metadata 블록을 닫지 못했습니다"),
-            )
-        })?;
-        removals.push((start, end));
-        cursor = end;
-    }
+    let removals = legacy_named_brace_ranges(text, name)?;
     if removals.is_empty() {
         return Ok(mapped);
     }
@@ -3481,6 +3471,39 @@ fn remove_named_block_mapped(
     })
 }
 
+/// Historical brace metadata is recognized only from lexer tokens.  Raw text
+/// search would incorrectly consume `쓰임 {` inside a string or comment and
+/// could therefore turn non-semantic text into a project-link error.
+fn legacy_named_brace_ranges(
+    text: &str,
+    name: &str,
+) -> Result<Vec<(usize, usize)>, LocalProjectError> {
+    let tokens = Lexer::new(text).tokenize().map_err(|error| {
+        LocalProjectError::new(
+            "E_PROJECT_ENTRY_PARSE",
+            format!("module metadata 토큰화 실패: {}", error.message),
+        )
+    })?;
+    let mut ranges = Vec::new();
+    for pair in tokens.windows(2) {
+        let is_name = matches!(
+            &pair[0].kind,
+            TokenKind::Ident(value) | TokenKind::Josa(value) if value == name
+        );
+        if !is_name || !matches!(pair[1].kind, TokenKind::LBrace) {
+            continue;
+        }
+        let end = find_block_end(text, pair[1].span.start).ok_or_else(|| {
+            LocalProjectError::new(
+                "E_PROJECT_METADATA_BLOCK",
+                format!("{name} metadata 블록을 닫지 못했습니다"),
+            )
+        })?;
+        ranges.push((pair[0].span.start, end));
+    }
+    Ok(ranges)
+}
+
 /// Module metadata is not parser input. Mask it without changing any original
 /// byte offset so AST-backed authoring locations remain source-exact.
 pub(crate) fn mask_module_metadata_blocks(text: &str) -> Result<String, LocalProjectError> {
@@ -3491,7 +3514,10 @@ pub(crate) fn mask_module_metadata_blocks(text: &str) -> Result<String, LocalPro
             format!("current module source 토큰화 실패: {}", error.message),
         )
     })?;
-    if matches!(tokens.first().map(|token| &token.kind), Some(TokenKind::LParen)) {
+    if matches!(
+        tokens.first().map(|token| &token.kind),
+        Some(TokenKind::LParen)
+    ) {
         let mut context = ModuleDirectiveContext::default();
         context.known_import_targets = tokens
             .iter()
@@ -3524,37 +3550,12 @@ pub(crate) fn mask_module_metadata_blocks(text: &str) -> Result<String, LocalPro
         }
     }
     for name in ["쓰임", "드러냄", "공개"] {
-        let mut cursor = 0usize;
-        while let Some(relative) = text[cursor..].find(name) {
-            let start = cursor + relative;
-            if !is_name_boundary(text, start, name.len()) {
-                cursor = start + name.len();
-                continue;
-            }
-            let mut open = start + name.len();
-            while let Some(ch) = text[open..].chars().next() {
-                if ch.is_whitespace() {
-                    open += ch.len_utf8();
-                } else {
-                    break;
-                }
-            }
-            if !text[open..].starts_with('{') {
-                cursor = open;
-                continue;
-            }
-            let end = find_block_end(text, open).ok_or_else(|| {
-                LocalProjectError::new(
-                    "E_PROJECT_METADATA_BLOCK",
-                    format!("{name} metadata 블록을 닫지 못했습니다"),
-                )
-            })?;
+        for (start, end) in legacy_named_brace_ranges(text, name)? {
             for byte in &mut bytes[start..end] {
                 if !matches!(*byte, b'\n' | b'\r') {
                     *byte = b' ';
                 }
             }
-            cursor = end;
         }
     }
     if bytes.starts_with(&[0xEF, 0xBB, 0xBF]) {
@@ -3617,13 +3618,6 @@ fn find_block_end(text: &str, open_brace: usize) -> Option<usize> {
         }
     }
     Some(end).filter(|_| depth == 0)
-}
-
-fn is_name_boundary(text: &str, start: usize, len: usize) -> bool {
-    let before = text[..start].chars().next_back();
-    let after = text[start + len..].chars().next();
-    !before.map(is_identifier_char).unwrap_or(false)
-        && !after.map(is_identifier_char).unwrap_or(false)
 }
 
 fn rewrite_alias_refs_in_mapped_source(
@@ -3922,7 +3916,17 @@ pub fn build_project_prepare_link(
     } else {
         None
     };
-    let linked = build_linked_project_with_options(source, Some(&target_path), false, None)?;
+    let mut linked = build_linked_project_with_options(source, Some(&target_path), false, None)?;
+    // Prepare/link must validate the same supported V25 execution source as
+    // project-run.  A generated entry body has no named update callable until
+    // the shared project wrapper provides it; rejecting that body here would
+    // make Workbench preflight disagree with the actual runtime frontdoor.
+    let v25_project_source = source_uses_v25_definition_epoch(&linked.execution_source);
+    let v25_named_target = v25_project_source
+        && v25_source_declares_update_target(&linked.execution_source, target);
+    if v25_project_source && !v25_named_target {
+        wrap_linked_execution_source_for_supported_project_run(&mut linked);
+    }
     let linked_execution_source_sha256 = sha256_hex(linked.execution_source.as_bytes());
     let mut runtime_execution_envelope = runtime_surface::execution_envelope_from_source_with_path(
         &linked.execution_source,
@@ -4044,10 +4048,10 @@ fn attach_host_resources_to_project_summary(
     summary: &mut LocalProjectRunSummary,
     prepared: &PreparedHostResources,
 ) {
-    let transcript = serde_json::to_value(&prepared.transcript)
-        .expect("host resource transcript serializes");
-    let receipt = serde_json::to_value(&prepared.receipt)
-        .expect("host resource receipt serializes");
+    let transcript =
+        serde_json::to_value(&prepared.transcript).expect("host resource transcript serializes");
+    let receipt =
+        serde_json::to_value(&prepared.receipt).expect("host resource receipt serializes");
     if let Some(envelope) = summary.runtime_execution_envelope.as_object_mut() {
         envelope.insert("host_resource_transcript".to_string(), transcript.clone());
         envelope.insert("host_resource_receipt".to_string(), receipt.clone());
@@ -4085,6 +4089,9 @@ fn build_project_run_summary_internal(
     } else {
         target.trim()
     };
+    if supported_profile {
+        validate_current_project_sources_before_link(&source)?;
+    }
     let project_asset_registry = project_asset_registry_from_source(&source)?;
     let domain_evidence_manifests = domain_evidence_manifest_identities_from_source(&source)?;
     let sealed_dataset_assets = project_asset_registry
@@ -4118,10 +4125,27 @@ fn build_project_run_summary_internal(
     // project-run은 아래의 asset-aware 공통 runtime에서 실제 실행을 한 번 수행한다.
     // linker 내부의 asset-unaware 사전 실행을 중복 호출하면 검증된 registry를 잃는다.
     let mut linked = build_linked_project_with_options(source, Some(&target_path), false, None)?;
-    if supported_profile {
+    // Current V25 project sources must take the same shared runtime profile as
+    // the explicit supported-profile entrypoint.  Leaving this choice to the
+    // legacy project-run default makes a valid `:=` module reach an old
+    // execution path with no V25 update wrapper.
+    let v25_project_source = source_uses_v25_definition_epoch(&linked.execution_source);
+    let v25_named_target = v25_project_source
+        && v25_source_declares_update_target(&linked.execution_source, target);
+    let use_supported_profile = supported_profile || v25_project_source;
+    if use_supported_profile && !v25_named_target {
         wrap_linked_execution_source_for_supported_project_run(&mut linked);
     }
-    let runtime = match (supported_profile, project_asset_registry) {
+    let runtime = if v25_named_target {
+        runtime_surface::run_summary_from_supported_source_profile_with_update_name_diagnostic(
+            &linked.execution_source,
+            &target_path,
+            Some(1),
+            Some(crate::ddn_runtime::V1_CORE_SUPPORTED_SOURCE_PROFILE_IDENTITY),
+            target,
+            project_asset_registry,
+        )
+    } else { match (use_supported_profile, project_asset_registry) {
         (true, Some(registry)) => runtime_surface::run_summary_from_supported_source_profile_with_project_assets_diagnostic(
                 &linked.execution_source,
                 &target_path,
@@ -4142,11 +4166,11 @@ fn build_project_run_summary_internal(
                 registry,
             ),
         (false, None) => runtime_surface::run_summary_from_source_diagnostic(
-                &linked.execution_source,
-                &target_path,
-                Some(1),
-            ),
-    }
+            &linked.execution_source,
+            &target_path,
+            Some(1),
+        ),
+    }}
     .map_err(|err| {
         LocalProjectError::from_execution_diagnostic(linked.remap_execution_diagnostic(err))
     })?;
@@ -5770,6 +5794,44 @@ pub(crate) struct ProjectModuleDirectives {
     pub typed_current: bool,
 }
 
+/// The current supported Project frontdoor must reject retired L11 brace
+/// declarations before graph/link processing can interpret them as metadata.
+/// This token-level check shares the parser's lexical boundary: strings and
+/// comments have no `Ident + LBrace` token pair, so they remain ordinary data.
+fn validate_current_project_sources_before_link(
+    source: &VirtualProjectSource,
+) -> Result<(), LocalProjectError> {
+    for file in &source.files {
+        if file.role != "ddn_source" {
+            continue;
+        }
+        let tokens = Lexer::new(&file.utf8_text).tokenize().map_err(|error| {
+            LocalProjectError::with_path(
+                "E_PROJECT_ENTRY_PARSE",
+                file.path.clone(),
+                format!("current module source 토큰화 실패: {}", error.message),
+            )
+        })?;
+        for pair in tokens.windows(2) {
+            let legacy_name = match &pair[0].kind {
+                TokenKind::Ident(name) | TokenKind::Josa(name) => {
+                    matches!(name.as_str(), "쓰임" | "드러냄" | "공개")
+                }
+                _ => false,
+            };
+            if legacy_name && matches!(pair[1].kind, TokenKind::LBrace) {
+                return Err(LocalProjectError::with_path_span(
+                    "E_V25_DEFINITION_MIGRATION_REQUIRED",
+                    file.path.clone(),
+                    "V25에서는 이전 brace형 L11 선언을 사용할 수 없습니다. `(<항목>=value) 쓰임.` 또는 `(<항목>=value) 드러냄.`처럼 현재 typed directive를 사용하세요",
+                    (pair[0].span.start, pair[1].span.end),
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
 fn current_module_directives(
     text: &str,
     path: &str,
@@ -5786,13 +5848,18 @@ fn current_module_directives(
             format!("current module source 토큰화 실패: {}", error.message),
         )
     })?;
-    if !matches!(tokens.first().map(|token| &token.kind), Some(TokenKind::LParen)) {
+    if !matches!(
+        tokens.first().map(|token| &token.kind),
+        Some(TokenKind::LParen)
+    ) {
         return Ok(None);
     }
 
     let mut known_import_targets = BTreeSet::new();
     for candidate_path in text_by_path.keys() {
-        let stem = candidate_path.strip_suffix(".ddn").unwrap_or(candidate_path);
+        let stem = candidate_path
+            .strip_suffix(".ddn")
+            .unwrap_or(candidate_path);
         known_import_targets.insert(stem.to_string());
         known_import_targets.insert(candidate_path.to_string());
         known_import_targets.insert(format!("./{stem}"));
@@ -5812,36 +5879,31 @@ fn current_module_directives(
     let context = ModuleDirectiveContext::default()
         .with_known_imports(known_import_targets)
         .with_public_definitions(lexical_candidates);
-    let parsed = parse_module_directive_prefix(text, path, &context)
-        .map_err(|error| {
-            LocalProjectError::with_path_span(
-                "E_CURRENT_MODULE_DIRECTIVE",
-                path,
-                error.message,
-                (error.span.start, error.span.end),
-            )
-        })?;
+    let parsed = parse_module_directive_prefix(text, path, &context).map_err(|error| {
+        LocalProjectError::with_path_span(
+            "E_CURRENT_MODULE_DIRECTIVE",
+            path,
+            error.message,
+            (error.span.start, error.span.end),
+        )
+    })?;
 
     let declared_names = if parsed.exports.is_some() {
-        ddonirang_lang::parse_v25_with_mode(
-            &parsed.declaration_source,
-            path,
-            ParseMode::Strict,
-        )
-        .map_err(|error| {
-            LocalProjectError::with_path_span(
-                "E_CURRENT_MODULE_DECLARATION",
-                path,
-                error.message,
-                (error.span.start, error.span.end),
-            )
-        })?
-        .items
-        .iter()
-        .map(|item| match item {
-            TopLevelItem::SeedDef(seed) => seed.canonical_name.clone(),
-        })
-        .collect::<BTreeSet<_>>()
+        ddonirang_lang::parse_v25_with_mode(&parsed.declaration_source, path, ParseMode::Strict)
+            .map_err(|error| {
+                LocalProjectError::with_path_span(
+                    "E_CURRENT_MODULE_DECLARATION",
+                    path,
+                    error.message,
+                    (error.span.start, error.span.end),
+                )
+            })?
+            .items
+            .iter()
+            .map(|item| match item {
+                TopLevelItem::SeedDef(seed) => seed.canonical_name.clone(),
+            })
+            .collect::<BTreeSet<_>>()
     } else {
         BTreeSet::new()
     };
@@ -5871,12 +5933,15 @@ fn current_module_directives(
                         return Err(LocalProjectError::with_path(
                             "E_RD457_EXPORT_TARGET_PRIVATE_OR_UNKNOWN",
                             path,
-                            format!("{}는 이 module의 typed DefinitionIdentity가 아닙니다", entry.target),
+                            format!(
+                                "{}는 이 module의 typed DefinitionIdentity가 아닙니다",
+                                entry.target
+                            ),
                         ));
                     }
                     Ok(ParsedExport {
                         external_name: entry.local_name.clone(),
-                    internal_name: entry.target.clone(),
+                        internal_name: entry.target.clone(),
                     })
                 })
                 .collect::<Result<Vec<_>, _>>()
@@ -6601,18 +6666,118 @@ mod tests {
             .expect("empty-project entry")
             .utf8_text = "값:수 := 0.\n값 보여주기.\n".to_string();
 
+        let first =
+            build_project_run_summary_with_supported_profile(source.clone(), "앱", false, false)
+                .expect("current empty-project callable runs");
+        let second = build_project_run_summary_with_supported_profile(source, "앱", false, false)
+            .expect("repeated current empty-project callable runs");
+        assert_eq!(first.runtime_output_log_texts, vec!["0"]);
+        assert_eq!(first.runtime_state_hash, second.runtime_state_hash);
+        assert_eq!(first.summary_sha256, second.summary_sha256);
+    }
+
+    #[test]
+    fn current_workbench_physics_body_runs_through_the_shared_frontdoor() {
+        // The Workbench project's entry is a callable body.  The supported
+        // Local Project runner owns the sole enclosing current-V25 callable;
+        // nesting a second callable here makes the generated source invalid.
+        let source = VirtualProjectSource {
+            schema: VIRTUAL_PROJECT_SOURCE_SCHEMA.to_string(),
+            kind: Some(LOCAL_PROJECT_TREE_KIND.to_string()),
+            package_hash: None,
+            root_path: "뿌리.ddn".to_string(),
+            entry_path: "app/main.ddn".to_string(),
+            files: vec![
+                VirtualProjectFileSource {
+                    path: "뿌리.ddn".to_string(),
+                    role: "root".to_string(),
+                    utf8_text: "프로젝트 { 이름: \"낙하 운동 실험\". 첫글: \"./app/main.ddn\". 목표 { 앱: \"./app/main.ddn\". } 모듈길 { 로컬: \"./lib\". } }.".to_string(),
+                },
+                VirtualProjectFileSource {
+                    path: "app/main.ddn".to_string(),
+                    role: "ddn_source".to_string(),
+                    utf8_text: "(힘=\"./lib/힘\") 쓰임.\n\n초기속도x:수 := 0.\n초기속도y:수 := 20.\n시간간격:수 := 0.1.\n중력가속도:수 := 힘.중력.\n속도:수 := 초기속도y - 중력가속도 * 시간간격.\n위치:수 := 초기속도x + 속도 * 시간간격.\n위치 보여주기.\n속도 보여주기.\n힘.중력 보여주기.\n".to_string(),
+                },
+                VirtualProjectFileSource {
+                    path: "lib/힘.ddn".to_string(),
+                    role: "ddn_source".to_string(),
+                    utf8_text: "(중력=중력) 드러냄.\n\n중력:수 := 9.8.\n".to_string(),
+                },
+            ],
+        };
+
+        let prepared = build_project_prepare_link(source.clone(), "앱", true, false)
+            .expect("current Workbench physics body prepares through the shared frontdoor");
+        assert!(prepared.linked_execution_source.starts_with("매마디:움직씨 := {\n"));
+
         let first = build_project_run_summary_with_supported_profile(
             source.clone(),
             "앱",
             false,
             false,
         )
-        .expect("current empty-project callable runs");
+        .expect("current Workbench physics body runs");
         let second = build_project_run_summary_with_supported_profile(source, "앱", false, false)
-            .expect("repeated current empty-project callable runs");
-        assert_eq!(first.runtime_output_log_texts, vec!["0"]);
+            .expect("repeated current Workbench physics body runs");
         assert_eq!(first.runtime_state_hash, second.runtime_state_hash);
         assert_eq!(first.summary_sha256, second.summary_sha256);
+        assert!(!first.runtime_output_log_texts.is_empty());
+    }
+
+    #[test]
+    fn current_project_run_rejects_legacy_l11_before_runtime_publication() {
+        let source = VirtualProjectSource {
+            schema: VIRTUAL_PROJECT_SOURCE_SCHEMA.to_string(),
+            kind: Some(LOCAL_PROJECT_TREE_KIND.to_string()),
+            package_hash: None,
+            root_path: "뿌리.ddn".to_string(),
+            entry_path: "app/main.ddn".to_string(),
+            files: vec![
+                VirtualProjectFileSource {
+                    path: "뿌리.ddn".to_string(),
+                    role: "root".to_string(),
+                    utf8_text: "프로젝트 { 이름: \"legacy rejection\". 첫글: \"./app/main.ddn\". 목표 { 앱: \"./app/main.ddn\". } }.".to_string(),
+                },
+                VirtualProjectFileSource {
+                    path: "app/main.ddn".to_string(),
+                    role: "ddn_source".to_string(),
+                    utf8_text: "쓰임 { 운동: \"./lib/운동\". }\n".to_string(),
+                },
+                VirtualProjectFileSource {
+                    path: "lib/운동.ddn".to_string(),
+                    role: "ddn_source".to_string(),
+                    utf8_text: "(속도=속도) 드러냄.\n\n속도:수 := 7.\n".to_string(),
+                },
+            ],
+        };
+
+        let error = build_project_run_summary_with_supported_profile(source, "앱", false, false)
+            .expect_err("legacy brace directives must fail before a run summary exists");
+        assert_eq!(error.code, "E_V25_DEFINITION_MIGRATION_REQUIRED");
+        assert_eq!(error.path.as_deref(), Some("app/main.ddn"));
+
+        let comment_only = VirtualProjectSource {
+            schema: VIRTUAL_PROJECT_SOURCE_SCHEMA.to_string(),
+            kind: Some(LOCAL_PROJECT_TREE_KIND.to_string()),
+            package_hash: None,
+            root_path: "뿌리.ddn".to_string(),
+            entry_path: "app/main.ddn".to_string(),
+            files: vec![
+                VirtualProjectFileSource {
+                    path: "뿌리.ddn".to_string(),
+                    role: "root".to_string(),
+                    utf8_text: "프로젝트 { 이름: \"comment text\". 첫글: \"./app/main.ddn\". 목표 { 앱: \"./app/main.ddn\". } }.".to_string(),
+                },
+                VirtualProjectFileSource {
+                    path: "app/main.ddn".to_string(),
+                    role: "ddn_source".to_string(),
+                    utf8_text: "값:수 := 1. // 쓰임 { 드러냄 { 공개 { 는 주석입니다\n값 보여주기.\n".to_string(),
+                },
+            ],
+        };
+        let summary = build_project_run_summary_with_supported_profile(comment_only, "앱", false, false)
+            .expect("comment text must not trigger a legacy L11 rejection");
+        assert_eq!(summary.runtime_output_log_texts, vec!["1"]);
     }
 
     #[test]
@@ -6631,7 +6796,7 @@ mod tests {
             transcript: None,
         };
         let summary = build_project_run_summary_with_supported_profile_and_host_resources(
-            sample_multifile_source(),
+            current_typed_multifile_source(),
             "앱",
             false,
             false,
@@ -6639,9 +6804,17 @@ mod tests {
         )
         .expect("project host resource run");
         assert!(summary.host_resource_receipt.is_some());
-        assert_ne!(summary.summary_sha256, build_project_run_summary_with_supported_profile(
-            sample_multifile_source(), "앱", false, false
-        ).expect("ordinary project run").summary_sha256);
+        assert_ne!(
+            summary.summary_sha256,
+            build_project_run_summary_with_supported_profile(
+                current_typed_multifile_source(),
+                "앱",
+                false,
+                false
+            )
+            .expect("ordinary project run")
+            .summary_sha256
+        );
 
         let invalid = HostResourceRequest {
             schema: host_resource::HOST_RESOURCE_REQUEST_SCHEMA.to_string(),
@@ -6656,7 +6829,11 @@ mod tests {
             transcript: None,
         };
         let error = build_project_run_summary_with_supported_profile_and_host_resources(
-            sample_multifile_source(), "앱", false, false, &invalid,
+            current_typed_multifile_source(),
+            "앱",
+            false,
+            false,
+            &invalid,
         )
         .expect_err("invalid declaration must stop before project execution");
         assert_eq!(error.code, "E_HOST_RESOURCE_PREFLIGHT");
@@ -6687,6 +6864,23 @@ mod tests {
                 },
             ],
         }
+    }
+
+    fn current_typed_multifile_source() -> VirtualProjectSource {
+        let mut source = sample_multifile_source();
+        source
+            .files
+            .iter_mut()
+            .find(|file| file.path == "app/main.ddn")
+            .expect("current entry")
+            .utf8_text = "(운동=\"./lib/운동\") 쓰임.\n\n운동.속도 보여주기.".to_string();
+        source
+            .files
+            .iter_mut()
+            .find(|file| file.path == "lib/운동.ddn")
+            .expect("current module")
+            .utf8_text = "(속도=속도) 드러냄.\n\n속도:수 := 7.".to_string();
+        source
     }
 
     fn sample_natural_iteration_multifile_source() -> VirtualProjectSource {
@@ -7746,9 +7940,7 @@ mod tests {
             .iter_mut()
             .find(|file| file.path == "app/main.ddn")
             .expect("entry")
-            .utf8_text =
-            "설정 { 제목: \"봉인 자료 연결\". 마디수: 1. }.\n\n(매마디)마다 {\n  첫행 <- (자료값.행, 0) 차림.값.\n  첫셀 <- (첫행.cells, 0) 차림.값.\n  (월: 첫셀.value.value) 보임.\n}.\n"
-                .to_string();
+            .utf8_text = "앱:움직씨 := {\n  값:수 := 1.\n  값 보여주기.\n}\n".to_string();
         let handle = project_asset_registry_from_source(&source)
             .expect("asset registry")
             .expect("asset registry present")
@@ -7773,14 +7965,14 @@ mod tests {
             .iter()
             .find(|file| file.path == "app/main.ddn")
             .expect("bound entry");
-        let binding = "자료값 <- (@\"datasets/project-runtime/envelope.json\") 자료.열기.";
+        let binding = "자료값:묶음 := (@\"datasets/project-runtime/envelope.json\") 자료.열기.";
         assert!(entry.utf8_text.contains(binding));
         assert!(
             entry.utf8_text.find(binding).expect("binding")
                 < entry
                     .utf8_text
-                    .find("첫행 <- (자료값.행, 0) 차림.값.")
-                    .expect("consumer")
+                    .find("값:수 := 1.")
+                    .expect("current consumer")
         );
         let summary =
             build_project_run_summary(plan.project_source, "앱", true, false).expect("project run");

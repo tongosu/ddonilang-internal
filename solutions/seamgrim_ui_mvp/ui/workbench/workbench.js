@@ -769,17 +769,15 @@ function nativeProjectFiles(name, template = "physics") {
       role: "ddn_source",
       utf8_text: `(힘="./lib/힘") 쓰임.
 
-운동:움직씨 := {
-  위치초기:수 := 0.
-  속도초기:수 := 20.
-  시간간격:수 := 0.1.
-  중력가속도:수 := 힘.중력.
-  속도:수 := 속도초기 - 중력가속도 * 시간간격.
-  위치:수 := 위치초기 + 속도 * 시간간격.
-  위치 보여주기.
-  속도 보여주기.
-  힘.중력 보여주기.
-}
+초기속도x:수 := 0.
+초기속도y:수 := 20.
+시간간격:수 := 0.1.
+중력가속도:수 := 힘.중력.
+속도:수 := 초기속도y - 중력가속도 * 시간간격.
+위치:수 := 초기속도x + 속도 * 시간간격.
+위치 보여주기.
+속도 보여주기.
+힘.중력 보여주기.
 `,
     },
     {
@@ -1924,6 +1922,72 @@ async function refreshAuthoritativeSourceReadiness(project = currentProject()) {
   if (!pending.ready) {
     state.sourceReadiness = pending;
     return pending;
+  }
+
+  // A native local project owns a typed file graph, not an isolated entry
+  // string.  Its shared prepare/link frontdoor validates RD-457 metadata and
+  // the ordinary declaration tail together before execution.  Routing that
+  // graph through the single-file carrier would reject valid body statements
+  // before the same shared project owner can bind the module identities.
+  const projectSource = currentVirtualProjectSource(project);
+  if (projectSource) {
+    const sourceAtRequest = activeRuntimeSourceText(project);
+    const generation = state.sourceAnalysisGeneration + 1;
+    state.sourceAnalysisGeneration = generation;
+    state.sourceAnalysisSourceText = sourceAtRequest;
+    try {
+      // The run path seals or refreshes its generated lock immediately after
+      // this semantic preflight.  Do not require that future artifact from
+      // the raw-source readiness gate itself.
+      const prepared = await runtimeBridge.prepareProjectLink(projectSource, "앱", true, false);
+      if (currentProject().id !== projectIdAtRequest) {
+        return { ...pending, ready: false, blocked: true, superseded: true };
+      }
+      if (activeRuntimeSourceText(currentProject()) !== sourceAtRequest) {
+        return { ...pending, ready: false, blocked: true, superseded: true };
+      }
+      const projected = {
+        ...pending,
+        authority_status: "shared_project_frontdoor",
+        ready: true,
+        blocked: false,
+        stale: false,
+        source_revision_identity: String(prepared?.prepare_link_sha256 ?? ""),
+        analysis_generation: generation,
+        source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+        analysis_outcome: "ACCEPTED",
+        module_directive_metadata: null,
+        diagnostics: [],
+        candidate: null,
+        candidates: [],
+      };
+      state.sourceReadiness = projected;
+      return projected;
+    } catch (error) {
+      const diagnostic = projectEditDiagnostic(error);
+      const rejected = {
+        ...pending,
+        authority_status: "shared_project_frontdoor",
+        ready: false,
+        blocked: true,
+        stale: false,
+        analysis_generation: generation,
+        source_profile_identity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
+        analysis_outcome: "REJECTED",
+        diagnostics: [{
+          code: String(diagnostic.code ?? "E_PROJECT_PREPARE_LINK"),
+          severity: "error",
+          status_axis: "LANGUAGE_ERROR",
+          message: String(diagnostic.message ?? error),
+          path: String(diagnostic.path ?? entryPath),
+          span: diagnostic.source_span ?? null,
+        }],
+        candidate: null,
+        candidates: [],
+      };
+      state.sourceReadiness = rejected;
+      return rejected;
+    }
   }
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -4273,7 +4337,12 @@ async function startRun({ branchFrom = null } = {}) {
       code: sourceReadiness.diagnostics?.[0]?.code ?? SOURCE_READINESS_DIAGNOSTIC_CODE,
       source_hash: sourceReadiness.source_hash,
     });
-    pushDiagnostic("E_SOURCE_RUN_BLOCKED", "원문 분석 또는 제품 준비 진단을 먼저 해결해야 실행할 수 있습니다.", "error");
+    const diagnostic = sourceReadiness.diagnostics?.[0] ?? null;
+    pushDiagnostic(
+      String(diagnostic?.code ?? "E_SOURCE_RUN_BLOCKED"),
+      String(diagnostic?.message ?? "원문 분석 또는 제품 준비 진단을 먼저 해결해야 실행할 수 있습니다."),
+      "error",
+    );
     renderAll();
     openProgressiveDialog(els.projectVerificationDrawer);
     return false;
@@ -4362,6 +4431,7 @@ async function startRun({ branchFrom = null } = {}) {
       state.wasmVmEntryCount += 1;
       const projectWasm = await runtimeBridge.createSession({
         ddnSourceText: projectExecutionPlan.linked_execution_source,
+        sourceProfileIdentity: SOURCE_ANALYSIS_PROFILE_IDENTITY,
         cacheBust: "approved-workbench-linked-project-v1",
         setStatus: () => {},
         clearStatusError: () => {},
