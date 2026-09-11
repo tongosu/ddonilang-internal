@@ -48,12 +48,13 @@ pub fn semantic_tokens_snapshot(
     if snapshot.language_id != "ddn" {
         return Ok(empty_resolution(snapshot));
     }
-    let Ok(program) = parse_v25(source, &snapshot.uri) else {
-        return Ok(empty_resolution(snapshot));
+    let tokens = match Lexer::new(source).tokenize() {
+        Ok(tokens) => tokens,
+        Err(_) => return Ok(empty_resolution(snapshot)),
     };
-    let tokens = Lexer::new(source)
-        .tokenize()
-        .map_err(|_| SemanticTokensError::InvalidUtf8)?;
+    let Ok(program) = parse_v25(source, &snapshot.uri) else {
+        return lexical_fallback_resolution(snapshot, source, &tokens, encoding);
+    };
     let local_names = program
         .items
         .iter()
@@ -110,12 +111,8 @@ pub fn semantic_tokens_snapshot(
         .into_iter()
         .map(|signature| signature.name.to_string())
         .collect::<BTreeSet<_>>();
-    let mut data = Vec::new();
-    let mut previous_line = 0;
-    let mut previous_start = 0;
-    let mut previous: Option<&Token> = None;
-    for token in &tokens {
-        let Some(classification) = token_classification(
+    let data = encode_token_data(source, &tokens, encoding, |token, previous| {
+        token_classification(
             token,
             previous,
             &local_names,
@@ -124,50 +121,11 @@ pub fn semantic_tokens_snapshot(
             &declaration_ranges,
             &type_definition_ranges,
             &parameter_declaration_ranges,
-        ) else {
-            previous = Some(token);
-            continue;
-        };
-        let range = byte_range_to_lsp_range(
-            source,
-            super::position::ByteRange {
-                start: token.span.start,
-                end: token.span.end,
-            },
-            encoding,
         )
-        .map_err(SemanticTokensError::InvalidPosition)?;
-        if range.start.line != range.end.line || range.end.character <= range.start.character {
-            previous = Some(token);
-            continue;
-        }
-        let delta_line = range.start.line.saturating_sub(previous_line);
-        let delta_start = if delta_line == 0 {
-            range.start.character.saturating_sub(previous_start)
-        } else {
-            range.start.character
-        };
-        data.extend([
-            delta_line,
-            delta_start,
-            range.end.character - range.start.character,
-            classification.token_type,
-            classification.modifiers,
-        ]);
-        if data.len() > MAX_TOKEN_DATA {
-            return Ok(empty_resolution(snapshot));
-        }
-        previous_line = range.start.line;
-        previous_start = range.start.character;
-        previous = Some(token);
-    }
-    Ok(SemanticTokensResolution {
-        document_version: snapshot.version,
-        snapshot_identity: snapshot.identity.as_str().to_string(),
-        result_id: result_id(snapshot, &data),
-        data,
-        source_profile: "v25",
-    })
+    })?;
+    Ok(data
+        .map(|data| resolution_from_data(snapshot, data))
+        .unwrap_or_else(|| empty_resolution(snapshot)))
 }
 
 pub fn semantic_tokens_delta(previous: &[u32], current: &[u32]) -> SemanticTokensEdit {
@@ -211,13 +169,85 @@ impl std::fmt::Display for SemanticTokensError {
 impl std::error::Error for SemanticTokensError {}
 
 fn empty_resolution(snapshot: &DocumentSnapshot) -> SemanticTokensResolution {
+    resolution_from_data(snapshot, Vec::new())
+}
+
+fn resolution_from_data(snapshot: &DocumentSnapshot, data: Vec<u32>) -> SemanticTokensResolution {
     SemanticTokensResolution {
         document_version: snapshot.version,
         snapshot_identity: snapshot.identity.as_str().to_string(),
-        result_id: result_id(snapshot, &[]),
-        data: Vec::new(),
+        result_id: result_id(snapshot, &data),
+        data,
         source_profile: "v25",
     }
+}
+
+fn lexical_fallback_resolution(
+    snapshot: &DocumentSnapshot,
+    source: &str,
+    tokens: &[Token],
+    encoding: PositionEncoding,
+) -> Result<SemanticTokensResolution, SemanticTokensError> {
+    let data = encode_token_data(source, tokens, encoding, |token, _| {
+        lexical_token_classification(token)
+    })?;
+    Ok(data
+        .map(|data| resolution_from_data(snapshot, data))
+        .unwrap_or_else(|| empty_resolution(snapshot)))
+}
+
+fn encode_token_data<F>(
+    source: &str,
+    tokens: &[Token],
+    encoding: PositionEncoding,
+    mut classify: F,
+) -> Result<Option<Vec<u32>>, SemanticTokensError>
+where
+    F: FnMut(&Token, Option<&Token>) -> Option<TokenClassification>,
+{
+    let mut data = Vec::new();
+    let mut previous_line = 0;
+    let mut previous_start = 0;
+    let mut previous: Option<&Token> = None;
+    for token in tokens {
+        let Some(classification) = classify(token, previous) else {
+            previous = Some(token);
+            continue;
+        };
+        let range = byte_range_to_lsp_range(
+            source,
+            super::position::ByteRange {
+                start: token.span.start,
+                end: token.span.end,
+            },
+            encoding,
+        )
+        .map_err(SemanticTokensError::InvalidPosition)?;
+        if range.start.line != range.end.line || range.end.character <= range.start.character {
+            previous = Some(token);
+            continue;
+        }
+        let delta_line = range.start.line.saturating_sub(previous_line);
+        let delta_start = if delta_line == 0 {
+            range.start.character.saturating_sub(previous_start)
+        } else {
+            range.start.character
+        };
+        data.extend([
+            delta_line,
+            delta_start,
+            range.end.character - range.start.character,
+            classification.token_type,
+            classification.modifiers,
+        ]);
+        if data.len() > MAX_TOKEN_DATA {
+            return Ok(None);
+        }
+        previous_line = range.start.line;
+        previous_start = range.start.character;
+        previous = Some(token);
+    }
+    Ok(Some(data))
 }
 
 fn result_id(snapshot: &DocumentSnapshot, data: &[u32]) -> String {
@@ -238,6 +268,108 @@ fn result_id(snapshot: &DocumentSnapshot, data: &[u32]) -> String {
 struct TokenClassification {
     token_type: u32,
     modifiers: u32,
+}
+
+fn lexical_token_classification(token: &Token) -> Option<TokenClassification> {
+    let token_type = if matches!(token.kind, TokenKind::StringLit(_)) {
+        5
+    } else if matches!(token.kind, TokenKind::Integer(_) | TokenKind::Float(_)) {
+        6
+    } else if matches!(
+        token.kind,
+        TokenKind::KwImeumssi
+            | TokenKind::KwUmjikssi
+            | TokenKind::KwGallaessi
+            | TokenKind::KwRelationssi
+            | TokenKind::KwValueFunc
+            | TokenKind::KwSam
+            | TokenKind::KwHeureumssi
+            | TokenKind::KwIeumssi
+            | TokenKind::KwSemssi
+            | TokenKind::KwManyak
+            | TokenKind::KwIramyeon
+            | TokenKind::KwIlttae
+            | TokenKind::KwAniramyeon
+            | TokenKind::KwBanbok
+            | TokenKind::KwButeo
+            | TokenKind::KwKkaji
+            | TokenKind::KwDongan
+            | TokenKind::KwDaehae
+            | TokenKind::KwMeomchugi
+            | TokenKind::KwGeonneottwigi
+            | TokenKind::KwDollyeojwo
+            | TokenKind::KwTolabogi
+            | TokenKind::KwAllyeo
+            | TokenKind::KwHaebogo
+            | TokenKind::KwGoreugi
+            | TokenKind::KwMajeumyeon
+            | TokenKind::KwJeonjehae
+            | TokenKind::KwBojanghago
+            | TokenKind::KwHaeseo
+            | TokenKind::KwNeuljikeobogo
+            | TokenKind::KwBoyeojugi
+            | TokenKind::KwBeat
+            | TokenKind::KwReserve
+            | TokenKind::And
+            | TokenKind::Or
+            | TokenKind::Not
+    ) {
+        4
+    } else if matches!(
+        token.kind,
+        TokenKind::At
+            | TokenKind::Question
+            | TokenKind::Bang
+            | TokenKind::Tilde
+            | TokenKind::Colon
+            | TokenKind::Define
+            | TokenKind::Equals
+            | TokenKind::Arrow
+            | TokenKind::RightArrow
+            | TokenKind::TypeArrow
+            | TokenKind::AsyncLeftArrow
+            | TokenKind::AsyncRightArrow
+            | TokenKind::RendezvousLeftArrow
+            | TokenKind::PersistentDependencyArrow
+            | TokenKind::DoubleArrow
+            | TokenKind::Dot
+            | TokenKind::DotDot
+            | TokenKind::DotDotEq
+            | TokenKind::Comma
+            | TokenKind::Semicolon
+            | TokenKind::Pipe
+            | TokenKind::LParen
+            | TokenKind::RParen
+            | TokenKind::LBrace
+            | TokenKind::RBrace
+            | TokenKind::LBracket
+            | TokenKind::RBracket
+            | TokenKind::Plus
+            | TokenKind::PlusArrow
+            | TokenKind::PlusEqual
+            | TokenKind::Minus
+            | TokenKind::MinusArrow
+            | TokenKind::MinusEqual
+            | TokenKind::Star
+            | TokenKind::Slash
+            | TokenKind::Percent
+            | TokenKind::Caret
+            | TokenKind::RelationEq
+            | TokenKind::EqEq
+            | TokenKind::NotEq
+            | TokenKind::Lt
+            | TokenKind::Gt
+            | TokenKind::LtEq
+            | TokenKind::GtEq
+    ) {
+        7
+    } else {
+        return None;
+    };
+    Some(TokenClassification {
+        token_type,
+        modifiers: 0,
+    })
 }
 
 fn token_classification(

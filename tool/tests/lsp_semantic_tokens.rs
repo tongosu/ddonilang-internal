@@ -283,7 +283,13 @@ fn lsp9_full_tokens_stale_change_malformed_and_close_fail_closed() {
     assert!(!current["data"].as_array().unwrap().is_empty());
 
     change(&mut server, "새함수:셈씨 = {", 3);
-    assert_eq!(tokens(&mut server, 4, 3)["data"], json!([]));
+    let incomplete = tokens(&mut server, 4, 3);
+    assert!(!incomplete["data"].as_array().unwrap().is_empty());
+    assert!(incomplete["data"]
+        .as_array()
+        .unwrap()
+        .chunks_exact(5)
+        .all(|chunk| !matches!(chunk[3].as_u64(), Some(0..=3))));
 
     change(&mut server, "새함수:셈씨 := { 1 돌려줘. }", 4);
     let snapshot_stale = server
@@ -307,6 +313,51 @@ fn lsp9_full_tokens_stale_change_malformed_and_close_fail_closed() {
         })
         .unwrap();
     assert_eq!(tokens(&mut server, 6, 4)["data"], json!([]));
+}
+
+#[test]
+fn lsp46_incomplete_source_keeps_bounded_lexical_roles_without_stale_identity_tokens() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    open(&mut server, SOURCE, 1);
+    let valid = tokens(&mut server, 2, 1);
+    assert!(valid["data"]
+        .as_array()
+        .unwrap()
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(0)));
+
+    let incomplete = "첫함수:셈씨 := {\n  \"🙂\" 보여주기.\n";
+    change(&mut server, incomplete, 2);
+    let fallback = tokens(&mut server, 3, 2);
+    let fallback_data = fallback["data"].as_array().unwrap();
+    assert!(!fallback_data.is_empty());
+    assert!(fallback_data
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(5)));
+    assert!(fallback_data
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(4)));
+    assert!(fallback_data.chunks_exact(5).all(|chunk| {
+        !matches!(chunk[3].as_u64(), Some(0..=3))
+    }));
+    assert!(decode(fallback_data)
+        .iter()
+        .any(|token| token.0 == 1 && token.1 == 2 && token.2 == 4 && token.3 == 5));
+
+    let invalid_string = "첫함수:셈씨 := {\n  \"unterminated";
+    change(&mut server, invalid_string, 3);
+    let invalid = tokens(&mut server, 4, 3);
+    assert_eq!(invalid["data"], json!([]));
+    assert_ne!(invalid["resultId"], fallback["resultId"]);
+
+    change(&mut server, SOURCE, 4);
+    let repaired = tokens(&mut server, 5, 4);
+    assert!(repaired["data"]
+        .as_array()
+        .unwrap()
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(0)));
 }
 
 trait RpcMessageTestExt {
