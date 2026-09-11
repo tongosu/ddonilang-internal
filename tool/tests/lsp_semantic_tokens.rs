@@ -151,12 +151,12 @@ fn lsp39_roles_use_ast_bound_declaration_modifiers_and_ignore_line_comments() {
 
     let result = tokens(&mut server, 2, 1);
     let data = result["data"].as_array().unwrap();
-    assert!(data.chunks_exact(5).any(|chunk| {
-        chunk[3].as_u64() == Some(0) && chunk[4].as_u64() == Some(1)
-    }));
-    assert!(data.chunks_exact(5).any(|chunk| {
-        chunk[3].as_u64() == Some(3) && chunk[4].as_u64() == Some(1)
-    }));
+    assert!(data
+        .chunks_exact(5)
+        .any(|chunk| { chunk[3].as_u64() == Some(0) && chunk[4].as_u64() == Some(1) }));
+    assert!(data
+        .chunks_exact(5)
+        .any(|chunk| { chunk[3].as_u64() == Some(3) && chunk[4].as_u64() == Some(1) }));
 
     let decoded = decode(data);
     assert!(decoded.iter().all(|token| token.0 != 1));
@@ -338,9 +338,9 @@ fn lsp46_incomplete_source_keeps_bounded_lexical_roles_without_stale_identity_to
     assert!(fallback_data
         .chunks_exact(5)
         .any(|chunk| chunk[3].as_u64() == Some(4)));
-    assert!(fallback_data.chunks_exact(5).all(|chunk| {
-        !matches!(chunk[3].as_u64(), Some(0..=3))
-    }));
+    assert!(fallback_data
+        .chunks_exact(5)
+        .all(|chunk| { !matches!(chunk[3].as_u64(), Some(0..=3)) }));
     assert!(decode(fallback_data)
         .iter()
         .any(|token| token.0 == 1 && token.1 == 2 && token.2 == 4 && token.3 == 5));
@@ -358,6 +358,25 @@ fn lsp46_incomplete_source_keeps_bounded_lexical_roles_without_stale_identity_to
         .unwrap()
         .chunks_exact(5)
         .any(|chunk| chunk[3].as_u64() == Some(0)));
+}
+
+#[test]
+fn lsp39_incomplete_source_preserves_lexical_atom_josa_and_variable_roles() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    open(&mut server, "첫함수:셈씨 := { #상태 값~을 ?임시 <- 1.", 1);
+
+    let result = tokens(&mut server, 2, 1);
+    let data = result["data"].as_array().unwrap();
+    assert!(data
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(2)));
+    assert!(data
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(8)));
+    assert!(data
+        .chunks_exact(5)
+        .any(|chunk| chunk[3].as_u64() == Some(9)));
 }
 
 trait RpcMessageTestExt {

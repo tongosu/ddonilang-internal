@@ -6,6 +6,7 @@
   "main": "./extension.js",
   "activationEvents": [
     "onLanguage:ddonilang",
+    "onCommand:ddonilang.selectLanguageServerExecutable",
     "onCommand:ddonilang.showLanguageServerStatus",
     "onCommand:ddonilang.restartLanguageServer",
     "onCommand:ddonilang.runCurrentDocumentConsoleBogae"
@@ -43,7 +44,35 @@
         "path": "./syntaxes/ddn.tmLanguage.json"
       }
     ],
+    "semanticTokenScopes": [
+      {
+        "language": "ddonilang",
+        "scopes": {
+          "function": ["entity.name.function.ddn", "entity.name.function.call.ddn"],
+          "type": ["storage.type.ddn", "entity.name.type.ddn"],
+          "variable": ["variable.other.ddn"],
+          "parameter": ["variable.parameter.ddn"],
+          "keyword": ["keyword.control.ddn"],
+          "string": ["string.quoted.double.ddn"],
+          "number": ["constant.numeric.ddn"],
+          "operator": ["keyword.operator.ddn"],
+          "atom": ["constant.other.ddn"],
+          "josa": ["keyword.other.josa.ddn"]
+        }
+      }
+    ],
+    "themes": [
+      {
+        "label": "Ddonilang Readable",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ddonilang-readable-color-theme.json"
+      }
+    ],
     "commands": [
+      {
+        "command": "ddonilang.selectLanguageServerExecutable",
+        "title": "Ddonilang: Select Language Server Executable"
+      },
       {
         "command": "ddonilang.showLanguageServerStatus",
         "title": "Ddonilang: Show Language Server Status"
@@ -90,7 +119,7 @@
     }
   },
   "scripts": {
-    "test": "node test/extension.test.js && node test/activation.test.js && node test/console-bogae.test.js && node test/package-inventory.js",
+    "test": "node test/extension.test.js && node test/activation.test.js && node test/console-bogae.test.js && node test/readability.test.js && node test/package-inventory.js",
     "package:inventory": "node test/package-inventory.js"
   },
   "dependencies": {

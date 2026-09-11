@@ -1,0 +1,30 @@
+{
+  "name": "Ddonilang Readable",
+  "type": "dark",
+  "semanticHighlighting": true,
+  "colors": {},
+  "tokenColors": [
+    {"scope": ["keyword.control.ddn", "storage.type.ddn"], "settings": {"foreground": "#C586C0"}},
+    {"scope": ["entity.name.function.ddn", "entity.name.function.definition.ddn", "entity.name.function.call.ddn"], "settings": {"foreground": "#DCDCAA"}},
+    {"scope": ["entity.name.type.ddn", "entity.name.type.definition.ddn"], "settings": {"foreground": "#4EC9B0"}},
+    {"scope": ["variable.parameter.ddn"], "settings": {"foreground": "#9CDCFE"}},
+    {"scope": ["variable.other.ddn"], "settings": {"foreground": "#D4D4D4"}},
+    {"scope": ["string.quoted.double.ddn", "string.quoted.double.resource.ddn"], "settings": {"foreground": "#CE9178"}},
+    {"scope": ["constant.numeric.ddn", "constant.numeric.integer.ddn", "constant.numeric.float.ddn", "constant.numeric.unit.ddn"], "settings": {"foreground": "#B5CEA8"}},
+    {"scope": ["constant.other.ddn", "constant.language.ddn"], "settings": {"foreground": "#569CD6"}},
+    {"scope": ["keyword.operator.ddn", "keyword.other.josa.ddn"], "settings": {"foreground": "#D4D4D4"}},
+    {"scope": ["comment.line.double-slash.ddn", "comment.block.ddn"], "settings": {"foreground": "#6A9955"}}
+  ],
+  "semanticTokenColors": {
+    "function": "#DCDCAA",
+    "type": "#4EC9B0",
+    "variable": "#D4D4D4",
+    "parameter": "#9CDCFE",
+    "keyword": "#C586C0",
+    "string": "#CE9178",
+    "number": "#B5CEA8",
+    "operator": "#D4D4D4",
+    "atom": "#569CD6",
+    "josa": "#D4D4D4"
+  }
+}

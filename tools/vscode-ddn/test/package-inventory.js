@@ -12,6 +12,7 @@ const expectedFiles = [
   "package.json",
   "snippets/ddn.code-snippets",
   "syntaxes/ddn.tmLanguage.json",
+  "themes/ddonilang-readable-color-theme.json",
 ].sort();
 const requiredIgnoreRules = ["node_modules/**", "test/**", "legacy/**", "quickfix/**"];
 const requiredIncludeRules = [

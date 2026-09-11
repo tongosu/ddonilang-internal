@@ -275,6 +275,12 @@ fn lexical_token_classification(token: &Token) -> Option<TokenClassification> {
         5
     } else if matches!(token.kind, TokenKind::Integer(_) | TokenKind::Float(_)) {
         6
+    } else if matches!(token.kind, TokenKind::Atom(_)) {
+        8
+    } else if matches!(token.kind, TokenKind::Josa(_)) {
+        9
+    } else if matches!(token.kind, TokenKind::Variable(_) | TokenKind::Nuance(_)) {
+        2
     } else if matches!(
         token.kind,
         TokenKind::KwImeumssi
@@ -313,7 +319,8 @@ fn lexical_token_classification(token: &Token) -> Option<TokenClassification> {
             | TokenKind::And
             | TokenKind::Or
             | TokenKind::Not
-    ) {
+    ) || matches!(token.kind, TokenKind::Pragma(_))
+    {
         4
     } else if matches!(
         token.kind,

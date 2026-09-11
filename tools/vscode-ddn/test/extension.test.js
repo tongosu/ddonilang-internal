@@ -12,6 +12,7 @@ try {
   assert.strictEqual(manifest.main, "./extension.js");
   assert.deepStrictEqual(manifest.activationEvents, [
     "onLanguage:ddonilang",
+    "onCommand:ddonilang.selectLanguageServerExecutable",
     "onCommand:ddonilang.showLanguageServerStatus",
     "onCommand:ddonilang.restartLanguageServer",
     "onCommand:ddonilang.runCurrentDocumentConsoleBogae",
@@ -21,12 +22,37 @@ try {
   assert.deepStrictEqual(
     manifest.contributes.commands.map(({ command }) => command),
     [
+      "ddonilang.selectLanguageServerExecutable",
       "ddonilang.showLanguageServerStatus",
       "ddonilang.restartLanguageServer",
       "ddonilang.runCurrentDocumentConsoleBogae",
     ],
   );
   assert.deepStrictEqual(manifest.contributes.languages[0].extensions, [".ddn", ".또니", ".ddl", ".옮김"]);
+  assert.deepStrictEqual(manifest.contributes.semanticTokenScopes, [
+    {
+      language: "ddonilang",
+      scopes: {
+        function: ["entity.name.function.ddn", "entity.name.function.call.ddn"],
+        type: ["storage.type.ddn", "entity.name.type.ddn"],
+        variable: ["variable.other.ddn"],
+        parameter: ["variable.parameter.ddn"],
+        keyword: ["keyword.control.ddn"],
+        string: ["string.quoted.double.ddn"],
+        number: ["constant.numeric.ddn"],
+        operator: ["keyword.operator.ddn"],
+        atom: ["constant.other.ddn"],
+        josa: ["keyword.other.josa.ddn"],
+      },
+    },
+  ]);
+  assert.deepStrictEqual(manifest.contributes.themes, [
+    {
+      label: "Ddonilang Readable",
+      uiTheme: "vs-dark",
+      path: "./themes/ddonilang-readable-color-theme.json",
+    },
+  ]);
   assert.deepStrictEqual(extension.documentSelector(), [
     { scheme: "file", language: "ddonilang" },
     { scheme: "untitled", language: "ddonilang" },

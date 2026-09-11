@@ -13,6 +13,7 @@ let lifecycleState = "inactive";
 let lastStartupFailure = null;
 
 const SUPPORTED_EXTENSIONS = [".ddn", ".또니", ".ddl", ".옮김"];
+const SELECT_EXECUTABLE_COMMAND = "ddonilang.selectLanguageServerExecutable";
 const STATUS_COMMAND = "ddonilang.showLanguageServerStatus";
 const RESTART_COMMAND = "ddonilang.restartLanguageServer";
 const CONSOLE_BOGAE_COMMAND = "ddonilang.runCurrentDocumentConsoleBogae";
@@ -183,6 +184,24 @@ function runtimeConfiguration(vscode) {
   return vscode.workspace.getConfiguration("ddonilang.runtime");
 }
 
+function executableConfigurationTargets(vscode) {
+  const configurationTarget = vscode.ConfigurationTarget || {};
+  const targets = [];
+  if (vscode.workspace && Array.isArray(vscode.workspace.workspaceFolders) && vscode.workspace.workspaceFolders.length > 0) {
+    targets.push({
+      label: "Workspace 설정에 저장 (추천)",
+      description: "현재 workspace에서만 사용",
+      target: configurationTarget.Workspace || 2,
+    });
+  }
+  targets.push({
+    label: "사용자 설정에 저장",
+    description: "모든 workspace에서 사용",
+    target: configurationTarget.Global || 1,
+  });
+  return targets;
+}
+
 function extensionForUri(uri) {
   if (typeof uri !== "string") {
     return null;
@@ -241,6 +260,73 @@ function formatStatus(status) {
     `server PID=${status.serverPid === null ? "없음" : status.serverPid}`,
     `최근 실패=${status.lastStartupFailure || "없음"}`,
   ].join(" | ");
+}
+
+function selectedFileSystemPath(uri) {
+  if (!uri) {
+    return null;
+  }
+  if (typeof uri.fsPath === "string") {
+    return uri.fsPath;
+  }
+  if (typeof uri.path === "string") {
+    return uri.path;
+  }
+  return null;
+}
+
+async function selectLanguageServerExecutable(context, vscode) {
+  if (!vscode.window || typeof vscode.window.showOpenDialog !== "function") {
+    lastStartupFailure = "FILE_PICKER_UNAVAILABLE";
+    return null;
+  }
+  const picked = await vscode.window.showOpenDialog({
+    canSelectFiles: true,
+    canSelectFolders: false,
+    canSelectMany: false,
+    openLabel: "이 실행파일 사용",
+    title: "또니랑 LSP 실행파일 선택",
+  });
+  const candidate = selectedFileSystemPath(Array.isArray(picked) ? picked[0] : null);
+  if (!candidate) {
+    return null;
+  }
+  const normalized = path.normalize(candidate);
+  const failure = configuredExecutableFailure(normalized);
+  if (failure) {
+    lastStartupFailure = failure;
+    if (typeof vscode.window.showErrorMessage === "function") {
+      void vscode.window.showErrorMessage(`DDN_LSP_EXECUTABLE_INVALID ${failure}`);
+    }
+    return null;
+  }
+  if (typeof vscode.window.showQuickPick !== "function") {
+    lastStartupFailure = "CONFIGURATION_SCOPE_PICKER_UNAVAILABLE";
+    return null;
+  }
+  const scope = await vscode.window.showQuickPick(executableConfigurationTargets(vscode), {
+    ignoreFocusOut: true,
+    placeHolder: "실행파일 설정 범위를 선택하세요",
+    title: "또니랑 LSP 실행파일 설정 범위",
+  });
+  if (!scope) {
+    return null;
+  }
+  const settings = configuration(vscode);
+  if (!settings || typeof settings.update !== "function") {
+    lastStartupFailure = "CONFIGURATION_UPDATE_UNAVAILABLE";
+    return null;
+  }
+  try {
+    await settings.update("executable", normalized, scope.target);
+  } catch (_) {
+    lastStartupFailure = "CONFIGURATION_SAVE_FAILED";
+    if (typeof vscode.window.showErrorMessage === "function") {
+      void vscode.window.showErrorMessage("DDN_LSP_CONFIGURATION_SAVE_FAILED 실행파일 설정을 저장하지 못했습니다.");
+    }
+    return null;
+  }
+  return restartLanguageServer(context, vscode);
 }
 
 function documentUri(document) {
@@ -431,6 +517,10 @@ function registerCommands(context, vscode) {
   if (!vscode.commands || typeof vscode.commands.registerCommand !== "function") {
     return;
   }
+  const selectExecutableDisposable = vscode.commands.registerCommand(
+    SELECT_EXECUTABLE_COMMAND,
+    () => selectLanguageServerExecutable(context, vscode),
+  );
   const statusDisposable = vscode.commands.registerCommand(STATUS_COMMAND, () => {
     const status = statusSnapshot(vscode, context);
     const message = formatStatus(status);
@@ -445,6 +535,7 @@ function registerCommands(context, vscode) {
   const consoleBogaeDisposable = vscode.commands.registerCommand(CONSOLE_BOGAE_COMMAND, () =>
     runCurrentDocumentConsoleBogae(context, vscode),
   );
+  context.subscriptions.push(selectExecutableDisposable);
   context.subscriptions.push(statusDisposable);
   context.subscriptions.push(restartDisposable);
   context.subscriptions.push(consoleBogaeDisposable);
@@ -606,5 +697,6 @@ module.exports = {
   runCurrentDocumentConsoleBogae,
   resolveServerExecutable,
   restartLanguageServer,
+  selectLanguageServerExecutable,
   statusSnapshot,
 };
