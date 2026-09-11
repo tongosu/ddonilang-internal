@@ -2,12 +2,15 @@ const fs = require("fs");
 const path = require("path");
 
 let activeClient = null;
+let restartInFlight = null;
+let commandsRegistered = false;
 let startupErrorShown = false;
 let lifecycleState = "inactive";
 let lastStartupFailure = null;
 
 const SUPPORTED_EXTENSIONS = [".ddn", ".또니", ".ddl", ".옮김"];
 const STATUS_COMMAND = "ddonilang.showLanguageServerStatus";
+const RESTART_COMMAND = "ddonilang.restartLanguageServer";
 
 function isLocalAbsolutePath(candidate) {
   if (typeof candidate !== "string" || candidate.length === 0) {
@@ -180,31 +183,33 @@ function formatStatus(status) {
   ].join(" | ");
 }
 
-function registerStatusCommand(context, vscode) {
+function registerCommands(context, vscode) {
   if (!vscode.commands || typeof vscode.commands.registerCommand !== "function") {
     return;
   }
-  const disposable = vscode.commands.registerCommand(STATUS_COMMAND, () => {
-  const status = statusSnapshot(vscode, context);
+  const statusDisposable = vscode.commands.registerCommand(STATUS_COMMAND, () => {
+    const status = statusSnapshot(vscode, context);
     const message = formatStatus(status);
     if (vscode.window && typeof vscode.window.showInformationMessage === "function") {
       void vscode.window.showInformationMessage(message);
     }
     return status;
   });
-  context.subscriptions.push(disposable);
+  const restartDisposable = vscode.commands.registerCommand(RESTART_COMMAND, () =>
+    restartLanguageServer(context, vscode),
+  );
+  context.subscriptions.push(statusDisposable);
+  context.subscriptions.push(restartDisposable);
 }
 
-async function activate(context) {
+async function startClient(context, vscode) {
   if (activeClient) {
     return activeClient;
   }
 
-  const vscode = require("vscode");
   const { LanguageClient } = require("vscode-languageclient/node");
   lifecycleState = "activating";
   lastStartupFailure = null;
-  registerStatusCommand(context, vscode);
   const settings = configuration(vscode);
   const configuredPath = settings.get("executable", "");
   const configuredFailure = configuredExecutableFailure(configuredPath);
@@ -266,17 +271,73 @@ async function activate(context) {
   }
 }
 
+async function stopActiveClient() {
+  const client = activeClient;
+  if (!client) {
+    lifecycleState = "inactive";
+    return true;
+  }
+  activeClient = null;
+  lifecycleState = "stopping";
+  try {
+    await client.stop();
+    lifecycleState = "inactive";
+    return true;
+  } catch (_) {
+    lifecycleState = "failed";
+    lastStartupFailure = "SERVER_STOP_FAILED";
+    try {
+      client.dispose();
+    } catch (_) {
+      // The client is already detached; preserve the typed failure state.
+    }
+    return false;
+  }
+}
+
+function restartLanguageServer(context, vscode) {
+  if (restartInFlight) {
+    return restartInFlight;
+  }
+  restartInFlight = (async () => {
+    if (!(await stopActiveClient())) {
+      return null;
+    }
+    const restartedClient = await startClient(context, vscode);
+    if (!restartedClient && lifecycleState !== "failed") {
+      lifecycleState = "failed";
+    }
+    return restartedClient;
+  })().finally(() => {
+    restartInFlight = null;
+  });
+  return restartInFlight;
+}
+
+async function activate(context) {
+  if (activeClient) {
+    return activeClient;
+  }
+
+  const vscode = require("vscode");
+  lifecycleState = "activating";
+  if (!commandsRegistered) {
+    registerCommands(context, vscode);
+    commandsRegistered = true;
+  }
+  return startClient(context, vscode);
+}
+
 async function deactivate() {
+  if (restartInFlight) {
+    await restartInFlight;
+  }
   if (!activeClient) {
     lifecycleState = "inactive";
     return undefined;
   }
-  const client = activeClient;
-  activeClient = null;
-  lifecycleState = "stopping";
-  const result = await client.stop();
-  lifecycleState = "inactive";
-  return result;
+  await stopActiveClient();
+  return undefined;
 }
 
 module.exports = {
@@ -289,5 +350,6 @@ module.exports = {
   formatStatus,
   isRegularExecutable,
   resolveServerExecutable,
+  restartLanguageServer,
   statusSnapshot,
 };

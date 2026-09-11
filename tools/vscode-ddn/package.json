@@ -6,7 +6,8 @@
   "main": "./extension.js",
   "activationEvents": [
     "onLanguage:ddonilang",
-    "onCommand:ddonilang.showLanguageServerStatus"
+    "onCommand:ddonilang.showLanguageServerStatus",
+    "onCommand:ddonilang.restartLanguageServer"
   ],
   "publisher": "ddonilang",
   "engines": {
@@ -45,6 +46,10 @@
       {
         "command": "ddonilang.showLanguageServerStatus",
         "title": "Ddonilang: Show Language Server Status"
+      },
+      {
+        "command": "ddonilang.restartLanguageServer",
+        "title": "Ddonilang: Restart Language Server"
       }
     ],
     "snippets": [

@@ -13,9 +13,14 @@ try {
   assert.deepStrictEqual(manifest.activationEvents, [
     "onLanguage:ddonilang",
     "onCommand:ddonilang.showLanguageServerStatus",
+    "onCommand:ddonilang.restartLanguageServer",
   ]);
   assert.strictEqual(manifest.dependencies["vscode-languageclient"], "8.1.0");
   assert.strictEqual(manifest.contributes.snippets[0].language, "ddonilang");
+  assert.deepStrictEqual(
+    manifest.contributes.commands.map(({ command }) => command),
+    ["ddonilang.showLanguageServerStatus", "ddonilang.restartLanguageServer"],
+  );
   assert.deepStrictEqual(manifest.contributes.languages[0].extensions, [".ddn", ".또니", ".ddl", ".옮김"]);
   assert.deepStrictEqual(extension.documentSelector(), [
     { scheme: "file", language: "ddonilang" },

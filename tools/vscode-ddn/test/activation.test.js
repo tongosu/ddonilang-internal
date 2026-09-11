@@ -8,6 +8,10 @@ const extension = require("../extension");
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ddonilang-vscode-activation-"));
 const executable = path.join(tempRoot, process.platform === "win32" ? "ddonirang-lsp.exe" : "ddonirang-lsp");
 fs.writeFileSync(executable, "placeholder");
+const configurationState = { executable, autoDiscover: true };
+const registeredCommands = new Map();
+const clientInstances = [];
+const clientEvents = [];
 
 const fakeVscode = {
   workspace: {
@@ -16,29 +20,28 @@ const fakeVscode = {
       assert.strictEqual(section, "ddonilang.lsp");
       return {
         get(name, fallback) {
-          return name === "executable" ? executable : fallback;
+          return Object.hasOwn(configurationState, name) ? configurationState[name] : fallback;
         },
       };
     },
   },
   window: {
-    showErrorMessage() {
-      throw new Error("unexpected extension startup error");
-    },
+    showErrorMessage() {},
     showInformationMessage() {},
     activeTextEditor: null,
   },
   commands: {
     registerCommand(command, callback) {
-      assert.strictEqual(command, "ddonilang.showLanguageServerStatus");
-      registeredStatusCommand = callback;
+      assert.ok([
+        "ddonilang.showLanguageServerStatus",
+        "ddonilang.restartLanguageServer",
+      ].includes(command));
+      registeredCommands.set(command, callback);
       return { dispose() {} };
     },
   },
 };
 
-let clientInstance;
-let registeredStatusCommand;
 class FakeLanguageClient {
   constructor(id, name, serverOptions, clientOptions) {
     this.id = id;
@@ -48,21 +51,35 @@ class FakeLanguageClient {
     this.startCalls = 0;
     this.stopCalls = 0;
     this.disposeCalls = 0;
-    clientInstance = this;
+    this.failStart = false;
+    this.failStop = false;
+    clientInstances.push(this);
+    clientEvents.push(`construct:${clientInstances.length}`);
   }
 
   async start() {
     this.startCalls += 1;
+    clientEvents.push(`start:${clientInstances.length}`);
+    if (this.failStart || FakeLanguageClient.failNextStart) {
+      FakeLanguageClient.failNextStart = false;
+      throw new Error("synthetic start failure");
+    }
   }
 
   async stop() {
     this.stopCalls += 1;
+    clientEvents.push(`stop:${clientInstances.indexOf(this) + 1}`);
+    if (this.failStop) {
+      throw new Error("synthetic stop failure");
+    }
   }
 
   dispose() {
     this.disposeCalls += 1;
+    clientEvents.push(`dispose:${clientInstances.indexOf(this) + 1}`);
   }
 }
+FakeLanguageClient.failNextStart = false;
 
 const originalLoad = Module._load;
 Module._load = function patchedLoad(request, parent, isMain) {
@@ -86,7 +103,7 @@ Module._load = function patchedLoad(request, parent, isMain) {
       extensionPath: path.join(tempRoot, "tools", "vscode-ddn"),
       subscriptions: { push() {} },
     });
-    assert.strictEqual(client, clientInstance);
+    assert.strictEqual(client, clientInstances[0]);
     assert.strictEqual(reusedClient, client);
     assert.strictEqual(client.startCalls, 1);
     assert.strictEqual(client.serverOptions.command, executable);
@@ -94,16 +111,55 @@ Module._load = function patchedLoad(request, parent, isMain) {
       { scheme: "file", language: "ddonilang" },
       { scheme: "untitled", language: "ddonilang" },
     ]);
-    assert.strictEqual(subscriptions.length, 2);
-    const status = registeredStatusCommand();
+    assert.strictEqual(subscriptions.length, 3);
+    const status = registeredCommands.get("ddonilang.showLanguageServerStatus")();
     assert.strictEqual(status.lifecycleState, "running");
     assert.strictEqual(status.serverProcessPresent, false);
 
+    const restartCommand = registeredCommands.get("ddonilang.restartLanguageServer");
+    const firstRestart = restartCommand();
+    const secondRestart = restartCommand();
+    assert.strictEqual(firstRestart, secondRestart);
+    const restarted = await firstRestart;
+    assert.strictEqual(restarted, clientInstances[1]);
+    assert.strictEqual(clientInstances[0].stopCalls, 1);
+    assert.strictEqual(clientInstances[1].startCalls, 1);
+    assert.deepStrictEqual(clientEvents.slice(-3), ["stop:1", "construct:2", "start:2"]);
+
+    FakeLanguageClient.failNextStart = true;
+    const failed = await restartCommand();
+    assert.strictEqual(failed, null);
+    const failedStatus = registeredCommands.get("ddonilang.showLanguageServerStatus")();
+    assert.strictEqual(failedStatus.lifecycleState, "failed");
+    assert.strictEqual(failedStatus.lastStartupFailure, "SERVER_START_FAILED");
+    assert.strictEqual(failedStatus.serverProcessPresent, false);
+
+    const recovered = await restartCommand();
+    assert.strictEqual(recovered, clientInstances[3]);
+    assert.strictEqual(
+      registeredCommands.get("ddonilang.showLanguageServerStatus")().lifecycleState,
+      "running",
+    );
+
+    clientInstances[3].failStop = true;
+    const stopFailed = await restartCommand();
+    assert.strictEqual(stopFailed, null);
+    const stopFailureStatus = registeredCommands.get("ddonilang.showLanguageServerStatus")();
+    assert.strictEqual(stopFailureStatus.lifecycleState, "failed");
+    assert.strictEqual(stopFailureStatus.lastStartupFailure, "SERVER_STOP_FAILED");
+    assert.strictEqual(stopFailureStatus.serverProcessPresent, false);
+    clientInstances[3].failStop = false;
+    const recoveredAfterStopFailure = await restartCommand();
+    assert.strictEqual(recoveredAfterStopFailure, clientInstances[4]);
+
     await extension.deactivate();
-    assert.strictEqual(client.stopCalls, 1);
+    assert.strictEqual(clientInstances[4].stopCalls, 1);
     await extension.deactivate();
-    assert.strictEqual(client.stopCalls, 1);
-    assert.strictEqual(registeredStatusCommand().lifecycleState, "inactive");
+    assert.strictEqual(clientInstances[4].stopCalls, 1);
+    assert.strictEqual(
+      registeredCommands.get("ddonilang.showLanguageServerStatus")().lifecycleState,
+      "inactive",
+    );
     console.log("activation tests: PASS");
   } finally {
     Module._load = originalLoad;

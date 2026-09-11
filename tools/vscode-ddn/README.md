@@ -25,6 +25,7 @@ The extension starts the existing local `ddonirang-lsp` stdio server for the reg
 - Explicit executable paths must be local regular files; directories, symlinks, and missing paths fail closed.
 - Auto-discovery checks only workspace `target/debug` and `target/release`, plus the repository-local target directories relative to this extension.
 - No PATH-wide search, remote server, source upload, or private dependency copy is used.
+- Use `Ddonilang: Restart Language Server` after correcting the executable setting; it stops the current local client, revalidates the exact/bounded executable, and starts at most one replacement client.
 
 If no executable is available, the extension shows one clear error and does not retry indefinitely. Deactivation stops the client and its local server process.
 
