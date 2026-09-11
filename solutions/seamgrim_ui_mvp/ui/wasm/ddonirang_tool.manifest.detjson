@@ -155,9 +155,9 @@
       "sha256": "0e70b568d6910ed199f845c769e51327636da343a0e66086494b70eee195be27"
     },
     {
-      "bytes": 6160,
+      "bytes": 8671,
       "path": "core/src/nurigym/cartpole.rs",
-      "sha256": "ab87bd0b4430e5206d534f211ec2161898681aba2c60e1950beaf80c707e1803"
+      "sha256": "1c0c2dd75d2601889d7c6f6108ab97ed938d902c31cc2e8e6cd85ef9d3e255eb"
     },
     {
       "bytes": 8540,
@@ -170,9 +170,9 @@
       "sha256": "19bb04f6f522a08da912f44564d03e87a07ce539f8e49a55044476d838a782e6"
     },
     {
-      "bytes": 5385,
+      "bytes": 7516,
       "path": "core/src/nurigym/pendulum.rs",
-      "sha256": "d4b963bd39aa25fae94bb3dfdaa6ee9584da5cb17fb612d783ae2a29f47aeeed"
+      "sha256": "28bd6d3d0107e40307a55e71aae906b527faf2bb6a1529ea759e5a53a65a7932"
     },
     {
       "bytes": 1437,
@@ -185,9 +185,9 @@
       "sha256": "5b3dacdb79f2886699cb321fab501bbf71bd13308d7be8326588627628452683"
     },
     {
-      "bytes": 5928,
+      "bytes": 9745,
       "path": "core/src/realms.rs",
-      "sha256": "b9a4fb6482a3e4d03d7092c8dbeacbf8bfcc4e8cbab407faf04074de2e2d3ec5"
+      "sha256": "1e33740bbaaeba2a0e1b2dfde3a603d28de8b94420acc779bae1aadc606825ab"
     },
     {
       "bytes": 654,
@@ -320,9 +320,9 @@
       "sha256": "249b634298c1e99259041322f9e6a54b6dee9beb9d43411e4ffafa7259937035"
     },
     {
-      "bytes": 26899,
+      "bytes": 29106,
       "path": "core/src/units.rs",
-      "sha256": "bf3d46fb0f26baf703257feba608db1ad6afb1a0def043d43c91fa95c439425e"
+      "sha256": "650484575c3f728b2119bc25b1789ed5ee641c186b8c1ea1032622be096487eb"
     },
     {
       "bytes": 4123,
@@ -575,9 +575,9 @@
       "sha256": "cbc119b733b18a855a9cb89b12aa5053da4bf12edf11644185a7f33ae19358ef"
     },
     {
-      "bytes": 1138565,
+      "bytes": 1147134,
       "path": "tool/src/ddn_runtime.rs",
-      "sha256": "e1cb5217857662281a052f51ec586e2f9ee90c668996cc1d33e8b68609911f98"
+      "sha256": "99f4c59f3b46689ad500b9571a1fb78dfc558e10289b3e57d58131e17193f6d2"
     },
     {
       "bytes": 81961,
@@ -1049,12 +1049,12 @@
     "symbolic/src",
     "tool/src"
   ],
-  "source_tree_sha256": "c2968b052c64e001b043b8b230192ccd30d20024cf9cd5ef6bbf57dab8d12f65",
+  "source_tree_sha256": "361682c81f041fbfc8147014ac3bb9cffa44382b26e34c0424a39567476cd129",
   "state_schema": "seamgrim.engine_response.v0",
   "target": "web",
   "wasm_bindgen_or_pack_version": "wasm-pack 0.14.0",
   "wasm_hash_mode": "raw_bytes_sha256",
   "wasm_path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
-  "wasm_sha256": "517025c7fa165af024b48f2fdb035d977450c3ec4f2b512244a884340faa20d3",
-  "wasm_size": 5681451
+  "wasm_sha256": "a793258dc3b0b32d602a40226db72ae194653263fc062977a0b6ab373c693573",
+  "wasm_size": 5681662
 }

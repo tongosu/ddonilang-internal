@@ -4538,6 +4538,7 @@ impl From<UnitError> for EvalError {
         match err {
             UnitError::DimensionMismatch { left, right } => EvalError::UnitMismatch { left, right },
             UnitError::DivisionByZero => EvalError::DivisionByZero,
+            UnitError::Overflow => EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow),
         }
     }
 }
@@ -8660,7 +8661,7 @@ impl<'a> EvalContext<'a> {
                         return Err("천장은 인자 1개를 받습니다".to_string().into());
                     }
                     let qty = unit_value_from_value(&args[0])?;
-                    let value = fixed64_ceil(qty.value);
+                    let value = fixed64_ceil(qty.value)?;
                     Ok(unit_value_to_value(UnitValue {
                         value,
                         dim: qty.dim,
@@ -8671,7 +8672,7 @@ impl<'a> EvalContext<'a> {
                         return Err("반올림은 인자 1개를 받습니다".to_string().into());
                     }
                     let qty = unit_value_from_value(&args[0])?;
-                    let value = fixed64_round_even(qty.value);
+                    let value = fixed64_round_even(qty.value)?;
                     Ok(unit_value_to_value(UnitValue {
                         value,
                         dim: qty.dim,
@@ -8759,7 +8760,7 @@ impl<'a> EvalContext<'a> {
                             let max_index = Fixed64::from_i64((values.len() - 1) as i64);
                             let pos = p.checked_mul(max_index)?;
                             let low = fixed64_floor(pos);
-                            let high = fixed64_ceil(pos);
+                            let high = fixed64_ceil(pos)?;
                             let low_idx = fixed64_to_nonnegative_index(low)?;
                             let high_idx = fixed64_to_nonnegative_index(high)?;
                             if low_idx >= values.len() || high_idx >= values.len() {
@@ -9029,7 +9030,7 @@ impl<'a> EvalContext<'a> {
                     };
                     let interval = upper.value.checked_sub(lower.value)?;
                     let n_est = interval.try_div(step.value)?;
-                    let mut n = fixed64_to_nonnegative_index(fixed64_ceil(n_est))?;
+                    let mut n = fixed64_to_nonnegative_index(fixed64_ceil(n_est)?)?;
                     if n == 0 {
                         n = 1;
                     }
@@ -9200,7 +9201,7 @@ impl<'a> EvalContext<'a> {
                         "cos" => libm::cos(angle),
                         _ => libm::tan(angle),
                     };
-                    Ok(Value::Fixed64(Fixed64::from_f64_lossy(out)))
+                    Ok(Value::Fixed64(fixed64_from_host_f64_checked(out)?))
                 }
                 "asin" | "acos" | "atan" => {
                     if args.len() != 1 {
@@ -9219,7 +9220,7 @@ impl<'a> EvalContext<'a> {
                         "acos" => libm::acos(val),
                         _ => libm::atan(val),
                     };
-                    Ok(Value::Fixed64(Fixed64::from_f64_lossy(out)))
+                    Ok(Value::Fixed64(fixed64_from_host_f64_checked(out)?))
                 }
                 "atan2" => {
                     if args.len() != 2 {
@@ -9228,7 +9229,7 @@ impl<'a> EvalContext<'a> {
                     let y = unit_value_from_value(&args[0])?;
                     let x = unit_value_from_value(&args[1])?;
                     let out = libm::atan2(fixed64_to_f64(y.value), fixed64_to_f64(x.value));
-                    Ok(Value::Fixed64(Fixed64::from_f64_lossy(out)))
+                    Ok(Value::Fixed64(fixed64_from_host_f64_checked(out)?))
                 }
                 "powi" => {
                     if args.len() != 2 {
@@ -10592,11 +10593,11 @@ impl<'a> EvalContext<'a> {
         match value {
             Value::Fixed64(v) => {
                 if let Some(spec) = parse_resource_unit_tag(name) {
+                    let unit_value = UnitValue::try_from_spec(v, spec).map_err(unit_error)?;
                     self.patch_ops.push(PatchOp::SetResourceFixed64 {
                         tag: name.to_string(),
                         value: v,
                     });
-                    let unit_value = UnitValue::from_spec(v, spec);
                     self.resources
                         .insert(name.to_string(), Value::Unit(unit_value));
                 } else {
@@ -11861,7 +11862,7 @@ fn apply_unit_suffix(value: Value, unit: &str) -> Result<Value, EvalError> {
         return Err(format!("단위 '{}'를 알 수 없습니다", unit).into());
     };
     match value {
-        Value::Fixed64(v) => Ok(Value::Unit(UnitValue::from_spec(v, spec))),
+        Value::Fixed64(v) => Ok(Value::Unit(UnitValue::try_from_spec(v, spec).map_err(unit_error)?)),
         Value::Unit(existing) => {
             if existing.dim != spec.dim {
                 return Err(unit_error(UnitError::DimensionMismatch {
@@ -11990,19 +11991,29 @@ fn fixed64_to_f64(value: Fixed64) -> f64 {
     value.raw_i64() as f64 / Fixed64::SCALE_F64
 }
 
-fn fixed64_ceil(value: Fixed64) -> Fixed64 {
-    let int_part = value.int_part();
+fn fixed64_from_host_f64_checked(value: f64) -> Result<Fixed64, ArithmeticFaultKind> {
+    let raw = value * Fixed64::SCALE_F64;
+    if !raw.is_finite() || raw < i64::MIN as f64 || raw >= i64::MAX as f64 {
+        return Err(ArithmeticFaultKind::Overflow);
+    }
+    Ok(Fixed64::from_raw_i64(raw as i64))
+}
+
+fn fixed64_ceil(value: Fixed64) -> Result<Fixed64, ArithmeticFaultKind> {
     if value.frac_part() == 0 {
-        Fixed64::from_i64(int_part)
+        Ok(Fixed64::from_raw_i64(
+            value.raw_i64() & !((1_i64 << Fixed64::FRAC_BITS) - 1),
+        ))
     } else {
-        Fixed64::from_i64(int_part.saturating_add(1))
+        Fixed64::from_raw_i64(value.raw_i64() & !((1_i64 << Fixed64::FRAC_BITS) - 1))
+            .checked_add(Fixed64::ONE)
     }
 }
 
-fn fixed64_round_even(value: Fixed64) -> Fixed64 {
+fn fixed64_round_even(value: Fixed64) -> Result<Fixed64, ArithmeticFaultKind> {
     let raw = value.raw_i64() as i128;
     if raw == 0 {
-        return Fixed64::from_i64(0);
+        return Ok(Fixed64::ZERO);
     }
     let sign = if raw < 0 { -1 } else { 1 };
     let abs = raw.abs();
@@ -12014,7 +12025,10 @@ fn fixed64_round_even(value: Fixed64) -> Fixed64 {
     if frac > half || (frac == half && (int_part & 1) != 0) {
         rounded += 1;
     }
-    Fixed64::from_i64((rounded * sign) as i64)
+    let raw = (rounded * sign) << Fixed64::FRAC_BITS;
+    i64::try_from(raw)
+        .map(Fixed64::from_raw_i64)
+        .map_err(|_| ArithmeticFaultKind::Overflow)
 }
 
 fn fixed64_abs(value: Fixed64) -> Result<Fixed64, ArithmeticFaultKind> {
@@ -19024,7 +19038,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
                 _ => libm::tan(angle),
             };
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19044,7 +19058,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
                 _ => libm::atan(value),
             };
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19062,7 +19076,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
             }
             let out = libm::atan2(fixed64_to_f64(y.value), fixed64_to_f64(x.value));
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19082,7 +19096,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
                 _ => libm::tanh(value),
             };
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19102,7 +19116,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
                 _ => libm::atanh(value),
             };
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19142,7 +19156,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
             let args = expect_args(1)?;
             let arg = args[0];
             return Ok(UnitValue {
-                value: fixed64_ceil(arg.value),
+                value: fixed64_ceil(arg.value)?,
                 dim: arg.dim,
             });
         }
@@ -19150,7 +19164,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
             let args = expect_args(1)?;
             let arg = args[0];
             return Ok(UnitValue {
-                value: fixed64_round_even(arg.value),
+                value: fixed64_round_even(arg.value)?,
                 dim: arg.dim,
             });
         }
@@ -19200,7 +19214,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
             }
             let value = fixed64_to_f64(arg.value);
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(libm::cbrt(value)),
+                value: fixed64_from_host_f64_checked(libm::cbrt(value))?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19242,7 +19256,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
             }
             let out = libm::pow(fixed64_to_f64(base.value), fixed64_to_f64(exp.value));
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -19263,7 +19277,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
                 _ => libm::log2(value),
             };
             return Ok(UnitValue {
-                value: Fixed64::from_f64_lossy(out),
+                value: fixed64_from_host_f64_checked(out)?,
                 dim: UnitDim::NONE,
             });
         }
@@ -21729,6 +21743,51 @@ mod tests {
     }
 
     #[test]
+    fn fixed64_ceil_and_round_reject_unrepresentable_integer_results() {
+        for operation in [fixed64_ceil, fixed64_round_even] {
+            let error = operation(Fixed64::MAX)
+                .expect_err("rounding a positive fractional maximum must reject");
+            assert_eq!(error, ArithmeticFaultKind::Overflow);
+        }
+
+        assert_eq!(
+            fixed64_ceil(Fixed64::from_raw_i64(Fixed64::ONE.raw_i64() + 1)),
+            Ok(Fixed64::from_i64(2))
+        );
+        assert_eq!(
+            fixed64_round_even(Fixed64::from_raw_i64(
+                Fixed64::ONE.raw_i64() + (Fixed64::ONE.raw_i64() / 2),
+            )),
+            Ok(Fixed64::from_i64(2))
+        );
+    }
+
+    #[test]
+    fn fixed64_rounding_runtime_overflow_publishes_nothing() {
+        for method in ["천장", "반올림"] {
+            let script = format!(
+                "매틱:움직씨 = {{\n    결과 <- (값) {method}.\n}}\n"
+            );
+            let program = DdnProgram::from_source(&script, "fixed64_rounding_overflow.ddn")
+                .expect("parse rounding program");
+            let mut runner = DdnRunner::new(program, "매틱");
+            let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+            defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::MAX));
+            defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+            let error = match runner.run_update_diagnostic(
+                &NuriWorld::new(),
+                &empty_input(),
+                &defaults,
+            ) {
+                Err(error) => error,
+                Ok(_) => panic!("rounding overflow must reject before publication"),
+            };
+            assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+        }
+    }
+
+    #[test]
     fn fixed64_powi_overflow_is_typed_and_does_not_saturate() {
         let error = unit_powi(
             UnitValue {
@@ -21811,6 +21870,55 @@ mod tests {
     }
 
     #[test]
+    fn fixed64_infix_division_overflow_is_not_misreported_as_zero_division() {
+        let script = r#"
+매틱:움직씨 = {
+    결과 <- 값 / 작은값.
+}
+"#;
+        let program = DdnProgram::from_source(script, "fixed64_infix_div_overflow.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::MAX));
+        defaults.insert(
+            "작은값".to_string(),
+            RuntimeValue::Fixed64(Fixed64::from_raw_i64(1)),
+        );
+        defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults) {
+            Ok(_) => panic!("nonzero tiny divisor must report overflow before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn fixed64_unit_suffix_overflow_rejects_before_publication() {
+        let script = r#"
+매틱:움직씨 = {
+    결과 <- 2147483647@C == 0@K.
+}
+"#;
+        let program = DdnProgram::from_source(script, "fixed64_unit_suffix_overflow.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("결과".to_string(), RuntimeValue::Bool(false));
+
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults) {
+            Ok(_) => panic!("unit suffix overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(
+            error.diagnostic_parts().0,
+            "E_RUNTIME_ARITH_OVERFLOW",
+            "unexpected error: {error:?}"
+        );
+    }
+
+    #[test]
     fn fixed64_formula_pow_overflow_is_typed_and_does_not_saturate() {
         let error = eval_formula_pow(
             UnitValue {
@@ -21841,6 +21949,42 @@ mod tests {
             error,
             EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow)
         ));
+    }
+
+    #[test]
+    fn fixed64_formula_nonfinite_host_results_must_not_publish_as_numbers() {
+        assert_eq!(
+            eval_formula_func(
+                "sin",
+                vec![UnitValue {
+                    value: Fixed64::ZERO,
+                    dim: UnitDim::NONE,
+                }],
+            )
+            .expect("finite host result remains supported")
+            .value,
+            Fixed64::ZERO
+        );
+
+        for (name, value) in [
+            ("asin", Fixed64::from_i64(2)),
+            ("acos", Fixed64::from_i64(2)),
+            ("acosh", Fixed64::ZERO),
+            ("atanh", Fixed64::ONE),
+        ] {
+            let error = eval_formula_func(
+                name,
+                vec![UnitValue {
+                    value,
+                    dim: UnitDim::NONE,
+                }],
+            )
+            .expect_err("non-finite host result must fail closed");
+            assert!(matches!(
+                error,
+                EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow)
+            ));
+        }
     }
 
     #[test]
