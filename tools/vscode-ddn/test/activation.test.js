@@ -11,6 +11,8 @@ fs.writeFileSync(executable, "placeholder");
 const configurationState = { executable, autoDiscover: true };
 const configurationUpdates = [];
 const selectionQueue = [];
+const startupNotifications = [];
+let nextStartupAction = null;
 let configurationUpdateFailure = false;
 const registeredCommands = new Map();
 const clientInstances = [];
@@ -36,7 +38,12 @@ const fakeVscode = {
     },
   },
   window: {
-    showErrorMessage() {},
+    showErrorMessage(message, ...actions) {
+      startupNotifications.push({ message, actions });
+      const selected = nextStartupAction;
+      nextStartupAction = null;
+      return Promise.resolve(selected);
+    },
     showInformationMessage() {},
     async showOpenDialog() {
       return selectionQueue.shift() || [];
@@ -202,6 +209,24 @@ Module._load = function patchedLoad(request, parent, isMain) {
       registeredCommands.get("ddonilang.showLanguageServerStatus")().lifecycleState,
       "inactive",
     );
+
+    configurationState.executable = path.join(tempRoot, "missing-lsp.exe");
+    nextStartupAction = "실행파일 선택";
+    selectionQueue.push([{ fsPath: executable }]);
+    const failedActivation = await extension.activate({
+      extensionPath: path.join(tempRoot, "tools", "vscode-ddn"),
+      subscriptions: { push() {} },
+    });
+    assert.strictEqual(failedActivation, null);
+    assert.strictEqual(startupNotifications.at(-1).actions[0], "실행파일 선택");
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.strictEqual(configurationState.executable, executable);
+    assert.strictEqual(clientInstances.at(-1).startCalls, 1);
+    assert.strictEqual(
+      registeredCommands.get("ddonilang.showLanguageServerStatus")().lifecycleState,
+      "running",
+    );
+    await extension.deactivate();
     console.log("activation tests: PASS");
   } finally {
     Module._load = originalLoad;

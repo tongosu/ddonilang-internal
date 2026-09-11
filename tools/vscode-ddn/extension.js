@@ -14,6 +14,7 @@ let lastStartupFailure = null;
 
 const SUPPORTED_EXTENSIONS = [".ddn", ".또니", ".ddl", ".옮김"];
 const SELECT_EXECUTABLE_COMMAND = "ddonilang.selectLanguageServerExecutable";
+const SELECT_EXECUTABLE_ACTION = "실행파일 선택";
 const STATUS_COMMAND = "ddonilang.showLanguageServerStatus";
 const RESTART_COMMAND = "ddonilang.restartLanguageServer";
 const CONSOLE_BOGAE_COMMAND = "ddonilang.runCurrentDocumentConsoleBogae";
@@ -329,6 +330,27 @@ async function selectLanguageServerExecutable(context, vscode) {
   return restartLanguageServer(context, vscode);
 }
 
+function showStartupFailure(context, vscode, code, detail) {
+  if (startupErrorShown || !vscode.window || typeof vscode.window.showErrorMessage !== "function") {
+    return;
+  }
+  startupErrorShown = true;
+  const notification = vscode.window.showErrorMessage(
+    `${code} ${detail}`,
+    SELECT_EXECUTABLE_ACTION,
+  );
+  void Promise.resolve(notification)
+    .then((action) => {
+      if (action === SELECT_EXECUTABLE_ACTION) {
+        return selectLanguageServerExecutable(context, vscode);
+      }
+      return null;
+    })
+    .catch(() => {
+      // A dismissed or unavailable notification must not create an unhandled rejection.
+    });
+}
+
 function documentUri(document) {
   return document && document.uri && typeof document.uri.toString === "function"
     ? document.uri.toString()
@@ -562,12 +584,12 @@ async function startClient(context, vscode) {
   if (!executable) {
     lifecycleState = "failed";
     lastStartupFailure = configuredFailure || "AUTODISCOVERY_NOT_FOUND";
-    if (!startupErrorShown) {
-      startupErrorShown = true;
-      void vscode.window.showErrorMessage(
-        "Ddonilang LSP를 시작할 수 없습니다. ddonilang.lsp.executable에 로컬 실행 파일 경로를 지정하거나 autoDiscover를 확인하세요.",
-      );
-    }
+    showStartupFailure(
+      context,
+      vscode,
+      lastStartupFailure,
+      "Ddonilang LSP를 시작할 수 없습니다. 실행파일을 선택해 복구할 수 있습니다.",
+    );
     return null;
   }
 
@@ -593,6 +615,7 @@ async function startClient(context, vscode) {
     lifecycleState = "starting";
     await activeClient.start();
     lifecycleState = "running";
+    startupErrorShown = false;
     return activeClient;
   } catch (error) {
     const failedClient = activeClient;
@@ -600,12 +623,12 @@ async function startClient(context, vscode) {
     lifecycleState = "failed";
     lastStartupFailure = "SERVER_START_FAILED";
     failedClient.dispose();
-    if (!startupErrorShown) {
-      startupErrorShown = true;
-      void vscode.window.showErrorMessage(
-        `Ddonilang LSP 시작에 실패했습니다: ${error instanceof Error ? error.message : String(error)}`,
-      );
-    }
+    showStartupFailure(
+      context,
+      vscode,
+      lastStartupFailure,
+      `Ddonilang LSP 시작에 실패했습니다: ${error instanceof Error ? error.message : String(error)}`,
+    );
     return null;
   }
 }
@@ -679,6 +702,7 @@ async function deactivate() {
   }
   outputChannel = null;
   commandsRegistered = false;
+  startupErrorShown = false;
   return undefined;
 }
 
