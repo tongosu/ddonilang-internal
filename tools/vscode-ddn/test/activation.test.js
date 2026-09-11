@@ -35,6 +35,7 @@ const fakeVscode = {
       assert.ok([
         "ddonilang.showLanguageServerStatus",
         "ddonilang.restartLanguageServer",
+        "ddonilang.runCurrentDocumentConsoleBogae",
       ].includes(command));
       registeredCommands.set(command, callback);
       return { dispose() {} };
@@ -111,7 +112,7 @@ Module._load = function patchedLoad(request, parent, isMain) {
       { scheme: "file", language: "ddonilang" },
       { scheme: "untitled", language: "ddonilang" },
     ]);
-    assert.strictEqual(subscriptions.length, 3);
+    assert.strictEqual(subscriptions.length, 4);
     const status = registeredCommands.get("ddonilang.showLanguageServerStatus")();
     assert.strictEqual(status.lifecycleState, "running");
     assert.strictEqual(status.serverProcessPresent, false);

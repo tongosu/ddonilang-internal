@@ -14,12 +14,17 @@ try {
     "onLanguage:ddonilang",
     "onCommand:ddonilang.showLanguageServerStatus",
     "onCommand:ddonilang.restartLanguageServer",
+    "onCommand:ddonilang.runCurrentDocumentConsoleBogae",
   ]);
   assert.strictEqual(manifest.dependencies["vscode-languageclient"], "8.1.0");
   assert.strictEqual(manifest.contributes.snippets[0].language, "ddonilang");
   assert.deepStrictEqual(
     manifest.contributes.commands.map(({ command }) => command),
-    ["ddonilang.showLanguageServerStatus", "ddonilang.restartLanguageServer"],
+    [
+      "ddonilang.showLanguageServerStatus",
+      "ddonilang.restartLanguageServer",
+      "ddonilang.runCurrentDocumentConsoleBogae",
+    ],
   );
   assert.deepStrictEqual(manifest.contributes.languages[0].extensions, [".ddn", ".또니", ".ddl", ".옮김"]);
   assert.deepStrictEqual(extension.documentSelector(), [
@@ -74,6 +79,28 @@ try {
   assert.strictEqual(extension.extensionForUri("file:///a.ddn"), ".ddn");
   assert.strictEqual(extension.extensionForUri("file:///a.또니"), ".또니");
   assert.strictEqual(extension.extensionForUri("file:///a.txt"), null);
+  assert.deepStrictEqual(extension.runtimeExecutableNames(),
+    process.platform === "win32"
+      ? ["ddonilang.exe", "또니랑.exe", "ddonirang.exe"]
+      : ["ddonilang", "또니랑", "ddonirang"],
+  );
+  assert.strictEqual(
+    extension.runtimeConfiguredExecutableFailure(path.join(workspaceRoot, "missing-runtime.exe")),
+    "CONFIGURED_PATH_MISSING",
+  );
+  assert.strictEqual(
+    extension.runtimeConfiguredExecutableFailure(path.join(tempRoot, "other-server.exe")),
+    "CONFIGURED_PATH_UNSUPPORTED_FILENAME",
+  );
+  assert.strictEqual(
+    extension.resolveRuntimeExecutable({
+      configuredPath: path.join(tempRoot, "other-server.exe"),
+      autoDiscover: false,
+      extensionPath: path.join(workspaceRoot, "tools", "vscode-ddn"),
+      workspaceFolders: [{ fsPath: workspaceRoot }],
+    }),
+    null,
+  );
   assert.strictEqual(
     extension.resolveServerExecutable({
       configuredPath: "relative-lsp",

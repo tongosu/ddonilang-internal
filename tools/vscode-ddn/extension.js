@@ -1,9 +1,13 @@
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
+const { spawn } = require("child_process");
 
 let activeClient = null;
 let restartInFlight = null;
 let commandsRegistered = false;
+let outputChannel = null;
+const activeExecutions = new Map();
 let startupErrorShown = false;
 let lifecycleState = "inactive";
 let lastStartupFailure = null;
@@ -11,6 +15,9 @@ let lastStartupFailure = null;
 const SUPPORTED_EXTENSIONS = [".ddn", ".또니", ".ddl", ".옮김"];
 const STATUS_COMMAND = "ddonilang.showLanguageServerStatus";
 const RESTART_COMMAND = "ddonilang.restartLanguageServer";
+const CONSOLE_BOGAE_COMMAND = "ddonilang.runCurrentDocumentConsoleBogae";
+const CONSOLE_OUTPUT_CHANNEL = "Ddonilang Console 보개";
+const CURRENTLINE_SOURCE_PROFILE = "v1-core-v25";
 
 function isLocalAbsolutePath(candidate) {
   if (typeof candidate !== "string" || candidate.length === 0) {
@@ -22,7 +29,13 @@ function isLocalAbsolutePath(candidate) {
   return process.platform !== "win32" || !candidate.startsWith("\\\\");
 }
 
-function isRegularExecutable(candidate) {
+function runtimeExecutableNames() {
+  return process.platform === "win32"
+    ? ["ddonilang.exe", "또니랑.exe", "ddonirang.exe"]
+    : ["ddonilang", "또니랑", "ddonirang"];
+}
+
+function isRegularExecutable(candidate, allowedNames = [executableName()]) {
   if (!isLocalAbsolutePath(candidate)) {
     return false;
   }
@@ -31,7 +44,9 @@ function isRegularExecutable(candidate) {
     return (
       stat.isFile() &&
       !stat.isSymbolicLink() &&
-      path.basename(candidate).toLowerCase() === executableName().toLowerCase()
+      allowedNames.some(
+        (name) => path.basename(candidate).toLowerCase() === name.toLowerCase(),
+      )
     );
   } catch (_) {
     return false;
@@ -42,7 +57,7 @@ function executableName() {
   return process.platform === "win32" ? "ddonirang-lsp.exe" : "ddonirang-lsp";
 }
 
-function boundedLocalCandidates(extensionPath, workspaceFolders) {
+function boundedLocalCandidatesForNames(extensionPath, workspaceFolders, names) {
   const roots = [];
   for (const folder of workspaceFolders || []) {
     if (folder && typeof folder.fsPath === "string") {
@@ -55,14 +70,25 @@ function boundedLocalCandidates(extensionPath, workspaceFolders) {
   const seen = new Set();
   for (const root of roots) {
     for (const profile of ["debug", "release"]) {
-      const candidate = path.resolve(root, "target", profile, executableName());
-      if (!seen.has(candidate)) {
-        seen.add(candidate);
-        result.push(candidate);
+      for (const name of names) {
+        const candidate = path.resolve(root, "target", profile, name);
+        const key = candidate.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          result.push(candidate);
+        }
       }
     }
   }
   return result;
+}
+
+function boundedLocalCandidates(extensionPath, workspaceFolders) {
+  return boundedLocalCandidatesForNames(extensionPath, workspaceFolders, [executableName()]);
+}
+
+function boundedRuntimeCandidates(extensionPath, workspaceFolders) {
+  return boundedLocalCandidatesForNames(extensionPath, workspaceFolders, runtimeExecutableNames());
 }
 
 function resolveServerExecutable({
@@ -86,7 +112,29 @@ function resolveServerExecutable({
   return null;
 }
 
-function configuredExecutableFailure(candidate) {
+function resolveRuntimeExecutable({
+  configuredPath,
+  autoDiscover,
+  extensionPath,
+  workspaceFolders,
+}) {
+  const allowedNames = runtimeExecutableNames();
+  if (typeof configuredPath === "string" && configuredPath.trim() !== "") {
+    const exactPath = path.normalize(configuredPath.trim());
+    return isRegularExecutable(exactPath, allowedNames) ? exactPath : null;
+  }
+  if (autoDiscover !== true) {
+    return null;
+  }
+  for (const candidate of boundedRuntimeCandidates(extensionPath, workspaceFolders)) {
+    if (isRegularExecutable(candidate, allowedNames)) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+function configuredExecutableFailureFor(candidate, allowedNames) {
   if (typeof candidate !== "string" || candidate.trim() === "") {
     return null;
   }
@@ -106,10 +154,18 @@ function configuredExecutableFailure(candidate) {
   if (!stat.isFile()) {
     return "CONFIGURED_PATH_DIRECTORY";
   }
-  if (path.basename(exactPath).toLowerCase() !== executableName().toLowerCase()) {
+  if (!allowedNames.some((name) => path.basename(exactPath).toLowerCase() === name.toLowerCase())) {
     return "CONFIGURED_PATH_UNSUPPORTED_FILENAME";
   }
   return null;
+}
+
+function configuredExecutableFailure(candidate) {
+  return configuredExecutableFailureFor(candidate, [executableName()]);
+}
+
+function runtimeConfiguredExecutableFailure(candidate) {
+  return configuredExecutableFailureFor(candidate, runtimeExecutableNames());
 }
 
 function documentSelector() {
@@ -121,6 +177,10 @@ function documentSelector() {
 
 function configuration(vscode) {
   return vscode.workspace.getConfiguration("ddonilang.lsp");
+}
+
+function runtimeConfiguration(vscode) {
+  return vscode.workspace.getConfiguration("ddonilang.runtime");
 }
 
 function extensionForUri(uri) {
@@ -183,6 +243,190 @@ function formatStatus(status) {
   ].join(" | ");
 }
 
+function documentUri(document) {
+  return document && document.uri && typeof document.uri.toString === "function"
+    ? document.uri.toString()
+    : "";
+}
+
+function executionExtension(document) {
+  const uri = document && document.uri;
+  const uriText = uri && typeof uri.path === "string" ? uri.path : documentUri(document);
+  return extensionForUri(uriText);
+}
+
+function isExecutableSurface(extension) {
+  return extension === ".ddn" || extension === ".또니";
+}
+
+function showExecutionFailure(vscode, message) {
+  if (vscode.window && typeof vscode.window.showWarningMessage === "function") {
+    void vscode.window.showWarningMessage(message);
+  } else if (vscode.window && typeof vscode.window.showErrorMessage === "function") {
+    void vscode.window.showErrorMessage(message);
+  }
+}
+
+function ensureOutputChannel(context, vscode) {
+  if (!outputChannel) {
+    outputChannel = vscode.window.createOutputChannel(CONSOLE_OUTPUT_CHANNEL);
+    context.subscriptions.push(outputChannel);
+  }
+  return outputChannel;
+}
+
+function isCurrentDocumentSnapshot(vscode, document, version) {
+  const uri = documentUri(document);
+  const documents = Array.isArray(vscode.workspace.textDocuments)
+    ? vscode.workspace.textDocuments
+    : [document];
+  return documents.some(
+    (candidate) => documentUri(candidate) === uri && candidate.version === version,
+  );
+}
+
+function startRuntimeProcess(executable, cellPath) {
+  let child;
+  let settled = false;
+  let resolveResult;
+  const done = new Promise((resolve) => {
+    resolveResult = resolve;
+  });
+  let stdout = "";
+  let stderr = "";
+  const finish = (result) => {
+    if (!settled) {
+      settled = true;
+      resolveResult(result);
+    }
+  };
+  try {
+    child = spawn(
+      executable,
+      [
+        "currentline-run",
+        "--cell",
+        cellPath,
+        "--source-profile",
+        CURRENTLINE_SOURCE_PROFILE,
+      ],
+      { cwd: path.dirname(executable), shell: false, windowsHide: true },
+    );
+  } catch (error) {
+    finish({ code: null, signal: null, stdout, stderr, error });
+    return { child: null, done };
+  }
+  if (child.stdout && typeof child.stdout.setEncoding === "function") {
+    child.stdout.setEncoding("utf8");
+  }
+  if (child.stderr && typeof child.stderr.setEncoding === "function") {
+    child.stderr.setEncoding("utf8");
+  }
+  child.stdout?.on("data", (chunk) => {
+    stdout += String(chunk);
+  });
+  child.stderr?.on("data", (chunk) => {
+    stderr += String(chunk);
+  });
+  child.on("error", (error) => finish({ code: null, signal: null, stdout, stderr, error }));
+  child.on("close", (code, signal) => finish({ code, signal, stdout, stderr }));
+  return { child, done };
+}
+
+async function runCurrentDocumentConsoleBogae(context, vscode) {
+  const editor = vscode.window && vscode.window.activeTextEditor;
+  const document = editor && editor.document;
+  const extension = executionExtension(document);
+  if (!document || !extension) {
+    showExecutionFailure(vscode, "LSP44_UNSUPPORTED_DOCUMENT 현재 문서는 또니랑 실행 대상이 아닙니다.");
+    return null;
+  }
+  if (!isExecutableSurface(extension)) {
+    showExecutionFailure(
+      vscode,
+      "LSP44_NON_EXECUTABLE_SURFACE .ddl/.옮김은 현재 Console 보개 실행 대상이 아닙니다.",
+    );
+    return null;
+  }
+  const key = documentUri(document);
+  if (activeExecutions.has(key)) {
+    showExecutionFailure(vscode, "LSP44_DUPLICATE_INVOCATION 같은 문서의 실행이 이미 진행 중입니다.");
+    return null;
+  }
+
+  const settings = runtimeConfiguration(vscode);
+  const configuredPath = settings.get("executable", "");
+  const configuredFailure = runtimeConfiguredExecutableFailure(configuredPath);
+  const executable = resolveRuntimeExecutable({
+    configuredPath,
+    autoDiscover: settings.get("autoDiscover", true),
+    extensionPath: context.extensionPath,
+    workspaceFolders: vscode.workspace.workspaceFolders,
+  });
+  if (!executable) {
+    showExecutionFailure(
+      vscode,
+      `LSP44_RUNTIME_NOT_AVAILABLE ${configuredFailure || "RUNTIME_AUTODISCOVERY_NOT_FOUND"}`,
+    );
+    return null;
+  }
+
+  const version = document.version;
+  let tempDir = null;
+  let entry = null;
+  try {
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ddonilang-console-bogae-"));
+    const cellPath = path.join(tempDir, `current${extension}`);
+    fs.writeFileSync(cellPath, document.getText(), { encoding: "utf8", flag: "wx" });
+    const processHandle = startRuntimeProcess(executable, cellPath);
+    entry = {
+      child: processHandle.child,
+      done: processHandle.done,
+      cancelled: false,
+    };
+    activeExecutions.set(key, entry);
+    const result = await entry.done;
+    if (entry.cancelled || result.signal || result.code !== 0) {
+      showExecutionFailure(vscode, "LSP44_RUNTIME_EXECUTION_FAILED 공식 runtime 실행이 실패했습니다.");
+      return null;
+    }
+    if (!isCurrentDocumentSnapshot(vscode, document, version)) {
+      showExecutionFailure(vscode, "LSP44_STALE_DOCUMENT_SNAPSHOT 최신 문서 결과만 게시할 수 있습니다.");
+      return null;
+    }
+    const channel = ensureOutputChannel(context, vscode);
+    channel.clear();
+    channel.append(result.stdout);
+    channel.show(true);
+    return result.stdout;
+  } catch (_) {
+    showExecutionFailure(vscode, "LSP44_RUNTIME_EXECUTION_FAILED 공식 runtime 실행을 시작할 수 없습니다.");
+    return null;
+  } finally {
+    if (activeExecutions.get(key) === entry) {
+      activeExecutions.delete(key);
+    }
+    if (tempDir) {
+      try {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      } catch (_) {
+        // The task-owned temporary directory is best-effort cleanup only.
+      }
+    }
+  }
+}
+
+async function stopAllExecutions() {
+  const entries = [...activeExecutions.values()];
+  for (const entry of entries) {
+    entry.cancelled = true;
+    if (entry.child && typeof entry.child.kill === "function" && !entry.child.killed) {
+      entry.child.kill();
+    }
+  }
+  await Promise.all(entries.map((entry) => entry.done));
+}
+
 function registerCommands(context, vscode) {
   if (!vscode.commands || typeof vscode.commands.registerCommand !== "function") {
     return;
@@ -198,8 +442,12 @@ function registerCommands(context, vscode) {
   const restartDisposable = vscode.commands.registerCommand(RESTART_COMMAND, () =>
     restartLanguageServer(context, vscode),
   );
+  const consoleBogaeDisposable = vscode.commands.registerCommand(CONSOLE_BOGAE_COMMAND, () =>
+    runCurrentDocumentConsoleBogae(context, vscode),
+  );
   context.subscriptions.push(statusDisposable);
   context.subscriptions.push(restartDisposable);
+  context.subscriptions.push(consoleBogaeDisposable);
 }
 
 async function startClient(context, vscode) {
@@ -329,14 +577,17 @@ async function activate(context) {
 }
 
 async function deactivate() {
+  await stopAllExecutions();
   if (restartInFlight) {
     await restartInFlight;
   }
-  if (!activeClient) {
+  if (activeClient) {
+    await stopActiveClient();
+  } else {
     lifecycleState = "inactive";
-    return undefined;
   }
-  await stopActiveClient();
+  outputChannel = null;
+  commandsRegistered = false;
   return undefined;
 }
 
@@ -349,6 +600,10 @@ module.exports = {
   extensionForUri,
   formatStatus,
   isRegularExecutable,
+  runtimeExecutableNames,
+  resolveRuntimeExecutable,
+  runtimeConfiguredExecutableFailure,
+  runCurrentDocumentConsoleBogae,
   resolveServerExecutable,
   restartLanguageServer,
   statusSnapshot,

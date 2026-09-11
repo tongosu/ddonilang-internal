@@ -7,7 +7,8 @@
   "activationEvents": [
     "onLanguage:ddonilang",
     "onCommand:ddonilang.showLanguageServerStatus",
-    "onCommand:ddonilang.restartLanguageServer"
+    "onCommand:ddonilang.restartLanguageServer",
+    "onCommand:ddonilang.runCurrentDocumentConsoleBogae"
   ],
   "publisher": "ddonilang",
   "engines": {
@@ -50,6 +51,10 @@
       {
         "command": "ddonilang.restartLanguageServer",
         "title": "Ddonilang: Restart Language Server"
+      },
+      {
+        "command": "ddonilang.runCurrentDocumentConsoleBogae",
+        "title": "Ddonilang: Run Current Document Console 보개"
       }
     ],
     "snippets": [
@@ -70,12 +75,22 @@
           "type": "boolean",
           "default": true,
           "description": "Allow bounded local discovery of a Cargo-built ddonirang-lsp executable."
+        },
+        "ddonilang.runtime.executable": {
+          "type": "string",
+          "default": "",
+          "description": "Exact local path to the approved ddonilang runtime executable."
+        },
+        "ddonilang.runtime.autoDiscover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow bounded discovery of the approved local ddonilang runtime executable."
         }
       }
     }
   },
   "scripts": {
-    "test": "node test/extension.test.js && node test/activation.test.js && node test/package-inventory.js",
+    "test": "node test/extension.test.js && node test/activation.test.js && node test/console-bogae.test.js && node test/package-inventory.js",
     "package:inventory": "node test/package-inventory.js"
   },
   "dependencies": {

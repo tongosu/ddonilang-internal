@@ -29,6 +29,17 @@ The extension starts the existing local `ddonirang-lsp` stdio server for the reg
 
 If no executable is available, the extension shows one clear error and does not retry indefinitely. Deactivation stops the client and its local server process.
 
+## Current-document Console 보개
+
+`Ddonilang: Run Current Document Console 보개` executes the active `.ddn` or `.또니` document through the approved local `ddonilang currentline-run` frontdoor and writes deterministic stdout to the `Ddonilang Console 보개` output channel.
+
+- `ddonilang.runtime.executable`: exact local path to `ddonilang.exe` (or the approved platform equivalent).
+- `ddonilang.runtime.autoDiscover`: bounded discovery in the workspace target directories.
+- `.ddl` and `.옮김` remain activation-only surfaces and are rejected with a typed warning.
+- The document is written to a task-owned temporary file for execution; only the current document version may publish output.
+- Duplicate execution, invalid executable paths, stale results, cancellation, and deactivation fail closed and clean up their child process.
+- The command does not invoke `teul-cli`, upload source, crawl the filesystem, or use a remote runtime.
+
 ## Immediate Dev Priority
 - 1순위: quick-fix
 - 2순위: hook template completion
