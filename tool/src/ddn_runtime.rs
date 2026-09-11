@@ -11993,10 +11993,11 @@ fn fixed64_to_f64(value: Fixed64) -> f64 {
 
 fn fixed64_from_host_f64_checked(value: f64) -> Result<Fixed64, ArithmeticFaultKind> {
     let raw = value * Fixed64::SCALE_F64;
-    if !raw.is_finite() || raw < i64::MIN as f64 || raw >= i64::MAX as f64 {
+    let rounded = raw.round_ties_even();
+    if !rounded.is_finite() || rounded < i64::MIN as f64 || rounded >= i64::MAX as f64 {
         return Err(ArithmeticFaultKind::Overflow);
     }
-    Ok(Fixed64::from_raw_i64(raw as i64))
+    Ok(Fixed64::from_raw_i64(rounded as i64))
 }
 
 fn fixed64_ceil(value: Fixed64) -> Result<Fixed64, ArithmeticFaultKind> {
@@ -18951,13 +18952,13 @@ fn eval_formula_expr(
             }
             if name == "pi" {
                 return Ok(UnitValue {
-                    value: Fixed64::from_f64_lossy(std::f64::consts::PI),
+                    value: fixed64_from_host_f64_checked(std::f64::consts::PI)?,
                     dim: UnitDim::NONE,
                 });
             }
             if name == "e" {
                 return Ok(UnitValue {
-                    value: Fixed64::from_f64_lossy(std::f64::consts::E),
+                    value: fixed64_from_host_f64_checked(std::f64::consts::E)?,
                     dim: UnitDim::NONE,
                 });
             }
@@ -21988,6 +21989,45 @@ mod tests {
     }
 
     #[test]
+    fn fixed64_finite_host_ingress_rounds_half_ulp_to_even() {
+        let half_ulp = 0.5 / Fixed64::SCALE_F64;
+        assert_eq!(
+            fixed64_from_host_f64_checked(half_ulp),
+            Ok(Fixed64::ZERO),
+            "zero is the even neighbor at +0.5 raw"
+        );
+        assert_eq!(
+            fixed64_from_host_f64_checked(3.0 * half_ulp),
+            Ok(Fixed64::from_raw_i64(2)),
+            "two is the even neighbor at +1.5 raw"
+        );
+        assert_eq!(
+            fixed64_from_host_f64_checked(-half_ulp),
+            Ok(Fixed64::ZERO),
+            "zero is the even neighbor at -0.5 raw"
+        );
+        assert_eq!(
+            fixed64_from_host_f64_checked(-3.0 * half_ulp),
+            Ok(Fixed64::from_raw_i64(-2)),
+            "negative ties retain the same even-neighbor rule"
+        );
+    }
+
+    #[test]
+    fn formula_constants_use_the_checked_host_fixed64_ingress() {
+        let env = BTreeMap::new();
+        let pi = eval_formula_expr(&FormulaExpr::Var("pi".to_string()), &env)
+            .expect("pi constant must evaluate");
+        let e = eval_formula_expr(&FormulaExpr::Var("e".to_string()), &env)
+            .expect("e constant must evaluate");
+
+        assert_eq!(pi.dim, UnitDim::NONE);
+        assert_eq!(pi.value, Fixed64::from_raw_i64(13_493_037_705));
+        assert_eq!(e.dim, UnitDim::NONE);
+        assert_eq!(e.value, Fixed64::from_raw_i64(11_674_931_555));
+    }
+
+    #[test]
     fn numeric_calculus_v1_builtins_return_value_error_method() {
         let script = r#"
 매틱:움직씨 = {
@@ -22030,11 +22070,11 @@ mod tests {
         }
         assert_eq!(
             extract_fixed(&output.resources, "적분값"),
-            Fixed64::from_raw_i64(1_431_655_766)
+            Fixed64::from_raw_i64(1_431_655_765)
         );
         assert_eq!(
             extract_fixed(&output.resources, "적분오차"),
-            Fixed64::from_raw_i64(44_739_242)
+            Fixed64::from_raw_i64(44_739_243)
         );
         match output.resources.get("적분방법") {
             Some(RuntimeValue::String(value)) => assert_eq!(value, "사다리꼴"),
