@@ -17,6 +17,12 @@ export class DdnWasmVm {
     columns(): any;
     configure_debug_plan(plan_json: string): any;
     configure_project_assets(project_source_json: string): string;
+    /**
+     * Canonical textual admission for a Workbench frame duration.  JavaScript
+     * carries only this decimal text and the returned Q31.32 pair; the
+     * numeric conversion itself remains owned by Fixed64.
+     */
+    fixed64_from_decimal_v1(decimal: string): any;
     get_build_info(): string;
     get_configured_madi(): bigint;
     get_debug_source_identity_json(): string;
@@ -32,8 +38,8 @@ export class DdnWasmVm {
     reset(keep_params?: boolean | null): any;
     restore_state(state_json: string): any;
     run_ticks(count: number): any;
-    set_dt_f64(dt: number): void;
-    set_input(keys_pressed: number, last_key_name: string, pointer_x_i32: number, pointer_y_i32: number, dt: number): void;
+    set_dt_fixed64_v1(dt_high_i32: number, dt_low_u32: number): any;
+    set_input_fixed64_v1(keys_pressed: number, last_key_name: string, pointer_x_i32: number, pointer_y_i32: number, dt_high_i32: number, dt_low_u32: number): any;
     set_keys_pressed(keys_pressed: number): void;
     set_last_key_name(last_key_name: string): void;
     set_param(key: string, value: any): any;
@@ -42,7 +48,7 @@ export class DdnWasmVm {
     set_pointer(pointer_x_i32: number, pointer_y_i32: number): void;
     set_rng_seed(seed: bigint): void;
     step_one(): any;
-    step_one_with_input(keys_pressed: number, last_key_name: string, pointer_x_i32: number, pointer_y_i32: number, dt: number): any;
+    step_one_with_input_fixed64_v1(keys_pressed: number, last_key_name: string, pointer_x_i32: number, pointer_y_i32: number, dt_high_i32: number, dt_low_u32: number): any;
     update_logic(source: string): void;
     update_logic_with_mode(source: string, mode: string): void;
     update_logic_with_source_path(source: string, source_path: string): void;
@@ -208,6 +214,7 @@ export interface InitOutput {
     readonly ddnwasmvm_columns: (a: number) => number;
     readonly ddnwasmvm_configure_debug_plan: (a: number, b: number, c: number, d: number) => void;
     readonly ddnwasmvm_configure_project_assets: (a: number, b: number, c: number, d: number) => void;
+    readonly ddnwasmvm_fixed64_from_decimal_v1: (a: number, b: number, c: number, d: number) => void;
     readonly ddnwasmvm_get_build_info: (a: number, b: number) => void;
     readonly ddnwasmvm_get_configured_madi: (a: number) => bigint;
     readonly ddnwasmvm_get_debug_source_identity_json: (a: number, b: number) => void;
@@ -223,8 +230,8 @@ export interface InitOutput {
     readonly ddnwasmvm_reset: (a: number, b: number, c: number) => void;
     readonly ddnwasmvm_restore_state: (a: number, b: number, c: number, d: number) => void;
     readonly ddnwasmvm_run_ticks: (a: number, b: number, c: number) => void;
-    readonly ddnwasmvm_set_dt_f64: (a: number, b: number) => void;
-    readonly ddnwasmvm_set_input: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => void;
+    readonly ddnwasmvm_set_dt_fixed64_v1: (a: number, b: number, c: number, d: number) => void;
+    readonly ddnwasmvm_set_input_fixed64_v1: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => void;
     readonly ddnwasmvm_set_keys_pressed: (a: number, b: number) => void;
     readonly ddnwasmvm_set_last_key_name: (a: number, b: number, c: number) => void;
     readonly ddnwasmvm_set_param: (a: number, b: number, c: number, d: number, e: number) => void;
@@ -233,7 +240,7 @@ export interface InitOutput {
     readonly ddnwasmvm_set_pointer: (a: number, b: number, c: number) => void;
     readonly ddnwasmvm_set_rng_seed: (a: number, b: bigint) => void;
     readonly ddnwasmvm_step_one: (a: number, b: number) => void;
-    readonly ddnwasmvm_step_one_with_input: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => void;
+    readonly ddnwasmvm_step_one_with_input_fixed64_v1: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => void;
     readonly ddnwasmvm_update_logic: (a: number, b: number, c: number, d: number) => void;
     readonly ddnwasmvm_update_logic_with_mode: (a: number, b: number, c: number, d: number, e: number, f: number) => void;
     readonly ddnwasmvm_update_logic_with_source_path: (a: number, b: number, c: number, d: number, e: number, f: number) => void;

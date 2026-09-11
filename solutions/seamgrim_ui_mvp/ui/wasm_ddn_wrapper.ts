@@ -52,14 +52,32 @@ export class DdnWasmVmClient {
     this.vm.set_rng_seed(seed);
   }
 
-  setInput(
+  setInputFixed64V1(
     keys_pressed: number,
     last_key_name: string,
     pointer_x_i32: number,
     pointer_y_i32: number,
-    dt: number
-  ): void {
-    this.vm.set_input(keys_pressed, last_key_name, pointer_x_i32, pointer_y_i32, dt);
+    dt_high_i32: number,
+    dt_low_u32: number
+  ): any {
+    if (typeof (this.vm as any).set_input_fixed64_v1 !== "function") {
+      throw new Error("set_input_fixed64_v1 is not available in this wasm build");
+    }
+    return JSON.parse((this.vm as any).set_input_fixed64_v1(
+      keys_pressed,
+      last_key_name,
+      pointer_x_i32,
+      pointer_y_i32,
+      dt_high_i32,
+      dt_low_u32,
+    ));
+  }
+
+  fixed64FromDecimalV1Parsed(decimalText: string): any {
+    if (typeof (this.vm as any).fixed64_from_decimal_v1 !== "function") {
+      throw new Error("fixed64_from_decimal_v1 is not available in this wasm build");
+    }
+    return JSON.parse((this.vm as any).fixed64_from_decimal_v1(String(decimalText ?? "")));
   }
 
   columnsParsed(): any {
@@ -78,9 +96,12 @@ export class DdnWasmVmClient {
     return warnings as DdnParseWarning[];
   }
 
-  setParamParsed(key: string, value: number | boolean | string): any {
+  setParamParsed(key: string, value: boolean | string): any {
     if (typeof (this.vm as any).set_param !== "function") {
       throw new Error("set_param is not available in this wasm build");
+    }
+    if (typeof value === "number") {
+      throw new TypeError("Fixed64 number input requires the raw Fixed64 setter");
     }
     return JSON.parse((this.vm as any).set_param(key, value));
   }
@@ -180,15 +201,26 @@ export class DdnWasmVmClient {
     return this.attachDerived(state, true);
   }
 
-  stepOneWithInputParsed(
+  stepOneWithInputFixed64V1Parsed(
     keys_pressed: number,
     last_key_name: string,
     pointer_x_i32: number,
     pointer_y_i32: number,
-    dt: number
+    dt_high_i32: number,
+    dt_low_u32: number,
   ): SeamgrimDerivedState {
+    if (typeof (this.vm as any).step_one_with_input_fixed64_v1 !== "function") {
+      throw new Error("step_one_with_input_fixed64_v1 is not available in this wasm build");
+    }
     const state = parseStateJson(
-      this.vm.step_one_with_input(keys_pressed, last_key_name, pointer_x_i32, pointer_y_i32, dt)
+      (this.vm as any).step_one_with_input_fixed64_v1(
+        keys_pressed,
+        last_key_name,
+        pointer_x_i32,
+        pointer_y_i32,
+        dt_high_i32,
+        dt_low_u32,
+      )
     );
     return this.attachDerived(state, true);
   }

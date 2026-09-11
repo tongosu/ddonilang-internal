@@ -70,7 +70,7 @@ async function main() {
       compatUpdated = String(source ?? "");
     },
     set_rng_seed() {},
-    set_input() {},
+    set_input_fixed64_v1() {},
     step_one() {
       return enginePayload({
         tickId: 0,
@@ -79,7 +79,7 @@ async function main() {
         row: [1],
       });
     },
-    step_one_with_input() {
+    step_one_with_input_fixed64_v1() {
       return enginePayload({
         tickId: 1,
         stateHash: "blake3:s1",
@@ -187,7 +187,13 @@ async function main() {
       lastMode = String(mode ?? "");
     },
     set_rng_seed() {},
-    set_input() {},
+    set_input_fixed64_v1() {
+      return JSON.stringify({ ok: true, value: { high_i32: 0, low_u32: 1 } });
+    },
+    fixed64_from_decimal_v1(text) {
+      assert(String(text) === "0.016", "fixed64 decimal admission forwards raw text");
+      return JSON.stringify({ ok: true, value: { high_i32: 0, low_u32: 68719477 } });
+    },
     columns() {
       return JSON.stringify({
         columns: [{ key: "g", dtype: "fixed64", role: "state" }],
@@ -251,7 +257,7 @@ async function main() {
         row: [idx + 1],
       });
     },
-    step_one_with_input() {
+    step_one_with_input_fixed64_v1() {
       const idx = stepSeq++;
       return enginePayload({
         tickId: idx,
@@ -287,9 +293,16 @@ async function main() {
     "parseWarningsParsed: warning code",
   );
 
-  const setResult = client.setParamParsed("g", 15);
+  const setResult = client.setParamParsed("g", "15");
   assert(setResult.ok === true, "setParamParsed: ok");
-  assert(lastSetParam?.key === "g" && lastSetParam?.value === 15, "setParamParsed: forwarded");
+  assert(lastSetParam?.key === "g" && lastSetParam?.value === "15", "setParamParsed: forwarded");
+  let numericParamRejected = false;
+  try {
+    client.setParamParsed("g", 15);
+  } catch (err) {
+    numericParamRejected = String(err?.message ?? err).includes("raw Fixed64 setter");
+  }
+  assert(numericParamRejected, "setParamParsed: JS number must not enter Fixed64 path");
   const setFixedResult = client.setParamFixed64Parsed("g", 4294967296);
   assert(setFixedResult.ok === true, "setParamFixed64Parsed: ok");
   assert(
@@ -330,7 +343,9 @@ async function main() {
   const restoreResult = client.restoreStateParsed("{\"schema\":\"seamgrim.engine_response.v0\"}");
   assert(restoreResult.ok === true, "restoreStateParsed: ok");
   assert(lastRestoreRaw.includes("seamgrim.engine_response.v0"), "restoreStateParsed: forwarded");
-  const s3 = client.stepOneWithInputParsed(0, "", 0, 0, 0.016);
+  const raw = client.fixed64FromDecimalV1Parsed("0.016");
+  assert(raw.ok === true && raw.value.low_u32 === 68719477, "fixed64 canonical admission");
+  const s3 = client.stepOneWithInputFixed64V1Parsed(0, "", 0, 0, 0, 68719477);
   assert(s3.frame_id === 0, "restoreStateParsed: frame_id reset");
 
   console.log("seamgrim wasm wrapper ok");

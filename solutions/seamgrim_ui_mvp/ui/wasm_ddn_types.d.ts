@@ -74,7 +74,7 @@ export interface DdnWasmVm {
   update_logic(source: string): void;
   update_logic_with_mode?(source: string, mode: string): void;
   get_parse_warnings?(): string;
-  set_param(key: string, value: number | boolean | string): string;
+  set_param(key: string, value: boolean | string): string;
   set_param_fixed64?(key: string, raw_i64: number): string;
   set_param_fixed64_str?(key: string, raw_i64: string): string;
   reset(keep_params?: boolean | null): string;
@@ -85,26 +85,29 @@ export interface DdnWasmVm {
   inject_ai_action?(key: string, value_json: string): void;
   clear_ai_injections?(): void;
   get_input_state_json?(): string;
-  set_input(
+  fixed64_from_decimal_v1(decimal_text: string): string;
+  set_input_fixed64_v1(
     keys_pressed: number,
     last_key_name: string,
     pointer_x_i32: number,
     pointer_y_i32: number,
-    dt: number
-  ): void;
+    dt_high_i32: number,
+    dt_low_u32: number
+  ): string;
   set_keys_pressed(keys_pressed: number): void;
   set_last_key_name(last_key_name: string): void;
   set_pointer(pointer_x_i32: number, pointer_y_i32: number): void;
-  set_dt_f64(dt: number): void;
+  set_dt_fixed64_v1(dt_high_i32: number, dt_low_u32: number): string;
   step_one(): string;
   run_ticks?(count: number): string;
   apply_currentline_cell?(source: string, context_json?: string): string;
-  step_one_with_input(
+  step_one_with_input_fixed64_v1(
     keys_pressed: number,
     last_key_name: string,
     pointer_x_i32: number,
     pointer_y_i32: number,
-    dt: number
+    dt_high_i32: number,
+    dt_low_u32: number
   ): string;
   get_state_hash(): string;
   get_state_json(): string;

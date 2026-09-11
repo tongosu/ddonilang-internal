@@ -56,6 +56,28 @@ impl Fixed64 {
             .map_err(|_| ArithmeticFaultKind::Overflow)
     }
 
+    /// Exact Q31.32 weighted blend with a dimensionless weight in `[0, 1]`.
+    /// The two products are accumulated in one widened intermediate so a
+    /// representable endpoint is never lost to component-wise rounding.
+    #[inline]
+    pub fn checked_weighted_blend(
+        self,
+        next: Self,
+        weight: Self,
+    ) -> Result<Self, ArithmeticFaultKind> {
+        if weight.raw < 0 || weight.raw > Self::ONE_RAW {
+            return Err(ArithmeticFaultKind::Overflow);
+        }
+        let keep = Self::ONE_RAW - weight.raw;
+        let numerator = (self.raw as i128) * (keep as i128)
+            + (next.raw as i128) * (weight.raw as i128);
+        let raw = round_div_ties_to_even(numerator, Self::ONE_RAW as i128)
+            .ok_or(ArithmeticFaultKind::Overflow)?;
+        i64::try_from(raw)
+            .map(Self::from_raw_i64)
+            .map_err(|_| ArithmeticFaultKind::Overflow)
+    }
+
     /// 정수 -> Fixed64 (value << 32), 범위 밖은 포화
     #[inline]
     pub fn from_i64(value: i64) -> Self {
@@ -488,6 +510,27 @@ mod tests {
         assert_eq!(three_ulp.checked_mul(half_ulp), Ok(Fixed64::from_raw_i64(2)));
         assert_eq!(Fixed64::ONE.try_div(Fixed64::from_i64(2)), Ok(half_ulp));
         assert_eq!(Fixed64::from_raw_i64(3).try_div(Fixed64::from_i64(2)), Ok(Fixed64::from_raw_i64(2)));
+    }
+
+    #[test]
+    fn checked_weighted_blend_preserves_exact_endpoint_and_ties_to_even() {
+        let half = Fixed64::from_raw_i64(1i64 << 31);
+        assert_eq!(
+            Fixed64::MAX.checked_weighted_blend(Fixed64::MAX, half),
+            Ok(Fixed64::MAX)
+        );
+        assert_eq!(
+            Fixed64::from_raw_i64(1).checked_weighted_blend(Fixed64::from_raw_i64(3), half),
+            Ok(Fixed64::from_raw_i64(2))
+        );
+        assert_eq!(
+            Fixed64::from_raw_i64(1).checked_weighted_blend(Fixed64::from_raw_i64(2), half),
+            Ok(Fixed64::from_raw_i64(2))
+        );
+        assert_eq!(
+            Fixed64::ONE.checked_weighted_blend(Fixed64::ZERO, Fixed64::from_raw_i64(-1)),
+            Err(ArithmeticFaultKind::Overflow)
+        );
     }
 
     #[test]

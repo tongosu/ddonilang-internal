@@ -2376,14 +2376,14 @@ export function gatherInputFromDom(getNode, keyBits = KEY_BITS) {
   const lastKey = getNode("input-last-key")?.value ?? "";
   const px = Number(getNode("input-px")?.value ?? 0);
   const py = Number(getNode("input-py")?.value ?? 0);
-  const dt = Number(getNode("input-dt")?.value ?? 0);
+  const dtText = String(getNode("input-dt")?.value ?? "0").trim();
 
   return {
     keys,
     lastKey,
     px: Number.isFinite(px) ? Math.trunc(px) : 0,
     py: Number.isFinite(py) ? Math.trunc(py) : 0,
-    dt: Number.isFinite(dt) && dt >= 0 ? dt : 0,
+    dtText,
   };
 }
 
@@ -2391,13 +2391,13 @@ export function normalizeWasmStepInput(input = {}) {
   const keys = Number(input.keys ?? 0);
   const px = Number(input.px ?? 0);
   const py = Number(input.py ?? 0);
-  const dt = Number(input.dt ?? 0);
+  const dtText = String(input.dtText ?? "").trim();
   return {
     keys: Number.isFinite(keys) ? Math.trunc(keys) : 0,
     lastKey: String(input.lastKey ?? ""),
     px: Number.isFinite(px) ? Math.trunc(px) : 0,
     py: Number.isFinite(py) ? Math.trunc(py) : 0,
-    dt: Number.isFinite(dt) && dt >= 0 ? dt : 0,
+    dtText,
   };
 }
 
@@ -2593,25 +2593,34 @@ export function stepWasmClientParsed({
     throw new Error(`${errorPrefix}: client가 필요합니다.`);
   }
   const normalizedInput = normalizeWasmStepInput(input);
-  const hasWithInput = typeof client.stepOneWithInputParsed === "function";
+  const hasWithInput = typeof client.stepOneWithInputFixed64V1Parsed === "function";
   const hasStepOne = typeof client.stepOneParsed === "function";
   if (!hasWithInput && !hasStepOne) {
-    throw new Error(`${errorPrefix}: stepOneWithInputParsed/stepOneParsed API가 없습니다.`);
+    throw new Error(`${errorPrefix}: stepOneWithInputFixed64V1Parsed/stepOneParsed API가 없습니다.`);
   }
   if (hasWithInput) {
     try {
-      const state = client.stepOneWithInputParsed(
+      if (typeof client.fixed64FromDecimalV1Parsed !== "function") {
+        throw new Error("fixed64_from_decimal_v1 API가 없습니다.");
+      }
+      const admitted = client.fixed64FromDecimalV1Parsed(normalizedInput.dtText);
+      const pair = admitted?.value;
+      if (!admitted?.ok || !Number.isInteger(pair?.high_i32) || !Number.isInteger(pair?.low_u32)) {
+        throw new Error("E_FIXED64_UNREPRESENTABLE_CONVERSION");
+      }
+      const state = client.stepOneWithInputFixed64V1Parsed(
         normalizedInput.keys,
         normalizedInput.lastKey,
         normalizedInput.px,
         normalizedInput.py,
-        normalizedInput.dt,
+        pair.high_i32,
+        pair.low_u32,
       );
       return { state, input: normalizedInput };
     } catch (withInputErr) {
       if (!hasStepOne) {
         throw new Error(
-          `${errorPrefix}: stepOneWithInputParsed 실패 (${String(withInputErr?.message ?? withInputErr)})`,
+          `${errorPrefix}: stepOneWithInputFixed64V1Parsed 실패 (${String(withInputErr?.message ?? withInputErr)})`,
         );
       }
       const state = client.stepOneParsed();
@@ -2718,7 +2727,9 @@ export function stepWasmClientWithTimingAndDispatch({
     lastKey: normalizedLastKey,
     px: enabled && Number.isFinite(parsedPx) ? Math.round(parsedPx) : 0,
     py: enabled && Number.isFinite(parsedPy) ? Math.round(parsedPy) : 0,
-    dt: delta.dtSec,
+    // JavaScript only serializes the clock reading.  Fixed64 admission and
+    // Q31.32 construction stay in the shared WASM Fixed64 owner.
+    dtText: String(delta.dtSec),
   };
   const stepped = stepWasmClientAndDispatchState({
     client,

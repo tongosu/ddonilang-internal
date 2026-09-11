@@ -1181,12 +1181,12 @@ async function main() {
     lastKey: 123,
     px: "10.7",
     py: "-9.2",
-    dt: "-0.1",
+    dtText: "-0.1",
   });
   assert(normalizedStepInput.keys === 7, "normalize step input: keys");
   assert(normalizedStepInput.lastKey === "123", "normalize step input: key name");
   assert(normalizedStepInput.px === 10 && normalizedStepInput.py === -9, "normalize step input: point");
-  assert(normalizedStepInput.dt === 0, "normalize step input: dt clamp");
+  assert(normalizedStepInput.dtText === "-0.1", "normalize step input: dt text preserved");
 
   const paramClient = {
     setParamParsed(key, value) {
@@ -1439,8 +1439,11 @@ async function main() {
     getStateParsed() {
       return { schema: "seamgrim.state.v0", tick_id: 1 };
     },
-    stepOneWithInputParsed(keys, lastKey, px, py, dt) {
-      return { schema: "seamgrim.state.v0", keys, lastKey, px, py, dt };
+    fixed64FromDecimalV1Parsed(dtText) {
+      return { ok: true, value: { high_i32: 0, low_u32: String(dtText).length } };
+    },
+    stepOneWithInputFixed64V1Parsed(keys, lastKey, px, py, high, low) {
+      return { schema: "seamgrim.state.v0", keys, lastKey, px, py, high, low };
     },
   };
   const ensureWasm = async (body) => {
@@ -1517,7 +1520,7 @@ async function main() {
   const stepped = await stepWasmWithInputFromSource({
     sourceText: "매틱:움직씨 = { x <- 4. }.",
     ensureWasm,
-    gatherInput: () => ({ keys: 3, lastKey: "w", px: 10, py: 20, dt: 0.1 }),
+    gatherInput: () => ({ keys: 3, lastKey: "w", px: 10, py: 20, dtText: "0.1" }),
   });
   assert(stepped.state?.keys === 3, "step wasm logic: input keys");
   assert(stepped.state?.lastKey === "w", "step wasm logic: input last key");
@@ -1569,7 +1572,7 @@ async function main() {
   const stepDispatched = await stepWasmAndDispatchState({
     sourceText: "매틱:움직씨 = { x <- 11. }.",
     ensureWasm,
-    gatherInput: () => ({ keys: 9, lastKey: "b", px: 2, py: 3, dt: 0.2 }),
+    gatherInput: () => ({ keys: 9, lastKey: "b", px: 2, py: 3, dtText: "0.2" }),
     patchMode: false,
     onFull: (stateJson) => {
       stepDispatchRendered = stateJson;
@@ -1581,7 +1584,7 @@ async function main() {
   await stepWasmAndDispatchState({
     sourceText: "#설명: step-source\n매틱:움직씨 = { x <- 13. }.",
     ensureWasm,
-    gatherInput: () => ({ keys: 1, lastKey: "c", px: 0, py: 0, dt: 0.05 }),
+    gatherInput: () => ({ keys: 1, lastKey: "c", px: 0, py: 0, dtText: "0.05" }),
     patchMode: false,
     onFullWithSource: (_stateJson, source) => {
       stepDispatchSource = String(source ?? "");
@@ -1593,7 +1596,7 @@ async function main() {
   );
   const directStepped = stepWasmClientParsed({
     client: fakeClient,
-    input: { keys: "5", lastKey: "k", px: "9.8", py: 2, dt: "0.25" },
+    input: { keys: "5", lastKey: "k", px: "9.8", py: 2, dtText: "0.25" },
   });
   assert(directStepped.state?.keys === 5, "step wasm client parsed: keys");
   assert(directStepped.state?.px === 9, "step wasm client parsed: px");
@@ -1603,7 +1606,7 @@ async function main() {
   } catch (err) {
     missingApiError = String(err?.message ?? err);
   }
-  assert(missingApiError.includes("stepOneWithInputParsed"), "step wasm client parsed: missing api");
+  assert(missingApiError.includes("stepOneWithInputFixed64V1Parsed"), "step wasm client parsed: missing api");
 
   assert(
     observationChannelSignature([{ key: "a" }, { key: "b" }]) === "a|b",
@@ -2019,7 +2022,7 @@ async function main() {
   let steppedWithSource = "";
   const steppedDispatchedDirect = stepWasmClientAndDispatchState({
     client: fakeClient,
-    input: { keys: 2, lastKey: "z", px: 1, py: 1, dt: 0.1 },
+    input: { keys: 2, lastKey: "z", px: 1, py: 1, dtText: "0.1" },
     sourceText: "SOURCE:DIRECT",
     patchMode: false,
     onFullWithSource: (_next, source) => {

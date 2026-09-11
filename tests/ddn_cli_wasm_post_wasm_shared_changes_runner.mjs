@@ -79,7 +79,7 @@ async function main() {
     assert(configuredMadi === 3, `configured madi expected 3 got ${configuredMadi}`);
     evidence.checks.configured_madi = configuredMadi;
 
-    const stepWithInput = client.stepOneWithInputParsed(8, "d", 12, -34, 0.5);
+    const stepWithInput = client.stepOneWithInputFixed64V1Parsed(8, "d", 12, -34, 0, 0x80000000);
     checkPersonInput(stepWithInput.input, "step_one_with_input top-level");
     assert(stepWithInput.input.keys_pressed === 8, "step input keys_pressed not preserved");
     assert(stepWithInput.input.last_key_name === "d", "step input last_key_name not preserved");
@@ -133,7 +133,7 @@ async function main() {
       last_key_name: reset.input.last_key_name,
     };
 
-    const replayStateJson = vm.step_one_with_input(2, "a", 7, 9, 0.25);
+    const replayStateJson = vm.step_one_with_input_fixed64_v1(2, "a", 7, 9, 0, 0x40000000);
     const restoreResult = client.restoreStateParsed(replayStateJson);
     assert(restoreResult.ok === true, "restore_state result ok must be true");
     const restoredInput = client.inputStateParsed();

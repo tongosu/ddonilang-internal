@@ -1496,6 +1496,39 @@ fn ensure_dimensionless_unit(value: &UnitValue) -> Result<(), EvalError> {
     Ok(())
 }
 
+fn checked_unit_mul(left: UnitValue, right: UnitValue) -> Result<UnitValue, EvalError> {
+    Ok(UnitValue {
+        value: left.value.checked_mul(right.value)?,
+        dim: left.dim.add(right.dim),
+    })
+}
+
+fn checked_unit_add(left: UnitValue, right: UnitValue) -> Result<UnitValue, EvalError> {
+    if left.dim != right.dim {
+        return Err(unit_error(UnitError::DimensionMismatch {
+            left: left.dim,
+            right: right.dim,
+        }));
+    }
+    Ok(UnitValue {
+        value: left.value.checked_add(right.value)?,
+        dim: left.dim,
+    })
+}
+
+fn checked_unit_sub(left: UnitValue, right: UnitValue) -> Result<UnitValue, EvalError> {
+    if left.dim != right.dim {
+        return Err(unit_error(UnitError::DimensionMismatch {
+            left: left.dim,
+            right: right.dim,
+        }));
+    }
+    Ok(UnitValue {
+        value: left.value.checked_sub(right.value)?,
+        dim: left.dim,
+    })
+}
+
 fn make_std_input_map(bindings: BTreeMap<String, Value>) -> Value {
     let mut fields = BTreeMap::new();
     fields.insert(
@@ -4361,6 +4394,7 @@ pub(crate) enum EvalError {
         left: UnitDim,
         right: UnitDim,
     },
+    ArithmeticFault(ArithmeticFaultKind),
     DivisionByZero,
     FieldAccess {
         code: &'static str,
@@ -4423,6 +4457,15 @@ impl EvalError {
                 )
             }
             EvalError::DivisionByZero => "0으로 나눌 수 없습니다".to_string(),
+            EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow) => {
+                "Fixed64 계산 범위를 벗어났습니다".to_string()
+            }
+            EvalError::ArithmeticFault(ArithmeticFaultKind::DivByZero) => {
+                "0으로 나눌 수 없습니다".to_string()
+            }
+            EvalError::ArithmeticFault(ArithmeticFaultKind::DimensionMismatch { left, right }) => {
+                format!("단위 차원이 다릅니다: {} vs {}", left.format(), right.format())
+            }
             EvalError::FieldAccess { code, message, .. } => format!("{code}: {message}"),
             EvalError::WorkCost(failure) => {
                 let receipt = serde_json::to_string(&failure.receipt)
@@ -4447,6 +4490,9 @@ impl EvalError {
                 span,
             } => (*code, message.clone(), Some(*span)),
             EvalError::WorkCost(failure) => (failure.code, self.message(), None),
+            EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow) => {
+                ("E_RUNTIME_ARITH_OVERFLOW", self.message(), None)
+            }
             _ => ("E_RUNTIME_EXECUTION", self.message(), None),
         }
     }
@@ -4483,6 +4529,12 @@ impl From<UnitError> for EvalError {
             UnitError::DimensionMismatch { left, right } => EvalError::UnitMismatch { left, right },
             UnitError::DivisionByZero => EvalError::DivisionByZero,
         }
+    }
+}
+
+impl From<ArithmeticFaultKind> for EvalError {
+    fn from(kind: ArithmeticFaultKind) -> Self {
+        Self::ArithmeticFault(kind)
     }
 }
 
@@ -7461,10 +7513,10 @@ impl<'a> EvalContext<'a> {
                     let dt = expect_unit_value(&args[2])?;
                     ensure_dimensionless_unit(&dt)?;
                     ensure_same_unit_dim(&position, &velocity)?;
+                    let displacement = velocity.value.checked_mul(dt.value)?;
+                    let next_position = position.value.checked_add(displacement)?;
                     Ok(unit_value_to_runtime_value(UnitValue {
-                        value: position
-                            .value
-                            .saturating_add(velocity.value.saturating_mul(dt.value)),
+                        value: next_position,
                         dim: position.dim,
                     }))
                 }
@@ -7477,10 +7529,10 @@ impl<'a> EvalContext<'a> {
                     let dt = expect_unit_value(&args[2])?;
                     ensure_dimensionless_unit(&dt)?;
                     ensure_same_unit_dim(&velocity, &acceleration)?;
+                    let delta_velocity = acceleration.value.checked_mul(dt.value)?;
+                    let next_velocity = velocity.value.checked_add(delta_velocity)?;
                     Ok(unit_value_to_runtime_value(UnitValue {
-                        value: velocity
-                            .value
-                            .saturating_add(acceleration.value.saturating_mul(dt.value)),
+                        value: next_velocity,
                         dim: velocity.dim,
                     }))
                 }
@@ -7495,7 +7547,7 @@ impl<'a> EvalContext<'a> {
                     ensure_dimensionless_unit(&m1)?;
                     ensure_dimensionless_unit(&m2)?;
                     ensure_same_unit_dim(&v1, &v2)?;
-                    let denom = m1.value.saturating_add(m2.value);
+                    let denom = m1.value.checked_add(m2.value)?;
                     if denom.raw_i64() == 0 {
                         return Err("물리1d.탄성충돌1d 질량 합은 0이 될 수 없습니다"
                             .to_string()
@@ -7504,19 +7556,15 @@ impl<'a> EvalContext<'a> {
                     let two = Fixed64::from_i64(2);
                     let next_v1_num = m1
                         .value
-                        .saturating_sub(m2.value)
-                        .saturating_mul(v1.value)
-                        .saturating_add(two.saturating_mul(m2.value).saturating_mul(v2.value));
+                        .checked_sub(m2.value)?
+                        .checked_mul(v1.value)?
+                        .checked_add(two.checked_mul(m2.value)?.checked_mul(v2.value)?)?;
                     let next_v2_num = two
-                        .saturating_mul(m1.value)
-                        .saturating_mul(v1.value)
-                        .saturating_add(m2.value.saturating_sub(m1.value).saturating_mul(v2.value));
-                    let next_v1 = next_v1_num
-                        .try_div(denom)
-                        .map_err(|_| EvalError::from("0으로 나눌 수 없습니다".to_string()))?;
-                    let next_v2 = next_v2_num
-                        .try_div(denom)
-                        .map_err(|_| EvalError::from("0으로 나눌 수 없습니다".to_string()))?;
+                        .checked_mul(m1.value)?
+                        .checked_mul(v1.value)?
+                        .checked_add(m2.value.checked_sub(m1.value)?.checked_mul(v2.value)?)?;
+                    let next_v1 = next_v1_num.try_div(denom)?;
+                    let next_v2 = next_v2_num.try_div(denom)?;
                     Ok(Value::List(vec![
                         unit_value_to_runtime_value(UnitValue {
                             value: next_v1,
@@ -7915,7 +7963,10 @@ impl<'a> EvalContext<'a> {
                                 value: current,
                                 dim: start.dim,
                             }));
-                            current = current.saturating_add(step_value);
+                            if current == end.value {
+                                break;
+                            }
+                            current = current.checked_add(step_value)?;
                         }
                     } else {
                         while current.raw_i64() >= end.value.raw_i64() {
@@ -7923,7 +7974,10 @@ impl<'a> EvalContext<'a> {
                                 value: current,
                                 dim: start.dim,
                             }));
-                            current = current.saturating_add(step_value);
+                            if current == end.value {
+                                break;
+                            }
+                            current = current.checked_add(step_value)?;
                         }
                     }
                     Ok(Value::List(items))
@@ -7966,7 +8020,10 @@ impl<'a> EvalContext<'a> {
                                     value: current,
                                     dim: start.dim,
                                 }));
-                                current = current.saturating_add(step.value);
+                                if current == end.value {
+                                    break;
+                                }
+                                current = current.checked_add(step.value)?;
                             }
                         } else {
                             while current.raw_i64() < end.value.raw_i64() {
@@ -7974,7 +8031,10 @@ impl<'a> EvalContext<'a> {
                                     value: current,
                                     dim: start.dim,
                                 }));
-                                current = current.saturating_add(step.value);
+                                if current == end.value {
+                                    break;
+                                }
+                                current = current.checked_add(step.value)?;
                             }
                         }
                     }
@@ -8622,7 +8682,7 @@ impl<'a> EvalContext<'a> {
                     for item in items.iter().skip(1) {
                         self.work_cost.borrow_mut().charge_element_visits(1)?;
                         let next = unit_value_from_value(item)?;
-                        total = total.add(next).map_err(unit_error)?;
+                        total = checked_unit_add(total, next)?;
                     }
                     Ok(unit_value_to_value(total))
                 }
@@ -8641,7 +8701,7 @@ impl<'a> EvalContext<'a> {
                     for item in items.iter().skip(1) {
                         self.work_cost.borrow_mut().charge_element_visits(1)?;
                         let next = unit_value_from_value(item)?;
-                        total = total.add(next).map_err(unit_error)?;
+                        total = checked_unit_add(total, next)?;
                     }
                     let count = Fixed64::from_i64(items.len() as i64);
                     let avg = total.div_scalar(count).map_err(unit_error)?;
@@ -8657,7 +8717,7 @@ impl<'a> EvalContext<'a> {
                         if value.value.raw_i64() < 0 {
                             return Err("지니 입력은 음수가 될 수 없습니다".to_string().into());
                         }
-                        total = total.saturating_add(value.value);
+                        total = total.checked_add(value.value)?;
                     }
                     if total.raw_i64() == 0 {
                         return Ok(Value::Fixed64(Fixed64::ZERO));
@@ -8665,15 +8725,13 @@ impl<'a> EvalContext<'a> {
                     let mut pair_sum = Fixed64::ZERO;
                     for i in 0..values.len() {
                         for j in (i + 1)..values.len() {
-                            let diff = values[i].value.saturating_sub(values[j].value);
-                            pair_sum = pair_sum.saturating_add(fixed64_abs(diff));
+                            let diff = values[i].value.checked_sub(values[j].value)?;
+                            pair_sum = pair_sum.checked_add(fixed64_abs(diff)?)?;
                         }
                     }
                     let count = Fixed64::from_i64(values.len() as i64);
-                    let denom = count.saturating_mul(total);
-                    let gini = pair_sum
-                        .try_div(denom)
-                        .map_err(|_| "지니 계산 중 0으로 나눌 수 없습니다".to_string())?;
+                    let denom = count.checked_mul(total)?;
+                    let gini = pair_sum.try_div(denom)?;
                     Ok(Value::Fixed64(gini))
                 }
                 "분위수" | "백분위수" => {
@@ -8689,7 +8747,7 @@ impl<'a> EvalContext<'a> {
                     match mode {
                         PercentileMode::Linear => {
                             let max_index = Fixed64::from_i64((values.len() - 1) as i64);
-                            let pos = p.saturating_mul(max_index);
+                            let pos = p.checked_mul(max_index)?;
                             let low = fixed64_floor(pos);
                             let high = fixed64_ceil(pos);
                             let low_idx = fixed64_to_nonnegative_index(low)?;
@@ -8702,13 +8760,13 @@ impl<'a> EvalContext<'a> {
                             if low_idx == high_idx {
                                 return Ok(unit_value_to_value(values[low_idx]));
                             }
-                            let frac = pos.saturating_sub(low);
+                            let frac = pos.checked_sub(low)?;
                             let base = values[low_idx];
                             let next = values[high_idx];
-                            let delta = next.value.saturating_sub(base.value);
-                            let step = delta.saturating_mul(frac);
+                            let delta = next.value.checked_sub(base.value)?;
+                            let step = delta.checked_mul(frac)?;
                             let interpolated = UnitValue {
-                                value: base.value.saturating_add(step),
+                                value: base.value.checked_add(step)?,
                                 dim: base.dim,
                             };
                             Ok(unit_value_to_value(interpolated))
@@ -8726,8 +8784,8 @@ impl<'a> EvalContext<'a> {
                     let value = unit_value_from_value(&args[0])?;
                     let rate = unit_value_from_value(&args[1])?;
                     let dt = unit_value_from_value(&args[2])?;
-                    let delta = rate.mul(dt);
-                    let out = value.add(delta).map_err(unit_error)?;
+                    let delta = checked_unit_mul(rate, dt)?;
+                    let out = checked_unit_add(value, delta)?;
                     Ok(unit_value_to_value(out))
                 }
                 "적분.반암시적오일러" => {
@@ -8740,8 +8798,8 @@ impl<'a> EvalContext<'a> {
                     let velocity = unit_value_from_value(&args[1])?;
                     let acceleration = unit_value_from_value(&args[2])?;
                     let dt = unit_value_from_value(&args[3])?;
-                    let next_velocity = velocity.add(acceleration.mul(dt)).map_err(unit_error)?;
-                    let next_position = position.add(next_velocity.mul(dt)).map_err(unit_error)?;
+                    let next_velocity = checked_unit_add(velocity, checked_unit_mul(acceleration, dt)?)?;
+                    let next_position = checked_unit_add(position, checked_unit_mul(next_velocity, dt)?)?;
                     Ok(Value::List(vec![
                         unit_value_to_value(next_position),
                         unit_value_to_value(next_velocity),
@@ -8760,8 +8818,8 @@ impl<'a> EvalContext<'a> {
                             right: UnitDim::NONE,
                         }));
                     }
-                    let delta = end.sub(start).map_err(unit_error)?;
-                    let out = start.add(delta.mul(t)).map_err(unit_error)?;
+                    let delta = checked_unit_sub(end, start)?;
+                    let out = checked_unit_add(start, checked_unit_mul(delta, t)?)?;
                     Ok(unit_value_to_value(out))
                 }
                 "보간.계단" => {
@@ -8816,7 +8874,7 @@ impl<'a> EvalContext<'a> {
                                 right: value.dim,
                             }));
                         }
-                        total = total.saturating_add(value.value);
+                        total = total.checked_add(value.value)?;
                         next_window.push(unit_value_to_value(value));
                     }
                     next_window.push(unit_value_to_value(next));
@@ -8856,12 +8914,7 @@ impl<'a> EvalContext<'a> {
                             .to_string()
                             .into());
                     }
-                    let one = Fixed64::from_i64(1);
-                    let keep = one.saturating_sub(alpha.value);
-                    let out = prev
-                        .value
-                        .saturating_mul(keep)
-                        .saturating_add(next.value.saturating_mul(alpha.value));
+                    let out = prev.value.checked_weighted_blend(next.value, alpha.value)?;
                     Ok(unit_value_to_value(UnitValue {
                         value: out,
                         dim: prev.dim,
@@ -8874,11 +8927,11 @@ impl<'a> EvalContext<'a> {
                     let two = Fixed64::from_i64(2);
 
                     let x_plus = UnitValue {
-                        value: point.value.saturating_add(step.value),
+                        value: point.value.checked_add(step.value)?,
                         dim: point.dim,
                     };
                     let x_minus = UnitValue {
-                        value: point.value.saturating_sub(step.value),
+                        value: point.value.checked_sub(step.value)?,
                         dim: point.dim,
                     };
                     let y_plus = eval_numeric_formula_at_metered(
@@ -8899,20 +8952,19 @@ impl<'a> EvalContext<'a> {
                             right: y_minus.dim,
                         }));
                     }
-                    let denom = step.value.saturating_mul(two);
+                    let denom = step.value.checked_mul(two)?;
                     let d_h = y_plus
                         .value
-                        .saturating_sub(y_minus.value)
-                        .try_div(denom)
-                        .map_err(|_| "미분.중앙차분 계산 중 0으로 나눌 수 없습니다".to_string())?;
+                        .checked_sub(y_minus.value)?
+                        .try_div(denom)?;
 
-                    let step2 = step.value.saturating_mul(two);
+                    let step2 = step.value.checked_mul(two)?;
                     let x_plus2 = UnitValue {
-                        value: point.value.saturating_add(step2),
+                        value: point.value.checked_add(step2)?,
                         dim: point.dim,
                     };
                     let x_minus2 = UnitValue {
-                        value: point.value.saturating_sub(step2),
+                        value: point.value.checked_sub(step2)?,
                         dim: point.dim,
                     };
                     let y_plus2 = eval_numeric_formula_at_metered(
@@ -8933,21 +8985,16 @@ impl<'a> EvalContext<'a> {
                             right: y_minus2.dim,
                         }));
                     }
-                    let denom2 = step2.saturating_mul(two);
+                    let denom2 = step2.checked_mul(two)?;
                     let d_2h = y_plus2
                         .value
-                        .saturating_sub(y_minus2.value)
-                        .try_div(denom2)
-                        .map_err(|_| "미분.중앙차분 계산 중 0으로 나눌 수 없습니다".to_string())?;
+                        .checked_sub(y_minus2.value)?
+                        .try_div(denom2)?;
                     let three = Fixed64::from_i64(3);
-                    let richardson_delta = d_h.saturating_sub(d_2h);
-                    let richardson_correction = richardson_delta
-                        .try_div(three)
-                        .map_err(|_| "미분.중앙차분 계산 중 0으로 나눌 수 없습니다".to_string())?;
-                    let richardson_value = d_h.saturating_add(richardson_correction);
-                    let richardson_error = fixed64_abs(richardson_delta)
-                        .try_div(three)
-                        .map_err(|_| "미분.중앙차분 계산 중 0으로 나눌 수 없습니다".to_string())?;
+                    let richardson_delta = d_h.checked_sub(d_2h)?;
+                    let richardson_correction = richardson_delta.try_div(three)?;
+                    let richardson_value = d_h.checked_add(richardson_correction)?;
+                    let richardson_error = fixed64_abs(richardson_delta)?.try_div(three)?;
                     let diff_dim = y_plus.dim.sub(step.dim);
                     Ok(Value::List(vec![
                         unit_value_to_value(UnitValue {
@@ -8970,10 +9017,8 @@ impl<'a> EvalContext<'a> {
                     } else {
                         (start, end, 1_i64)
                     };
-                    let interval = upper.value.saturating_sub(lower.value);
-                    let n_est = interval
-                        .try_div(step.value)
-                        .map_err(|_| "적분.사다리꼴 계산 중 0으로 나눌 수 없습니다".to_string())?;
+                    let interval = upper.value.checked_sub(lower.value)?;
+                    let n_est = interval.try_div(step.value)?;
                     let mut n = fixed64_to_nonnegative_index(fixed64_ceil(n_est))?;
                     if n == 0 {
                         n = 1;
@@ -8994,18 +9039,14 @@ impl<'a> EvalContext<'a> {
                         }));
                     }
                     let three = Fixed64::from_i64(3);
-                    let richardson_delta = refined.value.saturating_sub(coarse.value);
-                    let richardson_correction = richardson_delta
-                        .try_div(three)
-                        .map_err(|_| "적분.사다리꼴 계산 중 0으로 나눌 수 없습니다".to_string())?;
-                    let richardson_value = refined.value.saturating_add(richardson_correction);
-                    let richardson_error = fixed64_abs(richardson_delta)
-                        .try_div(three)
-                        .map_err(|_| "적분.사다리꼴 계산 중 0으로 나눌 수 없습니다".to_string())?;
+                    let richardson_delta = refined.value.checked_sub(coarse.value)?;
+                    let richardson_correction = richardson_delta.try_div(three)?;
+                    let richardson_value = refined.value.checked_add(richardson_correction)?;
+                    let richardson_error = fixed64_abs(richardson_delta)?.try_div(three)?;
                     let mut approx = refined;
                     approx.value = richardson_value;
                     if sign < 0 {
-                        approx.value = Fixed64::ZERO.saturating_sub(approx.value);
+                        approx.value = Fixed64::ZERO.checked_sub(approx.value)?;
                     }
                     let err = UnitValue {
                         value: richardson_error,
@@ -9044,7 +9085,7 @@ impl<'a> EvalContext<'a> {
                         return Err("abs는 인자 1개를 받습니다".to_string().into());
                     }
                     let qty = unit_value_from_value(&args[0])?;
-                    let value = fixed64_abs(qty.value);
+                    let value = fixed64_abs(qty.value)?;
                     Ok(unit_value_to_value(UnitValue {
                         value,
                         dim: qty.dim,
@@ -9950,7 +9991,7 @@ impl<'a> EvalContext<'a> {
                 }
                 let l = unit_value_from_value(&left)?;
                 let r = unit_value_from_value(&right)?;
-                let sum = l.add(r).map_err(unit_error)?;
+                let sum = checked_unit_add(l, r)?;
                 Ok(unit_value_to_value(sum))
             }
             "-" => {
@@ -9959,7 +10000,7 @@ impl<'a> EvalContext<'a> {
                 }
                 let l = unit_value_from_value(&left)?;
                 let r = unit_value_from_value(&right)?;
-                let diff = l.sub(r).map_err(unit_error)?;
+                let diff = checked_unit_sub(l, r)?;
                 Ok(unit_value_to_value(diff))
             }
             "*" => {
@@ -9968,7 +10009,7 @@ impl<'a> EvalContext<'a> {
                 }
                 let l = unit_value_from_value(&left)?;
                 let r = unit_value_from_value(&right)?;
-                Ok(unit_value_to_value(l.mul(r)))
+                Ok(unit_value_to_value(checked_unit_mul(l, r)?))
             }
             "/" => {
                 if let Some(exact) = self.eval_exact_numeric_infix_metered(op, &left, &right)? {
@@ -10082,6 +10123,7 @@ impl<'a> EvalContext<'a> {
         let location = match kind {
             ArithmeticFaultKind::DimensionMismatch { .. } => "ddn:unit_mismatch",
             ArithmeticFaultKind::DivByZero => "ddn:div0",
+            ArithmeticFaultKind::Overflow => "ddn:overflow",
         };
         let ctx = FaultContext {
             tick_id: self.tick_id,
@@ -11965,10 +12007,12 @@ fn fixed64_round_even(value: Fixed64) -> Fixed64 {
     Fixed64::from_i64((rounded * sign) as i64)
 }
 
-fn fixed64_abs(value: Fixed64) -> Fixed64 {
+fn fixed64_abs(value: Fixed64) -> Result<Fixed64, ArithmeticFaultKind> {
     let raw = value.raw_i64();
-    let abs = if raw == i64::MIN { i64::MAX } else { raw.abs() };
-    Fixed64::from_raw_i64(abs)
+    if raw == i64::MIN {
+        return Err(ArithmeticFaultKind::Overflow);
+    }
+    Ok(Fixed64::from_raw_i64(raw.abs()))
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -12511,8 +12555,8 @@ fn eval_linear_inequality_solve(
                 }));
             }
         }
-        let slope01 = y1.value.saturating_sub(y0.value);
-        let slope12 = y2.value.saturating_sub(y1.value);
+        let slope01 = y1.value.checked_sub(y0.value)?;
+        let slope12 = y2.value.checked_sub(y1.value)?;
         if slope01 != slope12 {
             return Err(
                 "E_LINEAR_INEQUALITY_NONLINEAR: V1은 1변수 선형 부등식만 지원합니다"
@@ -12520,7 +12564,7 @@ fn eval_linear_inequality_solve(
                     .into(),
             );
         }
-        let rhs = boundary.value.saturating_sub(y0.value);
+        let rhs = boundary.value.checked_sub(y0.value)?;
         apply_linear_inequality_constraint(&mut interval, slope01, rhs, compare.trim())?;
     }
 
@@ -12622,11 +12666,9 @@ fn numeric_trapezoid_integral(
             .to_string()
             .into());
     }
-    let interval = end.value.saturating_sub(start.value);
+    let interval = end.value.checked_sub(start.value)?;
     let seg = Fixed64::from_i64(segments as i64);
-    let h = interval
-        .try_div(seg)
-        .map_err(|_| "적분.사다리꼴 계산 중 0으로 나눌 수 없습니다".to_string())?;
+    let h = interval.try_div(seg)?;
 
     let mut y_dim: Option<UnitDim> = None;
     let mut sum_raw = Fixed64::ZERO;
@@ -12634,7 +12676,7 @@ fn numeric_trapezoid_integral(
     for idx in 0..=segments {
         let idx_raw = Fixed64::from_i64(idx as i64);
         let x = UnitValue {
-            value: start.value.saturating_add(h.saturating_mul(idx_raw)),
+            value: start.value.checked_add(h.checked_mul(idx_raw)?)?,
             dim: start.dim,
         };
         let y = eval_numeric_formula_at_metered(prepared, x, "적분.사다리꼴", work_cost)?;
@@ -12653,12 +12695,9 @@ fn numeric_trapezoid_integral(
         } else {
             two
         };
-        sum_raw = sum_raw.saturating_add(y.value.saturating_mul(weight));
+        sum_raw = sum_raw.checked_add(y.value.checked_mul(weight)?)?;
     }
-    let approx = sum_raw
-        .saturating_mul(h)
-        .try_div(Fixed64::from_i64(2))
-        .map_err(|_| "적분.사다리꼴 계산 중 0으로 나눌 수 없습니다".to_string())?;
+    let approx = sum_raw.checked_mul(h)?.try_div(Fixed64::from_i64(2))?;
     Ok(UnitValue {
         value: approx,
         dim: y_dim.unwrap_or(UnitDim::NONE).add(start.dim),
@@ -12725,11 +12764,7 @@ fn numeric_bisection_root(
     let mut best_residual = f_lower;
     let mut used_iterations = 0_usize;
     for idx in 1..=iterations {
-        let mid_value = lower
-            .value
-            .saturating_add(upper.value)
-            .try_div(two)
-            .map_err(|_| "수치해.이분법 계산 중 0으로 나눌 수 없습니다".to_string())?;
+        let mid_value = lower.value.checked_add(upper.value)?.try_div(two)?;
         let mid = UnitValue {
             value: mid_value,
             dim: lower.dim,
@@ -12743,7 +12778,7 @@ fn numeric_bisection_root(
         }
         best_root = mid;
         best_residual = UnitValue {
-            value: fixed64_abs(f_mid.value),
+            value: fixed64_abs(f_mid.value)?,
             dim: f_mid.dim,
         };
         used_iterations = idx;
@@ -12803,10 +12838,16 @@ fn unit_powi(base: UnitValue, exp: i64) -> Result<UnitValue, EvalError> {
             dim: UnitDim::NONE,
         });
     }
+    if exp == i64::MIN {
+        return Err(ArithmeticFaultKind::Overflow.into());
+    }
     let mut result = base;
-    let abs_exp = exp.abs() as i64;
+    let abs_exp = exp.unsigned_abs();
     for _ in 1..abs_exp {
-        result = result.mul(base);
+        result = UnitValue {
+            value: result.value.checked_mul(base.value)?,
+            dim: result.dim.add(base.dim),
+        };
     }
     if exp < 0 {
         let one = UnitValue {
@@ -18912,7 +18953,7 @@ fn eval_formula_expr(
             let value = eval_formula_expr(expr, env)?;
             match op {
                 FormulaOp::Sub => Ok(UnitValue {
-                    value: -value.value,
+                    value: Fixed64::ZERO.checked_sub(value.value)?,
                     dim: value.dim,
                 }),
                 _ => Ok(value),
@@ -18922,9 +18963,9 @@ fn eval_formula_expr(
             let l = eval_formula_expr(left, env)?;
             let r = eval_formula_expr(right, env)?;
             match op {
-                FormulaOp::Add => l.add(r).map_err(unit_error),
-                FormulaOp::Sub => l.sub(r).map_err(unit_error),
-                FormulaOp::Mul => Ok(l.mul(r)),
+                FormulaOp::Add => checked_unit_add(l, r),
+                FormulaOp::Sub => checked_unit_sub(l, r),
+                FormulaOp::Mul => checked_unit_mul(l, r),
                 FormulaOp::Div => l.div(r).map_err(unit_error),
                 FormulaOp::Mod => {
                     if l.dim != r.dim {
@@ -19059,7 +19100,7 @@ fn eval_formula_func(name: &str, args: Vec<UnitValue>) -> Result<UnitValue, Eval
             let args = expect_args(1)?;
             let arg = args[0];
             return Ok(UnitValue {
-                value: fixed64_abs(arg.value),
+                value: fixed64_abs(arg.value)?,
                 dim: arg.dim,
             });
         }
@@ -19312,7 +19353,10 @@ fn eval_formula_pow(base: UnitValue, exponent: UnitValue) -> Result<UnitValue, E
     }
     let mut result = base;
     for _ in 1..exp {
-        result = result.mul(base);
+        result = UnitValue {
+            value: result.value.checked_mul(base.value)?,
+            dim: result.dim.add(base.dim),
+        };
     }
     Ok(result)
 }
@@ -21377,6 +21421,26 @@ mod tests {
     }
 
     #[test]
+    fn gini_overflow_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    값목록 <- (1073741824, 1) 차림.
+    결과 <- (값목록) 지니.
+}
+"#;
+        let program = DdnProgram::from_source(script, "gini_overflow.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+        {
+            Ok(_) => panic!("gini overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
     fn quantile_rejects_unknown_mode() {
         let script = r#"
 매틱:움직씨 = {
@@ -21395,6 +21459,26 @@ mod tests {
             err.contains("분위수 mode는 선형보간 또는 최근순위여야 합니다"),
             "unexpected error: {err}"
         );
+    }
+
+    #[test]
+    fn linear_quantile_extreme_interpolation_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    값목록 <- (-2147483647, 2147483647.99999999976716935634613037109375) 차림.
+    결과 <- (값목록, 0.5, "선형보간") 분위수.
+}
+"#;
+        let program = DdnProgram::from_source(script, "quantile_extreme.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+        {
+            Ok(_) => panic!("unrepresentable interpolation must reject"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
     }
 
     #[test]
@@ -21502,6 +21586,206 @@ mod tests {
     }
 
     #[test]
+    fn exponential_smoothing_preserves_fixed64_max_endpoint() {
+        let script = r#"
+매틱:움직씨 = {
+    y <- (2147483647.99999999976716935634613037109375, 2147483647.99999999976716935634613037109375, 0.5) 필터.지수평활.
+}
+"#;
+        let program = DdnProgram::from_source(script, "exponential_smoothing_max.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("y".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+        let output = runner
+            .run_update(&NuriWorld::new(), &empty_input(), &defaults)
+            .expect("representable endpoint must run");
+
+        assert_eq!(extract_fixed(&output.resources, "y"), Fixed64::MAX);
+    }
+
+    #[test]
+    fn exponential_smoothing_rounds_the_combined_weighted_value_once() {
+        let script = r#"
+매틱:움직씨 = {
+    y <- (-0.000000004656612873077392578125, -0.00000000442378222942352294921875, 0.12500000023283064365386962890625) 필터.지수평활.
+}
+"#;
+        let program = DdnProgram::from_source(script, "exponential_smoothing_tie.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("y".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+        let output = runner
+            .run_update(&NuriWorld::new(), &empty_input(), &defaults)
+            .expect("exact weighted blend must run");
+
+        assert_eq!(
+            extract_fixed(&output.resources, "y"),
+            Fixed64::from_raw_i64(-20),
+            "component-wise rounded products would produce -19 instead"
+        );
+    }
+
+    #[test]
+    fn moving_average_overflow_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    창 <- (1073741824) 차림.
+    결과 <- (창, 1073741824) 필터.이동평균.
+}
+"#;
+        let program = DdnProgram::from_source(script, "moving_average_overflow.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("결과".to_string(), RuntimeValue::List(Vec::new()));
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+        {
+            Ok(_) => panic!("moving-average overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn fixed64_min_abs_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    결과 <- (값) abs.
+}
+"#;
+        let program = DdnProgram::from_source(script, "fixed64_min_abs.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::MIN));
+        defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+        {
+            Ok(_) => panic!("Fixed64 minimum abs must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn fixed64_powi_overflow_is_typed_and_does_not_saturate() {
+        let error = unit_powi(
+            UnitValue {
+                value: Fixed64::MAX,
+                dim: UnitDim::NONE,
+            },
+            2,
+        )
+        .expect_err("Fixed64 powi overflow must reject");
+        assert!(matches!(error, EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow)));
+    }
+
+    #[test]
+    fn fixed64_powi_runtime_overflow_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    결과 <- (값, 2) powi.
+}
+"#;
+        let program = DdnProgram::from_source(script, "fixed64_powi_overflow.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::MAX));
+        defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+        {
+            Ok(_) => panic!("Fixed64 powi overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn fixed64_infix_multiply_overflow_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    결과 <- 값 * 값.
+}
+"#;
+        let program = DdnProgram::from_source(script, "fixed64_infix_mul_overflow.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::MAX));
+        defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+        {
+            Ok(_) => panic!("Fixed64 infix multiply overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn fixed64_infix_add_sub_overflow_publish_nothing() {
+        for (operator, lhs, rhs) in [
+            ("+", Fixed64::MAX, Fixed64::ONE),
+            ("-", Fixed64::MIN, Fixed64::ONE),
+        ] {
+            let script = format!(
+                "매틱:움직씨 = {{\n    결과 <- 값 {operator} 다른값.\n}}\n"
+            );
+            let program = DdnProgram::from_source(&script, "fixed64_infix_add_sub_overflow.ddn")
+                .expect("parse");
+            let mut runner = DdnRunner::new(program, "매틱");
+            let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+            defaults.insert("값".to_string(), RuntimeValue::Fixed64(lhs));
+            defaults.insert("다른값".to_string(), RuntimeValue::Fixed64(rhs));
+            defaults.insert("결과".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+
+            let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &defaults)
+            {
+                Ok(_) => panic!("Fixed64 infix {operator} overflow must reject before publication"),
+                Err(error) => error,
+            };
+            assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+        }
+    }
+
+    #[test]
+    fn fixed64_formula_pow_overflow_is_typed_and_does_not_saturate() {
+        let error = eval_formula_pow(
+            UnitValue {
+                value: Fixed64::MAX,
+                dim: UnitDim::NONE,
+            },
+            UnitValue {
+                value: Fixed64::from_i64(2),
+                dim: UnitDim::NONE,
+            },
+        )
+        .expect_err("Fixed64 formula power overflow must reject");
+        assert!(matches!(error, EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow)));
+    }
+
+    #[test]
+    fn fixed64_formula_unary_neg_min_is_typed_overflow() {
+        let expr = FormulaExpr::Unary {
+            op: FormulaOp::Sub,
+            expr: Box::new(FormulaExpr::Number(UnitValue {
+                value: Fixed64::MIN,
+                dim: UnitDim::NONE,
+            })),
+        };
+        let error = eval_formula_expr(&expr, &BTreeMap::new())
+            .expect_err("Fixed64 formula unary negation of minimum must reject");
+        assert!(matches!(
+            error,
+            EvalError::ArithmeticFault(ArithmeticFaultKind::Overflow)
+        ));
+    }
+
+    #[test]
     fn numeric_calculus_v1_builtins_return_value_error_method() {
         let script = r#"
 매틱:움직씨 = {
@@ -21580,6 +21864,97 @@ mod tests {
     }
 
     #[test]
+    fn numeric_central_difference_overflow_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    d <- (((#ascii) 수식{x}), "x", 2147483647.99999999976716935634613037109375, 1) 미분.중앙차분.
+}
+"#;
+        let program = DdnProgram::from_source(script, "numeric_central_difference_overflow.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &HashMap::new()) {
+            Ok(_) => panic!("central-difference overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn numeric_central_difference_checked_path_preserves_the_supported_result() {
+        let script = r#"
+매틱:움직씨 = {
+    d <- (((#ascii) 수식{x^3}), "x", 1, 0.5) 미분.중앙차분.
+    값 <- (d, 0) 차림.값.
+    오차 <- (d, 1) 차림.값.
+}
+"#;
+        let program = DdnProgram::from_source(script, "numeric_central_difference_checked.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+        defaults.insert("오차".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+        let output = runner
+            .run_update(&NuriWorld::new(), &empty_input(), &defaults)
+            .expect("checked central difference must preserve the supported result");
+        assert_eq!(extract_fixed(&output.resources, "값"), Fixed64::from_i64(3));
+        assert_eq!(
+            extract_fixed(&output.resources, "오차"),
+            Fixed64::from_f64_lossy(0.25)
+        );
+    }
+
+    #[test]
+    fn numeric_trapezoid_integral_overflow_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    i <- (((#ascii) 수식{x - x}), "x", -2147483647, 2147483647, 2147483647) 적분.사다리꼴.
+}
+"#;
+        let program = DdnProgram::from_source(script, "numeric_trapezoid_integral_overflow.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &HashMap::new()) {
+            Ok(_) => panic!("trapezoid interval overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(
+            error.diagnostic_parts().0,
+            "E_RUNTIME_ARITH_OVERFLOW",
+            "unexpected diagnostic: {error:?}"
+        );
+    }
+
+    #[test]
+    fn numeric_trapezoid_integral_checked_path_preserves_the_supported_result() {
+        let script = r#"
+매틱:움직씨 = {
+    i <- (((#ascii) 수식{x^2}), "x", 0, 1, 0.5) 적분.사다리꼴.
+    값 <- (i, 0) 차림.값.
+    오차 <- (i, 1) 차림.값.
+}
+"#;
+        let program = DdnProgram::from_source(script, "numeric_trapezoid_integral_checked.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("값".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+        defaults.insert("오차".to_string(), RuntimeValue::Fixed64(Fixed64::ZERO));
+        let output = runner
+            .run_update(&NuriWorld::new(), &empty_input(), &defaults)
+            .expect("checked trapezoid path must preserve the supported result");
+        assert_eq!(
+            extract_fixed(&output.resources, "값"),
+            Fixed64::from_raw_i64(1_431_655_765)
+        );
+        assert_eq!(
+            extract_fixed(&output.resources, "오차"),
+            Fixed64::from_raw_i64(44_739_243)
+        );
+    }
+
+    #[test]
     fn numeric_root_finding_v1_bisection_returns_root_residual_iteration_method() {
         let script = r#"
 매틱:움직씨 = {
@@ -21639,6 +22014,59 @@ mod tests {
         assert_eq!(runner.work_cost_receipt().counters.solver_evaluations, 2);
         assert_eq!(runner.work_cost_receipt().counters.call_depth_current, 0);
         assert_eq!(runner.work_cost_receipt().counters.call_depth_peak, 2);
+    }
+
+    #[test]
+    fn numeric_bisection_midpoint_overflow_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    r <- (((#ascii) 수식{x - 2000000000}), "x", 1500000000, 2147483647, 1) 수치해.이분법.
+}
+"#;
+        let program = DdnProgram::from_source(script, "numeric_bisection_midpoint_overflow.ddn")
+            .expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &HashMap::new()) {
+            Ok(_) => panic!("bisection midpoint overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn range_step_overflow_is_typed_and_publishes_nothing() {
+        let script = r#"
+매틱:움직씨 = {
+    r <- (2147483646, 2147483647, 2) 범위.
+}
+"#;
+        let program = DdnProgram::from_source(script, "range_step_overflow.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let error = match runner.run_update_diagnostic(&NuriWorld::new(), &empty_input(), &HashMap::new()) {
+            Ok(_) => panic!("range step overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn range_endpoint_at_fixed64_max_stops_without_saturation_loop() {
+        let script = r#"
+매틱:움직씨 = {
+    r <- (2147483647, 2147483647, 1) 범위.
+}
+"#;
+        let program = DdnProgram::from_source(script, "range_endpoint_max.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("r".to_string(), RuntimeValue::List(Vec::new()));
+        let output = runner
+            .run_update(&NuriWorld::new(), &empty_input(), &defaults)
+            .expect("endpoint range must complete");
+        assert_eq!(
+            output.resources.get("r"),
+            Some(&RuntimeValue::List(vec![RuntimeValue::Fixed64(Fixed64::from_i64(2_147_483_647))]))
+        );
     }
 
     #[test]
@@ -21756,6 +22184,22 @@ mod tests {
             Some(RuntimeValue::String(value)) => assert_eq!(value, "공집합"),
             other => panic!("상태 must be string, got {:?}", other),
         }
+    }
+
+    #[test]
+    fn linear_inequality_rhs_overflow_is_typed_and_publishes_nothing() {
+        let conditions = Value::List(vec![linear_inequality_test_condition(
+            "x - 2147483647",
+            "이하",
+            2_147_483_647,
+        )]);
+        let work_cost = Rc::new(RefCell::new(WorkCostMeter::default()));
+        let error = eval_linear_inequality_solve(
+            &[conditions, Value::String("x".to_string())],
+            &work_cost,
+        )
+        .expect_err("unrepresentable RHS must reject before solution publication");
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
     }
 
     #[test]
@@ -22911,6 +23355,97 @@ mod tests {
             extract_fixed(&output.resources, "다음위치"),
             Fixed64::from_i64(16)
         );
+    }
+
+    #[test]
+    fn physics_position_update_overflow_is_typed_and_publishes_nothing() {
+        let script = r##"
+매틱:움직씨 = {
+    다음위치 <- (2147483647.99999999976716935634613037109375, 1, 1) 물리1d.위치갱신.
+}
+"##;
+        let program = DdnProgram::from_source(script, "physics_overflow.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let world = NuriWorld::new();
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert(
+            "다음위치".to_string(),
+            RuntimeValue::Fixed64(Fixed64::ZERO),
+        );
+
+        let error = match runner.run_update_diagnostic(&world, &empty_input(), &defaults) {
+            Ok(_) => panic!("overflow must reject before publication"),
+            Err(error) => error,
+        };
+        let (code, _message, _span) = error.diagnostic_parts();
+        assert_eq!(code, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn physics_velocity_update_overflow_is_typed_and_publishes_nothing() {
+        let script = r##"
+매틱:움직씨 = {
+    다음속도 <- (2147483647.99999999976716935634613037109375, 1, 1) 물리1d.속도갱신.
+}
+"##;
+        let program = DdnProgram::from_source(script, "physics_velocity_overflow.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let world = NuriWorld::new();
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert(
+            "다음속도".to_string(),
+            RuntimeValue::Fixed64(Fixed64::ZERO),
+        );
+
+        let error = match runner.run_update_diagnostic(&world, &empty_input(), &defaults) {
+            Ok(_) => panic!("overflow must reject before publication"),
+            Err(error) => error,
+        };
+        let (code, _message, _span) = error.diagnostic_parts();
+        assert_eq!(code, "E_RUNTIME_ARITH_OVERFLOW");
+    }
+
+    #[test]
+    fn physics_elastic_collision_uses_checked_fixed64_and_rejects_overflow() {
+        let normal_script = r##"
+매틱:움직씨 = {
+    충돌 <- (1, 2, 1, 0) 물리1d.탄성충돌1d.
+}
+"##;
+        let normal_program =
+            DdnProgram::from_source(normal_script, "physics_collision.ddn").expect("parse");
+        let mut normal_runner = DdnRunner::new(normal_program, "매틱");
+        let mut defaults: HashMap<String, RuntimeValue> = HashMap::new();
+        defaults.insert("충돌".to_string(), RuntimeValue::List(Vec::new()));
+        let output = normal_runner
+            .run_update(&NuriWorld::new(), &empty_input(), &defaults)
+            .expect("normal collision");
+        let collision = match output.resources.get("충돌") {
+            Some(RuntimeValue::List(items)) => items,
+            other => panic!("collision must be a pair, got {other:?}"),
+        };
+        assert_eq!(collision.len(), 2);
+        assert_eq!(collision[0], RuntimeValue::Fixed64(Fixed64::ZERO));
+        assert_eq!(collision[1], RuntimeValue::Fixed64(Fixed64::from_i64(2)));
+
+        let overflow_script = r##"
+매틱:움직씨 = {
+    충돌 <- (1073741824, 1, 0, 0) 물리1d.탄성충돌1d.
+}
+"##;
+        let overflow_program =
+            DdnProgram::from_source(overflow_script, "physics_collision_overflow.ddn")
+                .expect("parse");
+        let mut overflow_runner = DdnRunner::new(overflow_program, "매틱");
+        let error = match overflow_runner.run_update_diagnostic(
+            &NuriWorld::new(),
+            &empty_input(),
+            &defaults,
+        ) {
+            Ok(_) => panic!("overflow must reject before publication"),
+            Err(error) => error,
+        };
+        assert_eq!(error.diagnostic_parts().0, "E_RUNTIME_ARITH_OVERFLOW");
     }
 
     #[test]

@@ -27,13 +27,13 @@ use crate::deterministic_debug::{
     build_public_observation_trace, deterministic_debug_operation, public_observation_events_json,
     DebugEvaluator,
 };
-use crate::fixed64_boundary::Fixed64FloatBoundary;
 use crate::host_resource;
 use crate::local_project;
 use crate::module_directive_analysis;
 use crate::project_authoring;
 use crate::runtime_surface;
 use crate::source_analysis;
+pub(crate) use crate::unit_wire::json_to_fixed64;
 use crate::unit_wire::{RESOURCE_SNAPSHOT_SCHEMA_V2, UNIT_VALUE_WIRE_SCHEMA_V2};
 
 const DEFAULT_UPDATE_NAME: &str = "매마디";
@@ -1367,21 +1367,44 @@ impl DdnWasmVm {
         self.view_prefixes.clear();
     }
 
-    pub fn set_input(
+    pub fn set_input_fixed64_v1(
         &mut self,
         keys_pressed: u32,
         last_key_name: &str,
         pointer_x_i32: i32,
         pointer_y_i32: i32,
-        dt: f64,
-    ) {
-        self.input_keys_pressed = u64::from(keys_pressed);
-        self.input_last_key_name = last_key_name.to_string();
-        self.input_pointer_x_i32 = pointer_x_i32;
-        self.input_pointer_y_i32 = pointer_y_i32;
-        if dt.is_finite() {
-            self.input_dt = fixed64_from_f64_checked(dt);
-        }
+        dt_high_i32: i32,
+        dt_low_u32: u32,
+    ) -> Result<JsValue, JsValue> {
+        let dt = self.set_input_fixed64_parts(
+            keys_pressed,
+            last_key_name,
+            pointer_x_i32,
+            pointer_y_i32,
+            dt_high_i32,
+            dt_low_u32,
+        );
+        Ok(JsValue::from_str(&json!({
+            "ok": true,
+            "diag": [],
+            "input_dt": fixed64_q31_32_parts(dt),
+        }).to_string()))
+    }
+
+    /// Canonical textual admission for a Workbench frame duration.  JavaScript
+    /// carries only this decimal text and the returned Q31.32 pair; the
+    /// numeric conversion itself remains owned by Fixed64.
+    pub fn fixed64_from_decimal_v1(&self, decimal: &str) -> Result<JsValue, JsValue> {
+        let value = Fixed64::parse_decimal_exact(decimal).ok_or_else(|| {
+            wasm_error(
+                "E_FIXED64_UNREPRESENTABLE_CONVERSION",
+                "Fixed64 decimal input is not exactly representable",
+                "provide an exact Q31.32-compatible decimal value",
+            )
+        })?;
+        Ok(JsValue::from_str(
+            &json!({"ok": true, "diag": [], "value": fixed64_q31_32_parts(value)}).to_string(),
+        ))
     }
 
     pub fn set_keys_pressed(&mut self, keys_pressed: u32) {
@@ -1397,10 +1420,41 @@ impl DdnWasmVm {
         self.input_pointer_y_i32 = pointer_y_i32;
     }
 
-    pub fn set_dt_f64(&mut self, dt: f64) {
-        if dt.is_finite() {
-            self.input_dt = fixed64_from_f64_checked(dt);
-        }
+    pub fn set_dt_fixed64_v1(
+        &mut self,
+        dt_high_i32: i32,
+        dt_low_u32: u32,
+    ) -> Result<JsValue, JsValue> {
+        let dt = self.set_dt_fixed64_parts(dt_high_i32, dt_low_u32);
+        Ok(JsValue::from_str(&json!({
+            "ok": true,
+            "diag": [],
+            "input_dt": fixed64_q31_32_parts(dt),
+        }).to_string()))
+    }
+
+    fn set_input_fixed64_parts(
+        &mut self,
+        keys_pressed: u32,
+        last_key_name: &str,
+        pointer_x_i32: i32,
+        pointer_y_i32: i32,
+        dt_high_i32: i32,
+        dt_low_u32: u32,
+    ) -> Fixed64 {
+        let dt = fixed64_from_q31_32_parts(dt_high_i32, dt_low_u32);
+        self.input_keys_pressed = u64::from(keys_pressed);
+        self.input_last_key_name = last_key_name.to_string();
+        self.input_pointer_x_i32 = pointer_x_i32;
+        self.input_pointer_y_i32 = pointer_y_i32;
+        self.input_dt = dt;
+        dt
+    }
+
+    fn set_dt_fixed64_parts(&mut self, dt_high_i32: i32, dt_low_u32: u32) -> Fixed64 {
+        let dt = fixed64_from_q31_32_parts(dt_high_i32, dt_low_u32);
+        self.input_dt = dt;
+        dt
     }
 
     pub fn columns(&self) -> JsValue {
@@ -1438,8 +1492,8 @@ impl DdnWasmVm {
         let parsed = js_scalar_to_runtime_value(&value).ok_or_else(|| {
             wasm_error(
                 "PARAM_VALUE_INVALID",
-                "set_param: value는 수/참거짓/글 스칼라만 허용됩니다",
-                "수/참거짓/글 스칼라만 전달해 주세요.",
+                "set_param: Fixed64 수는 raw setter만 허용하며 참거짓/글만 직접 허용됩니다",
+                "Fixed64는 set_param_fixed64_str 또는 versioned raw carrier를 사용해 주세요.",
             )
         })?;
         apply_param_value(self.world.world_mut(), key, &parsed).map_err(|err| {
@@ -1584,21 +1638,23 @@ impl DdnWasmVm {
         Ok(JsValue::from_str(&payload.to_string()))
     }
 
-    pub fn step_one_with_input(
+    pub fn step_one_with_input_fixed64_v1(
         &mut self,
         keys_pressed: u32,
         last_key_name: &str,
         pointer_x_i32: i32,
         pointer_y_i32: i32,
-        dt: f64,
+        dt_high_i32: i32,
+        dt_low_u32: u32,
     ) -> Result<JsValue, JsValue> {
-        self.set_input(
+        self.set_input_fixed64_v1(
             keys_pressed,
             last_key_name,
             pointer_x_i32,
             pointer_y_i32,
-            dt,
-        );
+            dt_high_i32,
+            dt_low_u32,
+        )?;
         self.step_one()
     }
 
@@ -2065,18 +2121,17 @@ fn wasm_error(code: &str, detail: &str, hint: &str) -> JsValue {
     JsValue::from_str(&payload.to_string())
 }
 
-fn fixed64_from_f64_checked(value: f64) -> Fixed64 {
-    let result = Fixed64::from_f64_lossy(value);
-    #[cfg(all(target_arch = "wasm32", feature = "wasm"))]
-    {
-        let roundtrip = result.raw_i64() as f64 / Fixed64::ONE_RAW as f64;
-        if (value - roundtrip).abs() > 1e-10 {
-            web_sys::console::warn_1(
-                &format!("Fixed64 정밀도 손실: {value} -> {roundtrip}").into(),
-            );
-        }
-    }
-    result
+fn fixed64_from_q31_32_parts(high_i32: i32, low_u32: u32) -> Fixed64 {
+    let raw = (i64::from(high_i32) << 32) | i64::from(low_u32);
+    Fixed64::from_raw_i64(raw)
+}
+
+fn fixed64_q31_32_parts(value: Fixed64) -> JsonValue {
+    let raw = value.raw_i64();
+    json!({
+        "high_i32": (raw >> 32) as i32,
+        "low_u32": raw as u32,
+    })
 }
 
 fn build_view_meta(world: &ddonirang_core::platform::NuriWorld) -> JsonValue {
@@ -2585,6 +2640,42 @@ mod tests {
         assert_eq!(vm.get_configured_madi(), 0);
         assert_eq!(vm.source_bytes_sha256, runtime_surface::sha256_hex(source.as_bytes()));
     }
+
+    #[test]
+    fn wasm_fixed64_input_v1_reconstructs_q31_32_without_f64_conversion() {
+        let mut vm = DdnWasmVm::new("1 보여주기.").expect("inert bootstrap VM");
+
+        vm.set_input_fixed64_parts(7, "k", -3, 9, i32::MIN, 0);
+        assert_eq!(vm.input_dt, Fixed64::MIN);
+        assert_eq!(vm.input_keys_pressed, 7);
+        assert_eq!(vm.input_last_key_name, "k");
+        assert_eq!(vm.input_pointer_x_i32, -3);
+        assert_eq!(vm.input_pointer_y_i32, 9);
+
+        vm.set_dt_fixed64_parts(0, 1);
+        assert_eq!(vm.input_dt, Fixed64::from_raw_i64(1));
+        assert_eq!(
+            fixed64_q31_32_parts(Fixed64::MIN),
+            json!({"high_i32": i32::MIN, "low_u32": 0})
+        );
+        for value in [
+            Fixed64::MIN,
+            Fixed64::MAX,
+            Fixed64::from_raw_i64(-1),
+            Fixed64::from_raw_i64(1),
+            Fixed64::from_raw_i64(0x0000_0000_FFFF_FFFF),
+        ] {
+            let parts = fixed64_q31_32_parts(value);
+            let high = parts["high_i32"].as_i64().expect("high") as i32;
+            let low = parts["low_u32"].as_u64().expect("low") as u32;
+            assert_eq!(fixed64_from_q31_32_parts(high, low), value);
+        }
+        assert_eq!(
+            Fixed64::parse_decimal_exact("0.5"),
+            Some(fixed64_from_q31_32_parts(0, 0x8000_0000))
+        );
+    }
+
 
     fn sealed_external_test_request() -> (ProcessLocalCapabilityStore, ExternalBoundaryRequest) {
         let binding = CapabilityBinding::new("owner-a", "world-a", 7, 3);
@@ -3906,6 +3997,25 @@ a.기준점 <- b.꼭짓점.
     }
 
     #[test]
+    fn wasm_snapshot_number_admission_matches_checked_textual_fixed64_boundary() {
+        let three_halves_ulp: JsonValue =
+            serde_json::from_str("0.000000000349245965480804443359375")
+                .expect("three halves ULP JSON number");
+        let overflow: JsonValue = serde_json::from_str("2147483648")
+            .expect("out-of-range JSON number");
+
+        assert_eq!(
+            json_to_fixed64(&three_halves_ulp),
+            None
+        );
+        assert_eq!(json_to_fixed64(&overflow), None);
+        assert_eq!(
+            json_to_fixed64(&json!("0.000000000349245965480804443359375")),
+            Some(Fixed64::from_raw_i64(2))
+        );
+    }
+
+    #[test]
     fn unit_value_wire_v2_rejects_v1_shape_unknown_version_and_axis_mismatch() {
         let legacy = json!({
             "type": "unit",
@@ -3981,7 +4091,7 @@ a.기준점 <- b.꼭짓점.
                 },
                 "snapshot_v2": build_wasm_state_snapshot_v2(
                     resources,
-                    json!({"속도": 2}),
+                    json!({"속도": {"raw_i64": "2"}}),
                     Vec::new(),
                     7,
                 ),
@@ -4090,13 +4200,35 @@ a.기준점 <- b.꼭짓점.
             before_hash
         );
     }
+
+    #[test]
+    fn snapshot_param_overrides_use_the_shared_fixed64_raw_carrier() {
+        let exact = Fixed64::from_raw_i64(2);
+        let params = BTreeMap::from([
+            ("고정".to_string(), Value::Fixed64(exact)),
+            ("글".to_string(), Value::String("2".to_string())),
+        ]);
+
+        let serialized = serialize_param_overrides(&params);
+        assert_eq!(serialized["고정"], json!({"raw_i64": "2"}));
+        assert_eq!(serialized["글"], json!("2"));
+        assert_eq!(parse_param_overrides(&serialized).expect("raw carrier restore"), params);
+
+        let binary_number = parse_param_overrides(&json!({"고정": 2}));
+        assert!(
+            binary_number
+                .err()
+                .expect("binary JSON number must fail closed")
+                .contains("E_WASM_STATE_PARAMS_INVALID")
+        );
+    }
 }
 
 fn serialize_param_overrides(params: &BTreeMap<String, Value>) -> JsonValue {
     let mut out = Map::new();
     for (key, value) in params {
         let raw = match value {
-            Value::Fixed64(v) => json!(fixed64_to_f64(*v)),
+            Value::Fixed64(v) => json!({ "raw_i64": v.raw_i64().to_string() }),
             Value::Bool(v) => JsonValue::Bool(*v),
             Value::String(v) => JsonValue::String(v.clone()),
             _ => continue,
@@ -4115,15 +4247,14 @@ fn parse_param_overrides(payload: &JsonValue) -> Result<BTreeMap<String, Value>,
         let parsed = match value {
             JsonValue::Bool(v) => Value::Bool(*v),
             JsonValue::String(v) => Value::String(v.clone()),
-            JsonValue::Number(_) => {
-                let n = value
-                    .as_f64()
-                    .ok_or_else(|| format!("param_overrides[{key}] 숫자 파싱 실패"))?;
-                if !n.is_finite() {
-                    return Err(format!("param_overrides[{key}] 유한 숫자가 아닙니다"));
-                }
-                Value::Fixed64(fixed64_from_f64_checked(n))
-            }
+            JsonValue::Object(_) => json_to_fixed64(value)
+                .map(Value::Fixed64)
+                .ok_or_else(|| format!(
+                    "E_WASM_STATE_PARAMS_INVALID: param_overrides[{key}] Fixed64 raw_i64 형식 오류"
+                ))?,
+            JsonValue::Number(_) => return Err(format!(
+                "E_WASM_STATE_PARAMS_INVALID: param_overrides[{key}] binary JSON number는 Fixed64 authority가 아닙니다"
+            )),
             _ => {
                 return Err(format!(
                     "E_WASM_STATE_PARAMS_INVALID: param_overrides[{key}] 지원하지 않는 값"
@@ -4271,19 +4402,6 @@ fn restore_world_resources(
     }
 
     Ok(())
-}
-
-fn json_to_fixed64(value: &JsonValue) -> Option<Fixed64> {
-    match value {
-        JsonValue::Number(n) => n.as_f64().map(fixed64_from_f64_checked),
-        JsonValue::String(s) => Fixed64::parse_decimal(s),
-        JsonValue::Object(obj) => obj
-            .get("raw_i64")
-            .and_then(JsonValue::as_str)
-            .and_then(|raw| raw.parse::<i64>().ok())
-            .map(Fixed64::from_raw_i64),
-        _ => None,
-    }
 }
 
 fn parse_handle_string(text: &str) -> Result<u64, String> {
@@ -4586,10 +4704,7 @@ fn resource_value_to_scalar(value: &ResourceValue) -> Option<(String, JsonValue)
 }
 
 fn js_scalar_to_runtime_value(value: &JsValue) -> Option<Value> {
-    if let Some(v) = value.as_f64() {
-        if v.is_finite() {
-            return Some(Value::Fixed64(fixed64_from_f64_checked(v)));
-        }
+    if value.as_f64().is_some() {
         return None;
     }
     if let Some(v) = value.as_bool() {

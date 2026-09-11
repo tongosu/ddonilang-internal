@@ -70,8 +70,8 @@
   },
   "js_binding_hash_mode": "crlf_to_lf_then_sha256",
   "js_binding_path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js",
-  "js_binding_sha256": "d158517f1404986ee8e0add7e968ba5925c59f2f2dc3456080ed3e6313863ce9",
-  "js_binding_size": 98258,
+  "js_binding_sha256": "b39ab279158658f60630be1bf31ec85028f548b0428fed0f35a1a6afab0a11f0",
+  "js_binding_size": 100592,
   "js_wasm_reference": "ddonirang_tool_bg.wasm",
   "metadata_text_hash_mode": "crlf_to_lf_then_sha256",
   "profile": "release",
@@ -105,9 +105,9 @@
       "sha256": "87785d9bf1fdad298f9769b109b3a0d00dc3f934d8aaed38620a37e4c8e85996"
     },
     {
-      "bytes": 43791,
+      "bytes": 43932,
       "path": "core/src/atomic_commit.rs",
-      "sha256": "ef123a291f1940418c759cd7f5fd527521332f5508b5570393aba9eb41312034"
+      "sha256": "cfea4f0e89b9d5f79240a2e8aaec236daecd9a60dc670071b8df6c3ae3b7d01f"
     },
     {
       "bytes": 5426,
@@ -115,9 +115,9 @@
       "sha256": "4ac4ed8f332fdbcc19f662da67de943bc7637b6dd64ca72efba4a30cd4c292b1"
     },
     {
-      "bytes": 25268,
+      "bytes": 25358,
       "path": "core/src/commit_canon.rs",
-      "sha256": "1b951b84cc3fefcc8ffd344bb4a5bacfacb0689a4c337f2bf39c8cf5e47cabd7"
+      "sha256": "390087962acef74e3d65ffd822b337c37b77560abc30b3fa844fc8c95e2ea17f"
     },
     {
       "bytes": 1985,
@@ -130,9 +130,9 @@
       "sha256": "3351cc49aeecd99623a84d2ee79175998dcebf01b975b9a60a67b4d5f523aaf0"
     },
     {
-      "bytes": 16867,
+      "bytes": 22151,
       "path": "core/src/fixed64.rs",
-      "sha256": "58e8437bb5081dc05547b1afc12884706d521b1f07aed1d0b2888711a6026fb4"
+      "sha256": "71413e78ebd045767a3dacb0f5d1bd3e2baa79b4f6bc4a22db6566cdc55c9f6d"
     },
     {
       "bytes": 30788,
@@ -250,9 +250,9 @@
       "sha256": "4da4da4f35ddb0001d6cfb16b229f7086db8284fef64b38f6d0a86662ceea595"
     },
     {
-      "bytes": 2462,
+      "bytes": 2476,
       "path": "core/src/signals.rs",
-      "sha256": "2de613db3d9c1449c17df2f669c3c994a545d6419668f246811cc350a3b15655"
+      "sha256": "65669120b6cad3e8fd96c5c219fea61c5032c2337cf5131ad77f6fb6f60c6de4"
     },
     {
       "bytes": 1737,
@@ -420,9 +420,9 @@
       "sha256": "7fc55a8d5f33bbf5919fa5b312260ecf8ceed5242e4c68ba7c0312ef4d0dd956"
     },
     {
-      "bytes": 27018,
+      "bytes": 27238,
       "path": "lang/src/runtime.rs",
-      "sha256": "4bcfc1a33f6248099f3cf241182f8aeb10f012e58f21fa9bf74b95d7509c3ecc"
+      "sha256": "55a298e7dee4cafc07eca718f023ee175433acfdbd9b5617998ff9636a191bba"
     },
     {
       "bytes": 1581,
@@ -575,9 +575,9 @@
       "sha256": "cbc119b733b18a855a9cb89b12aa5053da4bf12edf11644185a7f33ae19358ef"
     },
     {
-      "bytes": 1117453,
+      "bytes": 1138565,
       "path": "tool/src/ddn_runtime.rs",
-      "sha256": "a21b2988fc7066e55e5309a5bcf5cf34f39a8551a44c70c2f39ac013525c5b76"
+      "sha256": "e1cb5217857662281a052f51ec586e2f9ee90c668996cc1d33e8b68609911f98"
     },
     {
       "bytes": 81961,
@@ -635,9 +635,9 @@
       "sha256": "6a87cca983233aef1aec0d9a2d52245bafbb67974181292883db41ba873523d8"
     },
     {
-      "bytes": 1036,
+      "bytes": 3359,
       "path": "tool/src/fixed64_boundary.rs",
-      "sha256": "a82cbd9e6dc35c48e8d4c4297a9aae97af67568837f901c391e955ba63968409"
+      "sha256": "9f7be3190b7cdef53e03833ac8f3a36de9723eda007c923cee63a81fd051ad00"
     },
     {
       "bytes": 12551,
@@ -1000,9 +1000,9 @@
       "sha256": "4908440c5c85b1e8bec80ed1f73c93e66bfb0486e3825e9d0c90bac476a8c3e7"
     },
     {
-      "bytes": 11823,
+      "bytes": 12448,
       "path": "tool/src/unit_wire.rs",
-      "sha256": "51a5f66de36d9eb43daf63dea6e67ed3784d16b24aa576352e0e299f552d88a1"
+      "sha256": "f12acf365a5208fe2081e594a5dbea0e6484b13fd5265998e7d22fad13bc67ac"
     },
     {
       "bytes": 7595,
@@ -1015,9 +1015,9 @@
       "sha256": "4ff23f4ffda9a448bf75e9d74af959fb492bdf5cc4847392027c408cd03ade1e"
     },
     {
-      "bytes": 177366,
+      "bytes": 181728,
       "path": "tool/src/wasm_api.rs",
-      "sha256": "ecf1cc2fb381dfe5f092c706411b9d4e6de7382f115fe3b2666ade0fac298ef0"
+      "sha256": "b1d5f5bf071b858dd02cf380ae6fad808f510cc35dfd022d59369e42712b0110"
     },
     {
       "bytes": 46199,
@@ -1049,12 +1049,12 @@
     "symbolic/src",
     "tool/src"
   ],
-  "source_tree_sha256": "0ca5649d2b63947a5da16dda4b9bb6d4df7b8024158c9792c8b1d899fbfa5c6a",
+  "source_tree_sha256": "c2968b052c64e001b043b8b230192ccd30d20024cf9cd5ef6bbf57dab8d12f65",
   "state_schema": "seamgrim.engine_response.v0",
   "target": "web",
   "wasm_bindgen_or_pack_version": "wasm-pack 0.14.0",
   "wasm_hash_mode": "raw_bytes_sha256",
   "wasm_path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
-  "wasm_sha256": "ffc82a6e97ba5a3af72b090f222f7f808d982d63c4297bf075d16cfd334a9f83",
-  "wasm_size": 5676788
+  "wasm_sha256": "517025c7fa165af024b48f2fdb035d977450c3ec4f2b512244a884340faa20d3",
+  "wasm_size": 5681451
 }

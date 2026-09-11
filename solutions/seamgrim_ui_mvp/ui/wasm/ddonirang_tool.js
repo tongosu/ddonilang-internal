@@ -151,6 +151,30 @@ export class DdnWasmVm {
         }
     }
     /**
+     * Canonical textual admission for a Workbench frame duration.  JavaScript
+     * carries only this decimal text and the returned Q31.32 pair; the
+     * numeric conversion itself remains owned by Fixed64.
+     * @param {string} decimal
+     * @returns {any}
+     */
+    fixed64_from_decimal_v1(decimal) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(decimal, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.ddnwasmvm_fixed64_from_decimal_v1(retptr, this.__wbg_ptr, ptr0, len0);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
      * @returns {string}
      */
     get_build_info() {
@@ -395,22 +419,50 @@ export class DdnWasmVm {
         }
     }
     /**
-     * @param {number} dt
+     * @param {number} dt_high_i32
+     * @param {number} dt_low_u32
+     * @returns {any}
      */
-    set_dt_f64(dt) {
-        wasm.ddnwasmvm_set_dt_f64(this.__wbg_ptr, dt);
+    set_dt_fixed64_v1(dt_high_i32, dt_low_u32) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.ddnwasmvm_set_dt_fixed64_v1(retptr, this.__wbg_ptr, dt_high_i32, dt_low_u32);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
     }
     /**
      * @param {number} keys_pressed
      * @param {string} last_key_name
      * @param {number} pointer_x_i32
      * @param {number} pointer_y_i32
-     * @param {number} dt
+     * @param {number} dt_high_i32
+     * @param {number} dt_low_u32
+     * @returns {any}
      */
-    set_input(keys_pressed, last_key_name, pointer_x_i32, pointer_y_i32, dt) {
-        const ptr0 = passStringToWasm0(last_key_name, wasm.__wbindgen_export, wasm.__wbindgen_export2);
-        const len0 = WASM_VECTOR_LEN;
-        wasm.ddnwasmvm_set_input(this.__wbg_ptr, keys_pressed, ptr0, len0, pointer_x_i32, pointer_y_i32, dt);
+    set_input_fixed64_v1(keys_pressed, last_key_name, pointer_x_i32, pointer_y_i32, dt_high_i32, dt_low_u32) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            const ptr0 = passStringToWasm0(last_key_name, wasm.__wbindgen_export, wasm.__wbindgen_export2);
+            const len0 = WASM_VECTOR_LEN;
+            wasm.ddnwasmvm_set_input_fixed64_v1(retptr, this.__wbg_ptr, keys_pressed, ptr0, len0, pointer_x_i32, pointer_y_i32, dt_high_i32, dt_low_u32);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
     }
     /**
      * @param {number} keys_pressed
@@ -530,15 +582,16 @@ export class DdnWasmVm {
      * @param {string} last_key_name
      * @param {number} pointer_x_i32
      * @param {number} pointer_y_i32
-     * @param {number} dt
+     * @param {number} dt_high_i32
+     * @param {number} dt_low_u32
      * @returns {any}
      */
-    step_one_with_input(keys_pressed, last_key_name, pointer_x_i32, pointer_y_i32, dt) {
+    step_one_with_input_fixed64_v1(keys_pressed, last_key_name, pointer_x_i32, pointer_y_i32, dt_high_i32, dt_low_u32) {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
             const ptr0 = passStringToWasm0(last_key_name, wasm.__wbindgen_export, wasm.__wbindgen_export2);
             const len0 = WASM_VECTOR_LEN;
-            wasm.ddnwasmvm_step_one_with_input(retptr, this.__wbg_ptr, keys_pressed, ptr0, len0, pointer_x_i32, pointer_y_i32, dt);
+            wasm.ddnwasmvm_step_one_with_input_fixed64_v1(retptr, this.__wbg_ptr, keys_pressed, ptr0, len0, pointer_x_i32, pointer_y_i32, dt_high_i32, dt_low_u32);
             var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
             var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
             var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
@@ -2408,9 +2461,6 @@ function __wbg_get_imports() {
         },
         __wbg___wbindgen_throw_be289d5034ed271b: function(arg0, arg1) {
             throw new Error(getStringFromWasm0(arg0, arg1));
-        },
-        __wbg_warn_f7ae1b2e66ccb930: function(arg0) {
-            console.warn(getObject(arg0));
         },
         __wbindgen_cast_0000000000000001: function(arg0, arg1) {
             // Cast intrinsic for `Ref(String) -> Externref`.

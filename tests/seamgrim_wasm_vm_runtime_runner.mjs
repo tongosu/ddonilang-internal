@@ -122,11 +122,15 @@ function createClient({
     },
   };
   if (supportsStepWithInput) {
-    client.stepOneWithInputParsed = function stepOneWithInputParsed(keys, lastKey, px, py, dt) {
-      this._inputSteps.push({ keys, lastKey, px, py, dt });
+    client.fixed64FromDecimalV1Parsed = function fixed64FromDecimalV1Parsed(dtText) {
+      if (String(dtText) === "invalid") throw new Error("E_FIXED64_UNREPRESENTABLE_CONVERSION");
+      return { ok: true, value: { high_i32: 0, low_u32: 68_719_477 } };
+    };
+    client.stepOneWithInputFixed64V1Parsed = function stepOneWithInputFixed64V1Parsed(keys, lastKey, px, py, high, low) {
+      this._inputSteps.push({ keys, lastKey, px, py, high, low });
       return {
         ...sharedState,
-        input: { keys, lastKey, px, py, dt },
+        input: { keys, lastKey, px, py, high, low },
       };
     };
   }
@@ -425,13 +429,13 @@ async function main() {
   );
   const validInputState = await incompleteInputHandle.step({
     n: 1,
-    input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8, dt: 0.016 },
+    input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8, dtText: "0.016" },
   });
   assert(
-    validInputState?.input?.dt === 0.016 && incompleteInputClient._inputSteps.length === 1,
+    validInputState?.input?.low === 68_719_477 && incompleteInputClient._inputSteps.length === 1,
     "wasm vm handle: complete typed input dispatches exactly once",
   );
-  const frozenInput = Object.freeze({ keys: 2, lastKey: "ArrowLeft", px: 3, py: 5, dt: 0.032 });
+  const frozenInput = Object.freeze({ keys: 2, lastKey: "ArrowLeft", px: 3, py: 5, dtText: "0.032" });
   const frozenInputBefore = JSON.stringify(frozenInput);
   await incompleteInputHandle.step({ n: 1, input: frozenInput });
   assert(
@@ -471,7 +475,7 @@ async function main() {
   try {
     await noTypedInputApiHandle.step({
       n: 1,
-      input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8, dt: 0.016 },
+      input: { keys: 1, lastKey: "ArrowRight", px: 4, py: 8, dtText: "0.016" },
     });
   } catch (_) {
     noTypedInputApiRejected = true;

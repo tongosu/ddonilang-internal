@@ -83,14 +83,14 @@ function requireTypedFrameInput(input) {
     !hasOwn("lastKey") ||
     !hasOwn("px") ||
     !hasOwn("py") ||
-    !hasOwn("dt") ||
+    !hasOwn("dtText") ||
     !Number.isInteger(input.keys) ||
     input.keys < 0 ||
     typeof input.lastKey !== "string" ||
     !Number.isFinite(input.px) ||
     !Number.isFinite(input.py) ||
-    !Number.isFinite(input.dt) ||
-    input.dt < 0
+    typeof input.dtText !== "string" ||
+    !input.dtText.trim()
   ) {
     throw new Error("typed frame input is invalid");
   }
@@ -365,17 +365,26 @@ export class WasmVmHandle {
         state = client.runTicksParsed(count);
       } else {
         const frameInput = hasFrameInput ? requireTypedFrameInput(input) : null;
-        if (frameInput && typeof client.stepOneWithInputParsed !== "function") {
+        if (frameInput && typeof client.stepOneWithInputFixed64V1Parsed !== "function") {
           throw new Error("typed frame input API is unavailable");
         }
         for (let i = 0; i < count; i += 1) {
           if (frameInput) {
-            state = client.stepOneWithInputParsed(
+            if (typeof client.fixed64FromDecimalV1Parsed !== "function") {
+              throw new Error("fixed64_from_decimal_v1 API is unavailable");
+            }
+            const admitted = client.fixed64FromDecimalV1Parsed(frameInput.dtText);
+            const pair = admitted?.value;
+            if (!admitted?.ok || !Number.isInteger(pair?.high_i32) || !Number.isInteger(pair?.low_u32)) {
+              throw new Error("E_FIXED64_UNREPRESENTABLE_CONVERSION");
+            }
+            state = client.stepOneWithInputFixed64V1Parsed(
               frameInput.keys,
               frameInput.lastKey,
               frameInput.px,
               frameInput.py,
-              frameInput.dt,
+              pair.high_i32,
+              pair.low_u32,
           );
           } else {
             state = client.stepOneParsed();
