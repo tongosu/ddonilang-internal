@@ -63,6 +63,16 @@ pub const E_SOURCE_PROFILE_REQUIRED: &str = "E_SOURCE_PROFILE_REQUIRED";
 pub const E_SOURCE_PROFILE_UNSUPPORTED: &str = "E_SOURCE_PROFILE_UNSUPPORTED";
 pub const E_V1_CORE_RECURSION_UNSUPPORTED: &str = "E_V1_CORE_RECURSION_UNSUPPORTED";
 
+// Current Bogae defaults are Q31.32 values, not host floating-point inputs.
+// These raw values preserve the former truncating values exactly while keeping
+// the active runtime inside the canonical Fixed64 representation.
+const BOGAE_DEFAULT_STROKE_WIDTH: Fixed64 = Fixed64::from_raw_i64(85_899_345);
+const BOGAE_DEFAULT_CIRCLE_RADIUS: Fixed64 = Fixed64::from_raw_i64(343_597_383);
+const BOGAE_DEFAULT_POINT_SIZE: Fixed64 = Fixed64::from_raw_i64(193_273_528);
+const BOGAE_DEFAULT_RECT_WIDTH: Fixed64 = Fixed64::from_raw_i64(858_993_459);
+const BOGAE_DEFAULT_RECT_HEIGHT: Fixed64 = Fixed64::from_raw_i64(515_396_075);
+const BOGAE_DEFAULT_TEXT_SIZE: Fixed64 = Fixed64::from_raw_i64(343_597_383);
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SupportedSourceProfile {
     V1CoreV25,
@@ -6505,7 +6515,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["굵기", "width"],
                         usize::MAX,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.02)),
+                        Value::Fixed64(BOGAE_DEFAULT_STROKE_WIDTH),
                     ),
                 );
             }
@@ -6541,7 +6551,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["r", "반지름"],
                         2,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.08)),
+                        Value::Fixed64(BOGAE_DEFAULT_CIRCLE_RADIUS),
                     ),
                 );
                 put(
@@ -6574,7 +6584,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["굵기", "width"],
                         usize::MAX,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.02)),
+                        Value::Fixed64(BOGAE_DEFAULT_STROKE_WIDTH),
                     ),
                 );
             }
@@ -6610,7 +6620,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["크기", "size", "r"],
                         2,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.045)),
+                        Value::Fixed64(BOGAE_DEFAULT_POINT_SIZE),
                     ),
                 );
                 put(
@@ -6657,7 +6667,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["w", "너비"],
                         2,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.2)),
+                        Value::Fixed64(BOGAE_DEFAULT_RECT_WIDTH),
                     ),
                 );
                 put(
@@ -6668,7 +6678,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["h", "높이"],
                         3,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.12)),
+                        Value::Fixed64(BOGAE_DEFAULT_RECT_HEIGHT),
                     ),
                 );
                 put(
@@ -6701,7 +6711,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["굵기", "width"],
                         usize::MAX,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.02)),
+                        Value::Fixed64(BOGAE_DEFAULT_STROKE_WIDTH),
                     ),
                 );
             }
@@ -6748,7 +6758,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["크기", "size"],
                         usize::MAX,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.08)),
+                        Value::Fixed64(BOGAE_DEFAULT_TEXT_SIZE),
                     ),
                 );
                 put(
@@ -6788,7 +6798,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["굵기", "width"],
                         usize::MAX,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.02)),
+                        Value::Fixed64(BOGAE_DEFAULT_STROKE_WIDTH),
                     ),
                 );
             }
@@ -6828,7 +6838,7 @@ impl<'a> EvalContext<'a> {
                         &shape,
                         &["굵기", "width"],
                         usize::MAX,
-                        Value::Fixed64(Fixed64::from_f64_lossy(0.02)),
+                        Value::Fixed64(BOGAE_DEFAULT_STROKE_WIDTH),
                     ),
                 );
             }
@@ -21132,6 +21142,54 @@ mod tests {
             extract_fixed(&third_out.resources, "입력상태.키_눌림.Z키"),
             Fixed64::from_i64(1)
         );
+    }
+
+    #[test]
+    fn bogae_omitted_numeric_defaults_are_exact_fixed64_raw_values() {
+        assert_eq!(BOGAE_DEFAULT_STROKE_WIDTH.raw_i64(), 85_899_345);
+        assert_eq!(BOGAE_DEFAULT_CIRCLE_RADIUS.raw_i64(), 343_597_383);
+        assert_eq!(BOGAE_DEFAULT_POINT_SIZE.raw_i64(), 193_273_528);
+        assert_eq!(BOGAE_DEFAULT_RECT_WIDTH.raw_i64(), 858_993_459);
+        assert_eq!(BOGAE_DEFAULT_RECT_HEIGHT.raw_i64(), 515_396_075);
+        assert_eq!(BOGAE_DEFAULT_TEXT_SIZE.raw_i64(), 343_597_383);
+    }
+
+    #[test]
+    fn bogae_omitted_shape_fields_publish_exact_fixed64_defaults() {
+        let script = r##"
+매틱:움직씨 = {
+    모양: {
+        선(0, 0, 1, 1).
+        원(0, 0).
+        점(0, 0).
+        사각형(0, 0).
+        글(0, 0, "x").
+    }.
+}
+"##;
+        let program = DdnProgram::from_source(script, "bogae_defaults.ddn").expect("parse");
+        let mut runner = DdnRunner::new(program, "매틱");
+        let output = runner
+            .run_update(&NuriWorld::new(), &empty_input(), &HashMap::new())
+            .expect("run omitted-default shapes");
+        let Some(RuntimeValue::List(items)) = output.resources.get("보개_그림판_목록") else {
+            panic!("drawlist must be present");
+        };
+        let value = |item: &RuntimeValue, key: &str| {
+            let RuntimeValue::Map(map) = item else {
+                panic!("draw item must be a map");
+            };
+            map.values()
+                .find(|entry| matches!(&entry.key, RuntimeValue::String(name) if name == key))
+                .map(|entry| entry.value.clone())
+                .expect("draw field")
+        };
+        assert_eq!(value(&items[0], "width"), RuntimeValue::Fixed64(Fixed64::from_raw_i64(85_899_345)));
+        assert_eq!(value(&items[1], "r"), RuntimeValue::Fixed64(Fixed64::from_raw_i64(343_597_383)));
+        assert_eq!(value(&items[2], "size"), RuntimeValue::Fixed64(Fixed64::from_raw_i64(193_273_528)));
+        assert_eq!(value(&items[3], "w"), RuntimeValue::Fixed64(Fixed64::from_raw_i64(858_993_459)));
+        assert_eq!(value(&items[3], "h"), RuntimeValue::Fixed64(Fixed64::from_raw_i64(515_396_075)));
+        assert_eq!(value(&items[4], "size"), RuntimeValue::Fixed64(Fixed64::from_raw_i64(343_597_383)));
     }
 
     #[test]
