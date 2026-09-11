@@ -123,6 +123,10 @@ fn lsp9_full_tokens_use_lexer_categories_utf16_and_deterministic_delta() {
         initialize["capabilities"]["semanticTokensProvider"]["legend"]["tokenTypes"][0],
         "function"
     );
+    assert_eq!(
+        initialize["capabilities"]["semanticTokensProvider"]["legend"]["tokenModifiers"],
+        json!(["declaration", "defaultLibrary"])
+    );
     open(&mut server, SOURCE, 1);
 
     let first = tokens(&mut server, 2, 1);
@@ -136,6 +140,48 @@ fn lsp9_full_tokens_use_lexer_categories_utf16_and_deterministic_delta() {
     assert_eq!(first["dataVersion"], 1);
     assert_eq!(first["snapshotIdentity"].as_str().unwrap().len(), 71);
     assert_eq!(first, tokens(&mut server, 3, 1));
+}
+
+#[test]
+fn lsp39_roles_use_ast_bound_declaration_modifiers_and_ignore_line_comments() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    let source = "(문자:글) 첫함수:셈씨 := { 1 돌려줘. }\n// 첫함수와 반환은 주석이다\n둘함수:셈씨 := { 첫함수. }";
+    open(&mut server, source, 1);
+
+    let result = tokens(&mut server, 2, 1);
+    let data = result["data"].as_array().unwrap();
+    assert!(data.chunks_exact(5).any(|chunk| {
+        chunk[3].as_u64() == Some(0) && chunk[4].as_u64() == Some(1)
+    }));
+    assert!(data.chunks_exact(5).any(|chunk| {
+        chunk[3].as_u64() == Some(3) && chunk[4].as_u64() == Some(1)
+    }));
+
+    let decoded = decode(data);
+    assert!(decoded.iter().all(|token| token.0 != 1));
+    assert!(decoded.iter().any(|token| token.0 == 2 && token.3 == 0));
+}
+
+#[test]
+fn lsp39_unsupported_source_is_not_semantically_classified() {
+    let mut server = LspServer::new();
+    init(&mut server);
+    let uri = "file:///unsupported.txt";
+    open_uri(&mut server, uri, "값:셈씨 := { 1 돌려줘. }", 1);
+    let response = server
+        .handle_message(RpcMessage::Request {
+            id: json!(2),
+            method: "textDocument/semanticTokens/full".into(),
+            params: Some(json!({
+                "textDocument": {"uri": uri, "version": 1}
+            })),
+        })
+        .unwrap()
+        .responses[0]
+        .clone_response()
+        .unwrap();
+    assert_eq!(response["data"], json!([]));
 }
 
 #[test]

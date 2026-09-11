@@ -1,7 +1,7 @@
 use super::document_store::DocumentSnapshot;
-use super::position::{byte_range_to_lsp_range, PositionEncoding};
+use super::position::{byte_range_to_lsp_range, ByteRange, PositionEncoding};
 use ddonirang_lang::stdlib::minimal_stdlib_sigs;
-use ddonirang_lang::{parse_v25, Lexer, Token, TokenKind, TopLevelItem};
+use ddonirang_lang::{parse_v25, Lexer, SeedKind, Token, TokenKind, TopLevelItem};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeSet;
 
@@ -19,6 +19,8 @@ pub const LEGEND_TOKEN_TYPES: &[&str] = &[
     "atom",
     "josa",
 ];
+
+pub const LEGEND_TOKEN_MODIFIERS: &[&str] = &["declaration", "defaultLibrary"];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SemanticTokensResolution {
@@ -59,6 +61,44 @@ pub fn semantic_tokens_snapshot(
             TopLevelItem::SeedDef(seed) => Some(seed.canonical_name.clone()),
         })
         .collect::<BTreeSet<_>>();
+    let declaration_ranges = program
+        .items
+        .iter()
+        .filter_map(|item| {
+            let TopLevelItem::SeedDef(seed) = item;
+            super::symbol::declaration_range(&tokens, seed)
+        })
+        .collect::<Vec<_>>();
+    let type_definition_ranges = program
+        .items
+        .iter()
+        .filter_map(|item| {
+            let TopLevelItem::SeedDef(seed) = item;
+            matches!(seed.seed_kind, SeedKind::Imeumssi)
+                .then(|| super::symbol::declaration_range(&tokens, seed))
+                .flatten()
+        })
+        .collect::<Vec<_>>();
+    let parameter_declaration_ranges = program
+        .items
+        .iter()
+        .flat_map(|item| {
+            let TopLevelItem::SeedDef(seed) = item;
+            seed.params.iter().filter_map(|param| {
+                tokens
+                    .iter()
+                    .find(|token| {
+                        token.span.start >= param.span.start
+                            && token.span.end <= param.span.end
+                            && token.raw == param.pin_name
+                    })
+                    .map(|token| ByteRange {
+                        start: token.span.start,
+                        end: token.span.end,
+                    })
+            })
+        })
+        .collect::<Vec<_>>();
     let parameter_names = program
         .items
         .iter()
@@ -75,12 +115,15 @@ pub fn semantic_tokens_snapshot(
     let mut previous_start = 0;
     let mut previous: Option<&Token> = None;
     for token in &tokens {
-        let Some(token_type) = token_type(
+        let Some(classification) = token_classification(
             token,
             previous,
             &local_names,
             &parameter_names,
             &stdlib_names,
+            &declaration_ranges,
+            &type_definition_ranges,
+            &parameter_declaration_ranges,
         ) else {
             previous = Some(token);
             continue;
@@ -108,8 +151,8 @@ pub fn semantic_tokens_snapshot(
             delta_line,
             delta_start,
             range.end.character - range.start.character,
-            token_type,
-            0,
+            classification.token_type,
+            classification.modifiers,
         ]);
         if data.len() > MAX_TOKEN_DATA {
             return Ok(empty_resolution(snapshot));
@@ -191,40 +234,104 @@ fn result_id(snapshot: &DocumentSnapshot, data: &[u32]) -> String {
     format!("sha256:{:x}", hasher.finalize())
 }
 
-fn token_type(
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct TokenClassification {
+    token_type: u32,
+    modifiers: u32,
+}
+
+fn token_classification(
     token: &Token,
     previous: Option<&Token>,
     local_names: &BTreeSet<String>,
     parameter_names: &BTreeSet<String>,
     stdlib_names: &BTreeSet<String>,
-) -> Option<u32> {
+    declaration_ranges: &[ByteRange],
+    type_definition_ranges: &[ByteRange],
+    parameter_declaration_ranges: &[ByteRange],
+) -> Option<TokenClassification> {
+    let range = ByteRange {
+        start: token.span.start,
+        end: token.span.end,
+    };
+    let declaration = if declaration_ranges.contains(&range) {
+        1
+    } else {
+        0
+    };
+    let default_library = if stdlib_names.contains(&token.raw) {
+        1 << 1
+    } else {
+        0
+    };
     let type_position = previous
         .map(|token| matches!(token.kind, TokenKind::Colon | TokenKind::TypeArrow))
         .unwrap_or(false);
     match &token.kind {
         TokenKind::Ident(name) => {
-            if type_position {
-                Some(1)
+            if type_definition_ranges.contains(&range) || type_position {
+                Some(TokenClassification {
+                    token_type: 1,
+                    modifiers: declaration,
+                })
             } else if local_names.contains(name) || stdlib_names.contains(name) {
-                Some(0)
+                Some(TokenClassification {
+                    token_type: 0,
+                    modifiers: if declaration != 0 {
+                        declaration
+                    } else {
+                        default_library
+                    },
+                })
             } else if parameter_names.contains(name) {
-                Some(3)
+                Some(TokenClassification {
+                    token_type: 3,
+                    modifiers: if parameter_declaration_ranges.contains(&range) {
+                        1
+                    } else {
+                        0
+                    },
+                })
             } else {
-                Some(2)
+                Some(TokenClassification {
+                    token_type: 2,
+                    modifiers: 0,
+                })
             }
         }
         TokenKind::Josa(_) => {
             if type_position {
-                Some(1)
+                Some(TokenClassification {
+                    token_type: 1,
+                    modifiers: 0,
+                })
             } else {
-                Some(9)
+                Some(TokenClassification {
+                    token_type: 9,
+                    modifiers: 0,
+                })
             }
         }
-        TokenKind::Variable(_) | TokenKind::Nuance(_) => Some(2),
-        TokenKind::StringLit(_) => Some(5),
-        TokenKind::Integer(_) | TokenKind::Float(_) => Some(6),
-        TokenKind::Atom(_) => Some(8),
-        TokenKind::Pragma(_) => Some(4),
+        TokenKind::Variable(_) | TokenKind::Nuance(_) => Some(TokenClassification {
+            token_type: 2,
+            modifiers: 0,
+        }),
+        TokenKind::StringLit(_) => Some(TokenClassification {
+            token_type: 5,
+            modifiers: 0,
+        }),
+        TokenKind::Integer(_) | TokenKind::Float(_) => Some(TokenClassification {
+            token_type: 6,
+            modifiers: 0,
+        }),
+        TokenKind::Atom(_) => Some(TokenClassification {
+            token_type: 8,
+            modifiers: 0,
+        }),
+        TokenKind::Pragma(_) => Some(TokenClassification {
+            token_type: 4,
+            modifiers: 0,
+        }),
         TokenKind::KwImeumssi
         | TokenKind::KwUmjikssi
         | TokenKind::KwGallaessi
@@ -262,9 +369,15 @@ fn token_type(
         | TokenKind::Or
         | TokenKind::Not => {
             if type_position {
-                Some(1)
+                Some(TokenClassification {
+                    token_type: 1,
+                    modifiers: 0,
+                })
             } else {
-                Some(4)
+                Some(TokenClassification {
+                    token_type: 4,
+                    modifiers: 0,
+                })
             }
         }
         TokenKind::At
@@ -310,7 +423,10 @@ fn token_type(
         | TokenKind::Lt
         | TokenKind::Gt
         | TokenKind::LtEq
-        | TokenKind::GtEq => Some(7),
+        | TokenKind::GtEq => Some(TokenClassification {
+            token_type: 7,
+            modifiers: 0,
+        }),
         TokenKind::AssertionBlock(_)
         | TokenKind::TemplateBlock(_)
         | TokenKind::FormulaBlock(_)

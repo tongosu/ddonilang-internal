@@ -5,6 +5,9 @@
     {"include": "#resourceLiterals"},
     {"include": "#strings"},
     {"include": "#unitNumbers"},
+    {"include": "#declarations"},
+    {"include": "#callSites"},
+    {"include": "#parameters"},
     {"include": "#josaPins"},
     {"include": "#unitIdentifiers"},
     {"include": "#numbers"},
@@ -17,6 +20,34 @@
     {"include": "#operators"}
   ],
   "repository": {
+    "declarations": {
+      "patterns": [
+        {
+          "name": "entity.name.type.ddn",
+          "match": "(?<![\\p{L}\\p{N}_])([\\p{L}\\p{N}_]+)(?=\\s*:\\s*(?:이름씨)(?![\\p{L}\\p{N}_]))"
+        },
+        {
+          "name": "entity.name.function.ddn",
+          "match": "(?<![\\p{L}\\p{N}_])([\\p{L}\\p{N}_]+)(?=\\s*:\\s*(?:움직씨|값함수|셈씨|이음씨|흐름씨|관계씨|고름씨|샘|일때씨|어찌씨)(?![\\p{L}\\p{N}_]))"
+        }
+      ]
+    },
+    "callSites": {
+      "patterns": [
+        {
+          "name": "variable.function.call.ddn",
+          "match": "(?<![\\p{L}\\p{N}_])([\\p{L}\\p{N}_]+)(?=\\s*(?:\\.|\\())"
+        }
+      ]
+    },
+    "parameters": {
+      "patterns": [
+        {
+          "name": "variable.parameter.ddn",
+          "match": "(?<![\\p{L}\\p{N}_])([\\p{L}\\p{N}_]+)(?=\\s*(?::|<-|=))"
+        }
+      ]
+    },
     "comments": {
       "patterns": [
         {"name": "comment.line.double-slash.ddn", "match": "//.*$"},

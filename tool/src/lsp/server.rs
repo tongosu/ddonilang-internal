@@ -19,7 +19,7 @@ use super::rename::{
 use super::selection_range::{selection_ranges_snapshot, SelectionRangeError};
 use super::semantic_tokens::{
     semantic_tokens_delta, semantic_tokens_snapshot, SemanticTokensError, SemanticTokensResolution,
-    LEGEND_TOKEN_TYPES,
+    LEGEND_TOKEN_MODIFIERS, LEGEND_TOKEN_TYPES,
 };
 use super::signature_help::{
     explicit_param_type_name_at_position, inlay_hints_snapshot, signature_help_snapshot,
@@ -2478,7 +2478,7 @@ impl LspServer {
                         "full": {"delta": true},
                         "legend": {
                             "tokenTypes": LEGEND_TOKEN_TYPES,
-                            "tokenModifiers": [],
+                            "tokenModifiers": LEGEND_TOKEN_MODIFIERS,
                         },
                     },
                     "signatureHelpProvider": {"triggerCharacters": ["(", ","]},

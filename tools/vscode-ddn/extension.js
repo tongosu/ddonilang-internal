@@ -3,6 +3,11 @@ const path = require("path");
 
 let activeClient = null;
 let startupErrorShown = false;
+let lifecycleState = "inactive";
+let lastStartupFailure = null;
+
+const SUPPORTED_EXTENSIONS = [".ddn", ".또니", ".ddl", ".옮김"];
+const STATUS_COMMAND = "ddonilang.showLanguageServerStatus";
 
 function isLocalAbsolutePath(candidate) {
   if (typeof candidate !== "string" || candidate.length === 0) {
@@ -20,7 +25,11 @@ function isRegularExecutable(candidate) {
   }
   try {
     const stat = fs.lstatSync(candidate);
-    return stat.isFile() && !stat.isSymbolicLink();
+    return (
+      stat.isFile() &&
+      !stat.isSymbolicLink() &&
+      path.basename(candidate).toLowerCase() === executableName().toLowerCase()
+    );
   } catch (_) {
     return false;
   }
@@ -74,6 +83,32 @@ function resolveServerExecutable({
   return null;
 }
 
+function configuredExecutableFailure(candidate) {
+  if (typeof candidate !== "string" || candidate.trim() === "") {
+    return null;
+  }
+  const exactPath = path.normalize(candidate.trim());
+  if (!path.isAbsolute(exactPath) || (process.platform === "win32" && exactPath.startsWith("\\\\"))) {
+    return "CONFIGURED_PATH_NOT_ABSOLUTE";
+  }
+  let stat;
+  try {
+    stat = fs.lstatSync(exactPath);
+  } catch (_) {
+    return "CONFIGURED_PATH_MISSING";
+  }
+  if (stat.isSymbolicLink()) {
+    return "CONFIGURED_PATH_SYMLINK";
+  }
+  if (!stat.isFile()) {
+    return "CONFIGURED_PATH_DIRECTORY";
+  }
+  if (path.basename(exactPath).toLowerCase() !== executableName().toLowerCase()) {
+    return "CONFIGURED_PATH_UNSUPPORTED_FILENAME";
+  }
+  return null;
+}
+
 function documentSelector() {
   return [
     { scheme: "file", language: "ddonilang" },
@@ -85,6 +120,81 @@ function configuration(vscode) {
   return vscode.workspace.getConfiguration("ddonilang.lsp");
 }
 
+function extensionForUri(uri) {
+  if (typeof uri !== "string") {
+    return null;
+  }
+  const pathPart = uri.split(/[?#]/, 1)[0];
+  const basename = pathPart.split(/[\\/]/).pop() || "";
+  const extension = path.extname(basename);
+  return SUPPORTED_EXTENSIONS.includes(extension) ? extension : null;
+}
+
+function serverPid(client) {
+  const processHandle = client && client._serverProcess;
+  return processHandle && Number.isInteger(processHandle.pid) ? processHandle.pid : null;
+}
+
+function statusSnapshot(vscode, context) {
+  const settings = configuration(vscode);
+  const configuredPath = settings.get("executable", "");
+  const activeDocument = vscode.window.activeTextEditor && vscode.window.activeTextEditor.document;
+  const uri =
+    activeDocument && activeDocument.uri
+      ? typeof activeDocument.uri.path === "string"
+        ? activeDocument.uri.path
+        : activeDocument.uri.toString()
+      : null;
+  const supportedExtension = extensionForUri(uri);
+  return {
+    extensionVersion: require("./package.json").version,
+    currentDocumentLanguageId: activeDocument ? activeDocument.languageId : null,
+    supportedExtension,
+    documentAdmission:
+      activeDocument && activeDocument.languageId === "ddonilang" && supportedExtension
+        ? "admitted"
+        : activeDocument
+          ? "not-admitted"
+          : "no-document",
+    configuredExecutablePath:
+      typeof configuredPath === "string" && configuredPath.trim() !== ""
+        ? path.normalize(configuredPath.trim())
+        : "bounded-local-discovery",
+    lifecycleState,
+    serverPid: serverPid(activeClient),
+    serverProcessPresent: serverPid(activeClient) !== null,
+    lastStartupFailure,
+  };
+}
+
+function formatStatus(status) {
+  return [
+    `Ddonilang LSP ${status.extensionVersion}`,
+    `문서=${status.currentDocumentLanguageId || "없음"}`,
+    `확장자=${status.supportedExtension || "미지원"}`,
+    `admission=${status.documentAdmission}`,
+    `실행 파일=${status.configuredExecutablePath}`,
+    `상태=${status.lifecycleState}`,
+    `server PID=${status.serverPid === null ? "없음" : status.serverPid}`,
+    `최근 실패=${status.lastStartupFailure || "없음"}`,
+  ].join(" | ");
+}
+
+function registerStatusCommand(context, vscode) {
+  if (!vscode.commands || typeof vscode.commands.registerCommand !== "function") {
+    return;
+  }
+  const disposable = vscode.commands.registerCommand(STATUS_COMMAND, () => {
+  const status = statusSnapshot(vscode, context);
+    const message = formatStatus(status);
+    if (vscode.window && typeof vscode.window.showInformationMessage === "function") {
+      void vscode.window.showInformationMessage(message);
+    }
+    return status;
+  });
+  context.subscriptions.push(disposable);
+}
+
 async function activate(context) {
   if (activeClient) {
     return activeClient;
@@ -92,15 +202,22 @@ async function activate(context) {
 
   const vscode = require("vscode");
   const { LanguageClient } = require("vscode-languageclient/node");
+  lifecycleState = "activating";
+  lastStartupFailure = null;
+  registerStatusCommand(context, vscode);
   const settings = configuration(vscode);
+  const configuredPath = settings.get("executable", "");
+  const configuredFailure = configuredExecutableFailure(configuredPath);
   const executable = resolveServerExecutable({
-    configuredPath: settings.get("executable", ""),
+    configuredPath,
     autoDiscover: settings.get("autoDiscover", true),
     extensionPath: context.extensionPath,
     workspaceFolders: vscode.workspace.workspaceFolders,
   });
 
   if (!executable) {
+    lifecycleState = "failed";
+    lastStartupFailure = configuredFailure || "AUTODISCOVERY_NOT_FOUND";
     if (!startupErrorShown) {
       startupErrorShown = true;
       void vscode.window.showErrorMessage(
@@ -129,11 +246,15 @@ async function activate(context) {
   context.subscriptions.push(activeClient);
 
   try {
+    lifecycleState = "starting";
     await activeClient.start();
+    lifecycleState = "running";
     return activeClient;
   } catch (error) {
     const failedClient = activeClient;
     activeClient = null;
+    lifecycleState = "failed";
+    lastStartupFailure = "SERVER_START_FAILED";
     failedClient.dispose();
     if (!startupErrorShown) {
       startupErrorShown = true;
@@ -147,18 +268,26 @@ async function activate(context) {
 
 async function deactivate() {
   if (!activeClient) {
+    lifecycleState = "inactive";
     return undefined;
   }
   const client = activeClient;
   activeClient = null;
-  return client.stop();
+  lifecycleState = "stopping";
+  const result = await client.stop();
+  lifecycleState = "inactive";
+  return result;
 }
 
 module.exports = {
   activate,
   deactivate,
   boundedLocalCandidates,
+  configuredExecutableFailure,
   documentSelector,
+  extensionForUri,
+  formatStatus,
   isRegularExecutable,
   resolveServerExecutable,
+  statusSnapshot,
 };

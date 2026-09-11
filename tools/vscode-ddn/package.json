@@ -5,7 +5,8 @@
   "version": "0.0.1",
   "main": "./extension.js",
   "activationEvents": [
-    "onLanguage:ddonilang"
+    "onLanguage:ddonilang",
+    "onCommand:ddonilang.showLanguageServerStatus"
   ],
   "publisher": "ddonilang",
   "engines": {
@@ -38,6 +39,12 @@
         "language": "ddonilang",
         "scopeName": "source.ddn",
         "path": "./syntaxes/ddn.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "ddonilang.showLanguageServerStatus",
+        "title": "Ddonilang: Show Language Server Status"
       }
     ],
     "snippets": [

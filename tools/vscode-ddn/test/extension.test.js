@@ -10,7 +10,10 @@ const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ddonilang-vscode-"));
 
 try {
   assert.strictEqual(manifest.main, "./extension.js");
-  assert.deepStrictEqual(manifest.activationEvents, ["onLanguage:ddonilang"]);
+  assert.deepStrictEqual(manifest.activationEvents, [
+    "onLanguage:ddonilang",
+    "onCommand:ddonilang.showLanguageServerStatus",
+  ]);
   assert.strictEqual(manifest.dependencies["vscode-languageclient"], "8.1.0");
   assert.strictEqual(manifest.contributes.snippets[0].language, "ddonilang");
   assert.deepStrictEqual(manifest.contributes.languages[0].extensions, [".ddn", ".또니", ".ddl", ".옮김"]);
@@ -24,6 +27,8 @@ try {
   fs.mkdirSync(debugDir, { recursive: true });
   const discovered = path.join(debugDir, process.platform === "win32" ? "ddonirang-lsp.exe" : "ddonirang-lsp");
   fs.writeFileSync(discovered, "placeholder");
+  const directory = path.join(tempRoot, "directory");
+  fs.mkdirSync(directory);
 
   assert.strictEqual(
     extension.resolveServerExecutable({
@@ -44,6 +49,27 @@ try {
     null,
   );
   assert.strictEqual(
+    extension.configuredExecutableFailure(path.join(workspaceRoot, "missing-lsp")),
+    "CONFIGURED_PATH_MISSING",
+  );
+  assert.strictEqual(
+    extension.configuredExecutableFailure("relative-lsp"),
+    "CONFIGURED_PATH_NOT_ABSOLUTE",
+  );
+  assert.strictEqual(
+    extension.configuredExecutableFailure(directory),
+    "CONFIGURED_PATH_DIRECTORY",
+  );
+  const unsupportedFilename = path.join(tempRoot, "other-server.exe");
+  fs.writeFileSync(unsupportedFilename, "placeholder");
+  assert.strictEqual(
+    extension.configuredExecutableFailure(unsupportedFilename),
+    "CONFIGURED_PATH_UNSUPPORTED_FILENAME",
+  );
+  assert.strictEqual(extension.extensionForUri("file:///a.ddn"), ".ddn");
+  assert.strictEqual(extension.extensionForUri("file:///a.또니"), ".또니");
+  assert.strictEqual(extension.extensionForUri("file:///a.txt"), null);
+  assert.strictEqual(
     extension.resolveServerExecutable({
       configuredPath: "relative-lsp",
       autoDiscover: true,
@@ -62,8 +88,6 @@ try {
     null,
   );
 
-  const directory = path.join(tempRoot, "directory");
-  fs.mkdirSync(directory);
   assert.strictEqual(extension.isRegularExecutable(directory), false);
 
   const symlink = path.join(tempRoot, "symlink");
