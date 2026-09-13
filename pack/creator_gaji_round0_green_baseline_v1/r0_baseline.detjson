@@ -1,0 +1,164 @@
+{
+  "schema": "ddn.creator_gaji_round0_green_baseline.r0.v1",
+  "recorded_at_kst": "2026-07-17",
+  "branch": "codex/queue-20260706",
+  "minimum_ancestor": "d139da2a86c0b4b7bf3af8ee096e57dd8a35b549",
+  "minimum_ancestor_verified": true,
+  "creator_range_start": "d55e7524591d29943d77a6ab7676bc3a3e2adc2a",
+  "creator_range_head": "d139da2a86c0b4b7bf3af8ee096e57dd8a35b549",
+  "creator_range_is_ancestor": true,
+  "start_head": "adf019cfdf02078c67b3a1f39b334e765bc34ce2",
+  "stage_clean": true,
+  "docs_ssot_clean": true,
+  "independent_review": {
+    "result": "PASS_WITH_FOLLOW_UP",
+    "source": "docs/context/roadmap/CODEX_LONG_GOAL_DDN_CREATOR_GAJI_FOLLOWUP_GREEN_BASELINE_V1_20260717.md",
+    "prior_product_disposition": "DDN_LOCAL_CREATOR_GAJI_CIRCULATION_CLOSED",
+    "round0_disposition": "READY_FOR_EXTERNAL_CREATOR_PILOT_ROUND0"
+  },
+  "dirty_ownership": {
+    "tracked_dirty_count": 29,
+    "untracked_entry_count": 151,
+    "status_sha256_before_r0_files": "8a2e8d444fa38e8803ae844cc5b260d84323ee4869c43e9b7ceda7b98a68e5d7",
+    "tracked_dirty_paths": [
+      "AGENTS.md",
+      "AGENT_WORKFLOW.md",
+      "AI_COLLABORATION_PLAYBOOK.md",
+      "CHANGELOG.md",
+      "PROJECT_STATUS.md",
+      "SSOT_POLICY.md",
+      "docs/context/all/DEV_SUMMARY.md",
+      "docs/context/proposals/PROPOSAL_SEAMGRIM_KOREAN_MANIM_WAVE1_TO_WAVE2B_SSOT_PROMOTION_PACKET_V1_20260711.md",
+      "docs/context/reports/INDEX.md",
+      "docs/context/reports/SEAMGRIM_KOREAN_MANIM_DECISION_LEDGER_V1_20260711.detjson",
+      "docs/context/reports/SEAMGRIM_KOREAN_MANIM_PROMOTION_LEDGER_V2_20260711.detjson",
+      "docs/reports/audit/INDEX.md",
+      "docs/reports/impl/INDEX.md",
+      "lang/src/stdlib.rs",
+      "pack/open_bundle_artifact/run_bundle/geoul.diag.jsonl",
+      "pack/open_end_to_end/open.log.jsonl",
+      "tests/run_lang_prime_derivative_runtime_semantics_gate_check.py",
+      "tests/run_lang_prime_parser_frontdoor_spike_check.py",
+      "tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+      "tests/run_seamgrim_approved_workbench_runtime_lineage_check.py",
+      "tests/run_seamgrim_approved_workbench_semantic_verticals_check.py",
+      "tests/run_seamgrim_approved_workbench_shell_check.py",
+      "tests/seamgrim_approved_workbench_quality_gate_runner.mjs",
+      "tests/seamgrim_approved_workbench_runtime_lineage_runner.mjs",
+      "tests/seamgrim_approved_workbench_semantic_verticals_runner.mjs",
+      "tools/teul-cli/src/canon.rs",
+      "work/_session_deltas/20260711_codex_seamgrim_next_superlong_goal.md",
+      "work/_session_deltas/20260717_codex_goal_expansion_business_readability_collaboration.md",
+      "work/erq/ERQ_QUEUE.md"
+    ],
+    "policy": "preserve_without_stage_commit_reset_stash_or_delete"
+  },
+  "target_paths_clean_at_start": true,
+  "target_path_groups": {
+    "public_wedge": [
+      "tests/run_seamgrim_one_file_ddn_create_run_check.py",
+      "tests/seamgrim_one_file_ddn_create_run_runner.mjs",
+      "pack/seamgrim_public_physics_wedge_v1",
+      "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+      "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js"
+    ],
+    "durable": [
+      "tests/run_seamgrim_workbench_durable_quality_gate_check.py",
+      "tests/run_seamgrim_workbench_durable_persistence_adapters_check.py",
+      "tests/seamgrim_workbench_durable_persistence_adapters_runner.mjs",
+      "tests/run_seamgrim_workbench_capability_share_clone_check.py",
+      "tests/seamgrim_workbench_capability_share_clone_runner.mjs",
+      "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js"
+    ],
+    "ai_prompt": [
+      "tool/assets/ai_prompt_template_v20.0.3.txt",
+      "tool/src/ai_prompt.rs",
+      "tests/toolchain_golden/ai_prompt_lean.txt"
+    ],
+    "fixed64": [
+      "core/src/fixed64.rs",
+      "core/src/tests/fixed64_lint_gate.rs"
+    ]
+  },
+  "reproductions": [
+    {
+      "id": "public_one_file_component",
+      "command": "python tests/run_seamgrim_one_file_ddn_create_run_check.py",
+      "exit_code": 1,
+      "elapsed_ms": 35030,
+      "status": "EXPECTED_RED",
+      "failure": "waited for fixed project id local_one_file_ddn_v1 after native creator dialog opened",
+      "new_owned_process_count": 0,
+      "new_owned_temp_dirs": ["seamgrim-one-file-qrisQV"]
+    },
+    {
+      "id": "public_wedge_aggregate",
+      "command": "python tests/run_seamgrim_public_physics_wedge_quality_gate_check.py",
+      "exit_code": 1,
+      "elapsed_ms": 48305,
+      "status": "EXPECTED_RED",
+      "failure": "nested legacy one-file checker timed out on fixed project id",
+      "new_owned_process_count": 0,
+      "new_owned_temp_dirs": ["seamgrim-one-file-kJnVav", "seamgrim-public-default-2AKfqQ", "seamgrim-public-physics-G3peJv"]
+    },
+    {
+      "id": "durable_persistence_component",
+      "command": "python tests/run_seamgrim_workbench_durable_persistence_adapters_check.py",
+      "exit_code": 0,
+      "elapsed_ms": 2711,
+      "status": "PASS_STANDALONE",
+      "new_owned_process_count": 0,
+      "new_owned_temp_dirs": []
+    },
+    {
+      "id": "durable_capability_component",
+      "command": "python tests/run_seamgrim_workbench_capability_share_clone_check.py",
+      "exit_code": 1,
+      "elapsed_ms": 33410,
+      "status": "EXPECTED_RED",
+      "failure": "view lifecycle-run remained disabled for the full Playwright click timeout",
+      "new_owned_process_count": 0,
+      "new_owned_temp_dirs": ["seamgrim-workbench-g6-IAwO1b"]
+    },
+    {
+      "id": "durable_aggregate",
+      "command": "python tests/run_seamgrim_workbench_durable_quality_gate_check.py",
+      "exit_code": 1,
+      "elapsed_ms": 65381,
+      "status": "EXPECTED_RED",
+      "failure": "aggregate reproduced the same capability view lifecycle-run disabled state",
+      "new_owned_process_count": 0,
+      "new_owned_temp_dirs": ["seamgrim-run-archive-jbcw2fc6", "seamgrim-workbench-g2-mMAxE2", "seamgrim-workbench-g3-He7DKF", "seamgrim-workbench-g6-arMGqN"]
+    },
+    {
+      "id": "ai_prompt_current_ssot",
+      "command": "cargo test -p ddonirang-tool ai_prompt::tests::ai_prompt_output_matches_golden -- --nocapture",
+      "exit_code": 101,
+      "elapsed_ms": 62935,
+      "status": "EXPECTED_RED",
+      "failure": "generated prompt still begins with SSOT_VERSION = v20.6.33 while current context is v24.15.1"
+    },
+    {
+      "id": "fixed64_no_float_core",
+      "command": "cargo test -p ddonirang-core fixed64_lint_gate_no_float_in_core -- --nocapture",
+      "exit_code": 101,
+      "elapsed_ms": 2036,
+      "status": "EXPECTED_RED",
+      "failure": "core/src/fixed64.rs exposes from_f64_lossy(value: f64)"
+    }
+  ],
+  "post_reproduction_owned_resources": {
+    "process_count": 0,
+    "listening_socket_count": 0,
+    "temp_dirs_are_recorded_for_later_cleanup_repair": true
+  },
+  "closure_claims": {
+    "public_wedge_native_creator_contract_closed": false,
+    "durable_gate_reproducible": false,
+    "ai_prompt_current_ssot_golden_closed": false,
+    "fixed64_no_float_core_gate_closed": false,
+    "creator_gaji_round0_green_baseline": false
+  },
+  "external_creator_success_count": 0,
+  "docs_ssot_changed": false
+}

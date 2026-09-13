@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.34s
+     Running `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_tilde_known_josa.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_tilde_known_josa.summary.detjson`
+E_RUN_SUMMARY_WRITE canon 실패: E_CANON_BAD_CHAR 알 수 없는 문자: ~
+error: process didn't exit successfully: `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_tilde_known_josa.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_tilde_known_josa.summary.detjson` (exit code: 1)

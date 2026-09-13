@@ -1,0 +1,6 @@
+"GANADA_MA_CLOSURE_REPAIR_V1" 보여주기.
+"repaired_checkers=3" 보여주기.
+"cells=마-0,마-1,마-4" 보여주기.
+"matrix_upgrade_claim=false" 보여주기.
+"docs_only_behavior_closure_allowed=false" 보여주기.
+"checker=tests/run_ganada_ma_closure_repair_check.py" 보여주기.

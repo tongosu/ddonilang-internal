@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:58681089c99522059033b7226936acedc7a552254fa01102c951b849830c6d34",
+  "stage": "S3",
+  "method": "unsupported_deferred_v1",
+  "relations": [],
+  "unknowns": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9"],
+  "lowering": {
+    "bound": {"unknown_count_max": 8, "unknown_count": 9},
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": ["state_read", "seum_solve", "state_write", "hook_next_segment"],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "E_SEUM_UNSUPPORTED",
+      "severity": "error",
+      "message": "S1 linear SolvePlan supports at most 8 unknowns"
+    }
+  ],
+  "state_hash_inputs": {
+    "include": ["schema", "source_hash", "stage", "method", "relations", "unknowns", "lowering"],
+    "exclude": ["diagnostics", "execution_results"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "JOSA_CANON_TILDE_INSERTION",
+  "expected_future_canon": "도로~를 먹기.",
+  "notes": [
+    "예시 입력은 정본화 기대를 문서화하기 위한 red skeleton이다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "ddn.ganada.la.editor_stability.v1",
+  "pack": "ganada_la_editor_stability_v1",
+  "cell_id": "라-5",
+  "status": "product_pass_gate",
+  "workflow": "block_editor_stability_matrix",
+  "base_checker": "tests/run_seamgrim_block_editor_smoke_check.py",
+  "editor_runner": "tests/seamgrim_block_editor_runner.mjs",
+  "editor_stability_matrix": [
+    {"id": "base_screen_smoke_matrix", "kind": "checker", "command": ["python", "tests/run_seamgrim_block_editor_smoke_check.py"]},
+    {"id": "rpg_smoke", "kind": "pack", "pack": "block_editor_screen_rpg_smoke_v1"},
+    {"id": "seamgrim_smoke", "kind": "pack", "pack": "block_editor_screen_seamgrim_smoke_v1"},
+    {"id": "seamgrim_flow", "kind": "pack", "pack": "block_editor_screen_seamgrim_flow_smoke_v1"},
+    {"id": "seamgrim_contract", "kind": "pack", "pack": "block_editor_screen_seamgrim_contract_smoke_v1"},
+    {"id": "seamgrim_prompt", "kind": "pack", "pack": "block_editor_screen_seamgrim_prompt_smoke_v1"},
+    {"id": "seamgrim_runtime", "kind": "pack", "pack": "block_editor_screen_seamgrim_runtime_smoke_v1"},
+    {"id": "seamgrim_view", "kind": "pack", "pack": "block_editor_screen_seamgrim_view_smoke_v1"},
+    {"id": "seamgrim_structured", "kind": "pack", "pack": "block_editor_screen_seamgrim_structured_smoke_v1"},
+    {"id": "seamgrim_expr", "kind": "pack", "pack": "block_editor_screen_seamgrim_expr_smoke_v1"},
+    {"id": "seamgrim_expr_edit", "kind": "pack", "pack": "block_editor_screen_seamgrim_expr_edit_smoke_v1"},
+    {"id": "vol4_state_transition", "kind": "pack", "pack": "block_editor_screen_vol4_state_transition_smoke_v1"},
+    {"id": "vol4_event_dispatch", "kind": "pack", "pack": "block_editor_screen_vol4_event_dispatch_smoke_v1"},
+    {"id": "vol4_resume_isolation", "kind": "pack", "pack": "block_editor_screen_vol4_resume_isolation_smoke_v1"},
+    {"id": "vol4_multi_signal_priority", "kind": "pack", "pack": "block_editor_screen_vol4_multi_signal_priority_smoke_v1"}
+  ],
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_la_editor_stability_v1/workflow.detjson:1",
+    "tests/run_seamgrim_block_editor_smoke_check.py:1",
+    "tests/seamgrim_block_editor_runner.mjs:1",
+    "pack/block_editor_screen_vol4_multi_signal_priority_smoke_v1/expected/block_editor_screen.detjson:1"
+  ]
+}

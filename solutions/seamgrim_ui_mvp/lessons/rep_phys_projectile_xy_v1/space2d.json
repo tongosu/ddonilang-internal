@@ -1,0 +1,50 @@
+{
+  "schema": "seamgrim.space2d.v0",
+  "meta": {
+    "title": "포물선 궤적",
+    "desc": "초기 속도와 중력으로 만든 xy 위치",
+    "view_roles": ["trajectory_trail", "vector_arrow", "fit_camera"],
+    "measurement_components": ["vector", "trajectory"],
+    "camera_policy": "fit",
+    "state_hash_participation": false
+  },
+  "camera": {
+    "x_min": 0,
+    "x_max": 9,
+    "y_min": 0,
+    "y_max": 7
+  },
+  "points": [
+    { "x": 0, "y": 0 },
+    { "x": 1, "y": 2.2 },
+    { "x": 2, "y": 3.8 },
+    { "x": 3, "y": 4.8 },
+    { "x": 4, "y": 5.1 },
+    { "x": 5, "y": 4.8 },
+    { "x": 6, "y": 3.8 },
+    { "x": 7, "y": 2.2 },
+    { "x": 8, "y": 0 }
+  ],
+  "shapes": [
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 0, "y1": 0, "x2": 1, "y2": 2.2, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 1, "y1": 2.2, "x2": 2, "y2": 3.8, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 2, "y1": 3.8, "x2": 3, "y2": 4.8, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 3, "y1": 4.8, "x2": 4, "y2": 5.1, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 4, "y1": 5.1, "x2": 5, "y2": 4.8, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 5, "y1": 4.8, "x2": 6, "y2": 3.8, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 6, "y1": 3.8, "x2": 7, "y2": 2.2, "stroke": "#2563eb", "width": 0.04 },
+    { "kind": "line", "role": "trajectory_trail", "group_id": "projectile.trajectory", "x1": 7, "y1": 2.2, "x2": 8, "y2": 0, "stroke": "#2563eb", "width": 0.04 },
+    {
+      "kind": "arrow",
+      "role": "vector_arrow",
+      "group_id": "projectile.velocity",
+      "x1": 4,
+      "y1": 5.1,
+      "x2": 4.65,
+      "y2": 4.72,
+      "stroke": "#7c3aed",
+      "width": 0.05,
+      "label": "v"
+    }
+  ]
+}

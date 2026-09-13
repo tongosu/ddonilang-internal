@@ -1,0 +1,88 @@
+{
+  "schema": "seamgrim.canonical_view.t5h_playground_surface_identity_audit.v1",
+  "legacy_entrypoint": "solutions/seamgrim_ui_mvp/ui/play.html",
+  "legacy_module": "solutions/seamgrim_ui_mvp/ui/playground.js",
+  "current_shell": "solutions/seamgrim_ui_mvp/ui/index.html",
+  "current_shell_runtime": "solutions/seamgrim_ui_mvp/ui/app.js",
+  "current_redirect_target": "index.html?tab=studio",
+  "required_redirect_markers": [
+    "예전 Playground 주소는 작업실로 통합되었습니다.",
+    "data-surface-identity=\"legacy_compatibility_only\"",
+    "data-authoritative-language-runtime-meaning=\"shared\"",
+    "data-full-product-surface-identity=\"false\"",
+    "target.searchParams.set(\"tab\", \"studio\");",
+    "target.searchParams.set(\"legacy_play_redirect\", \"1\");",
+    "window.location.replace(target.toString());"
+  ],
+  "required_shell_markers": [
+    "fromLegacyPlayRedirect",
+    "consumeLegacyPlayRedirectParam()",
+    "예전 Playground 주소를 작업실로 옮겼습니다. 이제 작업실에서 편집하고 실행하세요."
+  ],
+  "expected_active_entrypoint_importers": [],
+  "expected_consumer_matrix_playground_keys": [],
+  "expected_legacy_compatibility_playground_keys": [
+    "console",
+    "console_grid",
+    "graph",
+    "space2d",
+    "table",
+    "text",
+    "structure",
+    "grid2d",
+    "workbench_line",
+    "workbench_pendulum",
+    "workbench_projectile",
+    "workbench_grid"
+  ],
+  "required_legacy_module_authority_markers": [
+    "from \"./wasm_page_common.js\"",
+    "extractCanonicalViewAuthorityInputsFromState",
+    "buildCanonicalViewPayloadSet",
+    "allowObservationOutputFallback: false"
+  ],
+  "existing_projection_evidence": [
+    {
+      "phase": "T5B",
+      "runner": "tests/seamgrim_console_graph_canonical_view_payload_runner.mjs",
+      "mode": "NO_EXPLICIT_PLAYGROUND_PROJECTION",
+      "marker": "playground"
+    },
+    {
+      "phase": "T5C",
+      "runner": "tests/seamgrim_space2d_canonical_view_payload_runner.mjs",
+      "mode": "DIRECT_CANONICAL_BUILDER_ALIAS",
+      "marker": "const playgroundPayload = payloadsFor(state).space2d;"
+    },
+    {
+      "phase": "T5D",
+      "runner": "tests/seamgrim_table_text_structure_canonical_view_payload_runner.mjs",
+      "mode": "DIRECT_CANONICAL_BUILDER_ALIAS",
+      "marker": "const playground = payloadsFor(state);"
+    },
+    {
+      "phase": "T5E",
+      "runner": "tests/seamgrim_console_grid_grid2d_canonical_view_payload_runner.mjs",
+      "mode": "DIRECT_CANONICAL_BUILDER_ALIAS",
+      "marker": "const playground = buildCanonicalViewPayloadSet(extractCanonicalViewAuthorityInputsFromState(state));"
+    },
+    {
+      "phase": "T5F",
+      "runner": "tests/seamgrim_workbench_four_family_canonical_view_payload_runner.mjs",
+      "mode": "REBUILT_CANONICAL_FUNCTION_ALIAS",
+      "marker": "const playgroundProjection = stableSemanticJson(canonicalFor(entry.family, frame.wasm_state, frame.frame_id)"
+    }
+  ],
+  "expected_audit_result": "T5H_PLAYGROUND_OPTION_B_COMPATIBILITY_BOUNDARY_PASS",
+  "claim_boundaries": {
+    "owner_decision": "OPTION_B_PLAYGROUND_IS_LEGACY_COMPATIBILITY_ONLY",
+    "standalone_playground_current_product_surface": "NO_LEGACY_COMPATIBILITY_ONLY",
+    "workbench_studio_is_playground_identity": "NO_DISTINCT_PRODUCT_SURFACE_IDENTITY",
+    "legacy_module_is_active_surface": "NO_ACTIVE_IMPORTERS_0",
+    "compatibility_policy_change": "OWNER_APPROVED",
+    "separate_parser_runtime": "FORBIDDEN_AND_ABSENT",
+    "raw_state_semantic_inference": "FORBIDDEN",
+    "hidden_semantic_fallback": "FORBIDDEN",
+    "canonical_payload_meaning_transformation": "FORBIDDEN"
+  }
+}

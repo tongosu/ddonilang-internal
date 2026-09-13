@@ -1,0 +1,26 @@
+{
+  "schema_id": "seamgrim.primary_view_rules",
+  "schema_version": "v1",
+  "ruleset_hash": "candidate:fnv1a32:primary_view_rules:0b2e8f4c",
+  "rules": [
+    {
+      "lesson_id": "rep_math_function_line_v1",
+      "primary_view": "graph",
+      "secondary_views": ["table", "text"],
+      "reason": "declared_graph_lesson"
+    },
+    {
+      "lesson_id": "rep_phys_projectile_xy_v1",
+      "primary_view": "space2d",
+      "secondary_views": ["graph", "text"],
+      "reason": "declared_trajectory_scene"
+    },
+    {
+      "lesson_id": "rep_econ_supply_demand_tax_v1",
+      "primary_view": "graph",
+      "secondary_views": ["text"],
+      "reason": "declared_market_graph"
+    }
+  ],
+  "heuristic_selection": false
+}

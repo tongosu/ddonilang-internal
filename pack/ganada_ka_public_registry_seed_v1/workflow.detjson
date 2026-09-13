@@ -1,0 +1,27 @@
+{
+  "schema": "ddn.ganada.ka.public_registry_seed.v1",
+  "pack": "ganada_ka_public_registry_seed_v1",
+  "cell_id": "카-4",
+  "status": "product_pass_gate",
+  "product_surface": "ttonimaru_public_registry_seed",
+  "source_pack": "ttonimaru_registry_4_v1",
+  "product_runner": "tests/ganada_ka_public_registry_seed_runner.mjs",
+  "local_dry_run_only": true,
+  "public_registry_final_claim": false,
+  "registry_publish_claim": false,
+  "trust_signing_claim": false,
+  "moderation_claim": false,
+  "cloud_sync_claim": false,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "file_line_refs": [
+    "pack/ganada_ka_public_registry_seed_v1/workflow.detjson:1",
+    "tests/ganada_ka_public_registry_seed_runner.mjs:1",
+    "tests/ttonimaru_public_registry_seed_runner.mjs:1"
+  ]
+}

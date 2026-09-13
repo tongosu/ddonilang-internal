@@ -1,0 +1,49 @@
+{
+  "schema": "ddn.ganada.ma.publication_dryrun_workflow.v1",
+  "pack": "ganada_ma_publication_dryrun_workflow_v1",
+  "cell_id": "마-4",
+  "status": "product_pass_gate",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "public_upload_claim": false,
+  "public_link_creation_claim": false,
+  "registry_publish_claim": false,
+  "release_execution_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "workflow": {
+    "publication_dry_run_policy": "local_only",
+    "product_runner": "tests/ganada_ma_publication_dryrun_runner.mjs",
+    "required_selectors": [
+      "publication-review-panel",
+      "publication-dryrun",
+      "publication-artifact-preview",
+      "publication-boundary-warning"
+    ],
+    "required_boundaries": [
+      "public_upload:false",
+      "public_link_creation:false",
+      "registry_publish:false",
+      "release_execution:false"
+    ]
+  },
+  "required_commands": [
+    {
+      "kind": "pack_golden_pass",
+      "command": ["python", "tests/run_pack_golden.py", "ganada_ma_publication_dryrun_workflow_v1"],
+      "expect_stdout_contains": "pack golden ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/ganada_ma_publication_dryrun_runner.mjs"],
+      "expect_stdout_contains": "ganada_ma_publication_dryrun: ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/education_publication_pack_runner.mjs"],
+      "expect_stdout_contains": "education_publication_pack: ok"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"cmd":["run","pack/sim_seum_tick_phase_v1/source_phase.ddn","--solveplan-out","build/declarative_closure_g2/sim_seum_tick_phase_v1_solveplan.detjson"],"exit_code":0,"stdout":[]}

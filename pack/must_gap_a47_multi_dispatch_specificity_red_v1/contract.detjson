@@ -1,0 +1,24 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a47_multi_dispatch_specificity_red_v1",
+  "track": "A",
+  "item": "A47",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:3979",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER3_V1.md:18",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A47_multi_dispatch_specificity_V1.md",
+  "cases": [
+    {
+      "id": "c01_specific_type_wins",
+      "input": "cases/c01_specific_type_wins/input.ddn",
+      "expected_red": "cases/c01_specific_type_wins/expected_red.detjson"
+    },
+    {
+      "id": "c02_incomparable_tie_errors",
+      "input": "cases/c02_incomparable_tie_errors/input.ddn",
+      "expected_red": "cases/c02_incomparable_tie_errors/expected_red.detjson"
+    }
+  ]
+}

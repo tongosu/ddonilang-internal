@@ -1,0 +1,9 @@
+id = "gaji/std_grid"
+name = "표준 격자 가지"
+version = "0.1.0"
+ssot_requires = ">=20.1.22"
+
+det_tier = "D-STRICT"
+openness = "closed"
+
+description = "정수 격자 world/state helper"

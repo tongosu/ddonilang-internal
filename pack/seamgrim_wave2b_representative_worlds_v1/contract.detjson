@@ -1,0 +1,42 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave2b_representative_worlds_v1",
+  "kind": "seamgrim_wave2b_representative_worlds_vertical",
+  "wave": "wave2b",
+  "gate": "G7",
+  "product_code_change": true,
+  "product_behavior_claim": true,
+  "browser_runner": "tests/seamgrim_wave2b_representative_worlds_runner.mjs",
+  "worlds": [
+    {
+      "lesson_id": "rep_phys_pendulum_wave1_v1",
+      "primary_view": "space2d",
+      "measurement_components": ["angle", "length", "vector", "trail"],
+      "camera_policy": "follow",
+      "reaction_rule_refs": ["edge.theta_extremum"]
+    },
+    {
+      "lesson_id": "rep_phys_projectile_xy_v1",
+      "primary_view": "space2d",
+      "measurement_components": ["vector", "trail"],
+      "camera_policy": "fit",
+      "reaction_rule_refs": ["level.projectile.flight"]
+    },
+    {
+      "lesson_id": "rep_math_function_line_v1",
+      "primary_view": "graph",
+      "measurement_components": ["axes", "graph_point", "slope"],
+      "camera_policy": "fit",
+      "reaction_rule_refs": ["level.linear.point"]
+    }
+  ],
+  "requires_original_ddn": true,
+  "requires_wasm_state_hash": true,
+  "requires_browser_canvas_nonblank": true,
+  "requires_lesson_plan_roundtrip": true,
+  "state_hash_formula_change": false,
+  "view_objects_in_world_state": false,
+  "new_ddn_syntax": false,
+  "docs_ssot_change": false,
+  "requires_docs_ssot_clean": true
+}

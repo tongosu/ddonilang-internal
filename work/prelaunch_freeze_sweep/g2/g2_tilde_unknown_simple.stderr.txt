@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.34s
+     Running `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_tilde_unknown_simple.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_tilde_unknown_simple.summary.detjson`
+E_RUNTIME_UNDEFINED work\prelaunch_freeze_sweep\g2\g2_tilde_unknown_simple.ddn:1:6 정의되지 않은 경로: 살림.~분포
+error: process didn't exit successfully: `I:/home/urihanl/ddn/codex/target\debug\teul-cli.exe run work\prelaunch_freeze_sweep\g2\g2_tilde_unknown_simple.ddn --summary-json work\prelaunch_freeze_sweep\g2\g2_tilde_unknown_simple.summary.detjson` (exit code: 1)

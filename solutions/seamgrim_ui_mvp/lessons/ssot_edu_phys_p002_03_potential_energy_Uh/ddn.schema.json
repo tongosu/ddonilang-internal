@@ -1,0 +1,10 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "dh", "type": "수" },
+    { "name": "g", "type": "수" },
+    { "name": "h", "type": "수" },
+    { "name": "h_max", "type": "수" },
+    { "name": "m", "type": "수" }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "seamgrim.workbench_durable_persistence_adapters.contract.v1",
+  "gate": "G1",
+  "product_path": "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+  "required_modules": [
+    "solutions/seamgrim_ui_mvp/ui/workbench/persistence/local_fallback.js",
+    "solutions/seamgrim_ui_mvp/ui/workbench/persistence/project_adapter.js",
+    "solutions/seamgrim_ui_mvp/ui/workbench/persistence/capability_session.js",
+    "solutions/seamgrim_ui_mvp/ui/workbench/persistence/run_archive_adapter.js"
+  ],
+  "required_behavior": [
+    "local fallback is labeled device-only",
+    "server-saved is not claimed by local fallback",
+    "legacy approved-workbench local snapshot migrates through the adapter",
+    "project adapter builds seamgrim.project_snapshot_artifact.v0",
+    "capability raw value is not exposed through debug snapshot",
+    "run archive adapter declares server binding pending for G4",
+    "workbench API and save control readiness are explicit",
+    "save completion is tied to a monotonic persistence generation",
+    "runner-owned process socket and temp residuals are zero"
+  ],
+  "non_claims": [
+    "server project save/open",
+    "run archive server API",
+    "default shell switch",
+    "state_hash formula change"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ddn.corpus_card.v1.candidate",
+  "title": "Ddonirang Corpus Card V1 Candidate",
+  "type": "object",
+  "required": [
+    "schema",
+    "card_id",
+    "world_concept_id",
+    "name",
+    "one_line",
+    "lifecycle",
+    "feasibility",
+    "curriculum",
+    "source",
+    "surfaces",
+    "execution_evidence",
+    "few_shot",
+    "remix_handles",
+    "read_aloud",
+    "lineage",
+    "gate_status",
+    "owner_decision"
+  ],
+  "properties": {
+    "schema": {"const": "ddn.corpus_card.v1.candidate"},
+    "card_id": {"type": "string", "minLength": 1},
+    "world_concept_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "one_line": {"type": "string", "minLength": 1},
+    "lifecycle": {"enum": ["초안", "검증중", "잠김", "수록"]},
+    "feasibility": {
+      "type": "object",
+      "required": ["grade", "required_surfaces", "ssot_anchor"],
+      "properties": {
+        "grade": {"enum": ["ga", "na", "da"]},
+        "required_surfaces": {"type": "array", "items": {"type": "string"}},
+        "ssot_anchor": {"type": "string", "minLength": 1}
+      }
+    },
+    "few_shot": {"type": "array", "minItems": 2},
+    "remix_handles": {"type": "array", "minItems": 1},
+    "read_aloud": {"type": "object"},
+    "gate_status": {"type": "object"},
+    "owner_decision": {"type": "object"}
+  }
+}

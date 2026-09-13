@@ -1,0 +1,17 @@
+{
+  "schema": "ddn.v1_core_control_flow_evidence_rebase_w1.v1",
+  "source_profile_identity": "v1-core-v25",
+  "repeat_count": 3,
+  "cases": [
+    {"id":"CF01_CONDITION_TRUE_FALSE_ELSE","path":"fixtures/cf01_condition_true_false_else.ddn","kind":"success","ticks":1,"fixture_sha256":"df78ed4e2fdac6a8860289a509b60b5cbde09beaa48698beedc187dcc2b8608c","receipt":"expected/cf01.detjson","receipt_sha256":"f3a97fab70085077cdb1e4fa83672cf9c96fe819cefc497d5a385aae3130fd0d"},
+    {"id":"CF02_WHILE_ZERO","path":"fixtures/cf02_while_zero.ddn","kind":"success","ticks":1,"fixture_sha256":"c978ba34bd8a03d65472ab4094c0cffa6d042ce4bcfa3e590160b5016a26988d","receipt":"expected/cf02.detjson","receipt_sha256":"fab464152739f34a41256b3a6d7b5768415ca5d93470d1e7107f91820f2b9054"},
+    {"id":"CF03_WHILE_ONE","path":"fixtures/cf03_while_one.ddn","kind":"success","ticks":1,"fixture_sha256":"5023610af6a0c0d43a78a8ab79a3655ff78e2895758a968907fec1f95961b352","receipt":"expected/cf03.detjson","receipt_sha256":"c9799c2ff95af68bb60b2106062246d9c5db916e447aa8c38fc9dceffc50628b"},
+    {"id":"CF04_WHILE_MULTIPLE","path":"fixtures/cf04_while_multiple.ddn","kind":"success","ticks":1,"fixture_sha256":"7f08214ed5f79bcbfdfc006e7ab44fcae7a8475fa5ca70c38eee167512d59ea9","receipt":"expected/cf04.detjson","receipt_sha256":"7a80d6377da82240d941a08885de71bb9471b88984680d0da9464008e93a0653"},
+    {"id":"CF05_FOREACH_ZERO","path":"fixtures/cf05_foreach_zero.ddn","kind":"success","ticks":1,"fixture_sha256":"85ae2707f23ef1fb96033391db0638046d2048c34f1d687464a78d10f979c9bd","receipt":"expected/cf05.detjson","receipt_sha256":"36b2750c88a105dc72e591655af4e9a359123a7b3c18bcc7dc597786daf9f990"},
+    {"id":"CF06_FOREACH_ONE","path":"fixtures/cf06_foreach_one.ddn","kind":"success","ticks":1,"fixture_sha256":"3a008546dc9682b1ebb208bad7c0213a34d2011b31941f16e515f9c98b222ea7","receipt":"expected/cf06.detjson","receipt_sha256":"221a234b9b7723209c410cc3bfa431782c4be4a7bec6c7bdd5cf953f79df50d0"},
+    {"id":"CF07_FOREACH_MULTIPLE_ORDER","path":"fixtures/cf07_foreach_multiple_order.ddn","kind":"success","ticks":1,"fixture_sha256":"73689065480eb8c8c8d0cfadd2bd0eb199dc81558d2ffc605584189499c6822a","receipt":"expected/cf07.detjson","receipt_sha256":"4d566109c98d9493bd44d8c4a45947df06fa2debe01b85f3e367073267e2a921"},
+    {"id":"CF08_NESTED_CURRENT_ITEM","path":"fixtures/cf08_nested_current_item.ddn","kind":"success","ticks":1,"fixture_sha256":"a178b5e30f483ddfda8c2b4905aa88848acf1cbab135df558cbac1c305663f40","receipt":"expected/cf08.detjson","receipt_sha256":"a356e5b2a92fc62381fc7705fe66024aaa2fa8ce4d75236c70202dd39637430c"},
+    {"id":"CF09_BRANCH_FAILURE_ATOMIC","path":"fixtures/cf09_branch_failure_atomic.ddn","kind":"failure","ticks":1,"fixture_sha256":"6bea1bc27c2d90b51657ce0667ace0e52930e6e3196767f00f16bfc37e2ee9b2","receipt":"expected/cf09.detjson","receipt_sha256":"3b224f5c128540d40c09320a19aa1b5b51ecd396faaf4105c22349e01188aa4d"},
+    {"id":"CF10_LOOP_FAILURE_ATOMIC","path":"fixtures/cf10_loop_failure_atomic.ddn","kind":"failure","ticks":1,"fixture_sha256":"779e2c5a96857f2715c74e8f313d4874d24716a81b13bb20d660444946f50822","receipt":"expected/cf10.detjson","receipt_sha256":"afa7df90db5296292b04b208698122b37b3bfc1d594313fc605e54bba65e64dc"}
+  ]
+}

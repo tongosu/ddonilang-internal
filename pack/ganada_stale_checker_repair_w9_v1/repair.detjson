@@ -1,0 +1,100 @@
+{
+  "schema": "ddn.ganada.stale_checker_repair.w9.v1",
+  "pack": "ganada_stale_checker_repair_w9_v1",
+  "status": "product_evidence_checker_repair",
+  "legacy_markdown_dependency_removed": true,
+  "dev_summary_token_dependency_removed": true,
+  "matrix_count_dependency_removed": true,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "baseline_failures_before_repair": [
+    {
+      "command": ["python", "tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py"],
+      "observed_failure": "matrix counts mismatch: rows=90 behavior=90 docs=0"
+    },
+    {
+      "command": ["python", "tests/run_roadmap_v2_a5_nurigym_training_workflow_check.py"],
+      "observed_failure": "matrix counts mismatch: rows=90 behavior=90 docs=0"
+    },
+    {
+      "command": ["python", "tests/run_std_grid_game_bogae_browser_dom_smoke_check.py"],
+      "observed_failure": "missing file: NEXT_DEV_ROADMAP_AFTER_VIEWER_JS_DOM_V2.md"
+    },
+    {
+      "command": ["python", "tests/run_std_grid_game_bogae_web_playback_controls_check.py"],
+      "observed_failure": "missing file: STD_GRID_GAME_BOGAE_WEB_SHOWCASE_7DAY_V1.md"
+    }
+  ],
+  "repaired_checkers": [
+    {
+      "id": "roadmap_v2_a3_nurigym_python_web_parity",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py"],
+      "expect_stdout_contains": "[roadmap-v2-a3-nurigym-python-web-parity] OK",
+      "removed_dependency_tokens": [
+        "GANADA_MATRIX_CORRECTED_20260706.md",
+        "DEV_SUMMARY.md",
+        "behavior_closed_90"
+      ],
+      "file_line_refs": [
+        "tests/run_roadmap_v2_a3_nurigym_python_web_parity_check.py:1",
+        "tests/nurigym_python_web_parity_runner.mjs:1",
+        "pack/nurigym_python_web_parity_v1/contract.detjson:1",
+        "solutions/seamgrim_ui_mvp/ui/nurigym_python_web_parity.js:1"
+      ]
+    },
+    {
+      "id": "roadmap_v2_a5_nurigym_training_workflow",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_roadmap_v2_a5_nurigym_training_workflow_check.py"],
+      "expect_stdout_contains": "[roadmap-v2-a5-nurigym-training-workflow] OK",
+      "removed_dependency_tokens": [
+        "GANADA_MATRIX_CORRECTED_20260706.md",
+        "DEV_SUMMARY.md",
+        "behavior_closed_90"
+      ],
+      "file_line_refs": [
+        "tests/run_roadmap_v2_a5_nurigym_training_workflow_check.py:1",
+        "tests/run_v25_first_ai_production_path_pack_check.py:1",
+        "pack/nurigym_training_workflow_v1/contract.detjson:1",
+        "pack/v25_first_ai_production_path_v1/contract.detjson:1"
+      ]
+    },
+    {
+      "id": "std_grid_game_bogae_browser_dom_smoke",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_std_grid_game_bogae_browser_dom_smoke_check.py"],
+      "expect_stdout_contains": "[std-grid-game-bogae-browser-dom] OK",
+      "removed_dependency_tokens": [
+        "NEXT_DEV_ROADMAP_AFTER_VIEWER_JS_DOM_V2.md",
+        "STD_GRID_GAME_BOGAE_BROWSER_DOM_SMOKE_V1.md"
+      ],
+      "file_line_refs": [
+        "tests/run_std_grid_game_bogae_browser_dom_smoke_check.py:1",
+        "tests/std_grid_game_bogae_browser_dom_smoke_runner.mjs:1",
+        "pack/std_grid_game_bogae_browser_dom_smoke_v1/contract.detjson:1",
+        "pack/std_grid_game_bogae_live_web_assets_v1/golden.jsonl:1"
+      ]
+    },
+    {
+      "id": "std_grid_game_bogae_web_playback_controls",
+      "repair_basis": "product_runner_and_pack_contract",
+      "command": ["python", "tests/run_std_grid_game_bogae_web_playback_controls_check.py"],
+      "expect_stdout_contains": "[std-grid-game-bogae-web-playback] OK",
+      "removed_dependency_tokens": [
+        "STD_GRID_GAME_BOGAE_WEB_SHOWCASE_7DAY_V1.md",
+        "STD_GRID_GAME_BOGAE_WEB_PLAYBACK_CONTROLS_6DAY_V1.md"
+      ],
+      "file_line_refs": [
+        "tests/run_std_grid_game_bogae_web_playback_controls_check.py:1",
+        "pack/std_grid_game_bogae_web_playback_controls_v1/golden.jsonl:1",
+        "pack/std_grid_game_bogae_web_playback_closure_v1/contract.detjson:1",
+        "pack/std_grid_game_bogae_web_showcase_closure_v1/contract.detjson:1"
+      ]
+    }
+  ]
+}

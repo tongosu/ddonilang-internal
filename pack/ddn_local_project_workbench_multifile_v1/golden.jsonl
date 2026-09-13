@@ -1,0 +1,1 @@
+{"case_id":"workbench_project_run_v1","cmd":["project-run","--virtual","pack/ddn_local_project_workbench_multifile_v1/fixtures/workbench_project_v1.json","--target","앱","--inspect-graph","--inspect-lock"],"stdout_path":"expected/workbench_project_run_v1.detjson","exit_code":0}

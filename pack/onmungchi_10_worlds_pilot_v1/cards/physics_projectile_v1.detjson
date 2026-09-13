@@ -1,0 +1,21 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "physics_projectile_v1",
+  "world_concept_id": "physics.projectile",
+  "name": "포물선 운동",
+  "one_line": "가로·세로 속도와 중력이 만드는 포물선 궤적을 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["설정", "채비", "매김", "매마디마다", "조건"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "physics", "age_band": "middle", "textbook_candidates": ["3권 상태와 마디", "4권 세계 모델"]},
+  "source": {"lesson_id": "rep_phys_projectile_xy_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn", "existing_pack_id": "edu_seamgrim_rep_phys_projectile_xy_v1", "representative_madi": 240},
+  "surfaces": ["설정", "채비", "매김", "시작할때", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:349745dfcb0a6944acaa02db955721c8833bd6508cecd5f4ebbd7862ec67f8a3", "trace_hash": "blake3:21313036c6a6699eea72ea44a4678ab44dad8fbd9e6c19e08465879e030474b6", "pilot_case_id": "physics_projectile_v1"},
+  "few_shot": [{"audience": "child", "intent": "공을 던졌을 때 지나가는 길을 속도와 중력을 바꿔 보게 해줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "투사체의 x-y 상태를 명시적 마디 계산으로 전개하고 궤적을 비교하는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "초기속도y", "range": "1..40", "effect": "최고점과 비행 시간이 달라진다."}, {"parameter": "중력가속도", "range": "1..20", "effect": "궤적의 휘어짐과 낙하 시간이 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_phys_projectile_xy_v1", "remix_lineage_ref": null},
+  "representation_pair_ref": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/representation_pair.detjson",
+  "world_diff_ref": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/world_diff_gravity_half.detjson",
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

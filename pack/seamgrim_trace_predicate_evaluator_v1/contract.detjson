@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_trace_predicate_evaluator_v1",
+  "kind": "seamgrim_trace_predicate_evaluator",
+  "event_schema": "seamgrim.trace_predicate_events.v1",
+  "condition_kinds": ["zero_crossing", "sign_change", "extremum", "tolerance_entry"],
+  "diagnostics": [
+    "E_TRACE_SAMPLE_DUPLICATE_TICK",
+    "E_TRACE_SAMPLE_TICK_ORDER",
+    "E_TRACE_SAMPLE_MISSING_VALUE",
+    "E_TRACE_SAMPLE_NONFINITE"
+  ],
+  "byte_stable": true,
+  "precomputed_schedule_truth_allowed": false,
+  "state_hash_participation": false,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "docs_ssot_change": false
+}

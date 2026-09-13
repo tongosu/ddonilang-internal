@@ -1,0 +1,22 @@
+{
+  "env_id": "nurigym.gridmaze2d",
+  "seed": 0,
+  "episode_id": 101,
+  "agent_id": 1,
+  "max_steps": 1,
+  "actions": [
+    -1
+  ],
+  "gridmaze_layouts": [
+    {
+      "width": 2,
+      "height": 1,
+      "goal": [
+        1,
+        0
+      ],
+      "obstacles": []
+    }
+  ],
+  "step_record_version": "v0.2"
+}

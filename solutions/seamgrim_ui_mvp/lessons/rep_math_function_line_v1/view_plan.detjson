@@ -1,0 +1,16 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "rep_math_function_line_v1",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "graph",
+  "required_anchor_ids": ["obs.x", "obs.y", "obs.slope"],
+  "anchors": [
+    {"anchor_id": "obs.x", "source_ref": {"kind": "observation", "key": "x"}, "value_type": "scalar", "unit": "1", "label": "x", "accessibility_name": "일차함수 x 값", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/lesson.ddn", "source_span": "x <- x + 간격"}},
+    {"anchor_id": "obs.y", "source_ref": {"kind": "observation", "key": "y"}, "value_type": "scalar", "unit": "1", "label": "y", "accessibility_name": "일차함수 y 값", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/lesson.ddn", "source_span": "y <- 기울기 * x + 절편"}},
+    {"anchor_id": "obs.slope", "source_ref": {"kind": "observation", "key": "기울기"}, "value_type": "scalar", "unit": "1", "label": "기울기", "accessibility_name": "일차함수 기울기", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_math_function_line_v1/lesson.ddn", "source_span": "기울기: 수 <- (2.0) 매김"}}
+  ],
+  "measures": [],
+  "graph_cursor": {"cursor_id": "graph.current.line", "x_anchor": "obs.x", "y_anchor": "obs.y", "series_id": "y", "label": "현재 함수값"},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

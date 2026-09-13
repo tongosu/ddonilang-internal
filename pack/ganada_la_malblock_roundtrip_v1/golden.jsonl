@@ -1,0 +1,1 @@
+{"id":"c00_ganada_la_malblock_roundtrip_marker","cmd":["run","pack/ganada_la_malblock_roundtrip_v1/input.ddn"],"stdout":["GANADA_LA_MALBLOCK_ROUNDTRIP_V1","cell=라-2","subset_source=seamgrim_malblock_roundtrip_subset_v1","behavior_closed_claim=false","matrix_upgrade_claim=false"],"exit_code":0}

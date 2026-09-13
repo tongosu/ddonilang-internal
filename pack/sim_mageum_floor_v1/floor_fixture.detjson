@@ -1,0 +1,13 @@
+{
+  "schema": "ddn.declarative_closure.mageum.fixture.v1",
+  "pack": "sim_mageum_floor_v1",
+  "fixture_id": "floor_stop_red",
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "reaction": "멈춤",
+  "proposed_surface": "막음 바닥 { y >= 0, 반응: 멈춤 }",
+  "accepted_product_surface": false,
+  "runtime_landed": false,
+  "parser_landed": false,
+  "expected_status": "red_contract_only"
+}

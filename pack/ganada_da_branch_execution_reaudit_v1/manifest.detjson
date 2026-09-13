@@ -1,0 +1,78 @@
+{
+  "schema": "ddn.ganada.remaining_stems.reaudit.v1",
+  "pack": "ganada_da_branch_execution_reaudit_v1",
+  "pack_kind": "branch_execution_reaudit",
+  "branch": "다",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claims": 0,
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_da_branch_execution_reaudit_v1/manifest.detjson:1",
+    "pack/ganada_maru_verification_contract_v1/contract.detjson:1",
+    "pack/symbolic_minimum_v1/golden.jsonl:1"
+  ],
+  "cells": [
+    {
+      "cell_id": "다-0",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["pack/stdlib_math_basics/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "da0_stdlib_math_basics", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "stdlib_math_basics"], "expect_stdout_contains": "pack golden ok"}
+      ]
+    },
+    {
+      "cell_id": "다-1",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["pack/numeric_exact_numbers_smoke_v1/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "da1_numeric_exact_numbers", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "numeric_exact_numbers_smoke_v1"], "expect_stdout_contains": "pack golden ok"}
+      ]
+    },
+    {
+      "cell_id": "다-2",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["pack/symbolic_minimum_v1/golden.jsonl:1", "pack/proof_runtime_smoke_v1/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "da2_symbolic_and_proof", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "symbolic_minimum_v1", "proof_runtime_smoke_v1"], "expect_stdout_contains": "pack golden ok"}
+      ]
+    },
+    {
+      "cell_id": "다-3",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["pack/seamgrim_numeric_track_run_preset_v1/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "da3_numeric_track_run_preset_pack", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "seamgrim_numeric_track_run_preset_v1"], "expect_stdout_contains": "pack golden ok"}
+      ]
+    },
+    {
+      "cell_id": "다-4",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["pack/math_vector_minimum_first_run_v1/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "da4_math_vector_minimum", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "math_vector_minimum_first_run_v1"], "expect_stdout_contains": "pack golden ok"}
+      ]
+    },
+    {
+      "cell_id": "다-5",
+      "behavior_closed_claim": false,
+      "matrix_upgrade_claim": false,
+      "file_line_refs": ["tests/run_proof_runtime_minimum_check.py:1", "pack/proof_runtime_smoke_v1/golden.jsonl:1"],
+      "evidence_checks": [
+        {"id": "da5_proof_runtime_minimum", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_proof_runtime_minimum_check.py"], "expect_stdout_contains": "proof_runtime_minimum: PASS"}
+      ]
+    }
+  ]
+}

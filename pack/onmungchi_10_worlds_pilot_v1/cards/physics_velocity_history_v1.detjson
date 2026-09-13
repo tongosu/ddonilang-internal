@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "physics_velocity_history_v1",
+  "world_concept_id": "physics.velocity_history",
+  "name": "속도 기록 그래프",
+  "one_line": "등가속도 운동의 속도를 이력에 쌓아 최근값과 길이를 본다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["시작할때", "매마디마다", "조건", "이력"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "physics", "age_band": "middle", "textbook_candidates": ["2권 자료와 반복", "3권 상태와 마디"]},
+  "source": {"lesson_id": "rep_physics_velocity_history_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_physics_velocity_history_v1/lesson.ddn", "existing_pack_id": null, "representative_madi": 14},
+  "surfaces": ["설정", "시작할때", "매마디마다", "조건", "이력", "보여주기"],
+  "execution_evidence": {"state_hash": "blake3:454d5542a10c591cb92c64856a69f1f35d423b0b4ac04516a79cdab60e17cc75", "trace_hash": "blake3:4399a1e6bd42c6717b60caa4d25771e43a56678d520545d4c25ef60dced889bc", "pilot_case_id": "physics_velocity_history_v1"},
+  "few_shot": [{"audience": "child", "intent": "속도가 매번 얼마나 늘어나는지 최근 기록과 함께 보여줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "등가속도 속도값을 고정 길이 이력에 넣고 최근값과 기록 길이를 비교하는 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "가속도", "range": "-5..5", "effect": "속도 증가량과 방향이 달라진다."}, {"parameter": "이력용량", "range": "3..20", "effect": "보존되는 최근 속도 개수가 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_physics_velocity_history_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

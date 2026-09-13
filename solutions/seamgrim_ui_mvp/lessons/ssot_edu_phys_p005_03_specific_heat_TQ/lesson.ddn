@@ -1,0 +1,29 @@
+// stateful-sim preview(auto): range sampler -> step sim
+
+(시작)할때 {
+  Q <- 0.
+}.
+
+(매마디)마다 {
+  // 출력은 숫자만. (Q, T) 순서.
+  // NOTE: export_graph.py는 stdout 숫자쌍을 (x,y)로 묶는다.
+
+  m <- 1.
+  c <- 4200.
+  T0 <- 20.
+
+  Q_min <- 0.
+  Q_max <- 42000.
+  dQ <- 2000.
+
+  온도식 = (#ascii1) 수식{ y = T0 + x/(m*c) }.
+
+  { Q <= Q_max }인것 일때 {
+    T <- T0 + Q/(m*c).
+    보임 {
+      Q: Q.
+      T: T.
+    }.
+    Q <- Q + (dQ).
+  }.
+}.

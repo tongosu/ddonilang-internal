@@ -1,0 +1,4 @@
+프로젝트 {
+  이름: "ambiguous".
+  첫글: "./app/main.ddn".
+}.

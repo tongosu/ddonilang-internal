@@ -1,0 +1,50 @@
+{
+  "claims": {
+    "closure_tier": "behavior-closed",
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g7_status": "G7_INDEPENDENT_VIEW_INSTANCES_COMPLETE",
+    "state_hash_formula_change": false
+  },
+  "instance_contract": {
+    "magnifier_requires_selected_target": true,
+    "magnifier_temporary": true,
+    "minimum_primary_instances": 1,
+    "overlay_render_surface": "target_overlay",
+    "overlay_target": "primary_view_instance_id",
+    "schema": "seamgrim.workbench.view_workspace.v1",
+    "side_instance_cardinality": "N",
+    "unavailable_roles_hidden": true
+  },
+  "layout_contract": {
+    "bogae_full": "view_surfaces_with_explicit_ddn_access",
+    "bogae_main": "side_beside_primary_with_refit",
+    "ddn_main": "side_below_primary",
+    "narrow": "vertical_stack"
+  },
+  "persistence": {
+    "durable_side_instance_ids_restore": true,
+    "legacy_selected_view_projection": true,
+    "selected_target_restores": false,
+    "temporary_magnifier_restores": false,
+    "view_workspace_snapshot": true
+  },
+  "product_browser": {
+    "independent_side_instances": 2,
+    "independent_side_semantic_hashes": 2,
+    "narrow_viewport_width_px": 600,
+    "overlay_changes_target_artifact": true,
+    "selected_target_invalidated_on_frame_change": true,
+    "status": "PASS"
+  },
+  "schema": "seamgrim.workbench_recovery.g7_independent_view_instances.v1",
+  "verification": {
+    "committed_view_verticals_browser": "PASS",
+    "durable_persistence_adapters_browser": "PASS",
+    "execution_lifecycle_browser": "PASS",
+    "live_step_pump_browser": "PASS",
+    "node_syntax": "PASS",
+    "view_instance_model_unit": "PASS",
+    "view_instances_browser": "PASS"
+  }
+}

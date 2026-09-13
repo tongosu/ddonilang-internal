@@ -1,0 +1,17 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "L", "type": "수" },
+    { "name": "Q1", "type": "수" },
+    { "name": "Q2", "type": "수" },
+    { "name": "Q3", "type": "수" },
+    { "name": "Q목록", "type": "수" },
+    { "name": "T0", "type": "수" },
+    { "name": "Tend", "type": "수" },
+    { "name": "Tm", "type": "수" },
+    { "name": "c1", "type": "수" },
+    { "name": "c2", "type": "수" },
+    { "name": "dQ", "type": "수" },
+    { "name": "m", "type": "수" }
+  ]
+}

@@ -1,0 +1,1 @@
+{"id":"c01_seamgrim_wave3b_submission_inbox_marker","cmd":["run","pack/seamgrim_wave3b_submission_inbox_v1/input.ddn"],"stdout":["SEAMGRIM_WAVE3B_SUBMISSION_INBOX_V1","teacher imports multiple classroom_exchange.v0 student_submission records","local inbox checks origin integrity duplicate evidence and reopen","no autograding account cloud or public upload claim"],"exit_code":0}

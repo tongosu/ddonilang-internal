@@ -1,0 +1,10 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "K", "type": "수" },
+    { "name": "d_max", "type": "수" },
+    { "name": "d_min", "type": "수" },
+    { "name": "dd", "type": "수" },
+    { "name": "d목록", "type": "수" }
+  ]
+}

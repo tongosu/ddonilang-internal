@@ -1,0 +1,32 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_wave3b_product_quality_gate_v1",
+  "contract_kind": "seamgrim_wave3b_product_quality_product_gate",
+  "product_behavior_claim": true,
+  "foundation_lesson_count": 12,
+  "viewport_count": 4,
+  "required_viewports": ["1440x900", "1280x800", "1024x768", "390x844"],
+  "primary_view_nonblank_required": true,
+  "semantic_binding_required": true,
+  "teacher_student_teacher_workflow_required": true,
+  "keyboard_run_required": true,
+  "ddn_source_access_required": true,
+  "a11y_names_required": true,
+  "no_horizontal_overflow_required": true,
+  "console_error_regression_required": true,
+  "browser_runner": "tests/seamgrim_wave3b_product_quality_gate_runner.mjs",
+  "composed_checks": [
+    "tests/run_seamgrim_wave3b_foundation12_view_plan_check.py",
+    "tests/run_seamgrim_wave3b_student_assignment_check.py",
+    "tests/run_seamgrim_wave3b_teacher_submission_archive_check.py"
+  ],
+  "no_runtime_role_toggle": true,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "state_hash_formula_change": false,
+  "docs_ssot_change": false,
+  "auto_score_claim": false,
+  "account_identity_claim": false,
+  "public_upload_claim": false,
+  "education_effect_claim": false
+}

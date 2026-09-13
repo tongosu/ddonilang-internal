@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.must_gap.red_pack.v1",
+  "id": "must_gap_a20_nuance_token_combination_red_v1",
+  "track": "A",
+  "item": "A20",
+  "evidence_tier": "docs_first",
+  "closure_claim": "no",
+  "implementation_claim": false,
+  "ssot_anchor": "docs/ssot/ssot/SSOT_LANG_v24.12.9.md:4137",
+  "audit_anchor": "docs/context/reports/SSOT_MUST_RULE_AUDIT_TIER3_V1.md:27",
+  "deepdive_report": "docs/context/reports/MUST_GAP_DEEPDIVE_A20_nuance_token_combination_V1.md",
+  "cases": [
+    {
+      "id": "c01_dollar_nuance_combination",
+      "input": "cases/c01_dollar_nuance_combination/input.ddn",
+      "expected_red": "cases/c01_dollar_nuance_combination/expected_red.detjson"
+    }
+  ]
+}

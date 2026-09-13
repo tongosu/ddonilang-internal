@@ -1,0 +1,274 @@
+{
+  "schema": "ddn.ganada.ma_branch.execution_reaudit.v1",
+  "pack": "ganada_ma_branch_execution_reaudit_v1",
+  "branch": "마",
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claims": 0,
+  "docs_ssot_change": false,
+  "product_code_change": false,
+  "runtime_change": false,
+  "parser_change": false,
+  "state_hash_change": false,
+  "status_grades_allowed": ["후보", "닫힘-문서", "닫힘-동작", "실패", "결정필요"],
+  "legacy_claim_gate_failures": 0,
+  "summary": {
+    "cells": 6,
+    "product_evidence_required_cells": 6,
+    "cells_with_product_pass": 6,
+    "cells_with_pack_golden_pass": 6,
+    "cells_proposed_behavior_closed": 0,
+    "cells_needing_repair_or_hardening": 3
+  },
+  "cells": [
+    {
+      "cell_id": "마-0",
+      "expected_user_workflow": "Open the curriculum catalog and confirm math, physics, econ, and science lessons are discoverable.",
+      "proposed_grade": "결정필요",
+      "grade_reason": "Catalog product checks pass, but the legacy matrix checker fails on stale 90/90 status counts.",
+      "required_product_evidence": ["pack_golden_pass", "product_cli_or_runtime_pass"],
+      "file_line_refs": [
+        "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md:136",
+        "docs/context/roadmap/GANADA_MATRIX_CORRECTED_20260706.md:43",
+        "pack/ganada_maru_verification_contract_v1/contract.detjson:1252",
+        "pack/roadmap_v2_ma0_curriculum_catalog_v1/contract.detjson:14"
+      ],
+      "evidence_checks": [
+        {
+          "id": "ma0_pack_golden",
+          "kind": "pack_golden_pass",
+          "command": ["python", "tests/run_pack_golden.py", "roadmap_v2_ma0_curriculum_catalog_v1"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma0_curriculum_template_product",
+          "kind": "product_cli_or_runtime_pass",
+          "command": ["python", "tests/run_education_curriculum_template_check.py"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma0_seamgrim_template_runner",
+          "kind": "product_cli_or_runtime_pass",
+          "command": ["python", "tests/run_seamgrim_education_curriculum_template_check.py"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma0_legacy_claim_checker",
+          "kind": "legacy_claim_checker",
+          "command": ["python", "tests/run_roadmap_v2_ma0_curriculum_catalog_check.py"],
+          "required_for_behavior_close": false,
+          "expect": "pass"
+        }
+      ],
+      "repair_queue": []
+    },
+    {
+      "cell_id": "마-1",
+      "expected_user_workflow": "Run a representative lesson preset and see a deterministic lesson result.",
+      "proposed_grade": "후보",
+      "grade_reason": "Lesson runner product path passes, but the legacy reconciliation checker still fails on stale DEV_SUMMARY tokens.",
+      "required_product_evidence": ["pack_golden_pass", "browser_or_ui_runner_pass"],
+      "file_line_refs": [
+        "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md:137",
+        "docs/context/roadmap/GANADA_MATRIX_CORRECTED_20260706.md:55",
+        "pack/ganada_maru_verification_contract_v1/contract.detjson:1297",
+        "pack/roadmap_v2_ma1_lesson_first_run_reconciliation_v1/contract.detjson:9"
+      ],
+      "evidence_checks": [
+        {
+          "id": "ma1_pack_golden",
+          "kind": "pack_golden_pass",
+          "command": ["python", "tests/run_pack_golden.py", "roadmap_v2_ma1_lesson_first_run_reconciliation_v1", "education_curriculum_1_v1", "seamgrim_lesson_run_preset_rail_v1"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma1_lesson_preset_check",
+          "kind": "product_cli_or_runtime_pass",
+          "command": ["python", "tests/run_seamgrim_lesson_run_preset_rail_check.py"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma1_lesson_preset_browser_runner",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/seamgrim_lesson_run_preset_rail_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma1_legacy_claim_checker",
+          "kind": "legacy_claim_checker",
+          "command": ["python", "tests/run_roadmap_v2_ma1_lesson_first_run_reconciliation_check.py"],
+          "required_for_behavior_close": false,
+          "expect": "pass"
+        }
+      ],
+      "repair_queue": []
+    },
+    {
+      "cell_id": "마-2",
+      "expected_user_workflow": "Run curriculum assessment pack fixtures for lesson pack closure evidence.",
+      "proposed_grade": "후보",
+      "grade_reason": "Assessment product evidence passes, but the existing ma2 ROADMAP contract explicitly says not closed.",
+      "required_product_evidence": ["pack_golden_pass", "product_cli_or_runtime_pass"],
+      "file_line_refs": [
+        "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md:138",
+        "pack/ganada_maru_verification_contract_v1/contract.detjson:1342",
+        "pack/roadmap_v2_ma2_studio_prereq_unlock_v1/contract.detjson:9",
+        "pack/roadmap_v2_ma2_studio_prereq_unlock_v1/contract.detjson:10"
+      ],
+      "evidence_checks": [
+        {
+          "id": "ma2_pack_golden",
+          "kind": "pack_golden_pass",
+          "command": ["python", "tests/run_pack_golden.py", "roadmap_v2_ma2_studio_prereq_unlock_v1", "education_curriculum_2_v1"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma2_assessment_check",
+          "kind": "product_cli_or_runtime_pass",
+          "command": ["python", "tests/run_roadmap_v2_ha2_education_assessment_pack_check.py"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma2_assessment_runner",
+          "kind": "product_cli_or_runtime_pass",
+          "command": ["node", "tests/education_assessment_pack_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        }
+      ],
+      "repair_queue": ["Create ma2-specific closure checker or update prereq contract only after product evidence is accepted."]
+    },
+    {
+      "cell_id": "마-3",
+      "expected_user_workflow": "Open the classroom/workbench lesson UI and run the lesson authoring integration path.",
+      "proposed_grade": "후보",
+      "grade_reason": "Classroom and lesson authoring runners pass, but the existing ma3 ROADMAP contract explicitly says not closed.",
+      "required_product_evidence": ["pack_golden_pass", "browser_or_ui_runner_pass"],
+      "file_line_refs": [
+        "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md:139",
+        "pack/ganada_maru_verification_contract_v1/contract.detjson:1387",
+        "pack/roadmap_v2_ma3_studio_classroom_workbench_prereq_rebase_v1/contract.detjson:9",
+        "pack/roadmap_v2_ma3_studio_classroom_workbench_prereq_rebase_v1/contract.detjson:10"
+      ],
+      "evidence_checks": [
+        {
+          "id": "ma3_pack_golden",
+          "kind": "pack_golden_pass",
+          "command": ["python", "tests/run_pack_golden.py", "roadmap_v2_ma3_studio_classroom_workbench_prereq_rebase_v1", "education_curriculum_3_v1", "studio_lesson_authoring_run_integration_v1", "seamgrim_lesson_authoring_flow_v1"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma3_classroom_ui_check",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["python", "tests/run_roadmap_v2_ha3_classroom_ui_pack_check.py"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma3_lesson_authoring_browser_runner",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/seamgrim_lesson_authoring_flow_browser_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma3_studio_authoring_browser_runner",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/studio_lesson_authoring_run_integration_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        }
+      ],
+      "repair_queue": ["Add stable lesson catalog/run selectors and a ma3-specific closure checker before upgrading the grade."]
+    },
+    {
+      "cell_id": "마-4",
+      "expected_user_workflow": "Preview and package a public lesson publication artifact through product runners.",
+      "proposed_grade": "후보",
+      "grade_reason": "Publication runners pass, but related status checks still fail on stale DEV_SUMMARY tokens.",
+      "required_product_evidence": ["pack_golden_pass", "browser_or_ui_runner_pass"],
+      "file_line_refs": [
+        "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md:140",
+        "pack/ganada_maru_verification_contract_v1/contract.detjson:1432",
+        "pack/roadmap_v2_ma4_public_lesson_publication_prereq_rebase_v1/contract.detjson:9",
+        "pack/roadmap_v2_ma4_public_lesson_publication_prereq_rebase_v1/contract.detjson:10"
+      ],
+      "evidence_checks": [
+        {
+          "id": "ma4_pack_golden",
+          "kind": "pack_golden_pass",
+          "command": ["python", "tests/run_pack_golden.py", "roadmap_v2_ma4_public_lesson_publication_prereq_rebase_v1", "education_curriculum_4_v1", "studio_lesson_publication_review_surface_v1"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma4_publication_runner",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/education_publication_pack_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma4_review_surface_runner",
+          "kind": "browser_or_ui_runner_pass",
+          "command": ["node", "tests/studio_lesson_publication_review_surface_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma4_legacy_publication_prep_check",
+          "kind": "legacy_claim_checker",
+          "command": ["python", "tests/run_studio_public_lesson_publication_prep_check.py"],
+          "required_for_behavior_close": false,
+          "expect": "pass"
+        }
+      ],
+      "repair_queue": []
+    },
+    {
+      "cell_id": "마-5",
+      "expected_user_workflow": "Run curriculum LTS candidate evidence without claiming external release, cloud sync, or certification.",
+      "proposed_grade": "후보",
+      "grade_reason": "LTS candidate boundary passes, but ma5 contract explicitly remains not closed.",
+      "required_product_evidence": ["pack_golden_pass", "tooling_runner_or_ci_pass"],
+      "file_line_refs": [
+        "docs/context/roadmap/ROADMAP_V2_GANADA_MILESTONE_MATRIX_20260426.md:141",
+        "pack/ganada_maru_verification_contract_v1/contract.detjson:1477",
+        "pack/roadmap_v2_ma5_curriculum_lts_prereq_rebase_v1/contract.detjson:9",
+        "pack/roadmap_v2_ma5_curriculum_lts_prereq_rebase_v1/contract.detjson:10"
+      ],
+      "evidence_checks": [
+        {
+          "id": "ma5_pack_golden",
+          "kind": "pack_golden_pass",
+          "command": ["python", "tests/run_pack_golden.py", "roadmap_v2_ma5_curriculum_lts_prereq_rebase_v1", "education_curriculum_5_v1"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma5_boundary_check",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["python", "tests/run_roadmap_v2_ma5_lts_candidate_progress_boundary_check.py"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        },
+        {
+          "id": "ma5_operations_runner",
+          "kind": "tooling_runner_or_ci_pass",
+          "command": ["node", "tests/education_operations_lts_runner.mjs"],
+          "required_for_behavior_close": true,
+          "expect": "pass"
+        }
+      ],
+      "repair_queue": ["Define ma5 behavior-closure scope separately from release approval, external publication, and LTS certification."]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "seamgrim.canonical_view.t5h_projection_nonmutation_audit.v1",
+  "canonical_owner": "solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js",
+  "active_families": [
+    "console", "console-grid", "graph", "space2d", "table", "text", "structure", "grid2d",
+    "workbench-line", "workbench-pendulum", "workbench-projectile", "workbench-grid",
+    "scene-summary", "curriculum-semantic-scene"
+  ],
+  "required_existing_runner": "tests/seamgrim_canonical_view_t5i_native_readiness_audit_runner.mjs",
+  "required_boundary": {
+    "input_byte_drift": 0,
+    "input_object_aliases_in_output": 0,
+    "state_hash_identity_drift": 0,
+    "storage_reads": 0,
+    "storage_writes": 0,
+    "network_calls": 0
+  }
+}

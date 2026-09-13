@@ -1,0 +1,63 @@
+{
+  "schema": "ddn.current_public_rejection_parity.contract.v1_candidate",
+  "pack_id": "ddn_current_public_rejection_parity_v1",
+  "classification": "CURRENT_PUBLIC_EXPECTED_REJECTION_PARITY",
+  "source_owner": "pack/seamgrim_wasm_cli_runtime_parity_v1",
+  "runtime_owner": "ddonirang_tool::runtime_surface::run_summary_from_source",
+  "expected_case_count": 3,
+  "expected_case_ids": [
+    "c09_boim_structured_view",
+    "c11_show_and_boim_split",
+    "c13_bogae_draw_madi_view_sugar"
+  ],
+  "cases": [
+    {
+      "id": "c09_boim_structured_view",
+      "input": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c09_legacy_boim_reject/input.ddn",
+      "ticks": 1,
+      "expected": {
+        "exit_code": 1,
+        "outer_diagnostic_code": "E_EXECUTION_PREPROCESS",
+        "diagnostic_code": "E_BOIM_LEGACY_REMOVED",
+        "phase": "preprocess",
+        "source_span": null,
+        "state_mutation_count": 0,
+        "partial_output_count": 0,
+        "partial_effect_count": 0,
+        "compatibility_fallback_count": 0
+      }
+    },
+    {
+      "id": "c11_show_and_boim_split",
+      "input": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c11_show_and_boim_split/input.ddn",
+      "ticks": 1,
+      "expected": {
+        "exit_code": 1,
+        "outer_diagnostic_code": "E_EXECUTION_PREPROCESS",
+        "diagnostic_code": "E_BOIM_LEGACY_REMOVED",
+        "phase": "preprocess",
+        "source_span": null,
+        "state_mutation_count": 0,
+        "partial_output_count": 0,
+        "partial_effect_count": 0,
+        "compatibility_fallback_count": 0
+      }
+    },
+    {
+      "id": "c13_bogae_draw_madi_view_sugar",
+      "input": "pack/seamgrim_wasm_cli_runtime_parity_v1/cases/c13_bogae_draw_madi_view_sugar/input.ddn",
+      "ticks": 4,
+      "expected": {
+        "exit_code": 1,
+        "outer_diagnostic_code": "E_EXECUTION_PREPROCESS",
+        "diagnostic_code": "E_BOIM_LEGACY_REMOVED",
+        "phase": "preprocess",
+        "source_span": null,
+        "state_mutation_count": 0,
+        "partial_output_count": 0,
+        "partial_effect_count": 0,
+        "compatibility_fallback_count": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# 2026-09-01 DDN V1 CLI text artifact atomic publish W66
+
+- persistent goal: `DDN_V1_PRODUCT_CLOSURE_LONG_RANGE_R1` ACTIVE
+- baseline: `a291b246203805c517a19c23d6dc6f45fda0255e`
+- product fixed: `9d57ec8a87c9eb483486cc72e116d1e99d226591`
+- fixed tree: `6c5eb5d2957f8bbe50fe6a3e58e282081b6ae286`
+- FILE_OWNER:
+  - `tools/teul-cli/src/cli/ai.rs`
+  - `tools/teul-cli/src/cli/alrim.rs`
+  - `tools/teul-cli/src/cli/geoul.rs`
+- behavior: 세 단일 텍스트 artifact output이 shared atomic replacement를 소비
+- product output/schema/command spelling 변화: 0
+- shared writer tests 5/5, geoul tests 4/4, isolated check/build PASS
+- actual CLI repeat identity 3/3, staging residue 0
+- full teul: 1043 PASS + same historical 9 FAIL, new drift 0
+- mutation: direct writer bypass RED(exit 37) -> exact restore -> GREEN, residue 0
+- new pack/runner/test/meta-test: 0/0/0/0
+- protected untracked custody: 4 files byte-identical, unstaged
+- SSOT/SPEC/WASM/UI diff: 0
+- review bundle target: W62 state/trace + W63/W64 JSON + W65 SHA + W66 atomic publish
+- nonclaims: whole CLI/teul retirement/P0~P6/V1/release/Human PASS OPEN

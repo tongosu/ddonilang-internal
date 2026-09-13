@@ -1,0 +1,4 @@
+"SEAMGRIM_SEALED_OBSERVATION_TRACE_V1" 보여주기.
+"product wasm dotbogi timeline emits sealed observation trace artifact" 보여주기.
+"required values tick_id t theta omega verified without console string parsing" 보여주기.
+"trace artifact stays outside state_hash" 보여주기.

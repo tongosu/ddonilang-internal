@@ -1,0 +1,33 @@
+{
+  "schema": "ddn.perf_baseline.baseline.v1",
+  "pack_id": "perf_baseline_v1",
+  "status": "measurement_contract_only",
+  "closure_claim": false,
+  "product_perf_claim": false,
+  "baseline_values_status": "pending_first_measurement",
+  "regression_gate": {
+    "allowed_worse_ratio": 0.2,
+    "gate_kind": "median_wall_clock_ms_ratio",
+    "baseline_missing_behavior": "not_compared"
+  },
+  "cases": [
+    {
+      "id": "tick_throughput_grid_proxy_v1",
+      "axis": "tick_throughput",
+      "deterministic_input": "pack/benchmark_baseline_v1/c02_seamgrim_local_run.ddn",
+      "baseline_summary": null
+    },
+    {
+      "id": "wasm_load_cli_startup_fallback_v1",
+      "axis": "wasm_load_first_frame",
+      "deterministic_input": "tools/teul-cli/Cargo.toml",
+      "baseline_summary": null
+    },
+    {
+      "id": "nurigym_rollout_short_proxy_v1",
+      "axis": "gym_rollout_step_per_sec",
+      "deterministic_input": "pack/benchmark_baseline_v1/input.nurigym.json",
+      "baseline_summary": null
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+demand_intercept <- 100.
+demand_slope <- 2.
+supply_intercept <- 20.
+supply_slope <- 2.
+tax <- 10.
+
+price0 <- (demand_intercept - supply_intercept) / (demand_slope + supply_slope).
+quantity0 <- demand_intercept - demand_slope * price0.
+consumer_price1 <- (demand_intercept - supply_intercept + supply_slope * tax) / (demand_slope + supply_slope).
+producer_price1 <- consumer_price1 - tax.
+quantity1 <- demand_intercept - demand_slope * consumer_price1.
+
+choke_price <- demand_intercept / demand_slope.
+supply_floor_price <- 0 - (supply_intercept / supply_slope).
+consumer_surplus0 <- (choke_price - price0) * quantity0 / 2.
+producer_surplus0 <- (price0 - supply_floor_price) * quantity0 / 2.
+consumer_surplus1 <- (choke_price - consumer_price1) * quantity1 / 2.
+producer_surplus1 <- (producer_price1 - supply_floor_price) * quantity1 / 2.
+tax_revenue <- tax * quantity1.
+deadweight_loss <- (consumer_surplus0 + producer_surplus0) - (consumer_surplus1 + producer_surplus1 + tax_revenue).
+
+"econ_model_first" 보여주기.
+"tax_welfare" 보여주기.
+quantity0 보여주기.
+quantity1 보여주기.
+consumer_surplus1 보여주기.
+producer_surplus1 보여주기.
+tax_revenue 보여주기.
+deadweight_loss 보여주기.

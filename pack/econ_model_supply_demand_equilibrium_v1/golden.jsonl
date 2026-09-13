@@ -1,0 +1,1 @@
+{"id":"c01_supply_demand_equilibrium","cmd":["run","pack/econ_model_supply_demand_equilibrium_v1/input.ddn"],"stdout":["econ_model_first","supply_demand_equilibrium","20","60"],"exit_code":0}

@@ -1,0 +1,663 @@
+import { semanticViewPayloadHash } from "./semantic_view_payload.js";
+
+export const SEMANTIC_RENDER_MODEL_SCHEMA = "seamgrim.workbench.semantic_render_model.v1";
+
+function finiteNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function exactFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function label(key, value, unit = "") {
+  if (value === null || value === undefined) return null;
+  return { key, value, unit };
+}
+
+function canonicalWorkbenchResult(payload, family) {
+  const canonicalPayload = payload?.canonical_views?.[`workbench_${family}`];
+  if (!canonicalPayload || typeof canonicalPayload !== "object") {
+    return { status: "unavailable", result: null, diagnostic: null };
+  }
+  const committed = payload?.committed_frame;
+  const identity = canonicalPayload.identity;
+  if (
+    !committed
+    || !identity
+    || String(identity.state_hash ?? "") !== String(committed.state_hash ?? "")
+    || String(identity.source_hash ?? "") !== String(committed.source_hash ?? "")
+    || Number(identity.tick_id) !== Number(committed.madi)
+  ) {
+    return {
+      status: "unsupported",
+      result: null,
+      diagnostic: {
+        code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+        reason: "canonical_result_identity_mismatch",
+        actual_schema: String(canonicalPayload.schema ?? ""),
+      },
+    };
+  }
+  if (
+    String(canonicalPayload?.content?.provider_identity ?? "") !== "ddonirang_tool.wasm_runtime"
+    || String(canonicalPayload?.content?.provider_provenance ?? "") !== "native_authoritative_structured_result"
+  ) {
+    return {
+      status: "unsupported",
+      result: null,
+      diagnostic: {
+        code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+        reason: "canonical_result_provider_identity_mismatch",
+        actual_schema: String(canonicalPayload.schema ?? ""),
+      },
+    };
+  }
+  return {
+    status: String(canonicalPayload.status ?? "unavailable"),
+    result: canonicalPayload?.content?.result ?? null,
+    diagnostic: canonicalPayload.diagnostic ?? null,
+  };
+}
+
+function canonicalMissingModel(model, authority) {
+  return {
+    ...model,
+    status: authority.status === "no_view" ? "no_canonical_view" : `canonical_${authority.status}`,
+    data_source: "canonical_workbench_result",
+    canonical_diagnostic: authority.diagnostic,
+  };
+}
+
+function unsupportedRendererModel(payload, family) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      // Reuse the existing typed canonical-projection failure taxonomy.  A
+      // renderer token is capability selection, not semantic input, so it
+      // must never select a different successful renderer.
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "unsupported_renderer_family",
+      actual_schema: family,
+    },
+  });
+}
+
+function projectionCamera(camera) {
+  const minX = exactFiniteNumber(camera?.x_min);
+  const maxX = exactFiniteNumber(camera?.x_max);
+  const minY = exactFiniteNumber(camera?.y_min);
+  const maxY = exactFiniteNumber(camera?.y_max);
+  if (minX === null || maxX === null || minY === null || maxY === null || minX >= maxX || minY >= maxY) return null;
+  return { minX, maxX, minY, maxY };
+}
+
+function missingProjectionCameraModel(payload, family) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "projection_camera_missing_or_invalid",
+      actual_schema: family,
+    },
+  });
+}
+
+function invalidProjectionGeometryModel(payload, family, reason = "projection_geometry_missing_or_invalid") {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason,
+      actual_schema: family,
+    },
+  });
+}
+
+function unsupportedDrawItemModel(payload, family) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "unsupported_bogae_kind",
+      actual_schema: family,
+    },
+  });
+}
+
+function staleSemanticPayloadModel(payload) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "semantic_payload_hash_mismatch",
+      actual_schema: String(payload?.schema ?? ""),
+    },
+  });
+}
+
+function invalidCommittedFrameModel(payload) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "committed_frame_identity_missing_or_invalid",
+      actual_schema: String(payload?.schema ?? ""),
+    },
+  });
+}
+
+function invalidViewBindingModel(payload) {
+  return canonicalMissingModel(baseModel(payload), {
+    status: "unsupported",
+    diagnostic: {
+      code: "E_CANONICAL_WORKBENCH_RESULT_UNSUPPORTED_CANDIDATE",
+      reason: "view_binding_identity_missing_or_mismatch",
+      actual_schema: String(payload?.view_binding?.schema ?? ""),
+    },
+  });
+}
+
+function semanticPayloadHashMatches(payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+  const { semantic_payload_hash: declaredHash, ...hashInput } = payload;
+  return typeof declaredHash === "string" && declaredHash === semanticViewPayloadHash(hashInput);
+}
+
+function committedFrameIdentityValid(payload) {
+  const frame = payload?.committed_frame;
+  return Boolean(
+    frame &&
+    typeof frame === "object" &&
+    String(frame.run_id ?? "").trim() &&
+    String(frame.workspace_identity ?? "").trim() &&
+    Number.isInteger(frame.frame_id) && frame.frame_id >= 0 &&
+    Number.isInteger(frame.madi) && frame.madi >= 0 &&
+    String(frame.state_hash ?? "").trim() &&
+    String(frame.source_hash ?? "").trim(),
+  );
+}
+
+function executionReceiptBindingValid(payload) {
+  const binding = payload?.execution_receipt;
+  const frame = payload?.committed_frame;
+  return Boolean(
+    binding
+    && typeof binding === "object"
+    && String(binding.summary_schema ?? "").trim()
+    && String(binding.source_profile_identity ?? "").trim()
+    && String(binding.source_identity ?? "").trim()
+    && String(binding.state_hash ?? "") === String(frame?.state_hash ?? "")
+    && binding.work_cost_receipt
+    && typeof binding.work_cost_receipt === "object"
+    && String(binding.work_cost_receipt.schema ?? "").trim()
+  );
+}
+
+function viewBindingIdentityValid(payload) {
+  const primaryView = String(payload?.view_config?.primary_view ?? "").trim();
+  const binding = payload?.view_binding;
+  const canonicalKey = `workbench_${primaryView}`;
+  const canonicalStatus = String(payload?.canonical_views?.[canonicalKey]?.status ?? "unavailable");
+  return Boolean(
+    primaryView
+    &&
+    binding
+    && typeof binding === "object"
+    && binding.schema === "seamgrim.workbench.semantic_view_binding.v1"
+    && String(binding.view_family ?? "").trim() === primaryView
+    && String(binding.canonical_payload_key ?? "").trim() === canonicalKey
+    && String(binding.canonical_payload_status ?? "") === canonicalStatus
+  );
+}
+
+function baseModel(payload) {
+  const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
+  return {
+    schema: SEMANTIC_RENDER_MODEL_SCHEMA,
+    family,
+    status: payload?.committed_frame ? "missing_semantic_values" : "awaiting_committed_frame",
+    data_source: payload?.committed_frame ? "committed_runtime_frame" : "none",
+    committed_frame: payload?.committed_frame ?? null,
+    semantic_payload_hash: String(payload?.semantic_payload_hash ?? ""),
+    role: String(payload?.view_config?.role ?? "primary"),
+    overlay_enabled: Boolean(payload?.view_config?.overlay_enabled),
+    focus_target: payload?.view_config?.focus_target ?? null,
+    labels: [],
+  };
+}
+
+function pendulumModel(payload) {
+  const model = baseModel(payload);
+  const authority = canonicalWorkbenchResult(payload, "pendulum");
+  if (authority.status !== "available") return canonicalMissingModel(model, authority);
+  const current = authority.result.current;
+  if (
+    !current
+    || [current.theta, current.omega, current.length].some((value) => exactFiniteNumber(value) === null)
+    || current.length <= 0
+    || [current.energy, current.kinetic_energy, current.potential_energy]
+      .some((value) => value !== null && exactFiniteNumber(value) === null)
+    || exactFiniteNumber(current.physical_bob?.x) === null
+    || exactFiniteNumber(current.physical_bob?.y) === null
+    || exactFiniteNumber(current.normalized_bob?.x) === null
+    || exactFiniteNumber(current.normalized_bob?.y) === null
+  ) {
+    return invalidProjectionGeometryModel(payload, "pendulum");
+  }
+  return {
+    ...model,
+    status: "ready",
+    data_source: "canonical_workbench_result",
+    current,
+    overlay: { theta: current.theta, normalized_bob: current.normalized_bob },
+    labels: [
+      label("theta", current.theta, "rad"),
+      label("omega", current.omega, "rad/s"),
+      label("energy", current.energy),
+      label("kinetic_energy", current.kinetic_energy),
+      label("potential_energy", current.potential_energy),
+      label("L", current.length, "m"),
+    ].filter(Boolean),
+  };
+}
+
+function projectilePoint(values = {}, identity = {}) {
+  const x = exactFiniteNumber(values.x);
+  const y = exactFiniteNumber(values.y);
+  if (x === null || y === null) return null;
+  return {
+    frame_id: Number(identity?.frame_id ?? -1),
+    madi: Number(identity?.madi ?? 0),
+    state_hash: String(identity?.state_hash ?? ""),
+    x,
+    y,
+    t: exactFiniteNumber(values.t),
+    vx: exactFiniteNumber(values.vx),
+    vy: exactFiniteNumber(values.vy),
+  };
+}
+
+function committedTrajectory(payload, family) {
+  const rows = payload?.committed_trajectory;
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const points = [];
+  let previousFrameId = -1;
+  for (const row of rows) {
+    const point = projectilePoint(row?.values, row);
+    if (
+      !point
+      || !Number.isInteger(point.frame_id)
+      || point.frame_id < 0
+      || point.frame_id <= previousFrameId
+      || String(row?.authority ?? "") !== `workbench_${family}`
+    ) return null;
+    previousFrameId = point.frame_id;
+    points.push(point);
+  }
+  const last = points.at(-1);
+  const frame = payload?.committed_frame;
+  if (
+    last.frame_id !== frame?.frame_id
+    || last.madi !== frame?.madi
+    || last.state_hash !== frame?.state_hash
+  ) return null;
+  return points;
+}
+
+function projectileModel(payload) {
+  const model = baseModel(payload);
+  const authority = canonicalWorkbenchResult(payload, "projectile");
+  if (authority.status !== "available") return canonicalMissingModel(model, authority);
+  const camera = projectionCamera(authority.result.camera);
+  if (!camera) return missingProjectionCameraModel(payload, "projectile");
+  const current = projectilePoint(authority.result.current, payload?.committed_frame);
+  const trajectory = committedTrajectory(payload, "projectile");
+  if (
+    !current
+    || current.t === null
+    || current.vx === null
+    || current.vy === null
+    || !trajectory
+    || trajectory.at(-1).x !== current.x
+    || trajectory.at(-1).y !== current.y
+  ) return invalidProjectionGeometryModel(payload, "projectile");
+  return {
+    ...model,
+    status: "ready",
+    data_source: "canonical_workbench_result",
+    current,
+    trajectory,
+    camera,
+    overlay: current.vx === null || current.vy === null
+      ? null
+      : { origin: { x: current.x, y: current.y }, velocity: { x: current.vx, y: current.vy } },
+    labels: [
+      label("t", current.t, "s"),
+      label("x", current.x, "m"),
+      label("y", current.y, "m"),
+      label("vx", current.vx, "m/s"),
+      label("vy", current.vy, "m/s"),
+    ].filter(Boolean),
+  };
+}
+
+function gridModel(payload) {
+  const model = baseModel(payload);
+  const authority = canonicalWorkbenchResult(payload, "grid");
+  if (authority.status !== "available") return canonicalMissingModel(model, authority);
+  const result = authority.result;
+  const camera = projectionCamera(result.space2d?.camera);
+  if (!camera) return missingProjectionCameraModel(payload, "grid");
+  if (!Array.isArray(result.space2d?.drawlist)
+    || result.space2d.drawlist.length === 0
+    || result.space2d.drawlist.some((item) => !isRenderableSpace2dItem(item))) {
+    return unsupportedDrawItemModel(payload, "grid");
+  }
+  const tick = exactFiniteNumber(payload?.committed_frame?.madi);
+  if (
+    tick === null
+    || exactFiniteNumber(result.position?.x) === null
+    || exactFiniteNumber(result.position?.y) === null
+  ) return invalidProjectionGeometryModel(payload, "grid");
+  return {
+    ...model,
+    status: "ready",
+    data_source: "canonical_workbench_result",
+    tick,
+    position: result.position,
+    space2d: result.space2d,
+    camera,
+    dimensions: result.dimensions,
+    draw_list: result.space2d.drawlist,
+    geometry_source: "canonical_workbench_grid_result",
+    labels: [label("tick", tick, "step"), label("position", `${result.position.x},${result.position.y}`, "cell")],
+  };
+}
+
+function lineModel(payload) {
+  const model = baseModel(payload);
+  const authority = canonicalWorkbenchResult(payload, "line");
+  if (authority.status !== "available") return canonicalMissingModel(model, authority);
+  const camera = projectionCamera(authority.result.camera);
+  if (!camera) return missingProjectionCameraModel(payload, "line");
+  const current = projectilePoint(authority.result.current, payload?.committed_frame);
+  const points = committedTrajectory(payload, "line");
+  const a = authority.result?.equation?.a;
+  const b = authority.result?.equation?.b;
+  if (
+    !current
+    || !points
+    || points.at(-1).x !== current.x
+    || points.at(-1).y !== current.y
+    || exactFiniteNumber(a) === null
+    || exactFiniteNumber(b) === null
+  ) return invalidProjectionGeometryModel(payload, "line");
+  return {
+    ...model,
+    status: "ready",
+    data_source: "canonical_workbench_result",
+    current,
+    points,
+    equation: a === null || b === null ? null : { a, b },
+    camera,
+    labels: [
+      label("x", current?.x),
+      label("y", current?.y),
+      label("a", a),
+      label("b", b),
+    ].filter(Boolean),
+  };
+}
+
+export function buildSemanticRenderModel(payload) {
+  if (!payload?.committed_frame) return baseModel(payload);
+  if (!semanticPayloadHashMatches(payload)) return staleSemanticPayloadModel(payload);
+  if (!committedFrameIdentityValid(payload)) return invalidCommittedFrameModel(payload);
+  if (!executionReceiptBindingValid(payload)) return invalidCommittedFrameModel(payload);
+  if (!viewBindingIdentityValid(payload)) return invalidViewBindingModel(payload);
+  const family = String(payload?.view_config?.primary_view ?? payload?.view_binding?.view_family ?? "");
+  if (family === "pendulum") return pendulumModel(payload);
+  if (family === "projectile") return projectileModel(payload);
+  if (family === "grid") return gridModel(payload);
+  if (family === "line") return lineModel(payload);
+  return unsupportedRendererModel(payload, family);
+}
+
+function formatNumber(value) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    if (Math.abs(value) >= 1000 || (Math.abs(value) > 0 && Math.abs(value) < 0.001)) return value.toExponential(3);
+    return Number(value.toFixed(4)).toString();
+  }
+  return String(value ?? "-");
+}
+
+function drawLabels(ctx, labels, x, y, lineHeight = 18) {
+  ctx.fillStyle = "#164e63";
+  ctx.font = "600 13px Segoe UI, sans-serif";
+  labels.slice(0, 6).forEach((row, index) => {
+    ctx.fillText(`${row.key} ${formatNumber(row.value)}${row.unit ? ` ${row.unit}` : ""}`, x, y + index * lineHeight);
+  });
+}
+
+function drawAwaiting(ctx, width, height, model) {
+  ctx.fillStyle = "#31533e";
+  ctx.font = "700 16px Segoe UI, sans-serif";
+  const message = model.status === "awaiting_committed_frame"
+    ? "실행 후 committed frame을 표시합니다."
+    : "현재 committed frame에 이 보기의 의미값이 없습니다.";
+  ctx.fillText(message, Math.max(22, width * 0.08), height * 0.5);
+}
+
+function drawPendulum(ctx, width, height, model) {
+  const cx = width * 0.5;
+  const cy = height * 0.2;
+  const viewLength = Math.min(width, height) * 0.34;
+  const bx = cx + model.current.normalized_bob.x * viewLength;
+  const by = cy + model.current.normalized_bob.y * viewLength;
+  ctx.strokeStyle = "#d6dfd2";
+  ctx.lineWidth = 1;
+  for (let index = 0; index < 5; index += 1) {
+    const y = height * (0.18 + index * 0.15);
+    ctx.beginPath();
+    ctx.moveTo(width * 0.12, y);
+    ctx.lineTo(width * 0.88, y);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = "#475569";
+  ctx.lineWidth = Math.max(3, width * 0.004);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(bx, by);
+  ctx.stroke();
+  ctx.fillStyle = "#f59e0b";
+  ctx.beginPath();
+  ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#38bdf8";
+  ctx.strokeStyle = "#0e7490";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(bx, by, Math.max(16, Math.min(width, height) * 0.045), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  if (model.overlay_enabled || model.role === "overlay") {
+    ctx.strokeStyle = "#a16207";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cx, cy, Math.max(30, viewLength * 0.22), Math.PI / 2, Math.PI / 2 - model.current.theta, model.current.theta > 0);
+    ctx.stroke();
+    ctx.setLineDash([6, 5]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx, cy + viewLength);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  drawLabels(ctx, model.labels, 20, height - Math.min(100, 18 * model.labels.length));
+  return { canvas_bob: { x: bx, y: by }, overlay_origin: { x: cx, y: cy } };
+}
+
+function drawAxes(ctx, width, height, bounds, margin = 46) {
+  const plotWidth = Math.max(1, width - margin * 2);
+  const plotHeight = Math.max(1, height - margin * 2);
+  const spanX = Math.max(1e-9, bounds.maxX - bounds.minX);
+  const spanY = Math.max(1e-9, bounds.maxY - bounds.minY);
+  const sx = (x) => margin + ((x - bounds.minX) / spanX) * plotWidth;
+  const sy = (y) => height - margin - ((y - bounds.minY) / spanY) * plotHeight;
+  ctx.strokeStyle = "#64748b";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(margin, height - margin);
+  ctx.lineTo(width - margin, height - margin);
+  ctx.moveTo(margin, height - margin);
+  ctx.lineTo(margin, margin);
+  ctx.stroke();
+  return { sx, sy, margin };
+}
+
+function drawProjectile(ctx, width, height, model) {
+  const points = model.trajectory;
+  const { sx, sy, margin } = drawAxes(ctx, width, height, model.camera);
+  ctx.fillStyle = "#475569";
+  ctx.font = "600 13px Segoe UI, sans-serif";
+  ctx.fillText("x (m)", width - margin - 34, height - margin + 28);
+  ctx.fillText("y (m)", margin - 10, margin - 14);
+  ctx.strokeStyle = "#0e7490";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  points.forEach((point, index) => {
+    if (index === 0) ctx.moveTo(sx(point.x), sy(point.y));
+    else ctx.lineTo(sx(point.x), sy(point.y));
+  });
+  ctx.stroke();
+  const currentCanvas = { x: sx(model.current.x), y: sy(model.current.y) };
+  ctx.fillStyle = "#b45309";
+  ctx.beginPath();
+  ctx.arc(currentCanvas.x, currentCanvas.y, 8, 0, Math.PI * 2);
+  ctx.fill();
+  if ((model.overlay_enabled || model.role === "overlay") && model.overlay) {
+    const scale = 0.2;
+    ctx.strokeStyle = "#1f7a4d";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(currentCanvas.x, currentCanvas.y);
+    ctx.lineTo(sx(model.current.x + model.overlay.velocity.x * scale), sy(model.current.y + model.overlay.velocity.y * scale));
+    ctx.stroke();
+  }
+  drawLabels(ctx, model.labels, 18, 22);
+  return { canvas_current: currentCanvas, trajectory_point_count: points.length };
+}
+
+function normalizeKind(item) {
+  return String(item?.kind ?? "");
+}
+
+function isExactBogaeKind(kind) {
+  return new Set(["line", "rect", "circle", "point", "polygon", "polyline", "text", "arrow"])
+    .has(String(kind ?? ""));
+}
+
+function isRenderableSpace2dItem(item) {
+  if (!item || typeof item !== "object" || Array.isArray(item) || !isExactBogaeKind(item.kind)) return false;
+  const finite = (...values) => values.every((value) => exactFiniteNumber(value) !== null);
+  if (item.kind === "line") return finite(item.x1, item.y1, item.x2, item.y2);
+  if (item.kind === "rect") return finite(item.x, item.y, item.w, item.h) && item.w !== 0 && item.h !== 0;
+  if (item.kind === "circle") return finite(item.x, item.y, item.r) && item.r > 0;
+  if (item.kind === "point") return finite(item.x, item.y);
+  return false;
+}
+
+function drawSpace2d(ctx, width, height, model) {
+  const drawList = model.draw_list;
+  const { sx, sy } = drawAxes(ctx, width, height, model.camera, 38);
+  drawList.forEach((item) => {
+    const kind = normalizeKind(item);
+    ctx.strokeStyle = String(item.stroke ?? item.선색 ?? "#0e7490");
+    ctx.fillStyle = String(item.fill ?? item.색 ?? item.채움색 ?? "#22c55e");
+    ctx.lineWidth = Math.max(1, finiteNumber(item.line_width ?? item.굵기) ?? 2);
+    if (kind === "line") {
+      const x1 = finiteNumber(item.x1);
+      const y1 = finiteNumber(item.y1);
+      const x2 = finiteNumber(item.x2);
+      const y2 = finiteNumber(item.y2);
+      if ([x1, y1, x2, y2].every((value) => value !== null)) {
+        ctx.beginPath();
+        ctx.moveTo(sx(x1), sy(y1));
+        ctx.lineTo(sx(x2), sy(y2));
+        ctx.stroke();
+      }
+    } else if (kind === "rect") {
+      const x = finiteNumber(item.x);
+      const y = finiteNumber(item.y);
+      const itemWidth = finiteNumber(item.w ?? item.width ?? item.가로);
+      const itemHeight = finiteNumber(item.h ?? item.height ?? item.세로);
+      if ([x, y, itemWidth, itemHeight].every((value) => value !== null)) {
+        const left = Math.min(sx(x), sx(x + itemWidth));
+        const top = Math.min(sy(y), sy(y + itemHeight));
+        const canvasWidth = Math.abs(sx(x + itemWidth) - sx(x));
+        const canvasHeight = Math.abs(sy(y + itemHeight) - sy(y));
+        ctx.fillRect(left, top, canvasWidth, canvasHeight);
+        ctx.strokeRect(left, top, canvasWidth, canvasHeight);
+      }
+    } else if (kind === "circle" || kind === "point") {
+      const x = finiteNumber(item.x);
+      const y = finiteNumber(item.y);
+      if (x !== null && y !== null) {
+        const radius = Math.max(3, (finiteNumber(item.r ?? item.radius ?? item.크기) ?? 0.2) * 8);
+        ctx.beginPath();
+        ctx.arc(sx(x), sy(y), radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+  });
+}
+
+function drawGrid(ctx, width, height, model) {
+  drawSpace2d(ctx, width, height, model);
+  drawLabels(ctx, model.labels, 18, height - Math.max(26, model.labels.length * 18));
+  return { geometry_source: model.geometry_source, position: model.position };
+}
+
+function drawLine(ctx, width, height, model) {
+  const points = model.points;
+  const { sx, sy } = drawAxes(ctx, width, height, model.camera);
+  ctx.strokeStyle = "#0e7490";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  points.forEach((point, index) => {
+    if (index === 0) ctx.moveTo(sx(point.x), sy(point.y));
+    else ctx.lineTo(sx(point.x), sy(point.y));
+  });
+  if (points.length > 1) ctx.stroke();
+  const current = model.current;
+  const canvasCurrent = { x: sx(current.x), y: sy(current.y) };
+  ctx.fillStyle = "#a16207";
+  ctx.beginPath();
+  ctx.arc(canvasCurrent.x, canvasCurrent.y, 7, 0, Math.PI * 2);
+  ctx.fill();
+  drawLabels(ctx, model.labels, 18, 22);
+  return { point_count: points.length, current: { x: current.x, y: current.y }, canvas_current: canvasCurrent };
+}
+
+export function renderCommittedSemanticView(ctx, width, height, payload) {
+  const model = buildSemanticRenderModel(payload);
+  if (model.status !== "ready") {
+    drawAwaiting(ctx, width, height, model);
+    return model;
+  }
+  let canvasProjection = null;
+  if (model.family === "pendulum") canvasProjection = drawPendulum(ctx, width, height, model);
+  else if (model.family === "projectile") canvasProjection = drawProjectile(ctx, width, height, model);
+  else if (model.family === "grid") canvasProjection = drawGrid(ctx, width, height, model);
+  else if (model.family === "line") canvasProjection = drawLine(ctx, width, height, model);
+  else {
+    const unsupported = unsupportedRendererModel(payload, model.family);
+    drawAwaiting(ctx, width, height, unsupported);
+    return unsupported;
+  }
+  return { ...model, canvas_projection: canvasProjection };
+}

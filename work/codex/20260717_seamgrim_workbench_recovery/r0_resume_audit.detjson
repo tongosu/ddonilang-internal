@@ -1,0 +1,109 @@
+{
+  "authority": {
+    "approved_ui_choices": "1C-2C-3B-4B-5B-6C-7C-8B-9C",
+    "goal": "docs/context/roadmap/CODEX_ULTRALONG_GOAL_SEAMGRIM_WORKBENCH_RECOVERY_RESUME_G10_G18_V2_20260717.md",
+    "goal_attachment_sha256": "25910454121880d681f5050a9f0d79fa0dd99f262555b691722d219b07f1c6f8",
+    "repo_goal_ingest_sha256": "25910454121880d681f5050a9f0d79fa0dd99f262555b691722d219b07f1c6f8",
+    "repo_goal_normalized_sha256": "95cd9f20ff9bb2c40b92482a001adc1a95091923c52c9832d98d691e609f0528",
+    "ssot_mutation_allowed": false
+  },
+  "baseline": {
+    "branch": "codex/queue-20260706",
+    "expected_head": "4d861f7fb2ad5f1235351d9e70badd55bbb856ae",
+    "expected_head_is_resume_ancestor": true,
+    "resume_head": "fe357828911a51d065b9da66c69983608a0e8e77",
+    "resume_head_reason": "R0 representative smoke exposed and separately repaired a G9 exactly-once InputSnapshot regression",
+    "status_line_count_at_seal": 2188,
+    "tracked_dirty_count_at_seal": 38,
+    "untracked_file_count_at_seal": 2150
+  },
+  "committed_gates": [
+    { "gate": "G0", "commit": "fb1fdd7", "ancestor": true },
+    { "gate": "G1", "commit": "d1e63e3", "ancestor": true },
+    { "gate": "G2", "commit": "ff8608b", "ancestor": true },
+    { "gate": "G2-correction", "commit": "9031053", "ancestor": true },
+    { "gate": "G3", "commit": "b2b3320", "ancestor": true },
+    { "gate": "G4", "commit": "799d30c", "ancestor": true },
+    { "gate": "G5", "commit": "bd786a8", "ancestor": true },
+    { "gate": "G6", "commit": "f2e7f7a", "ancestor": true },
+    { "gate": "G7", "commit": "aee2792", "ancestor": true },
+    { "gate": "G8", "commit": "fc695d9", "ancestor": true },
+    { "gate": "G9", "commit": "4d861f7", "ancestor": true },
+    { "gate": "R0-regression-repair", "commit": "fe35782", "ancestor": true }
+  ],
+  "evidence": {
+    "g0_through_g9_machine_evidence_count": 10,
+    "g0_through_g9_machine_evidence_present": true,
+    "session_delta_ends_with_g10_next": true
+  },
+  "ownership": {
+    "docs_ssot_status_count": 0,
+    "stage_empty_before_r0_commit": true,
+    "protected_dirty_file_count": 7,
+    "protected_dirty_files_staged": false,
+    "protected_dirty_files": [
+      "tests/run_seamgrim_approved_workbench_quality_gate_check.py",
+      "tests/run_seamgrim_approved_workbench_runtime_lineage_check.py",
+      "tests/run_seamgrim_approved_workbench_semantic_verticals_check.py",
+      "tests/run_seamgrim_approved_workbench_shell_check.py",
+      "tests/seamgrim_approved_workbench_quality_gate_runner.mjs",
+      "tests/seamgrim_approved_workbench_runtime_lineage_runner.mjs",
+      "tests/seamgrim_approved_workbench_semantic_verticals_runner.mjs"
+    ],
+    "v1_owner_addendum_working_blob": "d3107ec36f195423319980475b4cfcc3d8b8b2bc",
+    "v2_owner_input_working_blob": "a1d8f9ff1eb83a5482f5463b538f9eddfce3c701"
+  },
+  "known_g10_wip": {
+    "assessment": "all observed deviations are G10 archive/failure-path diagnostics; no unrelated hunk was found",
+    "combined_patch_fingerprint_at_seal": "8f3c200a1abc072dae641ddec779aa5ede726e50",
+    "diff_check": "PASS",
+    "files": [
+      {
+        "path": "solutions/seamgrim_ui_mvp/ui/workbench/index.html",
+        "expected_blob": "f19b2fea9f28c965b38e174dfa4f45d2598ed3e5",
+        "observed_blob": "f19b2fea9f28c965b38e174dfa4f45d2598ed3e5",
+        "assessment": "exact known WIP"
+      },
+      {
+        "path": "solutions/seamgrim_ui_mvp/ui/workbench/workbench.css",
+        "expected_blob": "9bd349c02e06699e394ca1d0bf3264e95fea6b91",
+        "observed_blob": "9bd349c02e06699e394ca1d0bf3264e95fea6b91",
+        "assessment": "exact known WIP"
+      },
+      {
+        "path": "solutions/seamgrim_ui_mvp/ui/workbench/workbench.js",
+        "expected_blob": "d9f26debf59d07bbea89270732122a318b2f9366",
+        "observed_blob": "6102dff6ad849d92c43f5babbad940403cb4b148",
+        "assessment": "known G10 WIP plus sealed source/failure-path debug projection and committed R0 action repair"
+      },
+      {
+        "path": "tests/seamgrim_workbench_run_archive_lineage_runner.mjs",
+        "expected_blob": "d3a6508973a8808bd5f393c49f8a0c970c0ec855",
+        "observed_blob": "9eb179d1ac8d065a805c54a442c3a2bc37d12ae5",
+        "assessment": "known G10 WIP plus actual product failure fixture and bounded WASM failure diagnostics"
+      }
+    ]
+  },
+  "r0_regression_repair": {
+    "commit": "fe357828911a51d065b9da66c69983608a0e8e77",
+    "failure": "declared action committed 2 times instead of once",
+    "root_cause": "linked-project start recorded the queued action on its first committed frame without passing it to WASM or consuming the input id, so the automatic pump applied it again",
+    "repair": "pass the queued action to the first linked-project WASM step and consume the same input id after that commit",
+    "verification": [
+      "node tests/seamgrim_workbench_project_controls_browser_runner.mjs PASS",
+      "node tests/seamgrim_workbench_live_step_pump_runner.mjs PASS",
+      "node --check solutions/seamgrim_ui_mvp/ui/workbench/workbench.js PASS"
+    ]
+  },
+  "smoke": {
+    "clean_freshness": "PASS at fe35782 in owned detached worktree",
+    "committed_pendulum_projectile_view": "PASS",
+    "project_derived_controls": "PASS after fe35782",
+    "shared_execution_mode": "PASS 8/8",
+    "live_pump": "PASS",
+    "invalid_attempt": "first freshness command created a clean worktree but failed to change cwd and therefore measured the shared dirty worktree; excluded from evidence",
+    "owned_r0_worktree_residual_count": 0
+  },
+  "result": "R0_RESUME_ACCEPTED_G10_NEXT",
+  "schema": "seamgrim.workbench_recovery.r0_resume_audit.v1"
+}

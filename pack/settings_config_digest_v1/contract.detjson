@@ -1,0 +1,17 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "settings_config_digest_v1",
+  "kind": "decision_closure_settings_config_digest_policy",
+  "goal": "D1",
+  "closure_grade": "닫힘-문서",
+  "tooling_only": true,
+  "parser_landed_claim": false,
+  "runtime_claim": false,
+  "product_code_change": false,
+  "state_hash_formula_change": false,
+  "run_hash_policy": {
+    "doc_section_excluded": "문서",
+    "story_entry_included": "이야기.들머리"
+  },
+  "checker": "tests/run_settings_config_digest_v1_check.py"
+}

@@ -1,0 +1,91 @@
+{
+  "artifact": {
+    "cargo_version": "cargo 1.92.0 (344c4567c 2025-10-21)",
+    "js_binding_sha256": "0bd5406824717ce8e06835531e850b81a1c9766fd3bb81bd0a69d7d0889a8fbd",
+    "manifest_source_file_count": 77,
+    "manifest_source_tree_sha256": "51d599e7aefd718e5cc16accdc3c6fa628cabb96c93566f7498d155e9c403242",
+    "rustc_version": "rustc 1.92.0 (ded5c06cf 2025-12-08)",
+    "wasm_pack_version": "wasm-pack 0.14.0",
+    "wasm_sha256": "8d0b1432d94f6ea5cca5f4bbeebb5619d0bf4cb75e839b75c3a148e0ec78ff35",
+    "wasm_size": 3942200
+  },
+  "baseline": {
+    "clean_expected_source_tree_sha256": "d9a3305f5b80bf846acaa9ac4b6cdce232296d4711912d26aae6e2a060700dfb",
+    "clean_manifest_source_tree_sha256": "1d10c6161335fcbf3373c4df79ba0dc28804ae5c1622aad9d336eac80d031f57",
+    "failures": [
+      "source_tree_sha256 mismatch",
+      "source_files mismatch"
+    ],
+    "head": "56862318cae8f1b43bb36d1513c3dcec3cba7ccd",
+    "mismatched_clean_source_rows": [
+      "tool/src/ai_prompt.rs"
+    ],
+    "status": "FAIL_REPRODUCED_IN_CLEAN_WORKTREE"
+  },
+  "build": {
+    "command": "CARGO_NET_OFFLINE=true powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\build_wasm_tool.ps1 -Profile release -Target web",
+    "copy_to_ui": true,
+    "failure_propagation_check": "PASS",
+    "profile": "release",
+    "result": "PASS",
+    "target": "web"
+  },
+  "claims": {
+    "cli_wasm_full_language_equivalence": false,
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "state_hash_formula_change": false,
+    "status": "WASM_FRESHNESS_RESTORED"
+  },
+  "clean_build_inputs": {
+    "ignored_source_document_modified_or_staged": false,
+    "original_document_canonical_sha256": "dd9e42637945780337fff1409cb82c9ae220b03fb6c0bf4f19956fbe4f54b9be",
+    "product_resource": "lang/src/dialect_keywords_v8.tsv",
+    "product_resource_sha256": "dd9e42637945780337fff1409cb82c9ae220b03fb6c0bf4f19956fbe4f54b9be",
+    "readonly_vol4_bundle_injected_by_environment": true,
+    "shared_pinned_node_modules_junction": true
+  },
+  "corrections": {
+    "aggregate": "pack/creator_gaji_round7_handoff_v1/r0_r7_aggregate.detjson",
+    "checker": "tests/run_creator_gaji_round7_handoff_check.py",
+    "implementation_report": "docs/reports/impl/REPORT_CREATOR_GAJI_ROUND0_GREEN_BASELINE_V1_20260717.md",
+    "prior_sync_gate_claim_valid_at_5686231": false,
+    "session_delta": "work/_session_deltas/20260717_codex_creator_gaji_round0_green_baseline.md"
+  },
+  "recovery_head": "G1_SELF",
+  "schema": "seamgrim.workbench_recovery.g1_wasm_freshness_recovery.v1",
+  "shared_dirty_worktree": {
+    "changed_source_rows_after_recovery": [
+      "lang/src/stdlib.rs"
+    ],
+    "freshness_status": "EXPECTED_FAIL_PRESERVED_USER_DIRTY_SOURCE",
+    "manifest_source_tree_sha256": "51d599e7aefd718e5cc16accdc3c6fa628cabb96c93566f7498d155e9c403242",
+    "shared_dirty_source_tree_sha256": "2d51eb15c0af4a2f416408d91b44d9408196e5db41df4f862597228f8ab2e8b4"
+  },
+  "verification": {
+    "creator_gaji_round7_handoff": "PASS",
+    "dialect_tests": {
+      "failed": 0,
+      "passed": 12
+    },
+    "freshness_clean_worktree": "PASS",
+    "owned_runtime_processes_after_checks": 0,
+    "public_physics_wedge": "PASS",
+    "public_physics_wedge_stdout_sha256": "406693de8318dcf9e4106cd45a1eed831e6f594f7d8fadb68fe25f5039c6bd0b",
+    "sync_gate": {
+      "report_sha256": "f13132f0bcc753d5ab7cbbfe93c1619fb4cce74f3e838192d189caa7e5ea30fc",
+      "stage_count": 11,
+      "status": "PASS"
+    },
+    "true_parity_equality": {
+      "report_sha256": "4fdd2140bf257309cedf288ab2086900f431a75e7c6b6c5c646efa4044c04ad2",
+      "status": "PASS"
+    },
+    "wasm_build_failure_propagation": "PASS"
+  },
+  "worktree": {
+    "head_before_final_amend": "ff4fa0f2fc697fb5599a71a1e79bd32adfa7df90",
+    "path": "I:/home/urihanl/ddn/codex/build/worktrees/seamgrim_recovery_g1_fb1fdd7",
+    "source_status_before_build": "CLEAN"
+  }
+}

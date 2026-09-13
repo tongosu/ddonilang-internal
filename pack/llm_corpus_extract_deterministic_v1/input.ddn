@@ -1,0 +1,6 @@
+"LLM_CORPUS_EXTRACT_DETERMINISTIC_V1" 보여주기.
+"deterministic corpus extractor contract sealed" 보여주기.
+"tool: tests/tools/extract_llm_corpus_v1.py" 보여주기.
+"row schema: ddn.llm_corpus.row.v1" 보여주기.
+"generation policy: deterministic_path_order_no_generated_summary" 보여주기.
+"closure_claim: no" 보여주기.

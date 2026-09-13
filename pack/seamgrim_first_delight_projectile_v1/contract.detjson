@@ -1,0 +1,38 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_first_delight_projectile_v1",
+  "kind": "seamgrim_first_delight_product_behavior",
+  "runtime_claim": false,
+  "product_code_change": true,
+  "product_behavior_claim": true,
+  "closed_by": "SEAMGRIM_FIRST_DELIGHT_PROJECTILE_V1",
+  "browser_runner": "tests/seamgrim_first_delight_projectile_runner.mjs",
+  "product_lesson_id": "rep_phys_projectile_xy_v1",
+  "product_lesson_pack": "edu_seamgrim_rep_phys_projectile_xy_v1",
+  "route": "?first_delight=projectile",
+  "route_aliases": ["physics_projectile", "projectile"],
+  "visible_controls": ["초기속도x", "초기속도y", "중력가속도"],
+  "view_roles": ["trajectory_trail", "afterimage"],
+  "required_view_roles": ["trajectory_trail"],
+  "view_roles_in_state_hash": false,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "docs_ssot_change": false,
+  "covers": [
+    "first_delight_route",
+    "active_representative_lesson_alias",
+    "three_visible_controls",
+    "trajectory_canvas_nonblank",
+    "run_pause_step_reset",
+    "control_commit_restarts_product_frontdoor",
+    "same_input_same_state_hash",
+    "desktop_mobile_layout",
+    "cli_check_canon_run_same_source"
+  ],
+  "evidence": [
+    "node tests/seamgrim_first_delight_projectile_runner.mjs",
+    "python tests/run_seamgrim_subject_representative_examples_check.py",
+    "python tests/run_pack_golden.py seamgrim_first_delight_projectile_v1"
+  ],
+  "requires_docs_ssot_clean": true
+}

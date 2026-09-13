@@ -1,0 +1,1 @@
+{"id":"c01_seamgrim_curriculum_cards_marker","cmd":["run","pack/seamgrim_curriculum_cards_v0/input.ddn"],"stdout":["SEAMGRIM_CURRICULUM_CARDS_V0","curriculum_crosswalk.v0 and lesson_card.v0 loaded","lesson detail shows grade concept inquiry prompts","canonical curriculum alignment claim false"],"exit_code":0}

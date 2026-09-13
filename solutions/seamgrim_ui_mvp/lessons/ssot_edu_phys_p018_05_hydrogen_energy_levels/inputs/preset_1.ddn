@@ -1,0 +1,22 @@
+// stateful-sim preview(auto): range sampler -> step sim
+
+(시작)할때 {
+  n <- 1.
+}.
+
+(매마디)마다 {
+  // 출력은 숫자만. (n, E) 순서.
+
+  E0 <- 13.6.
+
+  n_min <- 1.
+  n_max <- 10.
+  dn <- 1.
+
+  { n <= n_max }인것 일때 {
+    n2 <- n * n.
+    E <- -E0 / n2.
+
+    n <- n + (dn).
+  }.
+}.

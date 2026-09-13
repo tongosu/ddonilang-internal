@@ -1,0 +1,2 @@
+{"case_id":"G1_console","fixture":"fixtures/authoritative_state.detjson","expected":"expected/console.payload.detjson","surfaces":["run","workbench"],"byte_equivalent":true}
+{"case_id":"G2_graph","fixture":"fixtures/authoritative_state.detjson","expected":"expected/graph.payload.detjson","surfaces":["run","workbench"],"byte_equivalent":true}

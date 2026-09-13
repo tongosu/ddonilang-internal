@@ -1,0 +1,21 @@
+{
+  "schema": "seamgrim.canonical_view.t5h_view_plan_boundary_audit.v1",
+  "canonical_owner": "solutions/seamgrim_ui_mvp/ui/workbench/semantic_view_payload.js",
+  "presentation_adapter": "solutions/seamgrim_ui_mvp/ui/view_plan_runtime.js",
+  "expected_product_callers": ["solutions/seamgrim_ui_mvp/ui/screens/run.js"],
+  "required_existing_runners": [
+    "tests/seamgrim_console_graph_canonical_view_payload_runner.mjs",
+    "tests/seamgrim_console_graph_canonical_view_payload_mutation_runner.mjs",
+    "tests/seamgrim_space2d_canonical_view_payload_runner.mjs",
+    "tests/seamgrim_space2d_canonical_view_payload_mutation_runner.mjs"
+  ],
+  "required_boundary": {
+    "presentation_only": true,
+    "state_hash_participation": false,
+    "canonical_space2d_synthesis": false,
+    "canonical_owner_imports_presentation_adapter": false,
+    "presentation_adapter_builds_canonical_payload": false,
+    "missing_graph_creates_series": false,
+    "authoritative_world_order_preserved": true
+  }
+}

@@ -1,0 +1,31 @@
+// stateful-sim preview(auto): range sampler -> step sim
+
+(시작)할때 {
+  th <- -1.57079632675.
+}.
+
+(매마디)마다 {
+  // 출력은 숫자만. (θ, I) 순서.
+
+  pi <- 3.1415926535.
+
+  d <- 4.0.
+  lam <- 1.0.
+
+  th_min <- -pi/2.
+  th_max <-  pi/2.
+  dth <- 0.002.
+
+  { th <= th_max }인것 일때 {
+    s <- (th) sin.
+    beta <- pi * d * s / lam.
+    c <- (beta) cos.
+    I <- c*c.
+
+    보임 {
+      th: th.
+      I: I.
+    }.
+    th <- th + (dth).
+  }.
+}.

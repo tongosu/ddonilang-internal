@@ -1,0 +1,9 @@
+{
+  "version": 0,
+  "symbols": [
+    { "name": "dv", "type": "수" },
+    { "name": "m", "type": "수" },
+    { "name": "v", "type": "수" },
+    { "name": "v_max", "type": "수" }
+  ]
+}

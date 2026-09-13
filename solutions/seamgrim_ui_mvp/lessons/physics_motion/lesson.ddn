@@ -1,0 +1,22 @@
+// stateful-sim preview(auto): range sampler -> step sim
+
+(시작)할때 {
+  t <- 0.
+}.
+
+(매마디)마다 {
+  운동 = (#ascii1) 수식{ y = a t^2 + b t + c }.
+
+  a <- 0.5.
+  b <- 2.
+  c <- 1.
+
+  { t <= 5 }인것 일때 {
+    y <- a t^2 + b t + c.
+    보임 {
+      t: t.
+      y: y.
+    }.
+    t <- t + (0.5).
+  }.
+}.

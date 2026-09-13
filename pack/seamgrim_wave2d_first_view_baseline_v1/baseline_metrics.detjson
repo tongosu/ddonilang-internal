@@ -1,0 +1,547 @@
+{
+  "schema": "seamgrim.wave2d.first_view.measurement.v1",
+  "runner": "tests/seamgrim_wave2d_first_view_authoring_runner.mjs",
+  "product_url": "solutions/seamgrim_ui_mvp/ui/index.html",
+  "viewports": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900
+      },
+      "metrics": {
+        "document": {
+          "client_width": 1440,
+          "scroll_width": 1440,
+          "viewport_height": 900
+        },
+        "toolbar": {
+          "rect": {
+            "x": 0,
+            "y": 56,
+            "width": 1440,
+            "height": 59,
+            "top": 56,
+            "right": 1440,
+            "bottom": 115,
+            "left": 0
+          },
+          "client_width": 1440,
+          "scroll_width": 1440,
+          "overflow_x": 0,
+          "command_buttons_visible": [
+            "#btn-run",
+            "#btn-pause",
+            "#btn-reset",
+            "#btn-step"
+          ],
+          "advanced_controls_visible": [
+            ".view-plan-angle-control",
+            ".view-plan-measure-control"
+          ],
+          "has_command_group": false,
+          "has_view_group": false,
+          "camera_visible": true
+        },
+        "primary_visual": {
+          "rect": {
+            "x": 524.391,
+            "y": 320.188,
+            "width": 915.609,
+            "height": 432,
+            "top": 320.188,
+            "right": 1440,
+            "bottom": 752.188,
+            "left": 524.391
+          },
+          "canvas_rect": {
+            "x": 524.391,
+            "y": 320.188,
+            "width": 915.609,
+            "height": 515.016,
+            "top": 320.188,
+            "right": 1440,
+            "bottom": 835.203,
+            "left": 524.391
+          },
+          "starts_in_first_view": true,
+          "available_height_after_chrome": 737,
+          "height_ratio_after_chrome": 0.5862
+        },
+        "ddn_editor": {
+          "rect": {
+            "x": 10,
+            "y": 349.188,
+            "width": 497.391,
+            "height": 540.813,
+            "top": 349.188,
+            "right": 507.391,
+            "bottom": 890,
+            "left": 10
+          },
+          "panel_rect": {
+            "x": 0,
+            "y": 320.188,
+            "width": 518.391,
+            "height": 579.813,
+            "top": 320.188,
+            "right": 518.391,
+            "bottom": 900,
+            "left": 0
+          },
+          "visible": true,
+          "before_primary_visual": false
+        },
+        "mobile_ddn_toggle": {
+          "visible": false,
+          "text": "DDN"
+        },
+        "lesson_brief_visible": true
+      },
+      "canvas": {
+        "rect": {
+          "x": 524.391,
+          "y": 320.188,
+          "width": 915.609,
+          "height": 515.016,
+          "top": 320.188,
+          "right": 1440,
+          "bottom": 835.203,
+          "left": 524.391
+        },
+        "pixel_width": 916,
+        "pixel_height": 515,
+        "colors": 19
+      }
+    },
+    {
+      "viewport": {
+        "name": "desktop_short",
+        "width": 1280,
+        "height": 720
+      },
+      "metrics": {
+        "document": {
+          "client_width": 1280,
+          "scroll_width": 1280,
+          "viewport_height": 720
+        },
+        "toolbar": {
+          "rect": {
+            "x": 0,
+            "y": 56,
+            "width": 1280,
+            "height": 59,
+            "top": 56,
+            "right": 1280,
+            "bottom": 115,
+            "left": 0
+          },
+          "client_width": 1280,
+          "scroll_width": 1280,
+          "overflow_x": 0,
+          "command_buttons_visible": [
+            "#btn-run",
+            "#btn-pause",
+            "#btn-reset",
+            "#btn-step"
+          ],
+          "advanced_controls_visible": [
+            ".view-plan-angle-control",
+            ".view-plan-measure-control"
+          ],
+          "has_command_group": false,
+          "has_view_group": false,
+          "camera_visible": true
+        },
+        "primary_visual": {
+          "rect": {
+            "x": 466.797,
+            "y": 320.188,
+            "width": 813.203,
+            "height": 345.594,
+            "top": 320.188,
+            "right": 1280,
+            "bottom": 665.781,
+            "left": 466.797
+          },
+          "canvas_rect": {
+            "x": 518.016,
+            "y": 320.188,
+            "width": 710.766,
+            "height": 399.797,
+            "top": 320.188,
+            "right": 1228.781,
+            "bottom": 719.984,
+            "left": 518.016
+          },
+          "starts_in_first_view": true,
+          "available_height_after_chrome": 557,
+          "height_ratio_after_chrome": 0.6205
+        },
+        "ddn_editor": {
+          "rect": {
+            "x": 10,
+            "y": 349.188,
+            "width": 439.797,
+            "height": 360.813,
+            "top": 349.188,
+            "right": 449.797,
+            "bottom": 710,
+            "left": 10
+          },
+          "panel_rect": {
+            "x": 0,
+            "y": 320.188,
+            "width": 460.797,
+            "height": 399.813,
+            "top": 320.188,
+            "right": 460.797,
+            "bottom": 720,
+            "left": 0
+          },
+          "visible": true,
+          "before_primary_visual": false
+        },
+        "mobile_ddn_toggle": {
+          "visible": false,
+          "text": "DDN"
+        },
+        "lesson_brief_visible": true
+      },
+      "canvas": {
+        "rect": {
+          "x": 518.016,
+          "y": 320.188,
+          "width": 710.766,
+          "height": 399.797,
+          "top": 320.188,
+          "right": 1228.781,
+          "bottom": 719.984,
+          "left": 518.016
+        },
+        "pixel_width": 711,
+        "pixel_height": 400,
+        "colors": 19
+      }
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 1024,
+        "height": 768
+      },
+      "metrics": {
+        "document": {
+          "client_width": 1024,
+          "scroll_width": 1024,
+          "viewport_height": 768
+        },
+        "toolbar": {
+          "rect": {
+            "x": 0,
+            "y": 56,
+            "width": 1024,
+            "height": 59,
+            "top": 56,
+            "right": 1024,
+            "bottom": 115,
+            "left": 0
+          },
+          "client_width": 1024,
+          "scroll_width": 1024,
+          "overflow_x": 0,
+          "command_buttons_visible": [
+            "#btn-run",
+            "#btn-pause",
+            "#btn-reset",
+            "#btn-step"
+          ],
+          "advanced_controls_visible": [
+            ".view-plan-angle-control",
+            ".view-plan-measure-control"
+          ],
+          "has_command_group": false,
+          "has_view_group": false,
+          "camera_visible": true
+        },
+        "primary_visual": {
+          "rect": {
+            "x": 0,
+            "y": 510.188,
+            "width": 1024,
+            "height": 368.625,
+            "top": 510.188,
+            "right": 1024,
+            "bottom": 878.813,
+            "left": 0
+          },
+          "canvas_rect": {
+            "x": 0,
+            "y": 510.188,
+            "width": 1024,
+            "height": 367.625,
+            "top": 510.188,
+            "right": 1024,
+            "bottom": 877.813,
+            "left": 0
+          },
+          "starts_in_first_view": true,
+          "available_height_after_chrome": 605,
+          "height_ratio_after_chrome": 0.6093
+        },
+        "ddn_editor": {
+          "rect": {
+            "x": 10,
+            "y": 349.188,
+            "width": 1004,
+            "height": 200,
+            "top": 349.188,
+            "right": 1014,
+            "bottom": 549.188,
+            "left": 10
+          },
+          "panel_rect": {
+            "x": 0,
+            "y": 320.188,
+            "width": 1024,
+            "height": 190,
+            "top": 320.188,
+            "right": 1024,
+            "bottom": 510.188,
+            "left": 0
+          },
+          "visible": true,
+          "before_primary_visual": true
+        },
+        "mobile_ddn_toggle": {
+          "visible": false,
+          "text": "DDN"
+        },
+        "lesson_brief_visible": true
+      },
+      "canvas": {
+        "rect": {
+          "x": 0,
+          "y": 510.188,
+          "width": 1024,
+          "height": 367.625,
+          "top": 510.188,
+          "right": 1024,
+          "bottom": 877.813,
+          "left": 0
+        },
+        "pixel_width": 1024,
+        "pixel_height": 368,
+        "colors": 19
+      }
+    },
+    {
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      "metrics": {
+        "document": {
+          "client_width": 390,
+          "scroll_width": 390,
+          "viewport_height": 844
+        },
+        "toolbar": {
+          "rect": {
+            "x": 0,
+            "y": 52,
+            "width": 390,
+            "height": 121,
+            "top": 52,
+            "right": 390,
+            "bottom": 173,
+            "left": 0
+          },
+          "client_width": 390,
+          "scroll_width": 390,
+          "overflow_x": 0,
+          "command_buttons_visible": [
+            "#btn-run",
+            "#btn-pause",
+            "#btn-reset",
+            "#btn-step"
+          ],
+          "advanced_controls_visible": [
+            ".view-plan-angle-control",
+            ".view-plan-measure-control"
+          ],
+          "has_command_group": false,
+          "has_view_group": false,
+          "camera_visible": true
+        },
+        "primary_visual": {
+          "rect": {
+            "x": 0,
+            "y": 473.375,
+            "width": 390,
+            "height": 354.469,
+            "top": 473.375,
+            "right": 390,
+            "bottom": 827.844,
+            "left": 0
+          },
+          "canvas_rect": {
+            "x": 0,
+            "y": 473.375,
+            "width": 390,
+            "height": 353.469,
+            "top": 473.375,
+            "right": 390,
+            "bottom": 826.844,
+            "left": 0
+          },
+          "starts_in_first_view": true,
+          "available_height_after_chrome": 551,
+          "height_ratio_after_chrome": 0.6433
+        },
+        "ddn_editor": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "panel_rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "visible": false,
+          "before_primary_visual": true
+        },
+        "mobile_ddn_toggle": {
+          "visible": true,
+          "text": "DDN"
+        },
+        "lesson_brief_visible": true
+      },
+      "canvas": {
+        "rect": {
+          "x": 0,
+          "y": 473.375,
+          "width": 390,
+          "height": 353.469,
+          "top": 473.375,
+          "right": 390,
+          "bottom": 826.844,
+          "left": 0
+        },
+        "pixel_width": 390,
+        "pixel_height": 353,
+        "colors": 19
+      }
+    }
+  ],
+  "card_preview": {
+    "lesson_id": "rep_phys_pendulum_wave1_v1",
+    "before": {
+      "card": {
+        "x": 14,
+        "y": 1618,
+        "width": 1052,
+        "height": 370,
+        "top": 1618,
+        "right": 1066,
+        "bottom": 1988,
+        "left": 14
+      },
+      "preview": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "hidden": true,
+      "text": "미리보기 로딩 중…"
+    },
+    "after": {
+      "card": {
+        "x": 14,
+        "y": 1618,
+        "width": 1052,
+        "height": 370,
+        "top": 1618,
+        "right": 1066,
+        "bottom": 1988,
+        "left": 14
+      },
+      "preview": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "hidden": true,
+      "text": "미리보기 로딩 중…"
+    },
+    "card_height_shift": 0,
+    "preview_height_shift": 0,
+    "hydration_timed_out": true
+  },
+  "console_failures": [],
+  "failure_vectors": [
+    {
+      "code": "toolbar_command_group_missing",
+      "viewport": "1440x900"
+    },
+    {
+      "code": "toolbar_view_group_missing",
+      "viewport": "1440x900"
+    },
+    {
+      "code": "toolbar_command_group_missing",
+      "viewport": "1280x720"
+    },
+    {
+      "code": "toolbar_view_group_missing",
+      "viewport": "1280x720"
+    },
+    {
+      "code": "tablet_ddn_before_visual",
+      "viewport": "1024x768"
+    },
+    {
+      "code": "mobile_primary_visual_too_short",
+      "viewport": "390x844",
+      "value": 354.469
+    },
+    {
+      "code": "mobile_advanced_controls_not_collapsed",
+      "viewport": "390x844",
+      "value": [
+        ".view-plan-angle-control",
+        ".view-plan-measure-control"
+      ]
+    },
+    {
+      "code": "card_preview_space_not_reserved"
+    },
+    {
+      "code": "card_preview_hydration_timeout"
+    }
+  ]
+}

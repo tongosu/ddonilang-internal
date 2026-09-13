@@ -1,0 +1,17 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "elem_math_fraction_line",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "graph",
+  "required_anchor_ids": ["obs.time", "obs.x", "obs.fraction", "obs.diff"],
+  "anchors": [
+    {"anchor_id": "obs.time", "source_ref": {"kind": "observation", "key": "t"}, "value_type": "scalar", "unit": "tick", "label": "마디", "accessibility_name": "분수 수직선 마디", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_fraction_line/lesson.ddn", "source_span": "t <- t + 1"}},
+    {"anchor_id": "obs.x", "source_ref": {"kind": "observation", "key": "x"}, "value_type": "scalar", "unit": "칸", "label": "x", "accessibility_name": "수직선 위치 x", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_fraction_line/lesson.ddn", "source_span": "x <- x + 증가량"}},
+    {"anchor_id": "obs.fraction", "source_ref": {"kind": "observation", "key": "분수값"}, "value_type": "scalar", "unit": "1", "label": "분수값", "accessibility_name": "분수로 나타낸 값", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_fraction_line/lesson.ddn", "source_span": "분수값 <- x / 분모"}},
+    {"anchor_id": "obs.diff", "source_ref": {"kind": "observation", "key": "차이"}, "value_type": "scalar", "unit": "칸", "label": "차이", "accessibility_name": "복원값과 원래 위치의 차이", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/elem_math_fraction_line/lesson.ddn", "source_span": "차이 <- x - 두배값"}}
+  ],
+  "measures": [],
+  "graph_cursor": {"cursor_id": "graph.current.fraction", "x_anchor": "obs.time", "y_anchor": "obs.fraction", "series_id": "분수값", "label": "현재 분수값"},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

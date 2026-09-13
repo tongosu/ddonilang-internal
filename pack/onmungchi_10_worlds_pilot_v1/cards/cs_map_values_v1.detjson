@@ -1,0 +1,19 @@
+{
+  "schema": "ddn.corpus_card.v1.candidate",
+  "card_id": "cs_map_values_v1",
+  "world_concept_id": "cs.map_values",
+  "name": "자료 바꾸기",
+  "one_line": "차림의 모든 값에 같은 규칙을 적용해 새 차림을 만든다.",
+  "lifecycle": "검증중",
+  "feasibility": {"grade": "ga", "required_surfaces": ["채비", "매김", "차림", "바꾸기", "함수값"], "ssot_anchor": "docs/ssot/ssot/SSOT_DECISIONS_v24.12.9.md:107"},
+  "curriculum": {"subject": "cs", "age_band": "middle", "textbook_candidates": ["2권 자료와 반복"]},
+  "source": {"lesson_id": "rep_ddonirang_vol2_map_v1", "path": "solutions/seamgrim_ui_mvp/lessons/rep_ddonirang_vol2_map_v1/lesson.ddn", "existing_pack_id": null, "representative_madi": 1},
+  "surfaces": ["설정", "채비", "매김", "차림", "함수값", "바꾸기", "매마디마다", "조건", "보개"],
+  "execution_evidence": {"state_hash": "blake3:e6444ab637ae4aa13e19a4292683a4acead0999fc54236abcfa35b71573923b0", "trace_hash": "blake3:5e63c07ea96a9a4772d1111dd553dfa65da264f6a2cac7da22c6da41c75f9e94", "pilot_case_id": "cs_map_values_v1"},
+  "few_shot": [{"audience": "child", "intent": "숫자 네 개를 모두 같은 배수로 바꿔 새 목록을 만들어줘.", "canonical_source_ref": "source.path"}, {"audience": "teacher", "intent": "차림의 각 값에 순수 함수값을 적용하는 map 개념 차시를 만들어줘.", "canonical_source_ref": "source.path"}],
+  "remix_handles": [{"parameter": "배수", "range": "1..5", "effect": "새 차림의 모든 값이 같은 비율로 달라진다."}],
+  "read_aloud": {"status": "pending_human_review", "reviewed_at": null, "reviewer": null},
+  "lineage": {"origin": "derived_existing_representative", "parent_lesson_id": "rep_ddonirang_vol2_map_v1", "remix_lineage_ref": null},
+  "gate_status": {"pack_pass": "passed", "canonical_roundtrip": "passed", "read_aloud": "pending_human_review", "remix_handles": "passed", "few_shot_pair": "structurally_passed"},
+  "owner_decision": {"status": "pending", "decided_at": null, "decision_ref": null}
+}

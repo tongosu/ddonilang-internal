@@ -1,0 +1,14 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "lang_mageum_diag_v1",
+  "kind": "declarative_closure_mageum_diag_red_fixture",
+  "goal": "G7",
+  "runtime_claim": false,
+  "parser_landed_claim": false,
+  "product_code_change": false,
+  "ssot_edit_claim": false,
+  "new_language_block": false,
+  "canonical_family": "막음",
+  "canonical_verb": "막기",
+  "fixture": "diagnostics.detjson"
+}

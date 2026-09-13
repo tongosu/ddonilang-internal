@@ -1,0 +1,14 @@
+{
+  "schema": "ddn.must_gap.expected_red.v1",
+  "expected_status": "red_until_product_implementation",
+  "expected_rule": "AT_MISUSE_PIN_QUICKFIX",
+  "expected_future_diag": "UNIT_UNKNOWN",
+  "expected_future_quickfixes": [
+    "사과:대상~를 먹기."
+  ],
+  "notes": [
+    "SSOT 요구: @대상은 단위가 아니므로 :대상 핀 고정으로 QuickFix 제안.",
+    "현재 LSP InvalidSuffix 진단은 fixes를 비워 둔다.",
+    "이번 배치는 구현 없이 red skeleton만 추가한다."
+  ]
+}

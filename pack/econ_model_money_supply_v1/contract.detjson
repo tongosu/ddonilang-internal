@@ -1,0 +1,15 @@
+{
+  "schema": "ddn.econ_model_first_g1.contract.v1",
+  "pack_id": "econ_model_money_supply_v1",
+  "evidence_tier": "skeleton/docs_first",
+  "model_first": true,
+  "domain": "money_supply",
+  "agent_first_symmetry_slots": [
+    "agent_first_household_v1",
+    "agent_first_firm_v1",
+    "agent_first_market_v1",
+    "agent_first_government_v1",
+    "agent_first_central_bank_v1"
+  ],
+  "product_behavior_claim": false
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "ddn.ganada.remaining_stems.evidence.v1",
+  "pack": "ganada_da_math_core_evidence_v1",
+  "pack_kind": "representative_evidence",
+  "branch": "다",
+  "tracked_cells": ["다-1", "다-2", "다-4"],
+  "source_contract_pack": "ganada_maru_verification_contract_v1",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "state_rejudgement_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "public_upload_claim": false,
+  "external_ai_call_claim": false,
+  "file_line_refs": [
+    "pack/ganada_da_math_core_evidence_v1/manifest.detjson:1",
+    "tests/run_numeric_p0n_pack_check.py:1",
+    "tests/run_symbolic_v2_pack_check.py:1",
+    "pack/math_vector_minimum_first_run_v1/golden.jsonl:1"
+  ],
+  "commands": [
+    {"id": "numeric_p0n", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_numeric_p0n_pack_check.py"], "expect_stdout_contains": "numeric_p0n_pack_check ok"},
+    {"id": "symbolic_v2", "kind": "tooling_runner_or_ci_pass", "command": ["python", "tests/run_symbolic_v2_pack_check.py"], "expect_stdout_contains": "symbolic v2 pack check ok"},
+    {"id": "math_vector_pack", "kind": "pack_golden_pass", "command": ["python", "tests/run_pack_golden.py", "math_vector_minimum_first_run_v1"], "expect_stdout_contains": "pack golden ok"}
+  ]
+}

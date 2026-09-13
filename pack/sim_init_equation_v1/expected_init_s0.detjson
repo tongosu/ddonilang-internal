@@ -1,0 +1,74 @@
+{
+  "diagnostics": [],
+  "init_plan": {
+    "allowed_stages": [
+      "S0",
+      "S1"
+    ],
+    "apply": "before_madi_0",
+    "kind": "t0_one_shot",
+    "source": "chaebi_inner_seum"
+  },
+  "lowering": {
+    "causal_order": [
+      "r1",
+      "r2"
+    ],
+    "causalization": "bipartite_matching_toposort_source_order_tiebreak",
+    "materialized_values": [
+      "위치",
+      "속도"
+    ],
+    "phase": {
+      "name": "seum_solve",
+      "tick_order": [
+        "state_read",
+        "seum_solve",
+        "state_write",
+        "hook_next_segment"
+      ],
+      "writes_apply": "same_tick_before_hook_next_segment"
+    }
+  },
+  "method": "explicit_algebra_causalized_v1",
+  "relations": [
+    {
+      "defines": "위치",
+      "depends_on": [],
+      "id": "r1",
+      "kind": "explicit_algebra",
+      "source_order": 0,
+      "text": "위치 =:= 0"
+    },
+    {
+      "defines": "속도",
+      "depends_on": [],
+      "id": "r2",
+      "kind": "explicit_algebra",
+      "source_order": 1,
+      "text": "속도 =:= 1"
+    }
+  ],
+  "schema": "ddn.solveplan.v1",
+  "source_hash": "sha256:a56e06be4e3800d460d47b1d4871592eaf1ac4777ce361c007468b7ab04d8ce2",
+  "stage": "S0",
+  "state_hash_inputs": {
+    "exclude": [
+      "diagnostics",
+      "execution_results"
+    ],
+    "include": [
+      "schema",
+      "source_hash",
+      "stage",
+      "method",
+      "relations",
+      "unknowns",
+      "lowering"
+    ]
+  },
+  "unknowns": [
+    "위치",
+    "속도"
+  ]
+}

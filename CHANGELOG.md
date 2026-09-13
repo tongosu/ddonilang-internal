@@ -1,0 +1,1214 @@
+# CHANGELOG.md
+
+## Unreleased
+- Implemented the V25 PC-02 shared Definition/Binding frontdoor under review.
+  - Routed tool/native/WASM/official CLI/teul-cli V25 assignment parsing, canon, runtime, and diagnostics through shared Rust authority.
+  - Kept pre-V25 compatibility explicit, disabled legacy fallback and canon passthrough, and preserved historical T5F lessons through the named WASM migration constructor.
+  - Added a seven-case multisurface oracle and five mutation checks with exact restoration and residue zero.
+  - Left tracked WASM stale and unchanged pending normal artifact custody; SSOT and public SPEC remain unchanged.
+- Implemented the V25 PC-01 Definition/Binding semantic split under review.
+  - Added explicit V25 `:=` Definition token/AST/canonicalization while preserving `<-` as Binding/Rebinding.
+  - Added a fail-closed pre-V25 migration diagnostic and an executable shared-parser/runtime pack.
+  - Kept default product frontdoors, SSOT, public SPEC, and tracked WASM unchanged pending independent plain PASS and PC-02.
+- Promoted the owner-approved internal SSOT v24.17.0 research integration to live current.
+  - Kept public Language SPEC v0.2.1 on its separate lineage pending successor parser, canonicalization, reading, golden, and CLI/WASM evidence.
+  - Restricted `보임 {}` to deprecated legacy input and prohibited it in new canonical output and recommended examples.
+  - Preserved product implementation, renderer, and Korean Manim completion as OPEN.
+- Closed the creator-gaji external Round 0 green product baseline.
+  - Promoted the legacy one-file public wedge to the native creator dialog and dynamic project-id contract.
+  - Made durable persistence/capability readiness reproducible and preserved zero runner-owned residual processes, sockets, and temp directories.
+  - Derived AI prompt version/file-list/hash from current SSOT v24.15.1 with portable CRLF normalization.
+  - Removed floating-point truth from the Fixed64 core while retaining host/JSON float only at tool and CLI adapters.
+  - Passed the public wedge, creator regressions, Rust suites, CLI/WASM freshness/parity/sync, and core_lang sanity; external creator successes remain zero.
+- Removed block editing entry points from the Seamgrim product UI.
+  - Removed `쉬운 블록`, `DDN 블록`, and `실험 블록` from the visible workspace.
+  - Restored the Run editor panel to a single DDN textarea path.
+  - Disconnected the product shell from `screen-block_editor`; the block editor
+    engine/codec remains only as a legacy module test surface.
+- Closed repository cleanup round 3 review candidates.
+  - Added `tests/run_age5_close_review_suite_check.py` to bind AGE5 close review
+    candidates into an explicit suite.
+  - Strengthened `tests/run_test_reference_inventory_check.py` so
+    `review > 0` fails.
+  - Added `repo_structure_hygiene_check` to the end of the Seamgrim product
+    stabilization smoke, with cleanup for ignored root `geoul.diag.jsonl`.
+  - Test inventory now expects `tests=32 referenced=32 review=0`.
+- Added repository structure policy gates and classification reports.
+  - Added:
+    - `tests/run_repo_structure_hygiene_check.py`
+    - `tests/run_pack_artifact_classification_check.py`
+    - `tests/run_test_reference_inventory_check.py`
+    - `solutions/seamgrim_ui_mvp/lessons/README.md`
+    - `solutions/seamgrim_ui_mvp/lessons_rewrite_v1/README.md`
+  - The hygiene check fails on tracked Seamgrim UI zip archives, root temp files,
+    root runtime logs, partial roadmap downloads, and debug temp pack folders.
+  - The pack artifact classification keeps all 194 tracked pack artifacts under
+    current contracts.
+  - The age-test inventory classifies 30 of 32 `tests/run_age*.py` files as
+    referenced and leaves 2 as review candidates.
+- Cleaned repository structure noise and clarified generated artifact policy.
+  - Stashed pre-existing Seamgrim UI/block worktree edits before cleanup:
+    - `pre-structure-cleanup-seamgrim-ui-block-work`
+  - Removed ignored local leftovers:
+    - root `__tmp_*.ddn`
+    - root `geoul.diag.jsonl`
+    - `docs/context/roadmap/*.crdownload`
+    - `pack/_tmp_dbg_*`
+  - Removed tracked stale archive:
+    - `solutions/seamgrim_ui_mvp/ui.zip`
+  - Added `.gitignore` guard for Seamgrim UI zip archives.
+  - Added `tools/vscode-ddn/legacy/README.md` to mark the legacy VS Code shell as non-current.
+  - Left pack proof/run artifacts and `tests/run_age*.py` in place pending separate reference classification.
+- Closed Task 4/5 for CI snapshot/report flow.
+  - Task 4 (snapshot report lock):
+    - revalidated profile chain:
+      - `python tests/run_ci_profile_split_contract_check.py` PASS
+      - `python tests/run_ci_profile_core_lang_gate.py` PASS
+      - `python tests/run_ci_profile_seamgrim_gate.py` PASS
+    - revalidated full profile snapshot artifact:
+      - `python tests/run_ci_sync_readiness_check.py --skip-aggregate --sanity-profile full --report-prefix dev_sync_readiness_full_snapshot --json-out build/reports/dev_sync_readiness_full_snapshot.ci_sync_readiness.detjson` PASS
+      - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness_full_snapshot.ci_sync_readiness.detjson --require-pass --sanity-profile full` PASS
+      - `python tests/run_ci_sync_readiness_report_check_selftest.py` PASS
+  - Task 5 (documentation close):
+    - finalized status/changelog record for snapshot lock and profile-chain verification.
+- Added `guideblock_keys_basics` D-PACK and parity runner for OI-417 key-dictionary validation.
+  - Added:
+    - `pack/guideblock_keys_basics/`
+      - `golden.jsonl`
+      - `README.md`
+      - `c01_hash_header_alias/{input.ddn,case.detjson}`
+      - `c02_guideblock_alias/{input.ddn,case.detjson}`
+      - `c03_mixed_precedence/{input.ddn,case.detjson}`
+    - `tests/seamgrim_guideblock_tool_parse.py`
+      - Python(tool) parser adapter for `export_graph.parse_guide_meta_header`
+    - `tests/seamgrim_guideblock_keys_pack_runner.mjs`
+      - case runner (`schema=ddn.seamgrim.guideblock_case.v1`)
+      - validates:
+        - expected canonical meta keys
+        - expected body prefix
+        - JS(UI) parser vs Python(tool) parser parity
+    - `tests/run_seamgrim_guideblock_keys_pack_check.py`
+      - CI-friendly wrapper for guideblock pack runner
+  - Updated:
+    - `tests/run_seamgrim_runtime_5min_check.py`
+      - added runtime step: `guideblock_keys_pack_check`
+    - `tests/run_seamgrim_5min_checklist.py`
+      - added checklist label for `guideblock_keys_pack_check`
+  - Verification:
+    - `python tests/run_seamgrim_guideblock_keys_pack_check.py` PASS
+    - `python tests/run_seamgrim_export_graph_preprocess_check.py` PASS
+    - `node tests/seamgrim_ui_common_runner.mjs` PASS
+    - `python tests/run_seamgrim_runtime_5min_check.py --skip-seed-cli --json-out build/reports/dev_runtime_5min_with_ui.detjson` PASS
+    - `python tests/run_seamgrim_5min_checklist.py --from-runtime-report build/reports/dev_runtime_5min_with_ui.detjson` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+- Added guideblock meta parsing (`설정/보개/슬기`) to UI/tool meta extraction for OI-417 alignment.
+  - Updated:
+    - `solutions/seamgrim_ui_mvp/ui/components/guide_meta.js`
+      - `parseGuideMetaHeader` now accepts top-of-file guide blocks:
+        - `설정 { ... }`
+        - `보개 { ... }`
+        - `슬기 { ... }`
+      - block fields are canonicalized with the existing alias dictionary (`GUIDE_META_ALIASES`)
+    - `solutions/seamgrim_ui_mvp/tools/export_graph.py`
+      - `parse_guide_meta_header` now accepts the same guide-block surface and key canonicalization
+    - `tests/seamgrim_ui_common_runner.mjs`
+      - added block-form alias regression:
+        - `title/설명/default-series/x-axis` -> `name/desc/default_observation/default_observation_x`
+    - `tests/run_seamgrim_export_graph_preprocess_check.py`
+      - added `test_meta_guideblock_dictionary`
+  - Verification:
+    - `node tests/seamgrim_ui_common_runner.mjs` PASS
+    - `python tests/run_seamgrim_export_graph_preprocess_check.py` PASS
+- Added `canon --emit exec-policy-map-json` for OI-416 language/tool-axis mapping output.
+  - Updated:
+    - `tools/teul-cli/src/canon.rs`
+      - `CanonOutput` now carries `exec_policy_map_json`
+      - added deterministic map extraction/serialization:
+        - schema: `ddn.exec_policy_effect_map.v1`
+        - language axis: 실행모드/효과정책(유효값/중복 블록 gate 오류 포함)
+        - tool axis: open 모드(`deny|record|replay`) 및 우선순위(`cli > open_policy > default_deny`)
+        - cross-axis: open 모드별 효과 경계 결과(`E_EFFECT_IN_STRICT_MODE`, `E_EFFECT_IN_ISOLATED_MODE`, `E_OPEN_DENIED`, `record/replay`)
+    - `tools/teul-cli/src/cli/canon.rs`
+      - `EmitKind::ExecPolicyMapJson` added
+      - `write_emit` supports `exec-policy-map-json` output
+    - `tests/run_pack_golden.py`
+      - default pack list now includes `seamgrim_exec_policy_effect_map_v1`
+  - Added:
+    - `pack/seamgrim_exec_policy_effect_map_v1/`
+      - `c01_general_allowed/input.ddn`
+      - `c01_general_allowed/expected_exec_policy_map.json`
+      - `c02_strict_forces_isolated/input.ddn`
+      - `c02_strict_forces_isolated/expected_exec_policy_map.json`
+      - `c03_duplicate_exec_policy_blocks/input.ddn`
+      - `c03_duplicate_exec_policy_blocks/expected_exec_policy_map.json`
+      - `golden.jsonl`
+      - `README.md`
+  - Verification:
+    - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+    - `python tests/run_pack_golden.py seamgrim_exec_policy_effect_map_v1` PASS
+    - `python tests/run_pack_golden.py seamgrim_exec_policy_effect_diag_v1 seamgrim_exec_policy_effect_map_v1 seamgrim_event_model_ir_v1 seamgrim_guseong_flatten_ir_v1 seamgrim_event_surface_canon_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1 seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+- Added `canon --emit alrim-plan-json` for minimal AGE5 event-model IR output.
+  - Updated:
+    - `tools/teul-cli/src/canon.rs`
+      - `CanonOutput` now carries `alrim_plan_json`
+      - added deterministic event handler plan extraction:
+        - schema: `ddn.alrim_event_plan.v1`
+        - fields: `handlers[].{order,kind,scope,body_canon}`
+    - `tools/teul-cli/src/cli/canon.rs`
+      - `EmitKind::AlrimPlanJson` added
+      - `write_emit` supports `alrim-plan-json` output
+    - `tests/run_pack_golden.py`
+      - default pack list now includes `seamgrim_event_model_ir_v1`
+  - Added:
+    - `pack/seamgrim_event_model_ir_v1/`
+      - `c01_basic/input.ddn`
+      - `c01_basic/expected_alrim_plan.json`
+      - `golden.jsonl`
+      - `README.md`
+  - Verification:
+    - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+    - `python tests/run_pack_golden.py seamgrim_event_model_ir_v1` PASS
+    - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_guseong_flatten_ir_v1 seamgrim_event_surface_canon_v1 seamgrim_event_model_ir_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+- Added `canon --emit guseong-flat-json` to expose deterministic `짜임 flatten` planning output.
+  - Updated:
+    - `tools/teul-cli/src/canon.rs`
+      - `CanonOutput` now carries `guseong_flat_json`
+      - `GuseongFlattenPlan` expanded to include:
+        - `topo_order`
+        - `instances` (`name`, `type_name`)
+        - `links` (`dst_instance`, `dst_port`, `src_instance`, `src_port`)
+      - flatten plan JSON schema fixed as `ddn.guseong_flatten_plan.v1`
+    - `tools/teul-cli/src/cli/canon.rs`
+      - `EmitKind::GuseongFlatJson` added
+      - `write_emit` now supports flat-plan JSON output
+    - `tests/run_pack_golden.py`
+      - default pack list now includes `seamgrim_guseong_flatten_ir_v1`
+  - Added:
+    - `pack/seamgrim_guseong_flatten_ir_v1/`
+      - `c01_basic/input.ddn`
+      - `c01_basic/expected_flat.json`
+      - `golden.jsonl`
+      - `README.md`
+  - Verification:
+    - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+    - `python tests/run_pack_golden.py seamgrim_guseong_flatten_ir_v1` PASS
+    - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_guseong_flatten_ir_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+- Added positive golden case for valid tuple-port projection in `짜임 flatten` diagnostics pack.
+  - Updated:
+    - `pack/seamgrim_guseong_flatten_diag_v1/c21_tuple_projection_valid_success/input.ddn`
+    - `pack/seamgrim_guseong_flatten_diag_v1/c21_tuple_projection_valid_success/expected_canon.ddn`
+    - `pack/seamgrim_guseong_flatten_diag_v1/golden.jsonl`
+      - added `c21_tuple_projection_valid_success`
+  - Verification:
+    - `python tests/run_pack_golden.py seamgrim_guseong_flatten_diag_v1` PASS
+    - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+- Added numeric dot-segment handling (`.0`, `.1`) to parser+runtime member/path traversal.
+  - Updated:
+    - `tools/teul-cli/src/lang/parser.rs`
+      - `parse_path`/`parse_postfix` now accept integer dot-segments
+      - fractional dot-segment rejected at parse stage (`E_PARSE_UNEXPECTED_TOKEN`)
+      - added parser tests:
+        - `parse_numeric_dot_segment_as_field_access`
+        - `parse_numeric_dot_segment_rejects_fraction`
+        - `parse_path_allows_numeric_dot_segment`
+    - `tools/teul-cli/src/runtime/eval.rs`
+      - `Expr::FieldAccess`/`eval_path` now share `eval_member_access`
+      - list target + numeric segment lookup support
+      - non-numeric segment guard: `E_PACK` (`차림 인덱스는 숫자(.0/.1)만 허용`)
+      - added unit tests:
+        - `list_dot_index_path_access_works`
+        - `list_dot_index_requires_numeric_segment`
+  - Verification:
+    - `cargo test --manifest-path tools/teul-cli/Cargo.toml parse_numeric_dot_segment -- --nocapture` PASS
+    - `cargo test --manifest-path tools/teul-cli/Cargo.toml parse_path_allows_numeric_dot_segment -- --nocapture` PASS
+    - `cargo test --manifest-path tools/teul-cli/Cargo.toml list_dot_index -- --nocapture` PASS
+    - `cargo run --quiet --manifest-path tools/teul-cli/Cargo.toml -- run build/tmp_runtime_list_index.ddn --ticks 1` => `22`
+    - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+    - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+- Extended `짜임` flatten diagnostics to cover scalar output tuple-access path (c19).
+  - Updated:
+    - `tools/teul-cli/src/canon.rs`
+      - parser now accepts numeric dot-segments in path/field access (e.g. `a.끝점.0`)
+      - added tuple-index guard on dot-segment parsing:
+        - non-integer index after dot -> `E_CANON_TUPLE_INDEX_INVALID`
+    - `pack/seamgrim_guseong_flatten_diag_v1/golden.jsonl`
+      - added `c19_tuple_access_on_scalar_output_EXPECT_FAIL`
+      - expected error: `E_GUSEONG_TUPLE_ACCESS_ON_SCALAR`
+  - Verification:
+    - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+    - `python tests/run_pack_golden.py seamgrim_guseong_flatten_diag_v1` PASS
+    - `cargo run --manifest-path tools/teul-cli/Cargo.toml -- canon pack/seamgrim_guseong_flatten_diag_v1/c19_tuple_access_on_scalar_output_EXPECT_FAIL/input.ddn` -> `E_GUSEONG_TUPLE_ACCESS_ON_SCALAR`
+    - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+- Started AGE5 1~6 continuation pass and added W92 AOT pack contract baseline.
+  - Added:
+    - `tests/run_w92_aot_pack_check.py`
+      - validates `pack/gogae9_w92_aot_compiler_v2` contract files/schemas/case-id parity/speedup floor
+    - `pack/gogae9_w92_aot_compiler_v2/intent.md`
+    - `pack/gogae9_w92_aot_compiler_v2/bench_cases.json`
+    - `pack/gogae9_w92_aot_compiler_v2/golden.detjson`
+    - `pack/gogae9_w92_aot_compiler_v2/golden.jsonl`
+    - `pack/gogae9_w92_aot_compiler_v2/inputs/c01_interp_aot_hash_parity/input.ddn`
+    - `pack/gogae9_w92_aot_compiler_v2/inputs/c01_interp_aot_hash_parity/expected_canon.ddn`
+  - Updated:
+    - `pack/gogae9_w92_aot_compiler_v2/README.md`
+      - moved from draft TODO to executable baseline contract
+    - `tests/run_pack_golden.py`
+      - default pack set now includes `gogae9_w92_aot_compiler_v2`
+  - Verification:
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_sync_readiness_check.py --skip-aggregate --json-out build/reports/dev_sync_readiness.detjson` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+    - `python tests/run_w92_aot_pack_check.py --pack pack/gogae9_w92_aot_compiler_v2` PASS
+    - `python tests/run_pack_golden.py gogae9_w92_aot_compiler_v2` PASS
+    - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+- Hardened aggregate-sanity diagnostics check to guard parity summary contracts across multiple files.
+  - Updated:
+    - `tests/run_ci_aggregate_gate_sanity_diagnostics_check.py`
+      - migrated from single-file token check to multi-file token map:
+        - `tests/run_ci_aggregate_gate.py`
+        - `tests/_ci_aggregate_diag_lib.py`
+        - `tests/run_ci_gate_summary_report_check.py`
+      - requires parity-summary keys and PASS invariant messages
+  - Verification:
+    - `python -m py_compile tests/run_ci_aggregate_gate_sanity_diagnostics_check.py tests/_ci_aggregate_diag_lib.py tests/run_ci_gate_summary_report_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sanity_diagnostics_check.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --skip-core-tests --report-prefix dev_age5_sanity_diag_guard --clean-prefixed-reports --quiet-success-logs --compact-step-logs` PASS
+- Exposed ci-sanity overlay/session parity triplet on PASS summary and enforced PASS invariants.
+  - Updated:
+    - `tests/_ci_aggregate_diag_lib.py`
+      - `append_ci_sanity_summary_lines` now emits:
+        - `ci_sanity_overlay_session_wired_consistency_ok`
+        - `ci_sanity_overlay_session_diag_parity_ok`
+        - `ci_sanity_overlay_compare_diag_parity_ok`
+    - `tests/run_ci_gate_summary_report_check.py`
+      - PASS-required keys now include the three parity keys
+      - PASS invariants require each parity key to be `1`
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - PASS fixture synchronized with parity keys
+      - added negative regression for `ci_sanity_overlay_compare_diag_parity_ok=0`
+  - Verification:
+    - `python -m py_compile tests/_ci_aggregate_diag_lib.py tests/run_ci_gate_summary_report_check.py tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_sanity_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --skip-core-tests --report-prefix dev_age5_sanity_parity_surface --clean-prefixed-reports --quiet-success-logs --compact-step-logs` PASS
+    - `python tests/run_ci_aggregate_gate.py --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --report-prefix dev_age5_core_followup --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Promoted `ci_sync_readiness` to aggregate PASS summary surface and locked summary/report contracts.
+  - Updated:
+    - `tests/_ci_aggregate_diag_lib.py`
+      - added `load_ci_sync_readiness_snapshot` and `append_ci_sync_readiness_summary_lines`
+      - synchronized `print_report_paths(...)` signature with `ci_sync_readiness_report`
+    - `tests/run_ci_aggregate_gate.py`
+      - summary now emits `ci_sync_readiness_report/status/ok/code/step/msg/step_count`
+      - report-path emission call now includes `ci_sync_readiness_report`
+    - `tests/run_ci_gate_summary_report_check.py`
+      - PASS-required keys include sync-readiness summary fields
+      - PASS invariants enforce `status=pass`, `ok=1`, `code=OK`, `step=all`, `step_count>0`
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - pass fixture synchronized with sync-readiness summary fields
+      - negative regressions added for missing sync key and low sync step-count
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - required tokens extended for sync summary helper/keys
+  - Verification:
+    - `python -m py_compile tests/_ci_aggregate_diag_lib.py tests/run_ci_aggregate_gate.py tests/run_ci_gate_summary_report_check.py tests/run_ci_gate_summary_report_check_selftest.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sanity_diagnostics_check.py` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_aggregate_gate.py --skip-core-tests --report-prefix dev_age5_finish_sync --clean-prefixed-reports --quiet-success-logs --compact-step-logs` PASS
+- Added `ci_sync_readiness` artifact contract enforcement in emit-artifacts checks.
+  - Updated:
+    - `tests/run_ci_emit_artifacts_check.py`
+      - validates `reports.ci_sync_readiness` presence, json/schema/status contract, and PASS fields (`code=OK`, `step=all`)
+    - `tests/ci_check_error_codes.py`
+      - added:
+        - `E_SYNC_READINESS_PATH_MISSING`
+        - `E_SYNC_READINESS_JSON_INVALID`
+        - `E_SYNC_READINESS_SCHEMA_MISMATCH`
+        - `E_SYNC_READINESS_STATUS_UNSUPPORTED`
+        - `E_SYNC_READINESS_STATUS_MISMATCH`
+        - `E_SYNC_READINESS_PASS_STATUS_FIELDS`
+    - `tests/run_ci_emit_artifacts_check_selftest.py`
+      - added negative cases for missing/schema/status/pass-field regressions on sync-readiness artifact
+    - `tests/run_ci_emit_artifacts_sanity_contract_check.py`
+      - static token contract now requires sync-readiness validation wiring and codes
+  - Verification:
+    - `python -m py_compile tests/ci_check_error_codes.py tests/run_ci_emit_artifacts_check.py tests/run_ci_emit_artifacts_check_selftest.py tests/run_ci_emit_artifacts_sanity_contract_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_sanity_contract_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_sync_emit_artifacts_20260302 --skip-core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common` PASS
+- Hardened sync-readiness report code contracts and wired aggregate to validate generated report artifacts directly.
+  - Updated:
+    - `tests/ci_check_error_codes.py`
+      - added `SYNC_READINESS_REPORT_CODES`
+    - `tests/run_ci_sync_readiness_report_check.py`
+      - switched to centralized `SYNC_READINESS_REPORT_CODES` lookups
+    - `tests/run_ci_sync_readiness_report_check_selftest.py`
+      - now asserts exact `fail code=...` for negative report cases
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - static required tokens aligned to code-map based report checker/selftest
+    - `tests/run_ci_aggregate_gate.py`
+      - added `ci_sync_readiness_report_generate` and `ci_sync_readiness_report_check`
+      - aggregate now generates `ci_sync_readiness.detjson` and immediately validates it with `run_ci_sync_readiness_report_check.py --require-pass`
+      - included new steps in fast-fail/overall/sub-step/fail diagnostics conditions
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - now requires tokens for generated-report check wiring
+  - Verification:
+    - `python -m py_compile tests/ci_check_error_codes.py tests/run_ci_sync_readiness_report_check.py tests/run_ci_sync_readiness_report_check_selftest.py tests/run_ci_sync_readiness_diagnostics_check.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_ci_sync_readiness_report_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_sync_direct_check_20260302 --skip-core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common` PASS
+- Added dedicated sync-readiness report contract checker and selftest, wired into aggregate CI.
+  - Added:
+    - `tests/run_ci_sync_readiness_report_check.py`
+      - validates `ddn.ci.sync_readiness.v1` payload contract:
+        - status/ok/code/step/msg consistency
+        - steps/steps_count consistency
+        - mandatory `sanity_gate_contract` row
+        - validate-only shape invariants
+        - pass non-validate base-step prefix invariants
+    - `tests/run_ci_sync_readiness_report_check_selftest.py`
+      - verifies real pass reports and validate-only pass report
+      - includes negative regressions:
+        - pass code corruption
+        - missing `sanity_gate_contract` row
+        - invalid validate-only steps shape
+  - Updated:
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - includes report checker/selftest token contracts
+    - `tests/run_ci_aggregate_gate.py`
+      - new step `ci_sync_readiness_report_selftest`
+      - included in fast-fail, overall pass criteria, sub-step failure criteria, and fail-path diagnostics run
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - now requires tokens for `ci_sync_readiness_report_selftest`
+  - Verification:
+    - `python -m py_compile tests/run_ci_sync_readiness_report_check.py tests/run_ci_sync_readiness_report_check_selftest.py tests/run_ci_sync_readiness_diagnostics_check.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_ci_sync_readiness_report_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_report_20260302` PASS
+- Standardized sync-readiness result surface and added validate-only contract mode.
+  - Updated:
+    - `tests/run_ci_sync_readiness_check.py`
+      - result now emits and stores `status/code/step/msg`
+      - added failure codes:
+        - `E_SYNC_READINESS_STEP_FAIL`
+        - `E_SYNC_READINESS_SANITY_CONTRACT_FAIL`
+        - `E_SYNC_READINESS_VALIDATE_ONLY_PATH_MISSING`
+      - new option: `--validate-only-sanity-json` (contract-only validation path)
+    - `tests/run_ci_sync_readiness_check_selftest.py`
+      - validates pass-path `status/code/step`
+      - added validate-only pass/fail cases:
+        - broken sanity contract -> `E_SYNC_READINESS_SANITY_CONTRACT_FAIL`
+        - missing path -> `E_SYNC_READINESS_VALIDATE_ONLY_PATH_MISSING`
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - extended static token checks for new codes/option/selftest cases
+  - Verification:
+    - `python -m py_compile tests/run_ci_sync_readiness_check.py tests/run_ci_sync_readiness_check_selftest.py tests/run_ci_sync_readiness_diagnostics_check.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_sync_readiness_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_sync_readiness_check.py --report-dir I:/home/urihanl/ddn/codex/build/reports --report-prefix dev_sync_readiness_codes_20260302 --skip-aggregate` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_codes_20260302` PASS
+- Added sync-readiness static diagnostics check and wired it into aggregate CI.
+  - Added:
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - validates sync-readiness contract tokens:
+        - `SANITY_REQUIRED_PASS_STEPS` (9 required entries)
+        - `validate_sanity_contract`
+        - `sanity_gate_contract` stage
+        - selftest step-count/token expectations
+  - Updated:
+    - `tests/run_ci_aggregate_gate.py`
+      - new step: `ci_sync_readiness_diagnostics_check`
+      - included in fast-fail, overall pass criteria, sub-step failure criteria, and fail-path diagnostics run
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - now requires aggregate tokens for the new sync-readiness diagnostics step/function/script
+  - Verification:
+    - `python -m py_compile tests/run_ci_sync_readiness_diagnostics_check.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_sync_readiness_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_diag_20260302` PASS
+- Added `ci_sanity_gate` contract validation into sync-readiness flow.
+  - Updated:
+    - `tests/run_ci_sync_readiness_check.py`
+      - added internal `sanity_gate_contract` step after sanity execution
+      - validates:
+        - schema `ddn.ci.sanity_gate.v1`
+        - `status=pass`, `code=OK`, `step=all`
+        - required sanity pass steps (9) present and all `ok=1/rc=0`
+    - `tests/run_ci_sync_readiness_check_selftest.py`
+      - expected step count updated from `4` to `5`
+      - added `sanity_gate_contract` presence/ok assertions
+  - Verification:
+    - `python -m py_compile tests/run_ci_sync_readiness_check.py tests/run_ci_sync_readiness_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_check.py --report-dir I:/home/urihanl/ddn/codex/build/reports --report-prefix dev_sync_readiness_contract_20260302 --skip-aggregate` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_contract_20260302` PASS
+- Hardened PASS summary contract to prevent CI sanity-step count regressions.
+  - Updated:
+    - `tests/run_ci_gate_summary_report_check.py`
+      - enforces `ci_sanity_gate_step_count >= 9` on PASS summaries
+      - added `MIN_REQUIRED_CI_SANITY_STEPS = 9`
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - PASS fixture synced to step_count `9`
+      - added failing selftest for low step count (`ci_sanity_gate_step_count=1`)
+  - Verification:
+    - `python -m py_compile tests/run_ci_gate_summary_report_check.py tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_gate_summary_report_check.py --summary I:/home/urihanl/ddn/codex/build/reports/dev_age5_continue_wired_contract_20260302.ci_gate_summary.txt --index I:/home/urihanl/ddn/codex/build/reports/dev_age5_continue_wired_contract_20260302.ci_gate_report_index.detjson --require-pass` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_summary_guard_20260302` PASS
+- Added `overlay_session_wired_consistency` as a required CI sanity/emit contract step.
+  - Updated:
+    - `tests/run_ci_sanity_gate.py`
+      - added `seamgrim_overlay_session_wired_consistency_check`
+      - fail code: `E_CI_SANITY_OVERLAY_SESSION_WIRED_CONSISTENCY_FAIL`
+    - `tests/run_ci_sanity_gate_diagnostics_check.py`
+      - added required tokens for the new sanity step/code
+    - `tests/run_ci_emit_artifacts_check.py`
+      - extended `SANITY_REQUIRED_PASS_STEPS` with wired consistency step
+    - `tests/run_ci_emit_artifacts_check_selftest.py`
+      - PASS sanity fixture now includes wired consistency step
+      - added negative cases:
+        - `badsanitywiredmissing` -> `E_SANITY_REQUIRED_STEP_MISSING`
+        - `badsanitywiredfailed` -> `E_SANITY_REQUIRED_STEP_FAILED`
+    - `tests/run_ci_emit_artifacts_sanity_contract_check.py`
+      - static-contract tokens now require wired consistency step/cases
+  - Verification:
+    - `python tests/run_seamgrim_overlay_session_wired_consistency_check.py` PASS
+    - `python tests/run_ci_sanity_gate_diagnostics_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_sanity_contract_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_sanity_gate.py --json-out I:/home/urihanl/ddn/codex/build/reports/dev_age5_continue_wired_sanity.ci_sanity_gate.detjson` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_wired_contract_20260302` PASS
+- Exposed overlay compare/session selftest status in PASS summary and hardened summary checks.
+  - Updated:
+    - `tests/run_ci_aggregate_gate.py`
+      - PASS summary now emits:
+        - `ci_pack_golden_overlay_compare_selftest_ok`
+        - `ci_pack_golden_overlay_session_selftest_ok`
+    - `tests/run_ci_gate_summary_report_check.py`
+      - requires the two keys for PASS summaries
+      - validates both values are `0|1`, and enforces `1` on PASS
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - updated PASS fixture lines with new keys
+    - `tests/run_ci_aggregate_gate_age5_diagnostics_check.py`
+      - requires summary token presence for the two new keys
+  - Verification:
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_age5_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_task235_summary --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Wired overlay-session pack selftest into aggregate AGE5 diagnostics path.
+  - Updated:
+    - `tests/run_ci_aggregate_gate.py`
+      - added `ci_pack_golden_overlay_session_selftest` step
+      - included session selftest rc in fast-fail/overall-substep checks
+    - `tests/run_ci_aggregate_gate_age5_diagnostics_check.py`
+      - now requires:
+        - `ci_pack_golden_overlay_session_selftest`
+        - `tests/run_pack_golden_overlay_session_selftest.py`
+  - Verification:
+    - `python tests/run_pack_golden_overlay_session_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_age5_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_task235_followup --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Completed AGE5 recommended sequence (1 -> 4 -> 2/3) for overlay/session close criteria hardening.
+  - Updated:
+    - `tests/run_age5_close.py`
+      - keeps strict close (`--strict`) behavior for wired-only S6 contracts
+      - adds S6 session pack golden mapping/order criteria:
+        - `s6_session_pack_golden_case_map_match`
+        - `s6_session_pack_golden_case_order_stable`
+      - syncs session pack minimum/case-range messaging to `c01~c09` and `>=9`
+    - `tests/_seamgrim_ci_diag_lib.py`
+      - adds diagnostics parsing for `overlay_session_wired_consistency`
+      - makes `age5_close` failure parsing compatible with strict status-line format
+    - `tests/run_seamgrim_ci_gate_diagnostics_check.py`
+      - adds regression fixtures for:
+        - `overlay_session_wired_consistency` token-missing diagnostics
+        - strict-form age5 close status line
+  - Verification:
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_overlay_session_pack.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-overlay-checks --with-age5-close --json-out build/reports/dev_age5_task235.seamgrim_ci_gate_report.json` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_task235 --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+    - `python tests/run_seamgrim_wasm_smoke.py` PASS
+- Locked event-surface hardcut on the `run` execution path (not only `canon`) for `"KIND"라는 소식이 오면 ...`.
+  - Updated:
+    - `pack/seamgrim_event_surface_canon_v1/golden.jsonl`
+      - added `run` case expecting `E_EVENT_SURFACE_ALIAS_FORBIDDEN` on `c06_kind_noun_alias_EXPECT_FAIL`
+  - Verification:
+    - `python tests/run_pack_golden.py seamgrim_event_surface_canon_v1` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+    - `python tests/run_seamgrim_wasm_smoke.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_continue --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Hardened `ci_emit_artifacts_check` with mandatory `ci_sanity_gate` contract validation.
+  - Updated:
+    - `tests/ci_check_error_codes.py`
+      - added `E_SANITY_*` error codes for artifact-contract failures
+    - `tests/run_ci_emit_artifacts_check.py`
+      - requires `reports.ci_sanity_gate`
+      - validates `ddn.ci.sanity_gate.v1` schema/status/steps consistency
+      - enforces `result_status=pass => ci_sanity_gate.status=pass`
+    - `tests/run_ci_emit_artifacts_check_selftest.py`
+      - expanded fixtures with `ci_sanity_gate` report and negative cases:
+        - missing sanity path
+        - sanity schema mismatch
+        - sanity status mismatch
+  - Verification:
+    - `python -m py_compile tests/ci_check_error_codes.py tests/run_ci_emit_artifacts_check.py tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_emit_artifacts_check.py --report-dir build/reports --prefix dev_summary_guard_r2 --require-brief --require-triage` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_emit_sanity_contract --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_emit_sanity_contract_core --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Integrated `seed_meta_files` as a real Seamgrim CI step to remove aggregate `step_missing` fallback.
+  - Updated:
+    - `tests/run_seamgrim_ci_gate.py`
+      - added `seed_meta_files` step (`tests/run_seamgrim_seed_meta_files_check.py`)
+  - Verification:
+    - `python -m py_compile tests/run_seamgrim_ci_gate.py` PASS
+    - `python tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --strict-graph --require-promoted --with-5min-checklist --checklist-skip-seed-cli --checklist-skip-ui-common --json-out build/reports/dev_seedmeta.seamgrim_ci_gate_report.json` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_seedmeta_followup --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+      - summary now reports `seamgrim_seed_meta_files_status=ok`
+- Restored aggregate CI pass after SSOT-aligned schema/seed updates.
+  - Updated:
+    - `tools/teul-cli/src/runtime/eval.rs`
+      - added missing canonical builtins in `is_builtin_name`: `tan`, `asin`, `acos`, `atan`, `atan2`
+    - `solutions/seamgrim_ui_mvp/lessons/**/lesson.ddn` and matching `lesson.age3.preview.ddn`
+      - removed legacy `#이름/#설명` meta headers from primary lesson sources
+    - `solutions/seamgrim_ui_mvp/seed_lessons_v1/physics_pendulum_seed_v1/lesson.ddn`
+      - restored prep-block surface contract (`채비 {}`) and aligned start initialization
+    - `pack/seamgrim_curriculum_seed_smoke_v1/smoke_*.v1.json`
+      - refreshed expected state hashes to current deterministic runtime outputs
+  - Verification:
+    - `python tests/run_builtin_name_sync_check.py` PASS
+    - `python tests/run_seamgrim_lesson_schema_gate.py --require-promoted` PASS
+    - `python tests/run_seamgrim_new_grammar_no_legacy_control_meta_check.py` PASS
+    - `python tests/run_pack_golden.py seamgrim_curriculum_seed_smoke_v1` PASS
+    - `python tests/run_age4_close.py --report-out build/reports/dev_runtime5_ui_skip.age4_close_report.detjson --pack-report-out build/reports/dev_runtime5_ui_skip.age4_close_pack_report.detjson` PASS
+    - `python tests/run_seamgrim_ci_gate.py --strict-graph --require-promoted --print-drilldown --with-5min-checklist --checklist-skip-seed-cli --checklist-skip-ui-common --json-out build/reports/dev_runtime5_ui_skip.seamgrim_ci_gate_report.json --ui-age3-json-out build/reports/dev_runtime5_ui_skip.seamgrim_ui_age3_gate_report.detjson --phase3-cleanup-json-out build/reports/dev_runtime5_ui_skip.seamgrim_phase3_cleanup_gate_report.detjson --browse-selection-json-out build/reports/dev_runtime5_ui_skip.seamgrim_browse_selection_flow_report.detjson --rewrite-overlay-json-out build/reports/dev_runtime5_ui_skip.seamgrim_rewrite_overlay_quality_report.detjson --checklist-json-out build/reports/dev_runtime5_ui_skip.seamgrim_5min_checklist_report.detjson` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_runtime5_ui_skip --skip-core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Hardened runtime5 diagnostics/token selftests for the new UI-skip passthrough.
+  - Updated:
+    - `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py`
+      - now requires `--runtime-5min-skip-ui-common` token path in aggregate gate source
+    - `tests/run_ci_pipeline_emit_flags_check_selftest.py`
+      - added missing-token failure case for `--runtime-5min-skip-ui-common`
+  - Verification:
+    - `python -m py_compile tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py tests/run_ci_pipeline_emit_flags_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` PASS
+    - `python tests/run_ci_pipeline_emit_flags_check_selftest.py` PASS
+    - `python tests/run_ci_pipeline_emit_flags_check.py` PASS
+    - `python tests/run_ci_sanity_gate_diagnostics_check.py` PASS
+- Improved runtime-5min diagnostics parsing for sub-step failure lines.
+  - Updated:
+    - `tests/_seamgrim_ci_diag_lib.py`
+      - runtime_5min now recognizes `[<step>] fail (<ms>ms)` as `runtime_5min_subcheck_failed`
+    - `tests/run_seamgrim_ci_gate_diagnostics_check.py`
+      - added regression case for runtime_5min subcheck line (`ui_pendulum_runner`)
+  - Verification:
+    - `python -m py_compile tests/_seamgrim_ci_diag_lib.py tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-runtime-5min --runtime-5min-base-url http://127.0.0.1:8787 --runtime-5min-skip-seed-cli --runtime-5min-skip-ui-common --with-5min-checklist --checklist-from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson --checklist-base-url http://127.0.0.1:8787` PASS
+- Wired runtime-5min UI-skip into CI pipeline invocations and flag checks.
+  - Updated:
+    - `.gitlab-ci.yml`, `azure-pipelines.yml`
+      - aggregate gate invocations now include `--runtime-5min-skip-ui-common`
+    - `tests/run_ci_pipeline_emit_flags_check.py`
+      - requires `--runtime-5min-skip-ui-common` in each aggregate invocation line
+    - `tests/run_ci_pipeline_emit_flags_check_selftest.py`
+      - baseline aggregate command includes the new required token
+  - Verification:
+    - `python tests/run_ci_pipeline_emit_flags_check.py` PASS
+    - `python tests/run_ci_pipeline_emit_flags_check_selftest.py` PASS
+    - `python tests/run_ci_sanity_gate_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` PASS
+- Added runtime-5min UI-skip passthrough options in CI gate wrappers.
+  - Updated:
+    - `tests/run_seamgrim_ci_gate.py`
+      - new option: `--runtime-5min-skip-ui-common`
+      - forwards to `run_seamgrim_runtime_5min_check.py --skip-ui-common`
+      - records `runtime_5min_skip_ui_common` in output json
+    - `tests/run_ci_aggregate_gate.py`
+      - new option: `--runtime-5min-skip-ui-common`
+      - forwards option into `run_seamgrim_ci_gate.py` call
+  - Verification:
+    - `python -m py_compile tests/run_seamgrim_ci_gate.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-runtime-5min --runtime-5min-base-url http://127.0.0.1:8787 --runtime-5min-skip-seed-cli --runtime-5min-skip-ui-common --with-5min-checklist --checklist-from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson --checklist-base-url http://127.0.0.1:8787` PASS
+    - `python tests/run_ci_aggregate_gate.py --help` includes `--runtime-5min-skip-ui-common`
+- Extended Seamgrim wasm smoke and checklist output stability.
+  - Updated:
+    - `tests/run_seamgrim_wasm_smoke.py`
+      - now runs:
+        - `tests/seamgrim_pendulum_bogae_runner.mjs`
+        - `tests/seamgrim_wasm_vm_runtime_runner.mjs`
+      - added skip flags:
+        - `--skip-ui-pendulum`
+        - `--skip-vm-runtime`
+    - `tests/run_seamgrim_5min_checklist.py`
+      - added `force_utf8_stdio()` to keep checklist stdout/stderr in UTF-8
+      - reduces Korean text mojibake when captured by `run_seamgrim_ci_gate.py`
+  - Verification:
+    - `python tests/run_seamgrim_wasm_smoke.py seamgrim_wasm_v0_smoke --skip-space2d-source-gate` PASS
+    - `python tests/run_seamgrim_wasm_smoke.py --skip-space2d-source-gate` PASS
+    - `python tests/run_seamgrim_5min_checklist.py --from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-runtime-5min --runtime-5min-base-url http://127.0.0.1:8787 --runtime-5min-skip-seed-cli --with-5min-checklist --checklist-base-url http://127.0.0.1:8787 --checklist-skip-seed-cli --print-drilldown` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-5min-checklist --checklist-from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson --checklist-base-url http://127.0.0.1:8787` PASS
+- Locked wasm parse-warning UI/runtime regressions with dedicated runners and checklist integration.
+  - Added:
+    - `tests/seamgrim_wasm_vm_runtime_runner.mjs`
+      - verifies `WasmVmHandle` parse warning retention/debug exposure/reset
+  - Updated:
+    - `tests/seamgrim_pendulum_bogae_runner.mjs`
+      - validates run-screen status hint parse-warning summary show/hide
+    - `tests/run_seamgrim_runtime_5min_check.py`
+      - includes `ui_pendulum_runner` and `wasm_vm_runtime_runner` in non-skip UI path
+    - `tests/run_seamgrim_5min_checklist.py`
+      - adds labels for the two new runtime steps
+  - Verification:
+    - `node tests/seamgrim_wasm_vm_runtime_runner.mjs` PASS
+    - `node tests/seamgrim_pendulum_bogae_runner.mjs` PASS
+    - `node tests/seamgrim_ui_common_runner.mjs` PASS
+    - `python -m py_compile tests/run_seamgrim_runtime_5min_check.py tests/run_seamgrim_5min_checklist.py` PASS
+    - `python tests/run_seamgrim_runtime_5min_check.py --base-url http://127.0.0.1:8787 --skip-seed-cli --json-out build/reports/seamgrim_runtime_5min_report.with_ui.detjson` PASS
+    - `python tests/run_seamgrim_5min_checklist.py --from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson` PASS
+    - `python tests/run_seamgrim_5min_checklist_selftest.py` PASS
+- Surfaced wasm parse warnings through Seamgrim run UI/runtime.
+  - Updated:
+    - `solutions/seamgrim_ui_mvp/ui/wasm_page_common.js`
+      - added `readWasmClientParseWarnings()`
+      - `applyWasmLogicFromSource()` now returns `parseWarnings`
+    - `solutions/seamgrim_ui_mvp/ui/screens/run.js`
+      - runtime hint now includes parse warning summary
+      - parse warning state is synchronized across wasm restart/fallback/failure paths
+    - `solutions/seamgrim_ui_mvp/ui/runtime/wasm_vm_runtime.js`
+      - tracks `lastParseWarnings`
+      - exposes `getParseWarnings()` and adds warnings in `getDebugInfo()`
+    - `solutions/seamgrim_ui_mvp/ui/app.js`
+      - smoke success output includes parse warning count
+    - `tests/seamgrim_ui_common_runner.mjs`
+      - added parse warning passthrough regression checks
+  - Verification:
+    - `node tests/seamgrim_ui_common_runner.mjs` PASS
+    - `node tests/seamgrim_wasm_wrapper_runner.mjs` PASS
+    - `node tests/seamgrim_pendulum_bogae_runner.mjs` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+- Added block-header colon deprecation warning propagation across `lang/tool/wasm`.
+  - Updated `lang/src/canonicalizer.rs`:
+    - emits `W_BLOCK_HEADER_COLON_DEPRECATED` when colon-form block headers are detected
+    - covers declaration/meta/repeat/while/foreach header surfaces
+  - Updated `tool/src/ddn_runtime.rs`:
+    - `DdnProgram` now retains canonicalization warnings (`parse_warnings`)
+  - Updated `tool/src/main.rs`:
+    - DDN load path now prints parse warnings to stderr
+      (`warning: CODE [start..end] message`)
+  - Updated `tool/src/wasm_api.rs`:
+    - added `get_parse_warnings()` export
+  - Updated Seamgrim wasm wrapper/types:
+    - `solutions/seamgrim_ui_mvp/ui/wasm_ddn_wrapper.{ts,js}`: `parseWarningsParsed()`
+    - `solutions/seamgrim_ui_mvp/ui/wasm_ddn_types.d.ts`: parse warning types/API
+  - Expanded `pack/block_header_no_colon`:
+    - added repeat/foreach/while colon-form regression cases
+  - Verification:
+    - `cargo test -p ddonirang-lang --lib` PASS
+    - `cargo test -p ddonirang-tool ddn_runtime::tests::parse_warnings_include_block_header_colon_deprecation` PASS
+    - `cargo check -p ddonirang-tool --features wasm` PASS
+    - `node tests/seamgrim_wasm_wrapper_runner.mjs` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+- Added `tests/run_ci_sync_readiness_check_selftest.py`.
+  - Verifies quick-mode (`--skip-aggregate`) pass path and JSON payload contract for `run_ci_sync_readiness_check.py`.
+  - Verifies `--json-out` custom output path handling.
+- Added `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`.
+  - Locks aggregate gate wiring for:
+    - `ci_sync_readiness_selftest`
+    - `ci_aggregate_gate_sync_diagnostics_check`
+- Integrated sync-readiness selftest/diagnostics into aggregate gate.
+  - `tests/run_ci_aggregate_gate.py` now runs:
+    - `ci_sync_readiness_selftest`
+    - `ci_aggregate_gate_sync_diagnostics_check`
+  - Fast-fail / overall / sub-step failure conditions include both rc values.
+- Added `tests/run_ci_sync_readiness_check.py` for one-command pre-sync verification.
+  - Runs pipeline flag checks, their selftest, sanity diagnostics, sanity gate, and aggregate gate (unless `--skip-aggregate`).
+  - Emits one-line status (`ci_sync_readiness_status=...`) and writes `ddn.ci.sync_readiness.v1` JSON report.
+- Added `tests/run_ci_sanity_gate_diagnostics_check.py` to lock sanity-gate pipeline flag selftest wiring.
+  - Verifies `run_ci_sanity_gate.py` keeps:
+    - `pipeline_emit_flags_selftest`
+    - `tests/run_ci_pipeline_emit_flags_check_selftest.py`
+    - `E_CI_SANITY_PIPELINE_FLAGS_SELFTEST_FAIL`
+- Integrated sanity-gate diagnostics into aggregate gate.
+  - `tests/run_ci_aggregate_gate.py` now runs `ci_sanity_gate_diagnostics_check`.
+  - Fast-fail / overall / sub-step failure conditions include the new diagnostics rc.
+- Added `tests/run_ci_pipeline_emit_flags_check_selftest.py`.
+  - Covers pass/fail scenarios for pipeline flag checker:
+    - baseline pass
+    - per-line required token missing
+    - per-line forbidden token present
+    - missing aggregate invocation line
+- Wired pipeline flag checker selftest into CI gates.
+  - `tests/run_ci_sanity_gate.py`: added `pipeline_emit_flags_selftest` step.
+  - `tests/run_ci_aggregate_gate.py`: added `ci_pipeline_emit_flags_selftest` step (fast-fail/overall/sub-step failure wiring).
+- Improved `tests/run_ci_pipeline_emit_flags_check.py` aggregate verification granularity.
+  - Switched aggregate checks from whole-file token scan to per-invocation-line checks for `tests/run_ci_aggregate_gate.py`.
+  - Required/forbidden checklist flags are now enforced on each aggregate command line.
+- Added forbidden checklist-toggle guard in `tests/run_ci_pipeline_emit_flags_check.py`.
+  - CI pipeline config now fails self-check if either token appears:
+    - `--skip-5min-checklist`
+    - `--with-5min-checklist`
+  - This locks pipeline behavior to default checklist ON + explicit lightweight skips only.
+- Pinned aggregate CI invocations to lightweight checklist mode in both pipeline configs.
+  - Added `--checklist-skip-seed-cli --checklist-skip-ui-common` to
+    - `.gitlab-ci.yml`
+    - `azure-pipelines.yml`
+- Updated `tests/run_ci_pipeline_emit_flags_check.py` to require both checklist skip flags so pipeline drift is caught by CI self-check.
+- Switched `tests/run_ci_aggregate_gate.py` 5-minute checklist behavior to default ON.
+  - Added `--skip-5min-checklist` as the explicit opt-out switch.
+  - Kept `--with-5min-checklist` as a deprecated compatibility flag.
+  - Aligned summary emission to use `include_5min_checklist` consistently.
+- Extended `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` to lock default-ON checklist tokens (`--skip-5min-checklist`, `include_5min_checklist`).
+- Updated pendulum smoke golden hashes in `pack/seamgrim_curriculum_seed_smoke_v1/smoke_physics_pendulum.v1.json` to match the current tick-based seed runtime.
+- Fixed AGE4 close blocker caused by stale seed smoke expected hashes (`seamgrim_curriculum_seed_smoke_v1` now passes).
+- Refined aggregate runtime-checklist summary semantics in `tests/run_ci_aggregate_gate.py`:
+  - when rewrite fallback item is not present (e.g., `--checklist-skip-seed-cli`), summary now reports `rewrite_status=not_executed` and `rewrite_ok=na`
+  - added checklist report artifact path (`seamgrim_5min_checklist_report.detjson`) and automatic `--checklist-json-out` passthrough
+- Added `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` and wired it into aggregate gate diagnostics flow.
+- Extended aggregate CI summary to surface runtime checklist details explicitly.
+  - `tests/run_ci_aggregate_gate.py` now emits:
+    - `seamgrim_5min_checklist`
+    - `seamgrim_5min_checklist_ok`
+    - `seamgrim_runtime_5min_rewrite_motion_projectile`
+    - `seamgrim_runtime_5min_rewrite_elapsed_ms`
+    - `seamgrim_runtime_5min_rewrite_status`
+  - Added checklist report artifact path (`seamgrim_5min_checklist_report.detjson`) to aggregate report index.
+  - Wired `--checklist-json-out` passthrough when `--with-5min-checklist` is enabled.
+  - Added `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` and integrated it into aggregate gate self-check flow.
+- Added `tests/run_seamgrim_motion_projectile_fallback_check.py` to lock observation-based bogae fallback coverage for rewrite physics lessons.
+  - validates run-screen fallback tokens for `x/y` and `x`-only observation synthesis in `ui/screens/run.js`
+  - runs `lessons_rewrite_v1/physics_motion` and `lessons_rewrite_v1/physics_projectile` via `teul-cli run --madi` and checks numeric progression sanity
+- Wired the new step into `tests/run_seamgrim_runtime_5min_check.py` as `rewrite_motion_projectile_fallback`.
+- Added checklist label mapping for the new fallback step in `tests/run_seamgrim_5min_checklist.py`.
+- Converted `physics_pendulum_seed_v1` from batch `동안` integration to tick-by-tick (`매마디 1스텝`) integration.
+- Updated `solutions/seamgrim_ui_mvp/seed_lessons_v1/physics_pendulum_seed_v1/lesson.ddn`:
+  - initialize `t/theta/omega/energy` in `(시작)할때`
+  - advance one Euler step per tick under `t <= t_max`
+  - emit `(t,theta)/(t,omega)/(t,energy)` every tick
+  - added explicit assignments outside `채비` for direct `teul-cli run` compatibility
+- Added optional `madi` passthrough for server-side execution:
+  - `solutions/seamgrim_ui_mvp/tools/export_graph.py`: `run_teul_cli(..., madi=None)`
+  - `solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py`: `/api/run` accepts payload `madi`
+  - `solutions/seamgrim_ui_mvp/tools/ddn_exec_server_check.py`: pendulum validation run uses `madi=420`
+- Reworked `tests/run_seamgrim_seed_pendulum_export_check.py` to validate real runtime progression via `teul-cli run --madi`.
+- Added observation-based bogae fallback in run screen for pendulum-like lessons when native `space2d` output is absent.
+- Updated `solutions/seamgrim_ui_mvp/ui/screens/run.js`:
+  - synthesize minimal pendulum `seamgrim.space2d.v0` from observation keys (`theta`, optional `L`)
+  - extend observation fallback to `x/y` (and `x`-only) lessons with a minimal point+axis `space2d` scene
+  - keep native `views.space2d` precedence when available
+  - align runtime snapshot status with synthesized `space2d`
+- Added explicit pendulum simulation guarantees to Seamgrim runtime validation flows.
+- Updated `solutions/seamgrim_ui_mvp/tools/ddn_exec_server_check.py` to execute `physics_pendulum_seed_v1` via `/api/run` and validate output sanity (point count, x-span, sign span).
+- Added `tests/run_seamgrim_seed_pendulum_export_check.py` (new) to smoke-check pendulum seed graph export output.
+- Added `seed_physics_pendulum_export` step to `tests/run_seamgrim_runtime_5min_check.py` (default non-skip path).
+- Added checklist label mapping for the new pendulum step in `tests/run_seamgrim_5min_checklist.py`.
+- Hardened `ddn_exec_server_check.py` path-candidate probing to swallow non-HTTP probe exceptions in fallback paths.
+- Changed browse default sort mode to `최근 실행순` (`filter.sort = recent`).
+- Added `lastRunHash` persistence in run prefs and hash display on both browse card run hint and run topbar summary.
+- Added browse card run-status badge colors (`최근성공/출력없음/최근실패/미실행`) for faster scan of lesson execution readiness.
+- Added browse sort option `정렬: 최근 실행순` (`filter-sort=recent`) based on per-lesson `lastRunAt`.
+- Added browse run-result filter (`filter-run-status`) with `성공/실패/미실행` options based on per-lesson run snapshots.
+- Added run topbar recent summary label (`run-last-summary`) to keep latest lesson execution outcome visible during run.
+- Added per-lesson run snapshot persistence (`lastRunKind`, `lastRunChannels`, `lastRunAt`, `lastRunStatus`) in `run.js` run prefs.
+- Added browse-card recent-run hint (`최근 실행: ...`) so each lesson card shows latest execution readiness (space2d output/obs-only/empty/error).
+- Added run failure snapshot capture (`kind=error`) and lesson-switch runtime snapshot reset to avoid cross-lesson stale hints.
+- Added run-screen visibility lifecycle control so the WASM RAF loop only runs on the `run` screen and auto-pauses on `browse`/`editor`.
+- Added runtime output diagnostics in `ui/screens/run.js`:
+  - `WASM 실행됨 · 출력 없음 (채널=0 · 보개 없음)`
+  - `WASM 실행됨 · 보개 출력 없음 (채널=N · 그래프/표 확인)`
+  - `WASM 실행 중 · 보개 출력 · 채널=N`
+- Kept `run_wasm_single_path` gate token compatibility by preserving `this.setStatus("실행 상태: WASM 실행 중")` in restart success path.
+- Added 3-slot range preset support for both Bogae and Graph (`slot 1/2/3` selectors + per-slot save/load) with legacy slot-1 fallback compatibility.
+- Added browse-card run-state hint from local prefs (`축잠금 ON` / `축잠금 OFF · x:... y:...`) and live refresh via `seamgrim:run-prefs-changed` event.
+- Added persistent per-lesson run UI prefs for preset slot selections (`selectedBogaePresetSlot`, `selectedGraphPresetSlot`).
+- Added UI gate tokens for preset slot selectors (`bogae-preset-slot`, `graph-preset-slot`).
+- Added preferred-axis lock toggle in run graph toolbar (`btn-axis-lock`) to switch between lesson-default axis lock and manual X/Y axis selection.
+- Added localStorage-backed run UI session restore (`seamgrim.ui.run_prefs.v1`) for per-lesson selected axes and saved range presets (graph/bogae).
+- Added Dotbogi axis APIs for session persistence (`getSelectedAxes`, `setSelectedAxes`, `setPreferredAxisLock`) and disabled selectors while axis lock is ON.
+- Added UI gate token for axis lock control (`btn-axis-lock`) in `tests/run_seamgrim_ui_age3_gate.py`.
+- Added X-axis selector to Dotbogi graph toolbar (`select-x-axis`) with `index` fallback and variable-based X plotting.
+- Added default X-axis preference parsing in `control_parser` (`#기본관찰x/#기본관측x` and `default_x*` aliases), plus inline `기본관찰x` hints in `채비` variable declarations.
+- Added preferred-axis labeling in dropdowns: preferred Y/X keys are shown as `(<key> (기본))` in selectors.
+- Wired lesson load path to apply both preferred axes (`defaultAxisKey`, `defaultXAxisKey`) from parsed DDN metadata.
+- Added default Y-axis preference wiring for Dotbogi: `#기본관찰`/`#기본관측` (and `default_obs` aliases) now set `defaultAxisKey` via `control_parser` and are applied on lesson load.
+- Added `DotbogiPanel.setPreferredYKey()` and selection fallback policy: preferred variable first, then first observable key.
+- Added parser support for inline default-observation hints on variable declarations in `채비` blocks and regression checks in `tests/seamgrim_ui_common_runner.mjs`.
+- Enforced control parsing split in `ui/components/control_parser.js`: only constant-like `채비/#control` entries become sliders, while variable-like entries are emitted as axis keys.
+- Applied explicit `#control` precedence over `채비` auto-inference for slider specs (DDN self-contained control contract alignment).
+- Added parser regression assertions in `tests/seamgrim_ui_common_runner.mjs` for constant/variable separation and `#control` priority.
+- Added one-slot range presets in run UI (`보개 저장/불러오기`, `축 저장/불러오기`) and wired them in `ui/screens/run.js`.
+- Added graph/bogae numeric range controls in the run screen (`index.html`, `styles.css`) with apply/reset actions for fixed axis/view testing.
+- Extended `ui/components/dotbogi.js` with explicit axis APIs (`getCurrentAxis`, `setAxis`, `resetAxis`) and axis normalization for manual range application.
+- Extended `ui/components/bogae.js` with range APIs (`getCurrentRange`, `setRange`) and range-change callbacks to keep UI controls synchronized.
+- Wired `ui/screens/run.js` to synchronize range inputs with mouse/keyboard zoom-pan state, validate numeric range input, and apply/reset graph/bogae ranges without server fallback.
+- Reduced noisy lesson asset 404s by adding catalog path preference caching in `ui/app.js` (reuse last successful root/project path).
+- Added optional Nginx reverse-proxy deploy template (`deploy/nginx/seamgrim.conf`) with explicit `application/wasm` MIME handling.
+- Extended `tests/run_seamgrim_deploy_artifacts_check.py` to enforce nginx template presence/tokens and deploy README nginx guidance.
+- Strengthened `ddn_exec_server_check.py` with runtime checks for lesson/seed/rewrite manifest accessibility, representative lesson asset fetches, and WASM MIME validation (`application/wasm`).
+- Added `ddn_exec_server_check` execution step to `tests/run_seamgrim_ci_gate.py` and extended diagnostics self-check coverage.
+- Hardened Seamgrim UI lesson/sample path loading with catalog fallback resolution (`/…` <-> `/solutions/seamgrim_ui_mvp/…`) to prevent manifest/asset 404s across server layouts.
+- Added `tests/run_seamgrim_lesson_path_fallback_check.py` and wired `lesson_path_fallback` into `tests/run_seamgrim_ci_gate.py`.
+- Added GitHub branch-protection config (`.github/branch-protection/main.required_checks.json`) and automation script (`tools/scripts/apply_github_branch_protection.py`) for enforcing `seamgrim-gate` required checks.
+- Added `tests/run_seamgrim_workflow_contract_check.py` and wired a new `workflow_contract` step into `tests/run_seamgrim_ci_gate.py` to lock workflow job/context drift.
+- Extended `.github/workflows/seamgrim-ci.yml` path filters to include `.github/branch-protection/**`.
+- Added Docker deploy artifacts for Seamgrim DDN exec server (`deploy/Dockerfile`, `deploy/docker-compose.yml`) and health/base-url checks.
+- Added `tests/run_seamgrim_deploy_artifacts_check.py` and wired `deploy_artifacts` into `run_seamgrim_ci_gate.py`.
+- Added GitHub Actions workflow `.github/workflows/seamgrim-ci.yml` to run `deploy_artifacts` + `seamgrim_ci_gate` on pull requests.
+- Expanded the Seamgrim (셈그림) UI MVP report and added a mastercourse curriculum proposal.
+- Added a stdlib_range_basics unit-mismatch error golden case.
+- Added a unit-annotated range case to stdlib_range_basics and extended ddn_exec_server_check to validate the UI markup.
+- Added an error-case golden for stdlib_range_basics (step=0) to lock the runtime failure message.
+- Added pack/stdlib_range_basics golden coverage for the stdlib range helper and updated default pack runner/coverage table.
+- Added a Seamgrim (셈그림) UI DDN sync button, a DDN exec server check script, stdlib range entries in status tables, and the ddonirang_mastercourse plan scaffold.
+- Clarified AGENTS guidance to create build/out dirs on startup, preferring I: paths with C: fallbacks.
+- Added stdlib `범위` (2~3 args, unit-safe inclusive range with step) to teul-cli/tool runtimes and lang stdlib signatures, and updated Seamgrim samples/auto DDN generation to use it.
+- Added SSOT admin request note for sam/geoul minimal schema adoption.
+- Split Seamgrim (셈그림) UI input into formula/DDN tabs and simplified the DDN samples with list iteration.
+- Wired Seamgrim (셈그림) UI MVP formula panel to runtime DDN exec server (auto DDN), clarified sam/geoul v0 schema aliases, and strengthened UI validation/summaries.
+- Added a range literal/minimal range spec proposal and regenerated ssot_*_ALL.md aggregates.
+- Added Seamgrim (셈그림) UI MVP proposal/design docs, UI skeleton with DDN editor + DDN exec server run, graph/snapshot import/export + sam/geoul validation + multi overlay compare + summary cards + overlay rules, a seamgrim_line_graph D-PACK (two cases), and a seamgrim_ui_mvp solution + export tools + snapshot/sam/geoul schemas + sam/geoul SSOT proposal.
+- Added W77 gogae7 demo pack coverage (bogae_hash golden).
+- Added W76 detbin cache (hit/miss log) and pack coverage.
+- Added W74 pack runner support for `bogae_hash` as a first-class field and pack coverage.
+- Recorded W75 docs/ssot/walks update as SSOT-manager work (no direct edits).
+- Added W73 bogae bundle v1 CLI and pack coverage.
+- Added W72 bogae hash determinism v1 pack coverage.
+- Added W71 bogae editor v0 CLI (detbin translate + color override) and pack coverage.
+- Added W70 bogae web viewer v1 pack coverage.
+- Added W69 bogae mapping v1 pack coverage and mapping rules (tag list + rule list with $ references).
+- Added W68 bogae asset manifest v1 pack coverage plus `teul-cli asset manifest` command.
+- Added W67 bogae adapter v1 smoke pack coverage.
+- Added W66 open end-to-end pack coverage (deny/record/replay).
+- Added W65 open bundle artifacts (--open-bundle) and open_bundle_artifact pack coverage.
+- Added W64 open rand sealing (record/replay) and open_rand_record_replay pack coverage.
+- Added W63 open replay mismatch diagnostics (log missing/parse/miss/tamper) and open_replay_mismatch_diag pack coverage.
+- Added W62 site_id canonicalization (blake3 hash) plus open_site_id_canon pack and refreshed open logs.
+- Added W61 open.policy allowlist parsing (default/allow/deny), root-up search, and open_policy_allowlist pack coverage.
+- Added W48 GOAP planner (A* planning), teul-cli goap plan command, and D-PACK/golden coverage.
+- Added W47 ObservationSpec (observation structs, detjson canonicalization, VisionCone) with D-PACK and teul-cli goldens.
+- Added W46 goal grammar (-도록) parsing with TargetState/GoalCondition, plus pack/golden coverage.
+- Added W59 open allow directive parsing (`#열림 허용(...)`), warning on undeclared open kinds, and an open_decl_policy D-PACK/golden.
+- Added open_deny_policy D-PACK with stderr/exit_code golden checks and extended the pack golden runner to support stderr/exit_code assertions.
+- Added open_decl_policy_warn D-PACK to validate W_OPEN_NOT_DECLARED warnings for undeclared open kinds.
+- Added open_replay_missing D-PACK to assert E_OPEN_REPLAY_MISSING on empty replay logs.
+- Added open_replay_invalid D-PACK to assert E_OPEN_REPLAY_INVALID on malformed replay logs and expanded open_deny_policy with a record case.
+- Added open_replay_hash_mismatch D-PACK and replay log detjson_hash validation.
+- Added open_replay_site_mismatch and open_replay_schema_mismatch D-PACKs plus replay schema validation.
+- Added open_file_read_key_mismatch D-PACK and stderr golden alternatives for site_id variations.
+- Added open_replay_schema_v2_accept and open_file_read_path_normalize D-PACKs, plus open.log v2 schema fallback + path normalization.
+- Added open_file_read_abs_path D-PACK and golden runner CWD placeholder expansion for absolute path tests.
+- Added open_file_read_abs_case and open_replay_schema_v2_extra D-PACKs, plus {{CWD_UPPER}} placeholder support.
+- Added open_file_read_unc_case and open_replay_schema_v2_missing D-PACKs plus OPEN_LOG_V2_RULES documentation.
+- Added open_file_read_unc_dot and open_replay_schema_v2_nested_meta D-PACKs, plus nested meta rules in OPEN_LOG_V2_RULES.
+- Added open_file_read_unc_mix and open_replay_schema_v2_meta_list D-PACKs, plus v2 meta scalar/list rules.
+- Added open_file_read_unc_dot_mix and open_replay_schema_v2_meta_scalar D-PACKs, plus v2 meta string/number rules.
+- Added open_file_read_unc_space_special and open_replay_schema_v2_meta_bool_null D-PACKs, plus v2 meta boolean/null rules.
+- Implemented AGE2(Open) W56 basics: `--open=deny|record|replay`, open.log.jsonl handling, and open clock/file_read packs with golden coverage.
+- Added gogae5 pack golden.jsonl coverage and extended the golden runner to support non-`run` teul-cli commands.
+- Hid the live console cursor to reduce bottom-line flicker and defaulted the web viewer scale to 1.25.
+- Added a Tetris render alignment guide plus a web viewer scale parameter for larger grids.
+- Added a full Tetris D-PACK (`pack/game_maker_tetris_full`) with 7-bag/hold/ghost/scoring and updated examples.
+- Aligned W45 SeulgiIntent/SeulgiPacket to SSOT v20.2.0 (MoveTo/Attack/Say/None + accepted/target_madi) and refreshed intent bundle pack/golden.
+- Synced SSOT version references to v20.2.0 (CURRENT + ai prompt + W91/toolchain goldens + SSOT_bundle_v20.2.0_codex.zip).
+- Added W44 time travel integration D-PACK/golden coverage.
+- Added W43 audit inspector (geoul query/backtrace) CLI and D-PACK/golden coverage.
+- Added W42 branching manager (replay branch) CLI and D-PACK/golden coverage.
+- Added W41 timeline make CLI, gaji/ddn.timeline.v0, and D-PACK/golden coverage.
+- Added suggested_intents to W40 story output and updated W40 golden expectations.
+- Added W40 sitcom engine v1 (story make CLI), gaji/ddn.story.v0, and D-PACK/golden coverage.
+- Added W39 nuance weight (말결값) runtime support, gaji/ddn.nuance.v0, and D-PACK/golden coverage.
+- Added W37 memory seed (기억씨) and W38 emotion wave (감정씨) runtime support, packs, and teul-cli golden coverage.
+- Recorded AGE1 stdlib completion (2026-01-26) and fixed stdlib_missing_coverage_* pack goldens with explicit seed.
+- Implemented teul-cli runtime support for `풀기`, input/RNG/resource stdlib, and call-expression statements; refreshed stdlib_missing_coverage_pure/io pack goldens.
+- Added a fix-it in-place guard to `teul-cli canon` and documented rails/training boundaries in `ddn.ai.policy.json`.
+- Added `teul-cli run --run-manifest` and `--artifact` to pin artifact inputs in a run manifest.
+- Added `gaji/element_swap` skeleton to reserve element-implementation swap paths for sam/bogae.
+- Marked AGE1 pending C2/C3/C4 items as done (fixits rail, prompt goldens, artifact pinning, swap path).
+- Updated `docs/WORKSPACE_MANIFEST.json` and `docs/context/CURRENT.md` to patch_version v20.2.0_20260127_292dad7d.
+- Extended teul-cli canon to support seed definitions (params/defaults), call-expression statements, atom literals (`#...`), hook statements (`할때`/`마다`), `?`/`!` terminators, `??` prompt syntax, pipe chaining (`해서/하고`), `(핀묶음)인 호출`, decimal numbers, multi-word call names, multiline conditions, and newline-based terminators.
+- Expanded canon input checks to cover docs/EXAMPLES, refreshed guides examples 01~04, and reduced CANON:SKIP to 0 items.
+- Added `teul-cli canon --check` plus pack-call parsing for canonical `차림.값/바꾼값` output and a guides-only canon check script.
+- Added `teul-cli gaji lock` (build/lock/gaji.lock.json) and `teul-cli scan` with W_SKIP_NON_GAJI_DIR warnings.
+- Canonicalized guides examples (01_basic/02_charim) and marked function-heavy examples with `CANON:SKIP` until canon supports declarations.
+- Updated W90 patch goldens to canonicalizable single-line inputs and refreshed patch approvals.
+- Updated `docs/WORKSPACE_MANIFEST.json` and `docs/context/CURRENT.md` for the latest patch_version.
+- Added tailless call diagnostics (E_CALL_TAIL_MISSING_*) to LSP/canonicalizer with QuickFix suggestions.
+- Added `gaji/30_nurigym_core` skeleton and updated `pack/nuri_gym_cartpole` to DR-075 DetJson samples.
+- Added `teul-cli alrim registry` to build `build/registry/alrim.registry.json` with hash/conflict detection.
+- Added `ddn.ai.policy.json` baseline policy file for AI preprocess hashing.
+- Expanded `ddn.patch.json` to before/after blocks, updated patch goldens, and defaulted patch verify tests root.
+- Added Seulgi/NuriGym/GOAP/latency/safety/dataset/workshop core + teul-cli modules with W45~W55 packs and golden coverage.
+- Added stdlib gaji v1 skeletons (`gaji/std_{text,charim,math,map,logic}`) with exports stubs and updated WORKSPACE_MANIFEST.
+- Added D-PACKs for math calculus v1, BDL2 subpixel/AA v1, and charim index sugar v1 with pack golden coverage.
+- Included math_calculus_v1/bdl2_subpixel_aa_v1/age1_charim_index in the default pack golden runner list.
+- Revalidated W22 BDL2 detbin goldens and the new pack golden cases.
+- Marked AI-friendly Phase0, math calculus, BDL2 subpixel/AA, and charim index items as done in AGE1 pending.
+- Fixed stdlib_examples string-contains sample (reserved identifier) and template-match expected output, then revalidated all pack goldens.
+- Added pack goldens for Korean key aliases, bogae background key normalization, and drawlist listkey, marking the AGE1 items as done.
+- Marked tensor stdlib P0 / stdlib align / 모두{} sugar as done and added pack golden coverage plus W108/W109 revalidation.
+- Marked AGE1 runtime typecheck/contract diag/seulgi hook as done and revalidated W106/W107 goldens.
+- Added pack golden coverage for compound update and contract mode, and included them in the default pack golden runner list.
+- Added D-PACKs for compound update and contract mode (`pack/compound_update_basics`, `pack/diag_contract_mode_v1`) and marked the related AGE1 pending items as done.
+- Refreshed `tests/toolchain_golden/ai_prompt_lean.txt` for SSOT v20.1.18 and revalidated ai prompt golden tests.
+- Bumped WORKSPACE_MANIFEST patch_version to v20.1.18_20260125_a0a63b00 after ai prompt golden refresh.
+- Updated `docs/context/CURRENT.md` to SSOT v20.1.18 and manifest patch_version authority.
+- Added math stdlib helpers (abs/min/max/clamp/sqrt/powi) to ddn runtime.
+- Added `tests/run_pack_golden.py` to verify all stdlib pack golden cases.
+- Updated `docs/WORKSPACE_MANIFEST.json`.
+- Added stdlib status docs (`docs/status/STDLIB_IMPL_MATRIX.md`, `docs/status/STDLIB_ALIAS_TABLE.md`).
+- Added stdlib base packs (`pack/stdlib_text_basics`, `pack/stdlib_charim_basics`, `pack/stdlib_math_basics`, `pack/stdlib_map_basics`).
+- Added stdlib alias canonicalization for teul-cli/ddn runtime (문자열/차림/수학 함수 별칭 입력 허용).
+- Added pack field access syntax `대상.필드` in teul-cli (parser/canon/runtime) with W05 golden coverage.
+- Bumped SSOT bundle to v20.1.17, regenerated SSOT_bundle_v20.1.17_codex.zip, and refreshed W91 ai prompt goldens.
+- Added seed literal `{x | ...}` parsing/canonicalization/runtime support and aligned charim/string stdlib signatures (정렬/거르기/변환/합치기, 포함하나/시작하나/끝나나/숫자로) with SSOT v20.1.15.
+- Added `teul-cli lint --suggest-patch` to generate ddn.patch.json for legacy term replacements.
+- Implemented `teul-cli canon --emit fixits-json` output with legacy-term suggestions and added `pack/cli_fixits_json_basics` plus W90_G06 golden coverage.
+- Added `teul-cli patch propose` and W90_G07 golden coverage.
+- Added `teul-cli ai prompt` (lean/runtime/full profiles) with zip/dir bundle input and deterministic context output.
+- Added W91 golden coverage for ai prompt (invariants + snapshot).
+- Added AI-PROMPT-GOLDEN-01 bundle hash unit test coverage in teul-cli.
+- Fixed teul-cli canon Parser::peek lookup and check SeedLiteral match to restore builds.
+- Refreshed W91 ai prompt snapshot golden output for the current SSOT bundle contents.
+- Bumped teul-cli ai prompt SSOT_VERSION to v20.1.16 and refreshed W91 ai prompt goldens.
+- Added SSOT_bundle_v20.1.16_codex.zip and switched W91 ai prompt goldens to the zip bundle.
+- Re-verified teul-cli goldens (W01~W109).
+- Added an AGE1 stdlib extension implementation mapping table proposal.
+- Added an AGE1 stdlib name normalization proposal for canonical/alias decisions.
+- Recorded DEC-20260125-STDLIB-NAMES-01 (AGE1 stdlib naming normalization decision).
+- Implemented DR-069 contract diag standard fields (including fault_id) and recorded `슬기.계약위반` hook events in teul-cli.
+- Added D-PACKs for contract diag standard/hook and expanded W107 post-contract golden coverage.
+- Added AI-friendly Phase0 data (pack/stdlib_examples, errors.jsonl, index.json).
+- Enforced arg-before call syntax `(args) name` and removed prefix `name(args)` parsing; updated packs/examples/golden inputs accordingly.
+- Consolidated docs sample locations: moved maze tracks to `docs/EXAMPLES/tracks/`, demos to `docs/EXAMPLES/demos/`, Gate0 records to `docs/steps/000/`, and folded reviews/templates into existing docs folders.
+- Removed `docs/legacy` (archive_root/quarantine) and cleaned up the remaining references.
+- Moved design drafts to `docs/context/design/` and updated references (SSOT pending refs handled separately).
+- Removed `docs/ssot/ssot/SSOT_PENDING.md` and kept pending notes in `docs/decisions/SSOT_PENDING.md`.
+- Moved roadmap documents to `docs/context/roadmap/` and updated references.
+- Consolidated docs structure and aligned report paths to `docs/reports/impl|audit` with `docs/context/reports` as redirect.
+- Added logical operators `&&`/`||` with Korean `그리고`/`또는` plus `아님` negation sugar in lang/tool runtime.
+- Added contract alert mode syntax `바탕으로(알림)`/`다짐하고(알림)` and logged violations without aborting.
+- Added teul-cli contract parsing/execution (`바탕으로`/`다짐하고`/`맞으면`), contract diag JSONL output, and W107 golden tests.
+- Recorded SSOT decisions for the contract diag standard and the `슬기.계약위반` hook.
+- Added teul-cli runtime type mismatch messages with expected/actual types and expanded type_runtime_typecheck inputs (unitless/optional mismatches).
+- Reflected DR-067 runtime typecheck semantics in SSOT (PinSpec/TypeRef enforcement rules).
+- Implemented PinSpec runtime typechecks in ddn_runtime with `E_RUNTIME_TYPE_MISMATCH` messaging and unit tests.
+- Added `pack/type_runtime_typecheck` inputs and teul-cli W106 golden coverage for runtime type mismatches.
+- Added charim index sugar `a[i]`/`a[i] <- v` that canonicalizes to `차림.값`/`차림.바꾼값`.
+- Added runtime support for `차림.값`/`차림.바꾼값` (out-of-range writes are FATAL).
+- Added W103 teul-cli golden coverage for charim indexing.
+- Added `[]` 차림 리터als (parser/normalizer) that canonicalize to `(…) 차림`.
+- Added teul-cli `[]` 차림 literal parsing/canon support and W102 golden coverage.
+- Added else-if sugar `아니고 (조건) 일때` plus `+<-`/`-<-` compound update sugar (variable targets only) with W104 golden coverage.
+- Added nested charim tensor sugar `[[...],[...]]` canonicalization to shape/data/layout packs, plus W105 golden coverage and ragged-shape parse errors.
+- Added `(임자) 대상차림 모두 { ... }.` sugar with canonicalization to `~에 대해:` plus tensor stdlib functions (`텐서.형상/자료/배치/값/바꾼값`), W108/W109 golden coverage, and related D-PACKs.
+- Added pack/age1_container_resource golden input/expectation and a ddn runtime container resource state_hash test.
+- Updated teul-cli ai prompt SSOT_VERSION to v20.1.13 and refreshed the lean golden output.
+- Added deterministic resource storage for containers (차림/모음/짝맞춤) via ResourceValue in core and ddn runtime resource assignment.
+- Added ddn runtime/teul-cli foreach support for 차림/모음/짝맞춤 (짝맞춤 yields a key/value 차림 pair), ddn runtime constructors for 차림/모음/짝맞춤, and W97_G04 foreach map golden coverage.
+- Added teul-cli loop statements (`반복:`/`동안:`/`에 대해:`) with `멈추기`, plus a loop example.
+- Added W97 teul-cli golden test coverage for loop/foreach/break.
+- Added lang/tool loop/foreach/break support in ddn runtime.
+- Added parser/normalizer support for container type notation like `(T)차림`.
+- Added `미분하기`/`적분하기` formula transforms that wrap expressions into ddn.math/ext `diff/int`.
+- Added template pattern matching (`맞추기`) with age1_template_match pack/example coverage.
+- Allowed ddn.math/ext call parsing in #ascii formulas, added Gate0 eval FATAL handling, and included age1_math_ext pack/example coverage.
+- Replaced `?_??_?` placeholders with `보개_그림판_가로/세로` in Bogae-related pack inputs.
+- Updated Bogae-related packs to use `보개_바탕색` and switched W35 replay harness input to a Korean arrow key alias.
+- Added Korean key aliases for sam keyboard input (왼쪽화살표/Z키/스페이스, etc.), plus the `보개_바탕색` background alias and updated Tetris Slice0 key usage.
+- Added W90 patch pipeline golden tests, an age1 patch approval sample pack, list-based Bogae drawlist entries (`보개_그림판_목록`), and `tetris_board_drawlist` to slim the Tetris Slice0 board rendering.
+- Added teul-cli patch preview/approve/apply/verify pipeline, container values (차림/모음/짝맞춤), list/string stdlib ops, and an AGE1 container pack/example.
+- Added W35 replay verify (geoul snapshot reinjection) and W36 trace-tier logging (T-OFF~T-FULL) with D-PACK/golden coverage.
+- Added W34 geoul blackbox logging (audit.ddni/idx/manifest + checkpoint), geoul seek/hash CLI, and gogae4_w34 pack/golden coverage.
+- Re-verified teul-cli golden tests (W01~W33) and ddonirang-tool state_hash smoke tests (W23~W33).
+- Added W33 teul-cli golden test coverage.
+- Added W32 teul-cli golden test coverage and W33 market integration state_hash computation with updated pack expectations/tests.
+- Added W31 teul-cli golden test coverage and W32 diff viewer state_hash computation with updated pack expectations/tests.
+- Added W30 teul-cli golden test coverage and W31 shared stage state_hash computation with updated pack expectations/tests.
+- Added W29 teul-cli golden test coverage and W30 qchain approval state_hash computation with updated pack expectations/tests.
+- Added W28 teul-cli golden test coverage and W29 reactive limit state_hash computation with updated pack expectations/tests.
+- Added W27 teul-cli golden test coverage and W28 indicators state_hash computation with updated pack expectations/tests.
+- Added W27 invariant hook state_hash computation in core gogae3 and updated the gogae3_w27_invariant_hook pack expectations/tests.
+- Added W26 econ seeds state_hash computation in core gogae3 and updated the gogae3_w26_econ_seeds pack expectations/tests.
+- Added core gogae3 helpers for W24 ECS archetype and W25 query batch state_hash computation, and updated pack expectations/tests.
+- Synced teul-cli W24/W25 state_hash with core computation and refreshed golden expectations.
+- Implemented ECS archetype/column storage in core and updated W24 state_hash test coverage.
+- Added W24/W25 input snapshot schema/samples and sam sorted/unsorted golden tests.
+- Added W24/W25 state_hash expectations and golden tests (W24_G01/W25_G01).
+- Verified W23 network sam determinism test and recorded W23 DoD completion.
+- Reviewed W24/W25 D-PACK skeletons and recorded them as incomplete.
+- Verified W22 golden tests and recorded W22 DoD completion.
+- Added teul-cli detjson sam parsing (net_events sort + summary resources) and W23 test docs update.
+- Ensured CI installs/validates python3 before running UTF-8 checks.
+- Repaired broken text and removed BOM in SSOT_PENDING_20260118 proposal.
+- Added W23 net_events state_hash expectation + test (pack expect/state_hash.txt, test Iyagi).
+- Wired UTF-8 checker into CI (GitLab/Azure) and removed remaining BOMs from step docs/W23 sample.
+- Added a UTF-8 check utility and enforced net_events sorting on input snapshot detjson parsing (W23).
+- Re-encoded non-UTF8 docs as UTF-8 and repaired broken text in SSOT_PENDING (notes/decisions).
+- Removed UTF-8 BOM from repository text files.
+- Added BDL2 subpixel Q24.8 decoding and AA-aware rendering (snap when AA is off, subpixel when AA is on), plus a W22 subpixel golden test.
+- Added BDL2 Circle/Arc/Curve command support (core/web/playback) with AA cmd flag parsing and W22 golden tests.
+- Updated golden DDNs + docs/ssot/pack for Bogae key canonicalization and refreshed W19/W21 stdout expectations.
+- Updated Bogae example/pack DDNs to 생김새/결/보개_그림판_* keys.
+- Canonicalized Bogae drawlist keys to 생김새/결/보개_그림판_* while keeping 모양/트레잇/bogae_canvas_* as aliases.
+- Moved root golden gate0 tests into `docs/steps/000/artifacts/golden`, relocated `해보기` samples into `docs/EXAMPLES/haebogi`, and archived `tools/ddonirang-vscode` under `tools/vscode-ddn/legacy`.
+- Added W23 InputSnapshot detjson net_events parsing and replay log net_events roundtrip support.
+- Added W23 net_events field to InputSnapshot with deterministic sorting in DetSam.
+- Added W26~W33 D-PACK skeletons under pack/gogae3_w26~w33.
+- Added W23 input snapshot schema/sample docs and W24/W25 D-PACK skeletons.
+- Started W23 D-PACK skeleton (`pack/gogae3_w23_network_sam`).
+- Fixed the golden runner to keep stdout lines that include hash tokens plus other fields (W14 stdout contract).
+- Re-verified W14/W15 golden tests (W14_G01_headless_stdout, W15_G01_playback_output).
+- Moved Gate0 step 000 records to `docs/steps/000`.
+- Adjusted Tetris Slice0 canvas height to show the bottom board row.
+- Skipped drawing sprites with tint alpha 0 in web/playback viewers to avoid empty-cell overdraw.
+- Added sam-live console stop handling (Ctrl+C/Esc) and sprite glyph mapping in console renderer.
+- Added `tetris_piece_block` builtin plus Slice0 updates for 4-block rendering, DAS/ARR movement, wall-kick rotation, and game-over detection.
+- Added `tetris_board_cell` builtin for board sprite/color lookup and updated Tetris Slice0 locked-block rendering plus line-clear scoring/effects.
+- Added teul-cli `tetris_*` helpers and `묶음값` for Slice0 board collisions/line clears.
+- Added `{...}아닌것` condition example.
+- Added canon support for `일때/고르기` branching and `{...}인것` conditions.
+- Extended Tetris Slice0 with basic gravity/lock flow.
+- Added teul-cli `고르기:` branching with `아니면:` and updated Tetris Slice0 input with conditional flow.
+- Added teul-cli `일때/아니면` conditional statement parsing/execution and a demo example.
+- Added Tetris Slice0 input skeleton (state model + key mapping + hold/rotation) in pack.
+- Added live sam input (`--sam-live console|web`) with input server and viewer input forwarding.
+- Added BDL2 detbin codec support with `--bogae-codec` and viewer parsing.
+- Added W22 implementation plan (phases) and expanded BDL2 pack test/diag definitions.
+- Added live Bogae console/web mode (`--bogae-live`) with ASCII renderer and live.html polling viewer.
+- Added W18 replay diff CLI and playback manifest `state_hash`.
+- Added W19 cmd_count cap/summary policy with diag fields and golden packs.
+- Added W20 BDL1 packet framing and `teul-cli bdl packet wrap/unwrap`, plus roundtrip tests.
+- Added W21 overlay output (`overlay.detjson`) and viewer overlay support with hash invariance tests.
+- Added W22 BDL2 spec skeleton proposal and pack skeleton.
+- Updated W22 BDL2 draft with detbin schema/command table (fixed_q=8) and filled pack docs.
+- Re-verified W16/W17 golden tests (W16_G01_text_sprite, W17_G01_input_replay).
+- Re-verified W14/W15 golden tests (W14_G01_headless_stdout, W15_G01_playback_output).
+- Removed unused `TokenKind::Hash` and simplified formula tag parsing to Atom-only.
+- Re-verified W01-W17 golden tests.
+- Fixed formula injection parsing for `(#ascii/#ascii1)` after bindings (W06 golden pass).
+- Relaxed W13_G01 artifacts test stdout/hash expectations to align with W14 headless stdout.
+- Added W14 headless output line for `--no-open` (bogae_hash/cmd_count/codec) and W14 golden test.
+- Added W13 web(Canvas) viewer support: `teul-cli view`, `--bogae web`, and viewer artifacts (`index.html`, `drawlist.bdl1`, `drawlist.json`).
+- Added W12 demo example program for Bogae drawlist output.
+- Added W12 atom literals (#...), pack literal bindings, state-driven Bogae drawlist (rect fill), and the Bogae D-PACK/golden updates.
+- Added W12 Bogae drawlist/BDL1 hashing, `--bogae-out` output, and `bogae_hash` parsing in the golden runner.
+- Verified W07~W11 golden packs in teul-cli.
+- Documented roadmap vs WALK spec precedence in AGENTS.
+- Verified W06 golden pack in teul-cli.
+- Verified W05 golden pack in teul-cli.
+- Verified W04 golden pack in teul-cli.
+- Corrected AGE references from age1 to age0 in docs and AGENTS.
+- Updated SSOT path references to the new walks/age structure across AGENTS/steps/status docs.
+- Verified W03 golden pack (schema/duplicate/type/diag/repro/trace) in teul-cli.
+- Added gaji/pack input bridge: `=` assignment, `(묶음)인 식 풀기`, and bare path `살림.` auto-prefix.
+- Added line-directive (`#...`) skipping in teul-cli lexer/canon for step01 directive headers.
+- Added per-walk demos (001~011) under docs/EXAMPLES/demos with usage notes.
+- Added Gate0 formula power operator (`^`) parsing/eval and a W06 golden test.
+- Added deterministic `sin`/`cos` (CORDIC) and a W05 golden test.
+- Added 글무늬 템플릿 렌더링(자리표시자/포맷/단위 변환)과 W12 골든 테스트.
+- Added W03~W11 step docs and updated the step index statuses.
+- Added W06 formula/MathIR evaluation (#ascii/#ascii1) with DetMath stdlib (abs/min/max/clamp/sqrt/powi) and Fixed64 sqrt.
+- Added hook/tick engine: `(시작)할때` and `(매마디)마다`, plus `--ticks/--madi` run support.
+- Added `--diag` alias for diag JSONL output and ensured diag does not affect state_hash.
+- Added `--enable-repro` default repro path and repro JSON meta fields (ssot_version, repro_command).
+- Added `teul-cli ai extract` for ??() prompt extraction.
+- Added canon `--out` path support and run_golden multi pipeline support.
+- Added W03~W11 golden test packs and passing coverage.
+- Added AGE01 WALK01 `tools/teul-cli` scaffold with `state_hash`/`trace_hash` (blake3) and W01 golden test runner.
+- Updated SSOT baseline references to v20.0.3 across step 000 and status docs.
+- Added SYNTAX_BRIDGE support via `canon --bridge age0_step01` and refreshed SSOT bundle/template references for v20.0.3.
+- Updated SSOT baseline references to v20.0.0 in step 000 docs/HANDOFF and recorded the 99-step plan (AGE0=1~33) exception in SSOT_CHANGELOG.
+- Added `canon` command to ddonirang-tool for canonical DDN output (`--emit ddn`, `--out`, `--check`).
+- Added `teul-cli ai prompt` output (lean profile, SSOT template/context), bundle zip/dir support, and AI-PROMPT-GOLDEN-01/02/03 tests.
+- Added v19.4.19 주입 표기 지원: `(<키=값>) 글무늬{...}`/`(<키=값>) 수식{...}` 즉시 평가, `(키=값)인 식 풀기` 정본화.
+- Added `??{...}` structured AI card preprocessing (equivalent to `??(글무늬{...})`).
+- Implemented `수식{...}` block parsing and `풀기` evaluation (ASCII/ASCII1, strict injection, `#latex` FATAL).
+- Recorded contract violations as Signal::Diag (CONTRACT_PRE/POST) with standardized fields and EmitSignal seq/madi assignment.
+- Ensured ARITH-TRACE-01 coverage with arith:* expr tags and source_span for DivAssignResourceFixed64 paths.
+- Replaced generic angle brackets in docs with 〈〉 (SSOT excluded).
+- Documented `target-dir` relocation to `C:\dev\cargo-target\ddonilang` to avoid OneDrive churn.
+- Updated SSOT baseline references to v19.4.19 (꺾쇠 금지, `$` 뉘앙스, `글무늬` 템플릿, `}해서`/`-서`, 계약 정본 `바탕으로/다짐하고`).
+- Implemented v19.4.8 Gate0 gaps: `}해서` tail, `-서` FATAL ban, `$` 뉘앙스, `글무늬`/`채우기`, `늘지켜보고`, prefix 호출 + `핀=값`, `[]`/`&` 예약 처리, 계약 정본 키워드 지원.
+- Updated step 000 docs and status summaries to reflect v19.4.19 baseline and applied fixes.
+- Updated base unit registry list to include `mm/us/min/h/g`.
+- Updated internal doc SSOT references to v18.22.1 (steps/status/impl_draft).
+- Clarified SSOT v18.17.12 lint placement: PLANS override, strict-terms optional, compat/termmap deferred.
+- Moved NAME-LINT-01/TERM-LINT-01 enforcement to parser (fatal/reserved/josa) and kept canonicalizer as legacy warning only (no auto replacement).
+- Added arith diag source_span/expr trace fields and runtime emission path.
+- Added lint_version/term_map_version fields to repro reports.
+- Updated SSOT references to v18.12.12 (steps/status/impl_draft).
+- Updated SSOT references and LANG_STATUS to v18.0.11 baseline.
+- Switched deterministic hash output to state_hash (BLAKE3) and updated logs/golden format.
+- Updated steps SSOT references to docs/ssot v18.0.11.
+- Reorganized steps into per-step directories and added step 000 for Gate0.
+- Adopted Gate0 dev checklist v18.0.11 as a step 000 reference.
+- Moved golden/replay artifacts into docs/steps/000/artifacts and updated tool defaults.
+- Organized the 11-step demo track under docs/EXAMPLES/tracks/11단계.
+- Added docs decision/notes structure for SSOT change proposals and approvals.
+- Added decision/reason sections to all step RESULT files.
+- Added per-step WORKLOG.md templates and initial logs for 000/001.
+- Added publish/ folder for documents intended for GitHub upload.
+- Added user-facing publish docs and binary release policy.
+- Added per-step TODO policy and TODO sections in step plans.
+- Added josa/@ token handling, optional param parsing, default injection, josa-based arg binding, @pin fixing, and mood terminator handling in lang canonicalizer path.
+- Added suffix-based mood inference for '.' terminators and updated pin/josa suffixes to `:핀`/`~조사` to match SSOT v18.0.11.
+- Added expression-level `@단위`/`@"자원"` parsing with a minimal unit registry and expanded 조사 토큰 목록.
+- Expanded unit registry + runtime unit semantics (UnitDim/UnitValue) with dimension mismatch validation.
+- Added ResourceHandle storage, `@"자원"` handle resolution, and unit-tagged resource read/write handling.
+- Added LSP diagnostic/QuickFix for `@핀` 오용을 `:핀`으로 교정 제안.
+- Extended CLI run-once parsing to store simple 수/글/참거짓 선언 값.
+- Added ddn interpreter and maze runners (run-maze-ddn, run-maze-ddn-live).
+- Added input last_key_name propagation to ddn runtime.
+- Added string escape handling in lexer (\n, \t, \r, \", \\).
+- Added built-in function 글바꾸기 for string replacement.
+- Updated ddn maze scripts to support coin pickup and map edits.
+- Added VS Code syntax highlighting (TextMate grammar).
+- Expanded highlighting for @ (josa/unit/resource) and keywords.
+- Improved ddn maze rendering to use 맵원본.
+- Added missing docs for architecture/CLI/decisions/known issues and linked design proposals.
+- Added DetMath LUT manifest/loader and startup hash verification guard.
+- Added DetMath manifest missing-entry negative test.
+- Updated DivAssignResourceFixed64 to emit div0 faults without committing resource updates.
+- Added Alrim 16-pass carryover loop and demo logging command.
+- Added Korean surface-form golden tests (Gate0 minimal set).
+- Added suffix-chain parsing/binding golden tests.
+- Added optional parameter default-injection test suite (5 cases).
+- Added static unit dimension validation for explicit unit expressions.
+- Expanded unit registry (평/inch/ft/kmh/mps/KRW/USD) and separated KRW/USD dimensions.
+- Added Gate0 registry loaders and default `ddn.asset.json`/`ddn.units.json` templates.
+- Added call-tail equivalence/resolve rules (~기/하기, ~고/하고, ~면/하면) with ambiguity/no-seed errors.
+- Added X/X하 seed-name conflict validation (E_SEED_NAME_CONFLICT_HA).
+- Allowed legacy `ddn.resource.json` as an input alias with a warning.
+- Added Gate0 Thunk/eval markers (`}한것/}인것/}아닌것/}하고`) and strict `}것` error.
+- Added pipe call-only enforcement with flow-value injection rules.
+- Added `해보고:`/`고르기:`/`바탕으로`/`다짐하고`(별칭: `전제하에`/`보장하고`) parsing and execution support.
+- Added deterministic RNG functions (무작위/무작위정수/무작위선택) with InputSnapshot seed usage.
+- Updated LSP traversal for new AST nodes and added gate0_flow example script.
+- Added runtime unit-dimension safety net (assignment invalidation + 차원고장 signal).
+- Added Gate0 golden scenarios (G0-PIPE/UNIT/FAULT) and scripts for pipe/unit checks.
+- Added Fixed64 raw_i64 determinism vector test.
+- Updated Gate0 step docs to reflect SSOT v18.0.12 AI-aware requirements.
+- Added `??()` preprocessor (preprocess-ai) that strips `!!{}` blocks and freezes calls into `!!{}` meta.
+- Added `ddn.schema.json` generator with `build-schema` command.
+- Added Patch Origin metadata, Guard violation enforcement, and `geoul.diag.jsonl` event recording.
+- Added `teul-cli test` runner for `golden/*.test.json` (DetTest) with repro generation.
+- Added `teul-cli geoul query` to filter `geoul.diag.jsonl`.

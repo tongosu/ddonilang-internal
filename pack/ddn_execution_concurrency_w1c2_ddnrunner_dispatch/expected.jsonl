@@ -1,0 +1,15 @@
+{"case_id":"01_route_zero_provider_callback_zero","test_id":"w1c2_i2_case_01_ddnrunner_route_zero_provider_callback_zero"}
+{"case_id":"02_route_two_provider_callback_zero","test_id":"w1c2_i2_case_02_ddnrunner_route_two_provider_callback_zero"}
+{"case_id":"03_route_one_empty_registry_exact_result","test_id":"w1c2_i2_case_03_ddnrunner_route_one_empty_registry_preserves_result"}
+{"case_id":"04_route_one_provider_candidate_commit","test_id":"w1c2_i2_case_04_ddnrunner_route_one_provider_candidate_commits"}
+{"case_id":"05_diamond_reachability_once","test_id":"w1c2_i2_case_05_ddnrunner_diamond_reachability_executes_once"}
+{"case_id":"06_distinct_provider_two","test_id":"w1c2_i2_case_06_ddnrunner_distinct_providers_both_execute"}
+{"case_id":"07_registration_worker_permutation","test_id":"w1c2_i2_case_07_ddnrunner_registration_and_worker_permutation_deterministic"}
+{"case_id":"08_one_settled_snapshot","test_id":"w1c2_i2_case_08_ddnrunner_providers_share_one_settled_snapshot"}
+{"case_id":"09_provider_failure_atomic_abort","test_id":"w1c2_i2_case_09_ddnrunner_provider_failure_aborts_route_publish"}
+{"case_id":"10_provider_conflict_deterministic","test_id":"w1c2_i2_case_10_ddnrunner_provider_conflict_is_deterministic_failure"}
+{"case_id":"11_effect_after_outer_commit","test_id":"w1c2_i2_case_11_ddnrunner_effect_intent_releases_after_outer_commit"}
+{"case_id":"12_wait_resume_provider_outbox","test_id":"w1c2_i2_case_12_ddnrunner_wait_resume_preserves_provider_outbox"}
+{"case_id":"13_nested_fifo_no_reentry","test_id":"w1c2_i2_case_13_ddnrunner_nested_delivery_preserves_fifo_no_reentry"}
+{"case_id":"14_execution_instance_identity","test_id":"w1c2_i2_case_14_ddnrunner_execution_instance_changes_occurrence_identity"}
+{"case_id":"15_occurrence_duplicate_once","test_id":"w1c2_i2_case_15_ddnrunner_occurrence_duplicate_attack_applies_once"}

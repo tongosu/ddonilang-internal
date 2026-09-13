@@ -1,0 +1,46 @@
+{
+  "schema": "ddn.ganada.ma.classroom_workflow.v1",
+  "pack": "ganada_ma_classroom_workflow_v1",
+  "cell_id": "마-3",
+  "status": "product_pass_gate",
+  "behavior_closed_claim": false,
+  "matrix_upgrade_claim": false,
+  "docs_ssot_change": false,
+  "parser_change": false,
+  "runtime_change": false,
+  "state_hash_change": false,
+  "workflow": {
+    "report_export_policy": "local_dry_run",
+    "product_runner": "tests/ganada_ma_classroom_workflow_runner.mjs",
+    "required_selectors": [
+      "classroom-workflow-panel",
+      "classroom-teacher-mode",
+      "classroom-student-mode",
+      "classroom-roster",
+      "classroom-result-review",
+      "classroom-report-export"
+    ],
+    "required_boundaries": [
+      "gradebook_write:false",
+      "student_personal_data_collection:false",
+      "remote_classroom_sync:false"
+    ]
+  },
+  "required_commands": [
+    {
+      "kind": "pack_golden_pass",
+      "command": ["python", "tests/run_pack_golden.py", "ganada_ma_classroom_workflow_v1"],
+      "expect_stdout_contains": "pack golden ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/ganada_ma_classroom_workflow_runner.mjs"],
+      "expect_stdout_contains": "ganada_ma_classroom_workflow: ok"
+    },
+    {
+      "kind": "browser_or_ui_runner_pass",
+      "command": ["node", "tests/education_classroom_ui_pack_runner.mjs"],
+      "expect_stdout_contains": "education_classroom_ui_pack: ok"
+    }
+  ]
+}

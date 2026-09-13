@@ -1,0 +1,21 @@
+{
+  "schema": "seamgrim.view_plan.v1",
+  "lesson_id": "rep_phys_projectile_xy_v1",
+  "binding_mode": "explicit",
+  "runtime_surface": "ddn.original.product_frontdoor",
+  "primary_view_target": "space2d",
+  "required_anchor_ids": ["obs.time", "obs.projectile", "obs.velocity_x", "obs.velocity_y"],
+  "anchors": [
+    {"anchor_id": "obs.origin", "source_ref": {"kind": "constant", "value": {"x": 0, "y": 0}}, "value_type": "point2", "unit": "m", "label": "발사점", "accessibility_name": "포물선 발사점", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn", "source_span": "x <- 0; y <- 0"}},
+    {"anchor_id": "obs.time", "source_ref": {"kind": "observation", "key": "t"}, "value_type": "scalar", "unit": "tick", "label": "마디", "accessibility_name": "포물선 마디", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn", "source_span": "t <- t + 1"}},
+    {"anchor_id": "obs.projectile", "source_ref": {"kind": "point2", "x_key": "x", "y_key": "y"}, "value_type": "point2", "unit": "m", "label": "물체", "accessibility_name": "포물선 물체 위치", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn", "source_span": "x <- x + vx * dt; y <- y + vy * dt"}},
+    {"anchor_id": "obs.velocity_x", "source_ref": {"kind": "observation", "key": "vx"}, "value_type": "scalar", "unit": "m/s", "label": "가로속도", "accessibility_name": "포물선 가로 속도", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn", "source_span": "vx <- 초기속도x"}},
+    {"anchor_id": "obs.velocity_y", "source_ref": {"kind": "observation", "key": "vy"}, "value_type": "scalar", "unit": "m/s", "label": "세로속도", "accessibility_name": "포물선 세로 속도", "provenance": {"path": "solutions/seamgrim_ui_mvp/lessons/rep_phys_projectile_xy_v1/lesson.ddn", "source_span": "vy <- vy - 중력가속도 * dt"}}
+  ],
+  "measures": [
+    {"measure_id": "measure.axes.projectile", "kind": "axes", "origin_anchor": "obs.origin", "unit": "m", "label": "좌표축·눈금", "range": {"x_min": 0, "x_max": 16, "y_min": 0, "y_max": 12}, "tick_step": 2, "style": {"axis_color": "#334155", "tick_color": "#64748b"}}
+  ],
+  "graph_cursor": {"cursor_id": "graph.current.projectile_y", "x_anchor": "obs.time", "y_anchor": "obs.velocity_y", "series_id": "y", "label": "현재 세로속도"},
+  "camera": {"default_policy": "fit", "policies": [{"policy_id": "fit", "mode": "fit", "padding": 0.35, "min_span": 4}, {"policy_id": "follow", "mode": "follow", "target_anchor": "obs.projectile", "span": {"x": 12, "y": 9}}], "conflict_diagnostic": "W_VIEW_CAMERA_POLICY_CONFLICT", "state_hash_participation": false},
+  "hash_policy": {"state_hash_participation": false, "view_plan_hash_candidate": true, "world_draw_payload_hash_candidate_uses_world_coordinates": true, "canonical_bogae_hash_claim": false}
+}

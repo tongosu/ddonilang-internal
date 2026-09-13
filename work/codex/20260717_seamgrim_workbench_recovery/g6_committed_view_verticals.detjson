@@ -1,0 +1,57 @@
+{
+  "claims": {
+    "closure_tier": "behavior-closed",
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "g6_status": "G6_COMMITTED_VIEW_VERTICALS_COMPLETE",
+    "state_hash_formula_change": false
+  },
+  "renderer_contract": {
+    "canvas_data_source": "committed_runtime_frame",
+    "pre_run_fabricated_state": false,
+    "projectile_source_regex_physics": false,
+    "render_model_schema": "seamgrim.workbench.semantic_render_model.v1",
+    "runtime_state_mutation_from_view": false,
+    "trajectory_future_frame_access": false,
+    "view_config_participates_in_state_hash": false
+  },
+  "representative_verticals": {
+    "grid": {
+      "committed_draw_item_minimum": 64,
+      "committed_piece_position": [3, 0],
+      "fixed_tick_zero_removed": true,
+      "status": "PASS"
+    },
+    "pendulum": {
+      "bob_derived_from_committed_theta_and_length": true,
+      "hardcoded_theta_removed": true,
+      "labels": ["theta", "omega", "energy", "kinetic_energy", "potential_energy", "L"],
+      "overlay_same_coordinate_system": true,
+      "status": "PASS"
+    },
+    "projectile": {
+      "committed_current_channels": ["x", "y", "t", "vx", "vy"],
+      "committed_history_only": true,
+      "movement_changes_view_artifact": true,
+      "status": "PASS"
+    },
+    "static_graph": {
+      "committed_point": [2, 5],
+      "labels": ["x", "y", "a", "b"],
+      "meaningless_numeric_primary": false,
+      "oneshot": true,
+      "status": "PASS"
+    }
+  },
+  "schema": "seamgrim.workbench_recovery.g6_committed_view_verticals.v1",
+  "verification": {
+    "committed_view_verticals_browser": "PASS",
+    "execution_lifecycle_browser": "PASS",
+    "execution_mode_preprocessed_surface": "PASS",
+    "live_step_pump_browser": "PASS",
+    "node_syntax": "PASS",
+    "semantic_payload_unit": "PASS",
+    "semantic_renderer_unit": "PASS",
+    "static_forbidden_shortcuts": "PASS"
+  }
+}

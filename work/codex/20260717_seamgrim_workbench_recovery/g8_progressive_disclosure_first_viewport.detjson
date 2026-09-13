@@ -1,0 +1,56 @@
+{
+  "claims": {
+    "closure_tier": "behavior-closed",
+    "docs_ssot_change_count": 0,
+    "external_user_success_count": 0,
+    "feature_deletion_count": 0,
+    "g8_status": "G8_PROGRESSIVE_DISCLOSURE_COMPLETE",
+    "state_hash_formula_change": false
+  },
+  "first_viewport_1360x840": {
+    "after_document_scroll_height_px": 1252,
+    "after_source_and_primary_top_px": 520.09375,
+    "before_document_scroll_height_px": 1535,
+    "before_source_and_primary_top_px": 803.09375,
+    "closed_management_dialog_display": "none",
+    "required_primary_content_visible": [
+      "project_title",
+      "project_files",
+      "run_strip",
+      "project_controls",
+      "ddn_source",
+      "primary_view"
+    ]
+  },
+  "progressive_surfaces": {
+    "diagnostics_and_state_hash": "project-verification-drawer",
+    "gaji_publish_install": "project-more-menu -> gaji workflow dialog",
+    "portable_metadata_and_import_preview": "portable-project-dialog",
+    "project_and_run_lineage": "project-history-drawer",
+    "server_and_revisions": "project-storage-drawer"
+  },
+  "accessibility": {
+    "escape_closes_modal_drawer": true,
+    "keyboard_details_menu": "PASS",
+    "native_dialog_focus_boundary": "PASS",
+    "named_close_actions": true,
+    "narrow_order_600x900": "PASS"
+  },
+  "compatibility": {
+    "direct_portable_export_download": "PASS",
+    "durable_persistence": "PASS",
+    "gaji_workflow_on_demand": "PASS",
+    "management_testids_preserved": true
+  },
+  "schema": "seamgrim.workbench_recovery.g8_progressive_disclosure_first_viewport.v1",
+  "verification": {
+    "committed_view_verticals_browser": "PASS",
+    "durable_persistence_adapters_browser": "PASS",
+    "execution_lifecycle_browser": "PASS",
+    "live_step_pump_browser": "PASS",
+    "node_syntax": "PASS",
+    "one_file_native_browser": "PASS",
+    "progressive_disclosure_browser": "PASS",
+    "view_instances_browser": "PASS"
+  }
+}

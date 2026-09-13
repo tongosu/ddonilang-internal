@@ -1,0 +1,18 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_sealed_observation_trace_v1",
+  "kind": "seamgrim_sealed_observation_trace_artifact",
+  "product_behavior_claim": true,
+  "closed_by": "SEAMGRIM_SEALED_OBSERVATION_TRACE_V1",
+  "browser_runner": "tests/seamgrim_sealed_observation_trace_runner.mjs",
+  "product_lesson_id": "rep_phys_pendulum_wave1_v1",
+  "trace_schema": "seamgrim.sealed_observation_trace.v1",
+  "required_values": ["tick_id", "t", "theta", "omega"],
+  "frontdoor": "seamgrim_product_wasm",
+  "console_string_parse": false,
+  "state_hash_participation": false,
+  "condition_evaluator_claim": false,
+  "parser_change": false,
+  "runtime_semantics_change": false,
+  "docs_ssot_change": false
+}

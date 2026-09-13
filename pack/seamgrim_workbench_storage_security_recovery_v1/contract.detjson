@@ -1,0 +1,13 @@
+{
+  "schema": "ddn.pack.contract.v1",
+  "pack": "seamgrim_workbench_storage_security_recovery_v1",
+  "gate": "G8",
+  "product_behavior_change": false,
+  "behavior_closed_claim": true,
+  "actual_server_required": true,
+  "backup_restore_includes_run_archive": true,
+  "public_error_leaks_internal_path": false,
+  "raw_capability_stored_in_db": false,
+  "new_ddn_syntax": false,
+  "state_hash_formula_change": false
+}

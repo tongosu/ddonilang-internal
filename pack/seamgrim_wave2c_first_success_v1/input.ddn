@@ -1,0 +1,12 @@
+설정 {
+  제목: "SEAMGRIM_WAVE2C_FIRST_SUCCESS_V1".
+  설명: "Wave2C 첫 사용자 제품 흐름 browser runner marker".
+}.
+
+채비 {
+  marker:수 <- 1.
+}.
+
+(매마디)마다 {
+  marker 보여주기.
+}.

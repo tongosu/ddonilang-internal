@@ -1,0 +1,1 @@
+{"cmd":["run","pack/ganada_maru_verification_contract_v1/input.ddn"],"stdout":["GANADA_MARU_VERIFICATION_CONTRACT_V1","cells=90","behavior_claims=0","docs_ssot_change=false","contract_checker=tests/run_ganada_maru_verification_contract_check.py"],"exit_code":0}

@@ -1,0 +1,272 @@
+{
+  "schema": "ddn.cli_wasm_sync.baseline.v1",
+  "recorded_date": "2026-07-12",
+  "scope": {
+    "goal": "CODEX_SUPERLONG_GOAL_DDN_CLI_WASM_SINGLE_RUNTIME_CLOSURE_V1_20260712",
+    "branch": "codex/queue-20260706",
+    "head": "9bd663d",
+    "reference_head_is_ancestor": true,
+    "docs_ssot_status": "clean",
+    "closure_claim": "baseline_only_no_single_runtime_closure",
+    "state_hash_policy": "report_only_at_g0"
+  },
+  "commands": [
+    {
+      "name": "runtime_parity_13",
+      "cmd": "python tests/run_seamgrim_wasm_cli_runtime_parity_check.py",
+      "expected": "PASS",
+      "actual": "PASS",
+      "returncode": 0,
+      "evidence": "seamgrim wasm/cli runtime parity ok"
+    },
+    {
+      "name": "vol4_bundle_parity_38",
+      "cmd": "python tests/run_ddonirang_vol4_bundle_cli_wasm_parity_check.py",
+      "expected": "PASS",
+      "actual": "PASS",
+      "returncode": 0,
+      "case_count": 38,
+      "evidence": "[ddonirang-vol4-bundle-cli-wasm-parity] PASS cases=38"
+    },
+    {
+      "name": "wasm_web_smoke",
+      "cmd": "python tests/run_seamgrim_wasm_web_smoke_contract_pack_check.py",
+      "expected": "PASS",
+      "actual": "PASS",
+      "returncode": 0,
+      "evidence": "seamgrim_wasm_web_smoke_contract_pack: PASS"
+    },
+    {
+      "name": "diag_parity",
+      "cmd": "python tests/run_seamgrim_wasm_cli_diag_parity_check.py",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "returncode": 1,
+      "failure_is_baseline": true,
+      "evidence": "numeric_family_factor_route_metrics_resource_is_emitted failed (rc=101, marker=False)"
+    },
+    {
+      "name": "ddonirang_tool_test_target_compile",
+      "cmd": "cargo test -p ddonirang-tool --no-run",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "returncode": 1,
+      "failure_is_baseline": true,
+      "rust_error": "E0063",
+      "evidence": "missing field frame_source in InputSnapshot initializers and source in NetEvent initializer"
+    }
+  ],
+  "dirty_snapshot": {
+    "status_count": 125,
+    "modified_count": 10,
+    "untracked_count": 115,
+    "status_snapshot_sha256": "b59fb9d1e991b4c29df64189265181399610373d6c8bdcce3f0d097177d8c550",
+    "modified_paths": [
+      {
+        "path": "docs/context/all/DEV_SUMMARY.md",
+        "sha256": "b42b0fb416e1721e7334bcc89dddc57f375b0a2d3d7c88a741cd1b1344747815",
+        "bytes": 762373
+      },
+      {
+        "path": "docs/context/proposals/PROPOSAL_SEAMGRIM_KOREAN_MANIM_WAVE1_TO_WAVE2B_SSOT_PROMOTION_PACKET_V1_20260711.md",
+        "sha256": "403de1595aefe238c768003622519ccc9f0f12401ed1b07bc4d6f8f5bf2ac483",
+        "bytes": 11441
+      },
+      {
+        "path": "docs/context/reports/INDEX.md",
+        "sha256": "8a74d5b971ac1b1126f90ddfe73c2c63bcb1fee4d34f8223f3fc8c0a9fe8ca75",
+        "bytes": 1229
+      },
+      {
+        "path": "docs/context/reports/SEAMGRIM_KOREAN_MANIM_DECISION_LEDGER_V1_20260711.detjson",
+        "sha256": "83ef23ddab8c523b3f088936723dfce775d09077b85f49e14c9aa5ab7bea7a29",
+        "bytes": 18558
+      },
+      {
+        "path": "docs/context/reports/SEAMGRIM_KOREAN_MANIM_PROMOTION_LEDGER_V2_20260711.detjson",
+        "sha256": "aecc5e55d44fae77e4f4454e5e496ef26d10366ab946832ab510bea2dc825fb2",
+        "bytes": 16028
+      },
+      {
+        "path": "docs/reports/audit/INDEX.md",
+        "sha256": "cd40b3b2974b2c7ea53042d3cfd20a7505ffc62a44ac86760affac4f46d97e13",
+        "bytes": 13999
+      },
+      {
+        "path": "docs/reports/impl/INDEX.md",
+        "sha256": "a408e944889bbcf4edf9bc12bf134e78ca956b462c6c5700546975d055192a79",
+        "bytes": 14971
+      },
+      {
+        "path": "pack/seamgrim_exec_policy_effect_diag_v1/c09_exec_policy_record_file_read_success/open.log.jsonl",
+        "sha256": "c49ebbcfc45bab1568c4d10e16eb55478a47d5b288afac3c0975cc6f57d842af",
+        "bytes": 405,
+        "generated_open_log": true
+      },
+      {
+        "path": "pack/seamgrim_exec_policy_effect_diag_v1/c14_exec_policy_record_open_io_EXPECT_FAIL/open.log.jsonl",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "generated_open_log": true
+      },
+      {
+        "path": "work/_session_deltas/20260711_codex_seamgrim_next_superlong_goal.md",
+        "sha256": "82f5501834c3a99a8473286f452cdbf573718ddeeebe2d11080639e0ddda47f8",
+        "bytes": 2144
+      }
+    ],
+    "untracked_sample": [
+      {
+        "path": "tests/ddonirang_complete_books_browser_runner.mjs",
+        "sha256": "b9006759fb341c81533b57ec1f1e885d46d9c4e49e2efdf560f52fd0a8c81fba"
+      },
+      {
+        "path": "tests/run_ddonirang_complete_books_browser_check.py",
+        "sha256": "43f89ccc7fe77d47ed9d9fcfc29d2067e210eaab96bfda203cc227dc363564a9"
+      },
+      {
+        "path": "tests/run_ddonirang_complete_books_check.py",
+        "sha256": "dff524d94487f4d63c18cb0c39b8edb06af093d114ef3976e797e23ad9b216f0"
+      }
+    ]
+  },
+  "wasm_baseline": {
+    "last_checked_in_wasm_commit": "8655649",
+    "last_checked_in_wasm_commit_subject": "Refresh WASM and nurigym baselines",
+    "product_js": {
+      "path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool.js",
+      "bytes": 32998,
+      "sha256": "09c59213f94ecdd7b575ab9b45cd6490d7bc46d8bf66650f7056857c817b9f16"
+    },
+    "product_wasm": {
+      "path": "solutions/seamgrim_ui_mvp/ui/wasm/ddonirang_tool_bg.wasm",
+      "bytes": 3331208,
+      "sha256": "8fc762638f4ca87ad61ed6e58fb3cc3ef25d2afc09aea4a653ef9af6f06f9bbf"
+    },
+    "tool_pkg_js": {
+      "path": "tool/pkg/ddonirang_tool.js",
+      "bytes": 32998,
+      "sha256": "09c59213f94ecdd7b575ab9b45cd6490d7bc46d8bf66650f7056857c817b9f16"
+    },
+    "tool_pkg_wasm": {
+      "path": "tool/pkg/ddonirang_tool_bg.wasm",
+      "bytes": 3331208,
+      "sha256": "8fc762638f4ca87ad61ed6e58fb3cc3ef25d2afc09aea4a653ef9af6f06f9bbf"
+    },
+    "js_exports": [
+      "DdnWasmVm",
+      "wasm_build_info",
+      "wasm_canon_alrim_plan",
+      "wasm_canon_block_editor_plan",
+      "wasm_canon_ddn",
+      "wasm_canon_exec_policy_map",
+      "wasm_canon_flat_json",
+      "wasm_canon_maegim_plan",
+      "wasm_preprocess_source"
+    ],
+    "wasm_api_methods": [
+      "new",
+      "new_with_mode",
+      "update_logic",
+      "update_logic_with_mode",
+      "get_configured_madi",
+      "get_build_info",
+      "get_parse_warnings",
+      "set_rng_seed",
+      "set_input",
+      "set_keys_pressed",
+      "set_last_key_name",
+      "set_pointer",
+      "set_dt_f64",
+      "columns",
+      "set_param",
+      "set_param_fixed64",
+      "set_param_fixed64_str",
+      "reset",
+      "step_one_with_input",
+      "step_one",
+      "run_ticks",
+      "apply_currentline_cell",
+      "get_state_hash",
+      "get_state_json",
+      "restore_state",
+      "inject_ai_action",
+      "clear_ai_injections"
+    ]
+  },
+  "post_wasm_source_delta": {
+    "base_commit": "8655649",
+    "head": "9bd663d",
+    "changed_file_count": 31,
+    "changed_files_sample": [
+      "core/Cargo.toml",
+      "core/src/lib.rs",
+      "core/src/nurigym/bandit.rs",
+      "core/src/nurigym/cartpole.rs",
+      "core/src/nurigym/gridmaze.rs",
+      "core/src/nurigym/pendulum.rs",
+      "core/src/platform.rs",
+      "core/src/seulgi/latency.rs",
+      "core/src/tests/sam_volatility.rs",
+      "tool/src/main.rs",
+      "tool/src/wasm_api.rs",
+      "tools/teul-cli/Cargo.lock",
+      "tools/teul-cli/src/cli/gaji.rs",
+      "tools/teul-cli/src/cli/gaji_registry.rs",
+      "tools/teul-cli/src/cli/mod.rs",
+      "tools/teul-cli/src/cli/nurigym.rs",
+      "tools/teul-cli/src/cli/run.rs",
+      "tools/teul-cli/src/cli/sam_snapshot.rs",
+      "tools/teul-cli/src/cli/solveplan.rs",
+      "tools/teul-cli/src/cli/worker.rs",
+      "tools/teul-cli/src/cli/world_diff.rs",
+      "tools/teul-cli/src/core/fixed64.rs",
+      "tools/teul-cli/src/core/geoul.rs",
+      "tools/teul-cli/src/lang/ast.rs",
+      "tools/teul-cli/src/lang/lexer.rs",
+      "tools/teul-cli/src/lang/parser.rs",
+      "tools/teul-cli/src/lang/token.rs",
+      "tools/teul-cli/src/main.rs",
+      "tools/teul-cli/src/runtime/error.rs",
+      "tools/teul-cli/src/runtime/eval.rs",
+      "tools/teul-cli/tests/golden/W107/W107_G28_contract_execute_age2_observed_typed_stale_blocked/.gitkeep"
+    ],
+    "risk_classes": [
+      {
+        "class": "input_source_metadata",
+        "paths": [
+          "core/src/platform.rs",
+          "tool/src/main.rs",
+          "tool/src/wasm_api.rs"
+        ],
+        "risk": "WASM built before InputSnapshot.frame_source and NetEvent.source test target drift was resolved"
+      },
+      {
+        "class": "nurigym_step_record",
+        "paths": [
+          "core/src/nurigym/bandit.rs",
+          "core/src/nurigym/cartpole.rs",
+          "core/src/nurigym/gridmaze.rs",
+          "core/src/nurigym/pendulum.rs",
+          "tools/teul-cli/src/cli/nurigym.rs"
+        ],
+        "risk": "CLI/WASM public schema and shared runtime output may diverge if stale WASM is used"
+      },
+      {
+        "class": "solveplan_and_world_diff",
+        "paths": [
+          "tools/teul-cli/src/cli/solveplan.rs",
+          "tools/teul-cli/src/cli/world_diff.rs",
+          "tools/teul-cli/src/runtime/eval.rs"
+        ],
+        "risk": "CLI artifacts changed after checked-in WASM and need explicit exclusion or parity coverage"
+      }
+    ]
+  },
+  "baseline_limits": [
+    "G0 records expected failures; it does not fix them.",
+    "G0 does not claim current HEAD WASM freshness.",
+    "G0 does not claim full DDN CLI/WASM equivalence.",
+    "G0 does not change state_hash, trace_hash, or bogae_hash formulas."
+  ]
+}

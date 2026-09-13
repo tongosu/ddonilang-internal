@@ -1,0 +1,1518 @@
+# PROJECT_STATUS.md
+
+## 목적
+이 문서는 관문 0 작업에서 추가/수정된 코드와 결정 사항을 한곳에 모아 이후 협업 시 빠르게 맥락을 복원할 수 있도록 정리한 기록이다.
+
+## 2026-08-25 V25 PC-02 shared frontdoor 구현·검토 대기
+
+- Definition `:=`와 Binding/Rebinding `<-`를 tool/native/WASM/official CLI/teul-cli의 공통 `ddonirang_lang` V25 authority로 연결했다.
+- 기본 V25 경로와 명시적 pre-V25 migration 경로를 분리했고, legacy parse fallback과 canon passthrough를 허용하지 않는다.
+- 7-case multisurface pack과 M1~M5 mutation RED→GREEN(residue 0), PC-01/T1/T2/T4/T4h/T5B~T5F 회귀를 통과했다.
+- source-built WASM은 현재 source를 포함하지만 tracked WASM은 의도적으로 덮어쓰지 않아 `TRACKED_WASM_STALE`로 남는다.
+- 상태는 `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW`; PC-05는 PC-02 plain PASS 전 시작하지 않는다.
+- `docs/ssot/**`, public SPEC, tracked WASM 변경은 0이다.
+
+## 2026-08-25 V25 PC-01 Definition / Binding 구현·검토 대기
+
+- V25 전용 shared parser에서 Definition `:=`와 Binding/Rebinding `<-`를
+  별도 token/AST/canon/runtime category로 구현했다.
+- pre-V25 기본 reader는 보존하고, 명시적 `parse_v25*` 및
+  `DdnProgram::from_v25_source`만 새 source epoch를 소비한다.
+- executable pack 3건, 언어 전체 263건, runtime vertical 1건, workspace
+  compile, mutation 3건 RED→GREEN을 통과했다.
+- 상태는 `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW`; dependent PC-02 frontdoor
+  authority 전환은 plain PASS 전 시작하지 않는다.
+- `docs/ssot/**`, public SPEC, tracked WASM 변경은 0이다.
+
+## 2026-07-24 SSOT v24.17.0 최종 승격
+
+- 내부 SSOT current는 사용자 최종 승인에 따라 `v24.17.0 live current`로 승격됐다.
+- 공개 Language SPEC은 별도 계보인 `v0.2.1`을 유지한다.
+- `(값들) 보임.`은 정본 방향이지만 제품 구현은 OPEN이다. `보임 {}`은 deprecated legacy input only이며 신규 정본 출력·예제에서는 금지한다.
+- 문서 승격은 parser/runtime/renderer 또는 한국어 Manim 제품 완료를 뜻하지 않는다.
+
+## 2026-07-17 창작자 가지 Round 0 녹색 기준선
+
+- public one-file 흐름을 고정 project id에서 native creator dialog·동적 id 계약으로 승격했다.
+- durable readiness의 persistence generation, capability disabled reason, view local run/server write 경계를 수리했고 최종 반복과 owned residual 0/0/0을 확인했다.
+- AI prompt는 current SSOT v24.15.1 bundle에서 version/file list/hash를 유도하며 Windows CRLF를 정본화한다.
+- Fixed64 결정 core의 float API를 제거하고 tool/CLI adapter에 host/JSON float를 격리했다. state hash 산식은 불변이다.
+- creator-gaji 회귀, public wedge, Rust 전체, CLI/WASM freshness·parity·sync, `core_lang` sanity가 PASS했다.
+- 판정: `CREATOR_GAJI_ROUND0_GREEN_BASELINE`, `READY_TO_START_EXTERNAL_CREATOR_ROUND0`. 외부 창작자 성공 수는 0이며 실제 Round 0는 아직 시작하지 않았다.
+- `docs/ssot/**` 변경 0건. 독립 검토 요청은 `docs/reports/audit/REQUEST_CREATOR_GAJI_ROUND0_GREEN_BASELINE_INDEPENDENT_REVIEW_V1_20260717.md`다.
+
+## 2026-05-05 추가 진행 (셈그림 블록 UI 제거)
+- 범위:
+  셈그림 작업실 제품 UI에서 `쉬운 블록`, `DDN 블록`, `실험 블록` 진입을 제거했다.
+- 반영:
+  실행 화면 편집 패널은 `run-ddn-preview` textarea 단일 경로로 되돌렸다.
+  편집 화면의 실험 블록 버튼과 `screen-block_editor` 제품 화면 연결을 끊었다.
+  내부 `ui/block_editor/**`와 block editor 테스트는 legacy module 계약으로 유지한다.
+- 검증:
+  `node tests/seamgrim_studio_layout_contract_runner.mjs` PASS
+  `node tests/seamgrim_ui_common_runner.mjs` PASS
+  `python tests/run_seamgrim_ui_age3_gate.py` PASS
+  `python tests/run_seamgrim_block_editor_smoke_check.py` PASS
+  `python tests/run_seamgrim_product_stabilization_smoke_check.py` PASS
+
+## 2026-05-04 추가 진행 (저장소 구조 정리 3단계: review 후보 닫힘)
+- 범위:
+  `tests/run_age*.py` review 후보를 삭제하지 않고 AGE5 계약 묶음에 연결했다.
+- 추가:
+  `tests/run_age5_close_review_suite_check.py`
+- 변경:
+  `tests/run_test_reference_inventory_check.py`는 `review > 0`이면 실패한다.
+  `tests/run_pack_artifact_classification_check.py`는 review 후보가 생기면 경로를 출력한다.
+  `tests/run_seamgrim_product_stabilization_smoke_check.py`는 마지막에 `repo_structure_hygiene_check`를 실행한다.
+- 정책:
+  제품 smoke 중 생성되는 ignored 루트 `geoul.diag.jsonl`은 hygiene 검사 직전 smoke 내부 cleanup 대상으로 처리한다.
+  tracked 산출물이나 pack/debug 위반은 계속 실패로 남긴다.
+
+## 2026-05-04 추가 진행 (저장소 구조 정리 2단계: 정책 게이트)
+- 범위:
+  삭제가 아니라 자동 분류와 재발 방지 게이트를 추가했다.
+- 추가:
+  `tests/run_repo_structure_hygiene_check.py`
+  `tests/run_pack_artifact_classification_check.py`
+  `tests/run_test_reference_inventory_check.py`
+  `solutions/seamgrim_ui_mvp/lessons/README.md`
+  `solutions/seamgrim_ui_mvp/lessons_rewrite_v1/README.md`
+- 정책:
+  `solutions/seamgrim_ui_mvp/*.zip`, 루트 임시 DDN, 루트 `geoul.diag.jsonl`, roadmap `.crdownload`, `pack/_tmp*`, `pack/_dbg*`를 hygiene 위반으로 잡는다.
+  pack 산출물은 삭제하지 않고 `keep/review`로 분류한다.
+  `tests/run_age*.py`는 참조 상태를 `referenced/readme_only/review`로 분류한다.
+- 결과:
+  pack 산출물 194개는 현재 계약상 모두 keep으로 분류된다.
+  `tests/run_age*.py` 32개 중 30개는 referenced, 2개는 review 후보로 분류된다.
+
+## 2026-05-04 추가 진행 (저장소 구조 정리 1차)
+- 범위:
+  tracked vs ignored/untracked 기준의 저위험 정리. `docs/ssot/**`는 수정하지 않았다.
+- 작업 상태:
+  기존 셈그림 UI/block 변경은 `pre-structure-cleanup-seamgrim-ui-block-work` stash에 보관해 구조 정리와 섞지 않았다.
+- 반영:
+  루트 `__tmp_*.ddn`, `geoul.diag.jsonl`, `docs/context/roadmap/*.crdownload`, `pack/_tmp_dbg_*` 로컬 부산물을 제거했다.
+  tracked stale archive인 `solutions/seamgrim_ui_mvp/ui.zip`을 제거하고, `.gitignore`에 `solutions/seamgrim_ui_mvp/*.zip`을 추가했다.
+  `tools/vscode-ddn/legacy/README.md`를 추가해 legacy VS Code shell과 현행 shell의 경계를 명시했다.
+- 보류:
+  `pack/**/RUN_LOG.txt`, `SHA256SUMS.txt`, `*.actual.*.detjson` 194개는 tests/golden 참조가 있어 삭제하지 않았다.
+  `tests/run_age*.py` 32개는 aggregate gate와 README 참조가 있어 삭제하지 않았다.
+
+## 2026-04-05 추가 진행 (Workspace cleanup round 1.5, low-risk apply)
+- 범위:
+  문서/안내 중심의 비파괴 적용. 대규모 rename/move/delete 미실행.
+- 반영:
+  `public / internal / support` 라벨 운영 가이드를 대표 문서에 추가.
+- walks:
+  `walks = 걸음길(학습/튜토리얼/고개별)` 기준을 유지하고, misuse는 이동 후보로만 명시.
+- pack_public:
+  정본 축이 아닌 support/legacy 성격 경고 문구를 README에 반영.
+- release snapshot:
+  `docs/ssot/ssot -> docs/ssot/releases/v23.0.5/` copy-only 준비 스크립트/안내만 추가, 실제 복사/삭제는 보류.
+- 추가 점검:
+  분류 보고서 action 집계(디렉터리/루트 파일 분리) 보정안 기록, `docs/ssot/gaji/**` UTF-8 점검 수행.
+
+## 2026-03-03 추가 진행 (Task 4/5 마감: sync-readiness 스냅샷 고정 + 문서 반영)
+- Task 4: `ci_sync_readiness` 스냅샷 리포트 고정을 프로파일 기준으로 재검증했다.
+  - 검증:
+    - `python tests/run_ci_profile_split_contract_check.py` PASS
+    - `python tests/run_ci_profile_core_lang_gate.py` PASS
+    - `python tests/run_ci_profile_seamgrim_gate.py` PASS
+    - `python tests/run_ci_sync_readiness_check.py --skip-aggregate --sanity-profile full --report-prefix dev_sync_readiness_full_snapshot --json-out build/reports/dev_sync_readiness_full_snapshot.ci_sync_readiness.detjson` PASS
+    - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness_full_snapshot.ci_sync_readiness.detjson --require-pass --sanity-profile full` PASS
+    - `python tests/run_ci_sync_readiness_report_check_selftest.py` PASS
+- Task 5: 위 결과를 기준으로 상태/변경 문서(`PROJECT_STATUS.md`, `CHANGELOG.md`)를 마감 반영했다.
+
+## 2026-03-03 추가 진행 (OI-417 본격화: guideblock_keys_basics D-PACK + 파서 동등성)
+- `guideblock_keys_basics` 팩과 전용 러너를 추가해 guideblock 키 사전(설정/보개/슬기) 검증을 D-PACK 형태로 고정했다.
+  - 추가:
+    - `pack/guideblock_keys_basics/` (3케이스: 헤더 alias/블록 alias/혼합 우선순위)
+    - `tests/seamgrim_guideblock_tool_parse.py`
+    - `tests/seamgrim_guideblock_keys_pack_runner.mjs`
+    - `tests/run_seamgrim_guideblock_keys_pack_check.py`
+  - 검증 규칙:
+    - expected canonical meta(`name/desc/default_observation/default_observation_x`)
+    - expected body prefix
+    - JS(UI) 파서(`parseGuideMetaHeader`) vs Python(tool) 파서(`parse_guide_meta_header`) parity
+- 런타임 5분 체크에도 guideblock pack 검증을 편입했다.
+  - 수정:
+    - `tests/run_seamgrim_runtime_5min_check.py` (`guideblock_keys_pack_check` step 추가)
+    - `tests/run_seamgrim_5min_checklist.py` (라벨 추가)
+- 검증:
+  - `python tests/run_seamgrim_guideblock_keys_pack_check.py` PASS
+  - `python tests/run_seamgrim_export_graph_preprocess_check.py` PASS
+  - `node tests/seamgrim_ui_common_runner.mjs` PASS
+  - `python tests/run_seamgrim_runtime_5min_check.py --skip-seed-cli --json-out build/reports/dev_runtime_5min_with_ui.detjson` PASS
+  - `python tests/run_seamgrim_5min_checklist.py --from-runtime-report build/reports/dev_runtime_5min_with_ui.detjson` PASS
+  - `python tests/run_age5_close.py --strict` PASS
+
+## 2026-03-03 추가 진행 (OI-417 연계: guideblock 메타 키 사전 블록형 파싱)
+- `설정/보개/슬기` 블록형 메타를 UI/도구 공통 파서가 읽도록 확장했다.
+  - 수정:
+    - `solutions/seamgrim_ui_mvp/ui/components/guide_meta.js`
+      - `parseGuideMetaHeader`에 guideblock 시작 감지(`설정|보개|슬기`)
+      - 블록 내부 `key: value.` 필드를 기존 alias 사전으로 정본 키 매핑
+    - `solutions/seamgrim_ui_mvp/tools/export_graph.py`
+      - `parse_guide_meta_header`에 동일한 guideblock 파싱/매핑 로직 반영
+    - `tests/seamgrim_ui_common_runner.mjs`
+      - block형 메타 회귀 테스트 추가
+    - `tests/run_seamgrim_export_graph_preprocess_check.py`
+      - `test_meta_guideblock_dictionary` 추가
+- 검증:
+  - `node tests/seamgrim_ui_common_runner.mjs` PASS
+  - `python tests/run_seamgrim_export_graph_preprocess_check.py` PASS
+
+## 2026-03-03 추가 진행 (AGE5 6번 증분: 실행정책/효과 경계 매핑 IR 산출)
+- `teul-cli canon`에 `--emit exec-policy-map-json`을 추가해 OI-416의 언어 축/도구 축 결합 결과를 JSON으로 고정 산출하도록 확장했다.
+  - 수정:
+    - `tools/teul-cli/src/canon.rs`
+      - `CanonOutput.exec_policy_map_json` 추가
+      - 실행정책 블록 파싱 기반 매핑 수집/직렬화 추가:
+        - `schema=ddn.exec_policy_effect_map.v1`
+        - language axis: `block_count`, `exec_mode/effect_policy` raw+effective, `strict_effect_ignored`, `would_fail_code`
+        - tool axis: `open_mode_values`, `effective_open_mode_resolution_order`
+        - open 모드별 결합 결과: strict/isolated/deny/record/replay 경로 고정
+    - `tools/teul-cli/src/cli/canon.rs`
+      - `EmitKind::ExecPolicyMapJson` 추가 및 emit 분기 구현
+    - `tests/run_pack_golden.py`
+      - 기본 팩 목록에 `seamgrim_exec_policy_effect_map_v1` 편입
+  - 추가:
+    - `pack/seamgrim_exec_policy_effect_map_v1/`
+      - `c01_general_allowed`, `c02_strict_forces_isolated`, `c03_duplicate_exec_policy_blocks`
+      - 각 케이스의 기대 JSON + `golden.jsonl` + `README.md`
+- 검증:
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+  - `python tests/run_pack_golden.py seamgrim_exec_policy_effect_map_v1` PASS
+  - `python tests/run_pack_golden.py seamgrim_exec_policy_effect_diag_v1 seamgrim_exec_policy_effect_map_v1 seamgrim_event_model_ir_v1 seamgrim_guseong_flatten_ir_v1 seamgrim_event_surface_canon_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1 seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1` PASS
+  - `python tests/run_age5_close.py --strict` PASS
+  - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+
+## 2026-03-03 추가 진행 (AGE5 5번 증분: 이벤트 모델 최소 IR 산출)
+- `teul-cli canon`에 `--emit alrim-plan-json`을 추가해 이벤트 반응 계획을 JSON으로 산출하도록 확장했다.
+  - 수정:
+    - `tools/teul-cli/src/canon.rs`
+      - `CanonOutput.alrim_plan_json` 추가
+      - 이벤트 핸들러 계획 수집/직렬화 추가:
+        - `schema=ddn.alrim_event_plan.v1`
+        - `handlers[].order/kind/scope/body_canon`
+    - `tools/teul-cli/src/cli/canon.rs`
+      - `EmitKind::AlrimPlanJson` 추가 및 emit 분기 구현
+    - `tests/run_pack_golden.py`
+      - 기본 팩 목록에 `seamgrim_event_model_ir_v1` 편입
+  - 추가:
+    - `pack/seamgrim_event_model_ir_v1/` (c01 입력/기대 JSON/골든/README)
+- 검증:
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+  - `python tests/run_pack_golden.py seamgrim_event_model_ir_v1` PASS
+  - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_guseong_flatten_ir_v1 seamgrim_event_surface_canon_v1 seamgrim_event_model_ir_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+  - `python tests/run_age5_close.py --strict` PASS
+  - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+
+## 2026-03-03 추가 진행 (AGE5 4번 증분: flatten JSON 산출 경로 추가)
+- `teul-cli canon`에 `--emit guseong-flat-json`를 추가해 `짜임 flatten` 계획을 결정적으로 출력하도록 확장했다.
+  - 수정:
+    - `tools/teul-cli/src/canon.rs`
+      - `CanonOutput`에 `guseong_flat_json` 필드 추가
+      - flatten 계획 산출에 `instances[]`, `links[]` 포함
+      - 고정 스키마: `ddn.guseong_flatten_plan.v1`
+    - `tools/teul-cli/src/cli/canon.rs`
+      - `EmitKind::GuseongFlatJson` 추가 및 emit 분기 구현
+    - `tests/run_pack_golden.py`
+      - 기본 팩 목록에 `seamgrim_guseong_flatten_ir_v1` 편입
+  - 추가:
+    - `pack/seamgrim_guseong_flatten_ir_v1/` (c01 입력/기대 JSON/골든/README)
+- 검증:
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+  - `python tests/run_pack_golden.py seamgrim_guseong_flatten_ir_v1` PASS
+  - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_guseong_flatten_ir_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+  - `python tests/run_age5_close.py --strict` PASS
+  - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+
+## 2026-03-03 추가 진행 (AGE5 2번 증분 후속2: 튜플 투영 양성 골든 보강)
+- `pack/seamgrim_guseong_flatten_diag_v1`에 유효 튜플 투영 성공 케이스를 추가했다.
+  - 추가:
+    - `c21_tuple_projection_valid_success/input.ddn`
+    - `c21_tuple_projection_valid_success/expected_canon.ddn`
+  - 수정:
+    - `golden.jsonl`에 `c21_tuple_projection_valid_success` 엔트리 추가
+  - 목적:
+    - `.0/.1` 튜플 포트 투영 규칙이 “오류 케이스(c17~c20)”뿐 아니라 “정상 케이스(c21)”도 함께 고정되도록 보강
+- 검증:
+  - `python tests/run_pack_golden.py seamgrim_guseong_flatten_diag_v1` PASS
+  - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+  - `python tests/run_age5_close.py --strict` PASS
+  - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+
+## 2026-03-03 추가 진행 (AGE5 2번 증분 후속: 런타임 list dot-index 접근 연결)
+- `tools/teul-cli/src/lang/parser.rs`
+  - `parse_path`/`parse_postfix`가 정수 dot 세그먼트(`.0/.1`)를 허용하도록 확장
+  - 분수 dot 세그먼트(`.1.5`)는 파서 단계에서 차단 (`E_PARSE_UNEXPECTED_TOKEN`)
+  - 테스트 추가:
+    - `parse_numeric_dot_segment_as_field_access`
+    - `parse_numeric_dot_segment_rejects_fraction`
+    - `parse_path_allows_numeric_dot_segment`
+- `tools/teul-cli/src/runtime/eval.rs`
+  - `Expr::FieldAccess`와 `eval_path`를 공통 `eval_member_access`로 통합
+  - `List` 대상 점 접근(`.0/.1`)을 런타임에서도 허용
+  - 비숫자 세그먼트는 `E_PACK`로 차단(`차림 인덱스는 숫자(.0/.1)만 허용`)
+  - 단위 테스트 추가:
+    - `list_dot_index_path_access_works`
+    - `list_dot_index_requires_numeric_segment`
+- 검증:
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml parse_numeric_dot_segment -- --nocapture` PASS
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml parse_path_allows_numeric_dot_segment -- --nocapture` PASS
+  - `cargo test --manifest-path tools/teul-cli/Cargo.toml list_dot_index -- --nocapture` PASS
+  - `cargo run --quiet --manifest-path tools/teul-cli/Cargo.toml -- run build/tmp_runtime_list_index.ddn --ticks 1` 실행 시 `22` 확인
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+  - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+  - `python tests/run_age5_close.py --strict` PASS
+  - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+
+## 2026-03-03 추가 진행 (AGE5 2번 증분: 짜임 flatten scalar tuple-access 진단 확장)
+- `짜임` flatten 진단 pack에서 누락되어 있던 `c19`(스칼라 출력 포트에 `.0` 접근) 케이스를 활성화했다.
+  - 수정:
+    - `tools/teul-cli/src/canon.rs`
+      - 경로/필드 파싱에서 숫자 dot 세그먼트(`.0`, `.1` 등) 허용
+      - 점 접근 인덱스가 정수가 아니면 `E_CANON_TUPLE_INDEX_INVALID`로 차단
+    - `pack/seamgrim_guseong_flatten_diag_v1/golden.jsonl`
+      - `c19_tuple_access_on_scalar_output_EXPECT_FAIL` 추가
+      - 기대 코드: `E_GUSEONG_TUPLE_ACCESS_ON_SCALAR`
+- 검증:
+  - `cargo check --manifest-path tools/teul-cli/Cargo.toml` PASS
+  - `python tests/run_pack_golden.py seamgrim_guseong_flatten_diag_v1` PASS
+  - `cargo run --manifest-path tools/teul-cli/Cargo.toml -- canon pack/seamgrim_guseong_flatten_diag_v1/c19_tuple_access_on_scalar_output_EXPECT_FAIL/input.ddn` 실행 시 `E_GUSEONG_TUPLE_ACCESS_ON_SCALAR` 확인
+  - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+
+## 2026-03-03 추가 진행 (AGE5 1~6 착수 + W92 최소 계약 편입)
+- AGE5 마감 게이트 재검증:
+  - `python tests/run_age5_close.py --strict` PASS (`criteria=19`, `failed=0`)
+  - `python tests/run_ci_sync_readiness_check.py --skip-aggregate --json-out build/reports/dev_sync_readiness.detjson` PASS
+  - `python tests/run_ci_sync_readiness_report_check.py --report build/reports/dev_sync_readiness.detjson --require-pass` PASS
+- OI-414/415/416/418 회귀 묶음 재검증:
+  - `python tests/run_pack_golden.py seamgrim_jjaim_block_stub_canon_v1 seamgrim_guseong_flatten_diag_v1 seamgrim_event_surface_canon_v1 seamgrim_exec_policy_effect_diag_v1 block_header_no_colon seamgrim_bogae_madang_alias_v1 seamgrim_moyang_template_instance_view_boundary_v1` PASS
+- W92 착수:
+  - `pack/gogae9_w92_aot_compiler_v2`를 실행 가능한 최소 계약 pack으로 전환
+    - 추가: `intent.md`, `bench_cases.json`, `golden.detjson`, `golden.jsonl`, 입력/정본 골든
+  - 신규 검증기 `tests/run_w92_aot_pack_check.py` 추가
+    - bench/golden 스키마, case-id 정합, speedup floor(`>=20.0`) 확인
+  - `tests/run_pack_golden.py` 기본 목록에 `gogae9_w92_aot_compiler_v2` 편입
+  - 검증:
+    - `python tests/run_w92_aot_pack_check.py --pack pack/gogae9_w92_aot_compiler_v2` PASS
+    - `python tests/run_pack_golden.py gogae9_w92_aot_compiler_v2` PASS
+
+## 최근 문서 갱신
+- aggregate sanity diagnostics 정적 체크를 다중 파일 계약으로 확장해 parity 요약 키 회귀를 사전 차단했다.
+  - 수정:
+    - `tests/run_ci_aggregate_gate_sanity_diagnostics_check.py`
+      - 단일 대상(`run_ci_aggregate_gate.py`) 토큰 체크에서 다중 대상 토큰 체크로 확장:
+        - `tests/run_ci_aggregate_gate.py`
+        - `tests/_ci_aggregate_diag_lib.py`
+        - `tests/run_ci_gate_summary_report_check.py`
+      - parity 요약 키/강제 메시지 토큰을 필수 계약으로 추가
+  - 검증:
+    - `python -m py_compile tests/run_ci_aggregate_gate_sanity_diagnostics_check.py tests/_ci_aggregate_diag_lib.py tests/run_ci_gate_summary_report_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sanity_diagnostics_check.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --skip-core-tests --report-prefix dev_age5_sanity_diag_guard --clean-prefixed-reports --quiet-success-logs --compact-step-logs` PASS
+- aggregate PASS summary에 `ci_sanity`의 overlay/session parity 3종 상태를 직접 노출하고 PASS 불변식으로 고정했다.
+  - 수정:
+    - `tests/_ci_aggregate_diag_lib.py`
+      - `ci_sanity_gate` 보고서의 아래 step 결과를 summary key로 노출:
+        - `ci_sanity_overlay_session_wired_consistency_ok`
+        - `ci_sanity_overlay_session_diag_parity_ok`
+        - `ci_sanity_overlay_compare_diag_parity_ok`
+    - `tests/run_ci_gate_summary_report_check.py`
+      - PASS 필수 키에 parity 3종 key 추가
+      - PASS일 때 각 key가 `1`인지 강제
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - PASS fixture parity 3종 key 반영
+      - 음수 케이스(`ci_sanity_overlay_compare_diag_parity_ok=0`) 추가
+  - 검증:
+    - `python -m py_compile tests/_ci_aggregate_diag_lib.py tests/run_ci_gate_summary_report_check.py tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_sanity_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --skip-core-tests --report-prefix dev_age5_sanity_parity_surface --clean-prefixed-reports --quiet-success-logs --compact-step-logs` PASS
+    - `python tests/run_ci_aggregate_gate.py --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --report-prefix dev_age5_core_followup --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- aggregate PASS summary에 `ci_sync_readiness` 표면을 고정해 sync 상태가 요약/검증/진단에서 일관되게 노출되도록 마감했다.
+  - 수정:
+    - `tests/_ci_aggregate_diag_lib.py`
+      - `load_ci_sync_readiness_snapshot`, `append_ci_sync_readiness_summary_lines` 추가
+      - `print_report_paths`에 `ci_sync_readiness_report` 경로 인자를 추가
+    - `tests/run_ci_aggregate_gate.py`
+      - PASS/FAIL summary 경로에서 `ci_sync_readiness_*` 요약 라인(`status/ok/code/step/msg/step_count`) 출력 추가
+      - report-path 출력 호출을 `ci_sync_readiness_report` 인자와 동기화
+    - `tests/run_ci_gate_summary_report_check.py`
+      - PASS 필수 키에 `ci_sync_readiness_report/status/ok/code/step/msg/step_count` 추가
+      - PASS 불변식(`status=pass`, `ok=1`, `code=OK`, `step=all`, `step_count>0`) 추가
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - PASS fixture에 sync_readiness summary 키를 추가
+      - 음수 케이스(키 누락, `step_count` 저하) 추가
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - sync summary helper/표면 키 토큰 계약 추가
+  - 검증:
+    - `python -m py_compile tests/_ci_aggregate_diag_lib.py tests/run_ci_aggregate_gate.py tests/run_ci_gate_summary_report_check.py tests/run_ci_gate_summary_report_check_selftest.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sanity_diagnostics_check.py` PASS
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_ci_aggregate_gate.py --skip-core-tests --report-prefix dev_age5_finish_sync --clean-prefixed-reports --quiet-success-logs --compact-step-logs` PASS
+- emit_artifacts 계약에 `ci_sync_readiness` 아티팩트 검증을 추가해 aggregate 직접검증 경로를 회귀 방지했다.
+  - 수정:
+    - `tests/run_ci_emit_artifacts_check.py`
+      - `reports.ci_sync_readiness` 존재/JSON/스키마(`ddn.ci.sync_readiness.v1`)/상태 일관성 검증 추가
+      - PASS 시 `code=OK`, `step=all` 고정 검증 추가
+    - `tests/ci_check_error_codes.py`
+      - 신규 코드 추가:
+        - `SYNC_READINESS_PATH_MISSING`
+        - `SYNC_READINESS_JSON_INVALID`
+        - `SYNC_READINESS_SCHEMA_MISMATCH`
+        - `SYNC_READINESS_STATUS_UNSUPPORTED`
+        - `SYNC_READINESS_STATUS_MISMATCH`
+        - `SYNC_READINESS_PASS_STATUS_FIELDS`
+    - `tests/run_ci_emit_artifacts_check_selftest.py`
+      - sync_readiness 음수 케이스 추가:
+        - 미존재 / 스키마 오류 / status unsupported / status mismatch / pass fields 불일치
+    - `tests/run_ci_emit_artifacts_sanity_contract_check.py`
+      - emit/seltest/code-map 정적 토큰 계약에 sync_readiness 항목 추가
+  - 검증:
+    - `python -m py_compile tests/ci_check_error_codes.py tests/run_ci_emit_artifacts_check.py tests/run_ci_emit_artifacts_check_selftest.py tests/run_ci_emit_artifacts_sanity_contract_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_sanity_contract_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_sync_emit_artifacts_20260302 --skip-core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common` PASS
+- sync_readiness report 에러코드 단일출처를 고정하고, aggregate에서 생성 리포트를 직접 검증하도록 배선했다.
+  - 수정:
+    - `tests/ci_check_error_codes.py`
+      - `SYNC_READINESS_REPORT_CODES` 그룹 추가
+    - `tests/run_ci_sync_readiness_report_check.py`
+      - 하드코딩 에러코드를 제거하고 `SYNC_READINESS_REPORT_CODES`를 사용
+    - `tests/run_ci_sync_readiness_report_check_selftest.py`
+      - 음수 케이스를 `returncode != 0`뿐 아니라 `fail code=...` 문자열까지 검증하도록 강화
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - report_check/report_selftest 토큰 계약을 코드맵 기반 표현으로 동기화
+    - `tests/run_ci_aggregate_gate.py`
+      - 신규 단계 추가:
+        - `ci_sync_readiness_report_generate`
+        - `ci_sync_readiness_report_check`
+      - `ci_sync_readiness.detjson`를 aggregate 산출물/인덱스에 편입
+      - fast-fail/overall/sub-step/fail-path 진단 조건에 신규 단계 반영
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - 신규 aggregate 단계/함수/스크립트 토큰 계약 추가
+  - 검증:
+    - `python -m py_compile tests/ci_check_error_codes.py tests/run_ci_sync_readiness_report_check.py tests/run_ci_sync_readiness_report_check_selftest.py tests/run_ci_sync_readiness_diagnostics_check.py tests/run_ci_aggregate_gate_sync_diagnostics_check.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_ci_sync_readiness_report_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_sync_direct_check_20260302 --skip-core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common` PASS
+- sync_readiness 결과 JSON에 대한 전용 계약 검증기와 selftest를 추가하고 aggregate 필수 단계로 편입했다.
+  - 수정:
+    - `tests/run_ci_sync_readiness_report_check.py` 추가
+      - `ddn.ci.sync_readiness.v1` 계약 검증:
+        - `status/ok/code/step/msg` 일관성
+        - `steps/steps_count` 일치
+        - `sanity_gate_contract` 단계 존재
+        - validate-only 모드의 단일 단계 형태 강제
+    - `tests/run_ci_sync_readiness_report_check_selftest.py` 추가
+      - PASS/validate-only PASS 및 음수 케이스(코드 깨짐/contract row 누락/validate-only 형태 깨짐) 검증
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - report check/selftest 토큰 계약 추가
+    - `tests/run_ci_aggregate_gate.py`
+      - 신규 단계 `ci_sync_readiness_report_selftest` 추가
+      - fast-fail/overall/sub-step/fail-path 진단 실행 조건 반영
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - 신규 단계/스크립트 토큰 계약 추가
+  - 검증:
+    - `python tests/run_ci_sync_readiness_report_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_report_20260302` PASS
+- sync_readiness 결과 표면을 `status/code/step/msg`로 고정하고 validate-only 모드를 추가했다.
+  - 수정:
+    - `tests/run_ci_sync_readiness_check.py`
+      - 실패 코드 도입:
+        - `E_SYNC_READINESS_STEP_FAIL`
+        - `E_SYNC_READINESS_SANITY_CONTRACT_FAIL`
+        - `E_SYNC_READINESS_VALIDATE_ONLY_PATH_MISSING`
+      - 신규 옵션 `--validate-only-sanity-json` 추가
+      - 결과 JSON/출력 라인에 `code`, `step`, `msg` 필드 고정
+    - `tests/run_ci_sync_readiness_check_selftest.py`
+      - PASS 경로의 `status/code/step` 검증 추가
+      - validate-only 정상/실패(계약 위반, 경로 누락) 케이스 추가
+    - `tests/run_ci_sync_readiness_diagnostics_check.py`
+      - 신규 코드/옵션/셀프테스트 토큰 계약 추가
+  - 검증:
+    - `python tests/run_ci_sync_readiness_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_check.py --report-dir I:/home/urihanl/ddn/codex/build/reports --report-prefix dev_sync_readiness_codes_20260302 --skip-aggregate` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_codes_20260302` PASS
+- sync_readiness 정적 진단 체크를 신설하고 aggregate 필수 단계로 편입했다.
+  - 수정:
+    - `tests/run_ci_sync_readiness_diagnostics_check.py` 추가
+      - `run_ci_sync_readiness_check.py`의 sanity 계약 토큰과 selftest 토큰을 정적 검증
+    - `tests/run_ci_aggregate_gate.py`
+      - 신규 단계 `ci_sync_readiness_diagnostics_check` 추가
+      - fast-fail/overall 성공 판정/sub-step 실패 판정 및 fail 경로 진단 실행에 포함
+    - `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`
+      - 신규 단계/함수/스크립트 토큰 계약 추가
+  - 검증:
+    - `python tests/run_ci_sync_readiness_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_sync_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_diag_20260302` PASS
+- sync_readiness에 `ci_sanity_gate` 계약 검증을 내장해, 실행 성공/계약 불일치 상태를 분리 탐지하도록 강화했다.
+  - 수정:
+    - `tests/run_ci_sync_readiness_check.py`
+      - 내부 계약 검증 단계 `sanity_gate_contract` 추가
+      - 검증 항목:
+        - `ddn.ci.sanity_gate.v1` 스키마
+        - `status=pass`, `code=OK`, `step=all`
+        - 필수 sanity step 9개의 존재/ok/returncode 일치
+    - `tests/run_ci_sync_readiness_check_selftest.py`
+      - 기대 step 수 `4 -> 5`로 갱신
+      - `sanity_gate_contract` 단계명 및 `ok=1` 검증 추가
+  - 검증:
+    - `python tests/run_ci_sync_readiness_check_selftest.py` PASS
+    - `python tests/run_ci_sync_readiness_check.py --report-dir I:/home/urihanl/ddn/codex/build/reports --report-prefix dev_sync_readiness_contract_20260302 --skip-aggregate` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_sync_contract_20260302` PASS
+- PASS summary 검증에서 `ci_sanity_gate_step_count` 하한을 고정해 sanity 스텝 축소 리그레션을 조기 차단했다.
+  - 수정:
+    - `tests/run_ci_gate_summary_report_check.py`
+      - `ci_sanity_gate_step_count` 기준을 `>0`에서 `>=9`로 강화
+      - 상수 추가: `MIN_REQUIRED_CI_SANITY_STEPS = 9`
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - PASS fixture step_count를 `9`로 동기화
+      - step_count 저하(`1`) 음수 케이스 추가
+  - 검증:
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_gate_summary_report_check.py --summary I:/home/urihanl/ddn/codex/build/reports/dev_age5_continue_wired_contract_20260302.ci_gate_summary.txt --index I:/home/urihanl/ddn/codex/build/reports/dev_age5_continue_wired_contract_20260302.ci_gate_report_index.detjson --require-pass` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_summary_guard_20260302` PASS
+- AGE5 sanity/emit 계약에 `overlay_session_wired_consistency` 필수 스텝을 편입해 S6 wired 이탈을 조기 차단했다.
+  - 수정:
+    - `tests/run_ci_sanity_gate.py`
+      - 신규 sanity 단계: `seamgrim_overlay_session_wired_consistency_check`
+      - 실패 코드: `E_CI_SANITY_OVERLAY_SESSION_WIRED_CONSISTENCY_FAIL`
+    - `tests/run_ci_sanity_gate_diagnostics_check.py`
+      - 신규 단계/코드 토큰 계약 추가
+    - `tests/run_ci_emit_artifacts_check.py`
+      - `SANITY_REQUIRED_PASS_STEPS`에 wired consistency 단계 추가
+    - `tests/run_ci_emit_artifacts_check_selftest.py`
+      - PASS fixture에 wired consistency 단계 추가
+      - 음수 케이스 추가:
+        - `badsanitywiredmissing` (`E_SANITY_REQUIRED_STEP_MISSING`)
+        - `badsanitywiredfailed` (`E_SANITY_REQUIRED_STEP_FAILED`)
+    - `tests/run_ci_emit_artifacts_sanity_contract_check.py`
+      - 위 단계/케이스 토큰 정적 계약 검증 추가
+  - 검증:
+    - `python tests/run_seamgrim_overlay_session_wired_consistency_check.py` PASS
+    - `python tests/run_ci_sanity_gate_diagnostics_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_sanity_contract_check.py` PASS
+    - `python tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_sanity_gate.py --json-out I:/home/urihanl/ddn/codex/build/reports/dev_age5_continue_wired_sanity.ci_sanity_gate.detjson` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-prefix dev_age5_continue_wired_contract_20260302` PASS
+- CI 요약 리포트에 overlay compare/session selftest 상태를 명시적으로 노출하도록 보강했다.
+  - 수정:
+    - `tests/run_ci_aggregate_gate.py`
+      - PASS summary에 아래 키 추가:
+        - `ci_pack_golden_overlay_compare_selftest_ok`
+        - `ci_pack_golden_overlay_session_selftest_ok`
+    - `tests/run_ci_gate_summary_report_check.py`
+      - PASS 필수 키에 위 2개를 추가하고 값(`0|1`) 검증 + PASS 시 `1` 강제
+    - `tests/run_ci_gate_summary_report_check_selftest.py`
+      - PASS fixture에 신규 키 2개 반영
+    - `tests/run_ci_aggregate_gate_age5_diagnostics_check.py`
+      - summary 토큰 필수 목록에 신규 키 2개 반영
+  - 검증:
+    - `python tests/run_ci_gate_summary_report_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_age5_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_task235_summary --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- aggregate 게이트 AGE5 진단 경로에 `overlay_session` selftest를 편입했다.
+  - 수정:
+    - `tests/run_ci_aggregate_gate.py`
+      - 신규 단계 추가: `ci_pack_golden_overlay_session_selftest` (`tests/run_pack_golden_overlay_session_selftest.py`)
+      - fast-fail/overall 성공 조건/하위 실패 조건에 session selftest 결과를 반영
+    - `tests/run_ci_aggregate_gate_age5_diagnostics_check.py`
+      - 필수 토큰 목록에 session selftest 단계/스크립트 경로 추가
+  - 검증:
+    - `python tests/run_pack_golden_overlay_session_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_age5_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_task235_followup --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- AGE5 권장 순서(1→4→2/3) 기준으로 S6 session 계약/팩/진단 게이트를 마무리 보강했다.
+  - 수정:
+    - `tests/run_age5_close.py`
+      - strict 모드(`--strict`) 기준 유지
+      - S6 session pack(`pack/seamgrim_overlay_session_roundtrip_v0`)에 `case_map_match`/`case_order_stable` 기준 추가
+      - `c09` 반영 기준으로 최소 케이스/안내 문구를 `9`로 동기화
+    - `tests/_seamgrim_ci_diag_lib.py`
+      - `overlay_session_wired_consistency` 단계 진단 파싱 추가
+      - `age5_close` 진단 파싱을 `strict=... overall_ok=...` 출력 형식까지 허용
+    - `tests/run_seamgrim_ci_gate_diagnostics_check.py`
+      - `overlay_session_wired_consistency` 누락 토큰 진단 회귀 케이스 추가
+      - `age5_close strict` 출력 형식 회귀 케이스로 갱신
+  - 검증:
+    - `python tests/run_age5_close.py --strict` PASS
+    - `python tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_overlay_session_pack.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-overlay-checks --with-age5-close --json-out build/reports/dev_age5_task235.seamgrim_ci_gate_report.json` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_task235 --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+    - `python tests/run_seamgrim_wasm_smoke.py` PASS
+- 이벤트 표면 하드컷을 `canon`뿐 아니라 `run` 경로까지 회귀 고정했다.
+  - 수정:
+    - `pack/seamgrim_event_surface_canon_v1/golden.jsonl`
+      - 케이스 추가: `"KIND"라는 소식이 오면 ...` 입력에 대한 `run` FATAL 기대
+      - 기대 코드: `E_EVENT_SURFACE_ALIAS_FORBIDDEN`
+  - 검증:
+    - `python tests/run_pack_golden.py seamgrim_event_surface_canon_v1` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+    - `python tests/run_seamgrim_wasm_smoke.py` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_age5_continue --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- `ci_emit_artifacts_check`에 `ci_sanity_gate` 아티팩트 계약 검증을 추가해, index/JSON 계약 누락·불일치를 조기 차단했다.
+  - 수정:
+    - `tests/ci_check_error_codes.py`
+      - `E_SANITY_*` 계열 코드 추가(`PATH_MISSING/JSON_INVALID/SCHEMA_MISMATCH/STATUS_*`)
+    - `tests/run_ci_emit_artifacts_check.py`
+      - `reports.ci_sanity_gate` 필수화
+      - `ddn.ci.sanity_gate.v1` 스키마/상태/steps 일관성 검증
+      - `result_status=pass`일 때 `ci_sanity`도 `pass`여야 통과하도록 불변식 추가
+    - `tests/run_ci_emit_artifacts_check_selftest.py`
+      - `ci_sanity_gate` 정상 fixture 추가
+      - 회귀 케이스 추가: `misssanity`, `badsanityschema`, `badsanitystatus`
+  - 검증:
+    - `python -m py_compile tests/ci_check_error_codes.py tests/run_ci_emit_artifacts_check.py tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_emit_artifacts_check_selftest.py` PASS
+    - `python tests/run_ci_emit_artifacts_check.py --report-dir build/reports --prefix dev_summary_guard_r2 --require-brief --require-triage` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_emit_sanity_contract --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_emit_sanity_contract_core --core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- Seamgrim CI 게이트에 `seed_meta_files` 실검 단계를 편입해 aggregate 요약의 `step_missing`을 제거했다.
+  - 수정:
+    - `tests/run_seamgrim_ci_gate.py`
+      - 신규 단계 추가: `seed_meta_files` (`tests/run_seamgrim_seed_meta_files_check.py`)
+  - 검증:
+    - `python -m py_compile tests/run_seamgrim_ci_gate.py` PASS
+    - `python tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --strict-graph --require-promoted --with-5min-checklist --checklist-skip-seed-cli --checklist-skip-ui-common --json-out build/reports/dev_seedmeta.seamgrim_ci_gate_report.json` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_seedmeta_followup --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+      - summary: `seamgrim_seed_meta_files_status=ok`, `..._ok=1`
+- aggregate 게이트의 실 실패 원인을 정리하고 SSOT 정렬 작업 후 재통과까지 완료했다.
+  - 수정:
+    - `tools/teul-cli/src/runtime/eval.rs`
+      - `is_builtin_name`에 누락 수학 빌트인 추가: `tan`, `asin`, `acos`, `atan`, `atan2`
+    - `solutions/seamgrim_ui_mvp/lessons/**/lesson.ddn` + `lesson.age3.preview.ddn`
+      - 레거시 `#이름/#설명` 헤더 제거(신문법 게이트 정렬)
+    - `solutions/seamgrim_ui_mvp/seed_lessons_v1/physics_pendulum_seed_v1/lesson.ddn`
+      - `채비 {}` 표면 계약 복구 + 시작 훅 초기화 정렬
+    - `pack/seamgrim_curriculum_seed_smoke_v1/smoke_*.v1.json`
+      - 최신 런타임 상태해시로 골든 재고정
+  - 검증:
+    - `python tests/run_builtin_name_sync_check.py` PASS
+    - `python tests/run_seamgrim_lesson_schema_gate.py --require-promoted` PASS
+    - `python tests/run_seamgrim_new_grammar_no_legacy_control_meta_check.py` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+    - `python tests/run_pack_golden.py seamgrim_curriculum_seed_smoke_v1` PASS
+    - `python tests/run_age4_close.py --report-out build/reports/dev_runtime5_ui_skip.age4_close_report.detjson --pack-report-out build/reports/dev_runtime5_ui_skip.age4_close_pack_report.detjson` PASS
+    - `python tests/run_seamgrim_ci_gate.py --strict-graph --require-promoted --print-drilldown --with-5min-checklist --checklist-skip-seed-cli --checklist-skip-ui-common --json-out build/reports/dev_runtime5_ui_skip.seamgrim_ci_gate_report.json --ui-age3-json-out build/reports/dev_runtime5_ui_skip.seamgrim_ui_age3_gate_report.detjson --phase3-cleanup-json-out build/reports/dev_runtime5_ui_skip.seamgrim_phase3_cleanup_gate_report.detjson --browse-selection-json-out build/reports/dev_runtime5_ui_skip.seamgrim_browse_selection_flow_report.detjson --rewrite-overlay-json-out build/reports/dev_runtime5_ui_skip.seamgrim_rewrite_overlay_quality_report.detjson --checklist-json-out build/reports/dev_runtime5_ui_skip.seamgrim_5min_checklist_report.detjson` PASS
+    - `python tests/run_ci_aggregate_gate.py --report-dir build/reports --report-prefix dev_runtime5_ui_skip --skip-core-tests --fast-fail --backup-hygiene --clean-prefixed-reports --quiet-success-logs --compact-step-logs --step-log-dir build/reports --step-log-failed-only --checklist-skip-seed-cli --checklist-skip-ui-common --runtime-5min-skip-ui-common` PASS
+- runtime5/파이프라인 토큰 진단 selftest를 추가 보강했다.
+  - 수정:
+    - `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py`
+      - `--runtime-5min-skip-ui-common` 관련 토큰(옵션/조건/전달 라인) 필수 검증 추가
+    - `tests/run_ci_pipeline_emit_flags_check_selftest.py`
+      - `--runtime-5min-skip-ui-common` 누락 시 실패해야 하는 회귀 케이스 추가
+  - 검증:
+    - `python -m py_compile tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py tests/run_ci_pipeline_emit_flags_check_selftest.py` PASS
+    - `python tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` PASS
+    - `python tests/run_ci_pipeline_emit_flags_check_selftest.py` PASS
+    - `python tests/run_ci_pipeline_emit_flags_check.py` PASS
+    - `python tests/run_ci_sanity_gate_diagnostics_check.py` PASS
+- `runtime_5min` 서브스텝 실패 라인 진단을 보강했다.
+  - 수정:
+    - `tests/_seamgrim_ci_diag_lib.py`
+      - `runtime_5min` 진단에서 `[<step>] fail (<ms>ms)` 패턴을 `runtime_5min_subcheck_failed`로 인식
+    - `tests/run_seamgrim_ci_gate_diagnostics_check.py`
+      - `runtime_5min_subcheck_failed` 회귀 케이스(`ui_pendulum_runner`) 추가
+  - 검증:
+    - `python -m py_compile tests/_seamgrim_ci_diag_lib.py tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_ci_gate_diagnostics_check.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-runtime-5min --runtime-5min-base-url http://127.0.0.1:8787 --runtime-5min-skip-seed-cli --runtime-5min-skip-ui-common --with-5min-checklist --checklist-from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson --checklist-base-url http://127.0.0.1:8787` PASS
+- CI 파이프라인에 `runtime_5min UI 스킵`을 실제 반영하고 플래그 검증을 고정했다.
+  - 수정:
+    - `.gitlab-ci.yml`, `azure-pipelines.yml`
+      - `tests/run_ci_aggregate_gate.py` 호출에 `--runtime-5min-skip-ui-common` 추가
+    - `tests/run_ci_pipeline_emit_flags_check.py`
+      - aggregate 필수 토큰에 `--runtime-5min-skip-ui-common` 추가
+    - `tests/run_ci_pipeline_emit_flags_check_selftest.py`
+      - baseline aggregate 라인에 신규 토큰 반영
+  - 검증:
+    - `python tests/run_ci_pipeline_emit_flags_check.py` PASS
+    - `python tests/run_ci_pipeline_emit_flags_check_selftest.py` PASS
+    - `python tests/run_ci_sanity_gate_diagnostics_check.py` PASS
+    - `python tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` PASS
+- CI 게이트에 `runtime_5min UI 러너 스킵` 패스스루를 추가했다.
+  - 수정:
+    - `tests/run_seamgrim_ci_gate.py`
+      - 신규 옵션: `--runtime-5min-skip-ui-common`
+      - `--with-runtime-5min` 경로에서 `run_seamgrim_runtime_5min_check.py --skip-ui-common` 전달
+      - 결과 JSON에 `runtime_5min_skip_ui_common` 필드 추가
+    - `tests/run_ci_aggregate_gate.py`
+      - 신규 옵션: `--runtime-5min-skip-ui-common`
+      - seamgrim 하위 게이트 호출 시 동일 옵션 전달
+  - 검증:
+    - `python -m py_compile tests/run_seamgrim_ci_gate.py tests/run_ci_aggregate_gate.py` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-runtime-5min --runtime-5min-base-url http://127.0.0.1:8787 --runtime-5min-skip-seed-cli --runtime-5min-skip-ui-common --with-5min-checklist --checklist-from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson --checklist-base-url http://127.0.0.1:8787` PASS
+    - `python tests/run_ci_aggregate_gate.py --help` 출력에서 `--runtime-5min-skip-ui-common` 확인 PASS
+- wasm 스모크/체크리스트 경로를 추가 보강했다.
+  - 수정:
+    - `tests/run_seamgrim_wasm_smoke.py`
+      - 신규 러너를 smoke 기본 경로에 편입:
+        - `tests/seamgrim_pendulum_bogae_runner.mjs`
+        - `tests/seamgrim_wasm_vm_runtime_runner.mjs`
+      - 제어 플래그 추가:
+        - `--skip-ui-pendulum`
+        - `--skip-vm-runtime`
+    - `tests/run_seamgrim_5min_checklist.py`
+      - `force_utf8_stdio()` 추가로 stdout/stderr UTF-8 고정
+      - `run_seamgrim_ci_gate.py` 캡처 로그에서 한글 깨짐 완화
+  - 검증:
+    - `python tests/run_seamgrim_wasm_smoke.py seamgrim_wasm_v0_smoke --skip-space2d-source-gate` PASS
+    - `python tests/run_seamgrim_wasm_smoke.py --skip-space2d-source-gate` PASS
+    - `python tests/run_seamgrim_5min_checklist.py --from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-runtime-5min --runtime-5min-base-url http://127.0.0.1:8787 --runtime-5min-skip-seed-cli --with-5min-checklist --checklist-base-url http://127.0.0.1:8787 --checklist-skip-seed-cli --print-drilldown` PASS
+    - `python tests/run_seamgrim_ci_gate.py --with-5min-checklist --checklist-from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson --checklist-base-url http://127.0.0.1:8787` PASS
+- wasm parse warning 회귀를 UI/런타임 테스트와 5분 체크 경로에 고정했다.
+  - 수정:
+    - `tests/seamgrim_wasm_vm_runtime_runner.mjs` 신규
+      - `WasmVmHandle`의 parse warning 보관/노출/초기화(`invalidate`) 검증
+    - `tests/seamgrim_pendulum_bogae_runner.mjs`
+      - `RunScreen` 상태 힌트(`slider-status`)의 문법경고 요약 노출/해제 검증 추가
+    - `tests/run_seamgrim_runtime_5min_check.py`
+      - `ui_pendulum_runner`, `wasm_vm_runtime_runner` 단계 추가
+    - `tests/run_seamgrim_5min_checklist.py`
+      - 신규 단계 라벨 매핑 추가
+  - 검증:
+    - `node tests/seamgrim_wasm_vm_runtime_runner.mjs` PASS
+    - `node tests/seamgrim_pendulum_bogae_runner.mjs` PASS
+    - `node tests/seamgrim_ui_common_runner.mjs` PASS
+    - `python -m py_compile tests/run_seamgrim_runtime_5min_check.py tests/run_seamgrim_5min_checklist.py` PASS
+    - `python tests/run_seamgrim_runtime_5min_check.py --base-url http://127.0.0.1:8787 --skip-seed-cli --json-out build/reports/seamgrim_runtime_5min_report.with_ui.detjson` PASS
+    - `python tests/run_seamgrim_5min_checklist.py --from-runtime-report build/reports/seamgrim_runtime_5min_report.with_ui.detjson` PASS
+    - `python tests/run_seamgrim_5min_checklist_selftest.py` PASS
+- wasm 파서 경고를 실행 UI/런타임까지 전달해 사용자 노출을 마무리했다.
+  - 수정:
+    - `solutions/seamgrim_ui_mvp/ui/wasm_page_common.js`
+      - `readWasmClientParseWarnings()` 추가
+      - `applyWasmLogicFromSource()`가 `parseWarnings`를 반환
+    - `solutions/seamgrim_ui_mvp/ui/screens/run.js`
+      - 실행 힌트(`slider-status`)에 `문법경고: CODE` 요약 노출
+      - wasm 재실행/실패/server fallback에서 경고 상태 동기화
+    - `solutions/seamgrim_ui_mvp/ui/runtime/wasm_vm_runtime.js`
+      - `lastParseWarnings` 추적 + `getParseWarnings()`/`getDebugInfo().parseWarnings` 노출
+    - `solutions/seamgrim_ui_mvp/ui/app.js`
+      - smoke 성공 문구에 `parse_warning=<count>` 노출
+    - `tests/seamgrim_ui_common_runner.mjs`
+      - `applyWasmLogicFromSource`/`applyWasmLogicAndDispatchState` 경고 전달 회귀 검증 추가
+  - 검증:
+    - `node tests/seamgrim_ui_common_runner.mjs` PASS
+    - `node tests/seamgrim_wasm_wrapper_runner.mjs` PASS
+    - `node tests/seamgrim_pendulum_bogae_runner.mjs` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+- `lang/tool/wasm` 경로에 블록헤더 콜론 경고 전파를 연결했다.
+  - 수정:
+    - `lang/src/canonicalizer.rs`
+      - `W_BLOCK_HEADER_COLON_DEPRECATED` 경고 감지 추가 (`채비/설정/보개/모양/슬기/반복/동안/에 대해`)
+    - `tool/src/ddn_runtime.rs`
+      - `DdnProgram`이 파싱 경고를 보관/조회(`parse_warnings`)하도록 확장
+    - `tool/src/main.rs`
+      - DDN 로딩 공통 경로에서 파싱 경고를 stderr에 출력
+        (`warning: CODE [start..end] message`)
+    - `tool/src/wasm_api.rs`
+      - `get_parse_warnings()` API 추가
+    - `solutions/seamgrim_ui_mvp/ui/wasm_ddn_wrapper.{ts,js}`
+      - `parseWarningsParsed()` 래퍼 메서드 추가
+    - `solutions/seamgrim_ui_mvp/ui/wasm_ddn_types.d.ts`
+      - `get_parse_warnings`/`DdnParseWarning` 타입 추가
+    - `pack/block_header_no_colon`
+      - `반복/에 대해/동안` 콜론 표면 케이스 추가
+  - 검증:
+    - `cargo test -p ddonirang-lang --lib` PASS
+    - `cargo test -p ddonirang-tool ddn_runtime::tests::parse_warnings_include_block_header_colon_deprecation` PASS
+    - `cargo check -p ddonirang-tool --features wasm` PASS
+    - `node tests/seamgrim_wasm_wrapper_runner.mjs` PASS
+    - `python tests/run_pack_golden.py block_header_no_colon seamgrim_event_surface_canon_v1` PASS
+- `tests/run_ci_sync_readiness_check_selftest.py`를 추가해 원클릭 동기화 점검 스크립트 회귀를 자동 검증하도록 보강했다.
+  - quick 모드(`--skip-aggregate`) PASS 및 JSON 스키마/step 목록/step 개수 검증
+  - `--json-out` 커스텀 경로 출력 검증
+- `tests/run_ci_aggregate_gate_sync_diagnostics_check.py`를 추가해
+  aggregate 게이트에 sync readiness selftest/diagnostics 연결이 유지되는지 검사하도록 고정했다.
+- `tests/run_ci_aggregate_gate.py`에 아래 단계를 추가했다.
+  - `ci_sync_readiness_selftest`
+  - `ci_aggregate_gate_sync_diagnostics_check`
+  - fast-fail / overall_ok / sub-step failed 판정 연동 완료
+- `tests/run_ci_sync_readiness_check.py`를 추가해 동기화 직전 점검을 1회 명령으로 실행할 수 있게 했다.
+  - 포함 단계:
+    - `run_ci_pipeline_emit_flags_check.py`
+    - `run_ci_pipeline_emit_flags_check_selftest.py`
+    - `run_ci_sanity_gate_diagnostics_check.py`
+    - `run_ci_sanity_gate.py`
+    - `run_ci_aggregate_gate.py` (기본 포함, `--skip-aggregate`로 제외 가능)
+  - 결과를 `ddn.ci.sync_readiness.v1` JSON으로 저장
+  - 출력: `ci_sync_readiness_status=...` one-line 상태
+- `tests/run_ci_sanity_gate_diagnostics_check.py`를 추가해 `run_ci_sanity_gate.py`의
+  파이프라인 플래그 selftest 연동 토큰 회귀를 자동 차단했다.
+  - 검증 토큰: `pipeline_emit_flags_selftest`, `tests/run_ci_pipeline_emit_flags_check_selftest.py`, `E_CI_SANITY_PIPELINE_FLAGS_SELFTEST_FAIL`
+- `tests/run_ci_aggregate_gate.py`에 `ci_sanity_gate_diagnostics_check` 단계를 추가했다.
+  - fast-fail / overall_ok / sub-step failed 판정에 반영
+- `tests/run_ci_pipeline_emit_flags_check_selftest.py`를 추가해 파이프라인 플래그 검사기의 회귀를 자동 검증하도록 보강했다.
+  - baseline 통과, 필수 토큰 누락 실패, 금지 토큰 실패, aggregate 호출 라인 미존재 실패 케이스를 포함
+- `tests/run_ci_sanity_gate.py`에 `pipeline_emit_flags_selftest` 단계를 추가했다.
+  - precheck 단계에서 플래그 검사기 자체의 회귀까지 함께 차단
+- `tests/run_ci_aggregate_gate.py`에 `ci_pipeline_emit_flags_selftest` 단계를 추가했다.
+  - fast-fail/overall/sub-step 실패 판정에 반영
+- `tests/run_ci_pipeline_emit_flags_check.py`의 aggregate 플래그 검증을 파일 전체 문자열 검사에서
+  `run_ci_aggregate_gate.py` 실행 라인 단위 검사로 강화했다.
+  - 각 aggregate 실행 라인마다 필수 플래그 누락/금지 플래그 포함 여부를 개별 판정
+  - 목적: 주석/문서 문자열로 인한 오탐을 줄이고 실제 실행 커맨드 드리프트만 정확히 검출
+- `tests/run_ci_pipeline_emit_flags_check.py`에 5분 체크리스트 정책 금지 플래그 가드를 추가했다.
+  - 금지 토큰:
+    - `--skip-5min-checklist`
+    - `--with-5min-checklist`
+  - 목적: 파이프라인이 기본 ON 정책을 우회하거나 중복 토글하는 회귀를 CI self-check에서 즉시 차단
+- CI 파이프라인의 aggregate 게이트 실행 플래그를 체크리스트 경량 경로로 고정했다.
+  - `.gitlab-ci.yml`, `azure-pipelines.yml`의 `run_ci_aggregate_gate.py` 호출에
+    - `--checklist-skip-seed-cli`
+    - `--checklist-skip-ui-common`
+    를 공통 추가
+  - `tests/run_ci_pipeline_emit_flags_check.py`에 두 토큰을 필수 검증으로 추가해 회귀를 차단
+- `tests/run_ci_aggregate_gate.py`의 5분 체크리스트 정책을 기본 ON으로 전환했다.
+  - 신규 옵션: `--skip-5min-checklist` (기본 ON 비활성화 전용)
+  - `--with-5min-checklist`는 하위호환용(deprecated)으로 유지
+  - 집계 요약 라인에서도 `include_5min_checklist` 경로를 사용하도록 정렬
+- `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py`에 기본 ON 정책 토큰(`--skip-5min-checklist`, `include_5min_checklist`) 검증을 추가했다.
+- `seamgrim_curriculum_seed_smoke_v1`의 진자 스모크 골든 해시를 틱 기반 진자 seed 최신 상태로 갱신했다.
+  - 파일: `pack/seamgrim_curriculum_seed_smoke_v1/smoke_physics_pendulum.v1.json`
+  - 결과: `python tests/run_pack_golden.py seamgrim_curriculum_seed_smoke_v1` PASS, `python tests/run_age4_close.py` PASS
+- CI 집계 요약의 5분 체크리스트 표시를 보강했다.
+  - `tests/run_ci_aggregate_gate.py`가 `--with-5min-checklist` 실행 시 `--checklist-json-out`을 자동 전달
+  - summary에 `seamgrim_runtime_5min_rewrite_motion_projectile` 계열 라인을 추가
+  - seed 스킵 실행(`--checklist-skip-seed-cli`)에서는 rewrite 상태를 `not_executed`/`na`로 명시해 실패로 오해되지 않도록 정리
+- 신규 `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py`를 추가해 위 토큰/연결의 회귀를 차단했다.
+- CI 집계 요약(`run_ci_aggregate_gate.py`)에 5분 체크리스트 결과를 명시적으로 반영했다.
+  - `seamgrim_5min_checklist` 리포트 경로를 집계 아티팩트/인덱스에 추가
+  - `rewrite_motion_projectile_fallback` 단계 상태를 요약 라인으로 출력:
+    - `seamgrim_runtime_5min_rewrite_motion_projectile`
+    - `seamgrim_runtime_5min_rewrite_elapsed_ms`
+    - `seamgrim_runtime_5min_rewrite_status`
+  - aggregate가 `--with-5min-checklist`로 실행될 때 `--checklist-json-out`을 자동 전달하도록 연결
+  - 신규 진단 selfcheck `tests/run_ci_aggregate_gate_runtime5_diagnostics_check.py` 추가 및 aggregate 기본 단계에 편입
+- 5분 런타임 체크리스트에 `physics_motion`/`physics_projectile` 보개 폴백 검증 단계를 추가했다.
+- 신규 `tests/run_seamgrim_motion_projectile_fallback_check.py`:
+  - `run.js`에 `x/y`(및 `x` 단독) 관측값 기반 `space2d` 폴백 토큰이 존재하는지 검사
+  - `lessons_rewrite_v1/physics_motion`, `lessons_rewrite_v1/physics_projectile`를 `teul-cli run --madi`로 실행해 시계열 출력 최소 조건을 검증
+- `tests/run_seamgrim_runtime_5min_check.py`에 `rewrite_motion_projectile_fallback` 단계를 연결했고,
+  `tests/run_seamgrim_5min_checklist.py` 라벨(`Rewrite 운동/포물선 보개 폴백 점검`)을 추가했다.
+- `physics_pendulum_seed_v1`를 `동안` 일괄 계산형에서 `매마디 1스텝` 틱 전이형으로 전환했다.
+- 적용 파일: `solutions/seamgrim_ui_mvp/seed_lessons_v1/physics_pendulum_seed_v1/lesson.ddn`
+  - `시작`에서 상태(`t/theta/omega/energy`) 초기화
+  - `매마디`에서 `t <= t_max` 조건 하 1스텝 오일러 적분
+  - 관찰 채널은 매 틱 `(t,theta)/(t,omega)/(t,energy)` 출력
+  - `teul-cli run` 직접 실행 호환을 위해 채비 외 명시 대입 블록 추가
+- `ddn_exec_server` 실행 API에 `madi`(옵션) 입력을 추가해 다중 틱 실행 검증을 지원했다.
+  - 적용 파일:
+    - `solutions/seamgrim_ui_mvp/tools/export_graph.py` (`run_teul_cli(..., madi=...)`)
+    - `solutions/seamgrim_ui_mvp/tools/ddn_exec_server.py` (`/api/run` payload `madi` 전달)
+    - `solutions/seamgrim_ui_mvp/tools/ddn_exec_server_check.py` (진자 검증 시 `madi=420`)
+- `tests/run_seamgrim_seed_pendulum_export_check.py`를 런타임 기반 검증으로 전환했다.
+  - `teul-cli run --madi` 실행 결과에서 `theta` 시계열 길이/시간축 범위/부호 변화/단조 시간축을 검사
+- `run` 화면에서 보개(`space2d`)가 비어 있을 때 관찰값 기반 최소 진자 장면을 자동 합성해 표시하도록 보강했다.
+- 적용 파일: `solutions/seamgrim_ui_mvp/ui/screens/run.js`
+  - `theta`(+ 선택적 `L`) 관찰값이 있으면 line/circle/point로 진자 2D 장면을 합성
+  - `x/y`(또는 `x` 단독) 관찰값만 있는 교과도 점/축 기반 최소 2D 장면을 합성해 보개를 비우지 않도록 확장
+  - 원본 `views.space2d`가 있으면 기존 출력을 우선 사용
+  - 런타임 요약(`kind/channels`)은 합성된 space2d까지 반영해 `보개 출력` 상태가 일관되게 저장되도록 정렬
+- 5분 검증 시나리오에 "진자 시뮬레이션 실행 보증" 단계를 추가했다.
+- `solutions/seamgrim_ui_mvp/tools/ddn_exec_server_check.py`에서 `physics_pendulum_seed_v1`를 `/api/run`으로 실제 실행해 점/축 범위 최소 조건을 검사하도록 보강했다.
+- 신규 `tests/run_seamgrim_seed_pendulum_export_check.py`를 추가해 `export_graph.py` 기반 진자 seed 그래프 출력 smoke 검증을 고정했다.
+- `tests/run_seamgrim_runtime_5min_check.py`에 `seed_physics_pendulum_export` 단계를 추가했고, `tests/run_seamgrim_5min_checklist.py`에 체크리스트 라벨(`Seed 진자 시뮬 실행`)을 반영했다.
+- `ddn_exec_server_check.py`의 경로 폴백 조회에서 비정상 예외가 상위로 전파되지 않도록 예외 안전 처리(`fetch_first_ok_text`)를 보강했다.
+- 탐색 화면의 기본 정렬을 `최근 실행순`으로 전환해 최근에 확인한 교과가 목록 상단에 오도록 조정했다.
+- 실행 스냅샷에 `lastRunHash`를 저장하고, 탐색 카드/실행 상단 요약에 축약 hash를 함께 표시하도록 보강했다.
+- 탐색 카드에 최근 실행 배지 색상(최근성공/출력없음/최근실패/미실행)을 추가해 실행 가능 상태를 빠르게 판별할 수 있게 했다.
+- 탐색 필터에 `정렬: 최근 실행순`을 추가해 마지막 실행 시간이 최신인 교과를 우선 배치할 수 있게 했다.
+- 탐색 필터에 `최근 실행(성공/실패/미실행)`을 추가해 교과 실행 이력을 기준으로 카드 목록을 바로 좁힐 수 있게 했다.
+- 실행 화면 상단 바에 `최근 실행 요약` 라벨을 추가해 현재 교과의 마지막 실행 결과를 화면 고정 정보로 노출했다.
+- 탐색 카드에 교과별 `최근 실행` 힌트를 추가해 보개 출력/무출력/실패를 선택 전에 확인할 수 있게 했다.
+- `run` prefs 교과 항목에 실행 요약(`lastRunKind`, `lastRunChannels`, `lastRunAt`, `lastRunStatus`)을 저장하도록 확장했다.
+- 실행 실패 시 `kind=error` 스냅샷을 남기고, 교과 전환 시 런타임 스냅샷 캐시를 초기화해 카드 상태 오염을 막았다.
+- 실행 화면 표시 상태와 WASM 루프를 연결해 `run` 화면에서만 RAF 스텝 루프가 동작하고, `browse/editor` 전환 시 자동 정지하도록 정리했다.
+- `ui/screens/run.js`에 런타임 출력 진단 상태를 추가해 무출력 상황을 `채널/보개 출력 유무` 기준으로 즉시 식별할 수 있게 했다.
+- `setStatus("실행 상태: WASM 실행 중")` 토큰은 UI AGE3 게이트 호환성을 위해 유지한 채, 상세 진단 문구가 뒤이어 반영되도록 구성했다.
+- 범위 프리셋을 1슬롯에서 3슬롯(1/2/3)으로 확장하고, 교과별로 선택 슬롯/슬롯별 보개·그래프 범위를 로컬에 저장·복원하도록 구현했다.
+- 탐색 카드에 실행 상태 힌트(축잠금 ON/OFF + 수동축 x/y)를 표시해 교과 선택 전에 현재 축 모드를 확인할 수 있게 했다.
+- run prefs 저장 시 `seamgrim:run-prefs-changed` 이벤트를 발행하고 browse 화면이 즉시 재렌더링되도록 연결했다.
+- `tests/run_seamgrim_ui_age3_gate.py`에 `bogae-preset-slot`/`graph-preset-slot` 토큰을 추가하고 seamgrim CI 게이트 재검증 PASS.
+- 실행 화면 그래프 툴바에 `기본축 고정 ON/OFF` 토글을 추가해 교과 기본축 고정과 수동 축 선택을 즉시 전환할 수 있게 했다.
+- `run` 상태를 로컬 저장소(`seamgrim.ui.run_prefs.v1`)에 저장해 교과별 x/y 선택축과 보개/그래프 저장 범위 프리셋을 재접속 시 자동 복원하도록 보강했다.
+- `dotbogi` 선택자 잠금 상태에서 x/y 드롭다운을 비활성화하고, 잠금 해제 시 수동 선택이 저장되도록 세션 경계를 정리했다.
+- `tests/run_seamgrim_ui_age3_gate.py`에 `btn-axis-lock` 토큰을 추가하고 seamgrim UI/CI 게이트 재검증 PASS.
+- 실행 화면 그래프 툴바에 `x축 선택`을 추가해 시간 자동 추정 외에도 임의 변수축으로 그래프를 볼 수 있게 했다(`index` 폴백 포함).
+- `control_parser`에 기본 x축 메타(`#기본관찰x/#기본관측x`, `default_x*`)와 채비 라인 힌트(`기본관찰x`) 파싱을 추가했다.
+- y/x 드롭다운에서 기본축 후보를 `(기본)`으로 표시하도록 개선해 현재 교과의 권장 축을 즉시 인지할 수 있게 했다.
+- `run` 로드 경로에 `defaultXAxisKey` 적용을 연결했고, 공용 러너 + seamgrim UI/CI 게이트 전체 재검증 PASS.
+- DDN 메타의 `#기본관찰/#기본관측`(alias: `default_obs` 등)을 `defaultAxisKey`로 파싱해 그래프 y축 기본 변수를 교과별로 고정할 수 있게 했다.
+- `dotbogi`에 preferred y축 키 적용 로직을 추가해 `기본관찰 우선 -> 없으면 첫 관찰변수` 규칙으로 선택되도록 정리했다.
+- 채비 변수 선언 꼬리의 기본관찰 힌트(예: `// 기본관찰`)도 파싱해 기본 y축 후보로 사용하도록 보강했다.
+- 관련 회귀 검증(`tests/seamgrim_ui_common_runner.mjs`)과 seamgrim UI/CI 게이트 전체 재검증 PASS.
+- `control_parser`에서 `상수/수 계열 -> 슬라이더`, `변수 계열 -> 그래프 축 후보(axisKeys)` 규칙을 강제해 채비 역할을 분리했다.
+- `#control` 명시가 있는 경우 채비 자동 추론보다 우선하도록 슬라이더 스펙 우선순위를 고정했다.
+- 실행 화면에 범위 프리셋 1슬롯(`보개 저장/불러오기`, `축 저장/불러오기`)을 추가해 수업 재현성을 높였다.
+- `tests/seamgrim_ui_common_runner.mjs`에 control 파서 회귀 검증을 추가했고, seamgrim 게이트(AGE3/UI/CI) 전체 재검증 PASS.
+- 실행 화면에 보개/그래프 수치 범위 입력(적용/리셋) UI를 추가해 축·시뮬 뷰를 고정한 상태에서 재현 가능한 관찰이 가능해졌다.
+- `ui/components/dotbogi.js`, `ui/components/bogae.js`에 수동 축/범위 API(`get/set/reset`)를 추가하고, 마우스·키보드 조작 후 입력칸이 자동 동기화되도록 콜백을 연결했다.
+- `ui/screens/run.js`에 수치 범위 검증(x_max>x_min, y_max>y_min)과 적용 실패 상태 메시지를 추가해 무반응처럼 보이는 케이스를 줄였다.
+- `python tests/run_seamgrim_ui_age3_gate.py`, `python tests/run_seamgrim_space2d_source_ui_gate.py`, `node tests/seamgrim_ui_common_runner.mjs`, `python tests/run_seamgrim_ci_gate.py --json-out build/reports/seamgrim_ci_gate_latest.detjson` 재검증 PASS.
+- `ui/app.js`에 catalog 경로 선호 캐시를 추가해 성공한 root/project 경로를 우선 재사용하고 반복 404 로그를 줄였다.
+- 선택형 Nginx 역프록시 템플릿(`solutions/seamgrim_ui_mvp/deploy/nginx/seamgrim.conf`)을 추가해 wasm MIME(`application/wasm`) 고정을 명시했다.
+- `tests/run_seamgrim_deploy_artifacts_check.py`에 nginx 템플릿/문서 토큰 검증을 추가해 배포 산출물 체크를 강화했다.
+- `ddn_exec_server_check.py` 점검 범위를 확장해 lesson/seed/rewrite manifest 접근, 대표 DDN 자산 접근, wasm MIME(`application/wasm`)까지 검증하도록 강화했다.
+- 셈그림 CI 게이트에 `ddn_exec_server_check` 실실행 단계를 추가하고 진단 self-check를 확장했다.
+- 셈그림 UI의 교과/seed/rewrite/샘플 로딩 경로에 `/` 및 `/solutions/seamgrim_ui_mvp/` 이중 폴백을 추가해 실행 방식별 404를 줄였다.
+- `tests/run_seamgrim_lesson_path_fallback_check.py`를 추가하고 셈그림 CI 게이트에 `lesson_path_fallback` 단계를 연결했다.
+- GitHub 브랜치 보호 설정 파일(`.github/branch-protection/main.required_checks.json`)과 적용 스크립트(`tools/scripts/apply_github_branch_protection.py`)를 추가해 `seamgrim-gate` 필수 체크를 자동 적용할 수 있게 했다.
+- 셈그림 CI 게이트에 워크플로우/브랜치보호 계약 검증(`tests/run_seamgrim_workflow_contract_check.py`, `workflow_contract` step)을 추가해 job/context 드리프트를 차단했다.
+- `.github/workflows/seamgrim-ci.yml` PR path 필터에 `.github/branch-protection/**`를 추가했다.
+- 셈그림 DDN 실행 서버용 Docker 배포 산출물(`deploy/Dockerfile`, `deploy/docker-compose.yml`)과 health/base-url 점검을 추가했다.
+- 셈그림 CI 게이트에 deploy 아티팩트 정합 점검(`run_seamgrim_deploy_artifacts_check.py`) 단계를 추가했다.
+- GitHub Actions 워크플로우(`.github/workflows/seamgrim-ci.yml`)를 추가해 PR에서 deploy 아티팩트 + seamgrim CI 게이트를 자동 실행하도록 구성했다.
+- 셈그림 UI MVP/stdlib 범위 상세 보고서를 확장하고, 교과과정 통합 마스터코스 제안서를 추가했다.
+- stdlib_range_basics에 단위 불일치 오류 골든 케이스를 추가했다.
+- stdlib 범위 pack에 단위 범위 케이스를 추가하고, DDN 실행 서버 체크에서 UI 마크업 확인을 포함했다.
+- stdlib_range_basics에 범위 간격 0 오류 골든 케이스를 추가했다.
+- stdlib 범위 기본 pack(stdlib_range_basics)을 추가하고 골든/문서 커버리지를 보강했다.
+- 셈그림 UI에 DDN 생성 버튼을 추가하고 DDN 실행 서버 자동 점검 스크립트(ddn_exec_server_check.py), stdlib 범위 문서 표(impl/alias) 및 ddonirang_mastercourse 계획을 보강했다.
+- AGENTS 지침에 build/out 경로를 시작 시 생성하고 I: 경로 우선, 없으면 C: fallback하도록 명시했다.
+- stdlib `범위`(2~3인자, 단위 정합/증가·감소/포함 범위) 함수를 teul-cli/tool 런타임과 lang stdlib 시그니처에 추가하고, 셈그림 샘플/자동 DDN 생성에 반영했다.
+- 샘/거울 최소 스키마를 SSOT에 반영하기 위한 관리자 요청 노트(`docs/notes/SSOT_SAM_GEOUL_SCHEMA_REQUEST_20260130.md`)를 추가했다.
+- 셈그림 UI에서 수식/변수와 DDN 편집을 탭으로 분리하고, DDN 샘플을 에 대해/차림 기반으로 간소화했다.
+- 셈그림 UI MVP에 수식→DDN 자동 생성→런타임 실행 서버 연동을 연결하고, 샘/거울 스키마(v0) 이름 정합 및 UI 검증/요약 로직을 보강했다.
+- 범위 리터럴/범위 생성 최소 스펙 제안서를 추가하고 SSOT ALL 합본(`docs/context/all/ssot_*_ALL.md`)을 갱신했다.
+- 셈그림 UI MVP 제안/설계 문서, UI 스켈레톤/그래프·스냅샷 JSON 및 샘/거울 로드(검증 요약/요약 카드) + 스냅샷 다중 오버레이(자동 색상/라벨 규칙) + DDN 실행 서버 연동, seamgrim_line_graph D-PACK(2케이스), seamgrim_ui_mvp 솔루션/변환툴/스냅샷·샘·거울 스키마와 SSOT 제안서를 추가했다.
+- W77 gogae7 대표 데모 D-PACK을 추가하고 bogae_hash 골든을 고정했다.
+- W76 detbin 캐시(동일 프레임)와 cache hit/miss 로그를 추가했다.
+- W75 docs/ssot/walks 갱신은 SSOT 관리자 작업으로 요청만 기록했다.
+- W74 pack golden 러너에 bogae_hash 1급 필드 검증을 추가하고 bogae_runner_bogae_hash D-PACK을 추가했다.
+- W73 bogae bundle v1 CLI와 bundle 스모크 D-PACK을 추가했다.
+- W72 bogae hash determinism v1 스모크 D-PACK을 추가했다.
+- W71 bogae editor v0(detbin 이동/색상 변경) CLI와 editor 스모크 D-PACK을 추가했다.
+- W70 bogae web viewer v1 스모크 D-PACK을 추가했다.
+- W69 bogae mapping v1(태그→Rect/Text/Sprite) 스모크 D-PACK과 매핑 처리(보개_태그_목록/보개_매핑_목록)를 추가했다.
+- W68 bogae asset manifest v1 스모크 D-PACK과 `teul-cli asset manifest` 명령을 추가했다.
+- W67 bogae adapter v1 smoke D-PACK을 추가하고 bogae_hash 골든을 고정했다.
+- W66 open end-to-end(deny/record/replay) D-PACK을 추가했다.
+- W65 open bundle 아티팩트(--open-bundle)와 open_bundle_artifact D-PACK을 추가했다.
+- W64 open.rand(외부 난수) 봉인과 open_rand_record_replay D-PACK을 추가했다.
+- W63 replay mismatch 진단 코드를 표준화(E_OPEN_LOG_MISSING/PARSE/REPLAY_MISS/LOG_TAMPER)하고 D-PACK을 추가했다.
+- W62 open site_id 정본화(blake3 해시)와 open_site_id_canon D-PACK을 추가했다.
+- W61 open.policy allowlist 파싱/기본 모드 적용과 open_policy_allowlist D-PACK을 추가했다.
+- open.policy 탐색을 입력 파일 기준 상위(프로젝트 루트까지)로 확장했다.
+- W46 목표 문법(-도록) 파서/TargetState/GoalCondition 구현과 D-PACK/골든 테스트를 추가했다.
+- AGE2(Open) W59 `#열림 허용(...)` 지시문 파싱과 미선언 open 경고, open_decl_policy D-PACK/골든을 추가했다.
+- open_deny_policy D-PACK과 stderr/exit_code golden 검증을 추가했다.
+- open_decl_policy_warn D-PACK으로 미선언 open_kind 경고를 검증했다.
+- open_replay_missing D-PACK으로 replay 로그 누락 오류를 검증했다.
+- open_replay_invalid D-PACK 추가와 open_deny_policy record 케이스 확장을 반영했다.
+- open_replay_hash_mismatch D-PACK 추가와 replay log detjson_hash 검증을 반영했다.
+- open_replay_site_mismatch/open_replay_schema_mismatch D-PACK 추가와 replay schema 검증을 반영했다.
+- open_file_read_key_mismatch D-PACK과 stderr 대안 매칭을 반영했다.
+- open_replay_schema_v2_accept/open_file_read_path_normalize D-PACK과 open.log v2 fallback 및 경로 정규화를 반영했다.
+- open_file_read_abs_path D-PACK과 golden runner의 {{CWD}} 치환을 추가했다.
+- open_file_read_abs_case/open_replay_schema_v2_extra D-PACK과 {{CWD_UPPER}} 치환을 추가했다.
+- open_file_read_unc_case/open_replay_schema_v2_missing D-PACK과 OPEN_LOG_V2_RULES 문서를 추가했다.
+- open_file_read_unc_dot/open_replay_schema_v2_nested_meta D-PACK과 v2 중첩 meta 규칙을 추가했다.
+- open_file_read_unc_mix/open_replay_schema_v2_meta_list D-PACK과 v2 meta scalar/list 규칙을 추가했다.
+- open_file_read_unc_dot_mix/open_replay_schema_v2_meta_scalar D-PACK과 v2 meta 문자열/숫자 규칙을 추가했다.
+- open_file_read_unc_space_special/open_replay_schema_v2_meta_bool_null D-PACK과 v2 meta 불리언/널 규칙을 추가했다.
+- AGE2(Open) W56 기본(deny/record/replay + open.log.jsonl)을 구현하고 open_clock/open_file_read pack goldens를 추가했다.
+- 제5고개 pack에 golden.jsonl을 추가하고 golden 러너를 확장해 run 이외 teul-cli 명령도 검증 가능하게 했다.
+- 라이브 콘솔 커서를 숨겨 하단 깜빡임을 줄이고 웹 뷰어 기본 배율을 1.25로 조정했다.
+- 테트리스 Full D-PACK(pack/game_maker_tetris_full)과 스킨/샘 입력/예시를 추가했다.
+- 테트리스 Full 콘솔/웹 정렬 가이드와 웹 뷰어 배율(scale) 옵션을 반영했다.
+- W45 SeulgiIntent/SeulgiPacket를 SSOT v20.2.0 규격으로 정합하고 intent bundle/팩/골든을 갱신했다.
+- SSOT 기준을 v20.2.0으로 갱신하고 CURRENT/ai prompt/W91/toolchain golden 및 SSOT_bundle_v20.2.0_codex.zip을 정합했다.
+- W44 time travel 통합 D-PACK/골든 추가를 반영했다.
+- W43 audit inspector(geoul query/backtrace) CLI/팩/골든 추가를 반영했다.
+- W42 branching manager(replay branch) CLI/팩/골든 추가를 반영했다.
+- W41 타임라인 CLI와 gaji/ddn.timeline.v0, gogae4_w41 D-PACK 및 골든 테스트를 반영했다.
+- W40 시트콤 엔진에서 suggested_intents를 추가하고 골든 기대값을 갱신했다.
+- W40 시트콤 엔진 CLI와 gaji/ddn.story.v0, gogae4_w40 D-PACK 및 골든 테스트를 반영했다.
+- W39 말결값 런타임과 gaji/ddn.nuance.v0, gogae4_w39 D-PACK 및 골든 테스트를 반영했다.
+- W37 기억씨/ W38 감정씨 런타임 추가와 gogae4_w37/w38 D-PACK 및 골든 테스트를 반영했다.
+- AGE1 stdlib 완료 선언(2026-01-26)과 stdlib_missing_coverage_* pack 골든 고정(시드 명시 포함)을 반영했다.
+- teul-cli 런타임에 `풀기`/입력/RNG/자원 호출과 호출식 단독 문장 실행을 추가하고 stdlib_missing_coverage_pure/io pack 골든을 갱신했다.
+- `teul-cli canon`에 fix-it in-place 자동 반영 금지 가드를 추가하고 ddn.ai.policy.json에 rails/training 경계를 명시했다.
+- `teul-cli run`에 `--run-manifest`/`--artifact`를 추가해 쓸감 핀 경로를 마련했다.
+- `gaji/element_swap` 골격을 추가해 샘/보개 등 원소 구현 교체 경로를 예약했다.
+- AGE1 pending(C2/C3/C4) 항목을 DONE으로 갱신했다.
+- WORKSPACE_MANIFEST/CURRENT patch_version을 v20.2.0_20260127_292dad7d로 갱신했다.
+- 정본화기에 씨앗 정의(인자/기본값)와 호출식 문장 지원을 추가했다.
+- 정본화기에 `@단위`/`@"자원"` 접미, 원자 리터럴(`#...`), 훅 문장(`(시작)할때`, `(매마디)마다`), `?`/`!` 종결 처리에 더해 `??` 프롬프트 구문, `해서/하고` 파이프, `(핀묶음)인 호출`, 소수점 숫자, 다중 단어 호출명, 블록/개행 종결 허용을 추가하고 docs/EXAMPLES CANON:SKIP을 0건으로 정리했다.
+- `teul-cli canon --check`를 추가하고 pack/차림 값 호출용 pack 인자 구문을 정본화기가 인식하도록 보완했다.
+- `tests/check_canon_inputs.py`에 docs/EXAMPLES까지 포함해 정본 체크를 확장하고 guides 예제 01~04를 최신 정본 출력으로 갱신했으며 CANON:SKIP 잔여를 0건으로 정리했다.
+- `docs/WORKSPACE_MANIFEST.json` 해시/바이트를 최신 변경분으로 갱신했다.
+- `teul-cli gaji lock`(build/lock/gaji.lock.json)과 `teul-cli scan`(W_SKIP_NON_GAJI_DIR 경고)을 추가했다.
+- patch apply의 canon 체크를 strict로 전환하고 W90 patch 골든 입력을 정본화 가능 형태로 갱신했다.
+- 꼬리 없는 호출 진단(E_CALL_TAIL_MISSING_*)을 LSP/정본화기에 추가하고 QuickFix(…기/…하기)를 제공했다.
+- `gaji/30_nurigym_core` 골격을 추가하고 `pack/nuri_gym_cartpole`를 DR-075 최소 스키마 DetJson 샘플로 갱신했다.
+- `teul-cli alrim registry`를 추가해 `build/registry/alrim.registry.json` 생성/해시/충돌 진단 경로를 마련했다.
+- `ddn.ai.policy.json` 기본 파일을 추가했다(정책 해시 메타 포함 경로 활성화).
+- `ddn.patch.json`에 before/after 스키마를 추가하고 patch apply의 canon 체크(실패 시 경고 스킵) 및 verify 기본 tests 경로를 보강했다.
+- 제5고개 W45~W55 슬기/누리짐/GOAP/latency/safety/dataset/workshop 경로를 core/teul-cli에 추가하고 관련 pack 11종과 골든 테스트를 구성했다.
+- stdlib gaji 분할 v1을 위해 `gaji/std_{text,charim,math,map,logic}` 골격과 exports 스켈레톤을 추가하고 WORKSPACE_MANIFEST에 반영했다.
+- AI 친화 Phase0 산출물(stdlib_examples 10종, errors.jsonl 120개/12패턴)을 확인하고 AGE1 pending 항목을 갱신했다.
+- `pack/math_calculus_v1`, `pack/bdl2_subpixel_aa_v1`, `pack/age1_charim_index`를 추가하고 pack/W22 골든을 재검증했다.
+- 기본 pack golden 러너 목록에 math_calculus_v1/bdl2_subpixel_aa_v1/age1_charim_index를 포함했다.
+- pack/stdlib_examples 일부 입력/기대값을 정정하고 전체 pack golden(--all)을 재검증했다.
+- 키보드 한국어 별칭/보개 배경색 키/보개 목록 키를 DONE 처리하고 관련 pack goldens를 추가했다.
+- 텐서 stdlib P0, stdlib 정합, 모두{} 설탕을 DONE 처리하고 관련 pack 골든/W108~W109를 재검증했다.
+- AGE1 런타임 타입검사/계약 진단/슬기 훅 항목을 DONE으로 갱신하고 관련 W106/W107 골든을 재검증했다.
+- 복합 갱신/계약 모드 pack golden.jsonl을 추가하고 기본 pack 골든 러너 목록에 포함했다.
+- AGE1 pending 정리에서 복합 갱신/계약 모드/fixits-json을 DONE으로 갱신하고 관련 D-PACK(복합 갱신/계약 모드)을 추가했다.
+- PLN-20260125-COMPOUND-UPDATE-01 정합 방침을 기록했다: `+<-`/`-<-`만 채택, `+=`/`-=`는 거부.
+- ai prompt lean 골든을 SSOT v20.1.18 기준으로 재생성하고 테스트를 재검증했다.
+- WORKSPACE_MANIFEST patch_version을 v20.1.18_20260125_a0a63b00로 갱신했다.
+- CURRENT.md를 SSOT v20.1.18 및 최신 WORKSPACE_MANIFEST 기준으로 갱신했다.
+- ddn_runtime에 수학 stdlib(abs/min/max/clamp/sqrt/powi)를 추가해 teul-cli와 정합을 맞췄다.
+- WORKSPACE_MANIFEST.json을 갱신했다.
+- stdlib 정본/별칭 상태판(STDLIB_IMPL_MATRIX/ALIAS_TABLE)과 stdlib 기본 pack 4종(text/charim/math/map)을 추가했다.
+- stdlib 별칭 정본화를 반영하고 `묶음.키` 필드 접근 문법/정본/런타임 지원과 W05 골든 테스트를 추가했다.
+- teul-cli ai prompt SSOT_VERSION을 v20.1.17로 갱신하고 SSOT_bundle_v20.1.17_codex.zip 및 W91 골든을 재생성했다.
+- ai prompt 번들 해시 벡터(AI-PROMPT-GOLDEN-01) 단위 테스트를 teul-cli에 추가했다.
+- teul-cli canon Parser::peek 누락과 check SeedLiteral 매치 누락을 보완했다.
+- W91 ai prompt 스냅샷 골든을 최신 SSOT 기준으로 갱신했다.
+- teul-cli ai prompt SSOT_VERSION을 v20.1.16으로 갱신하고 W91 골든을 재생성했다.
+- SSOT_bundle_v20.1.16_codex.zip을 생성하고 W91 골든을 zip 기준으로 고정했다.
+- teul-cli 골든 테스트(W01~W109)를 재검증했다.
+- stdlib 확장 제안 대비 구현 매핑 표를 정리했다.
+- stdlib 명칭 정합(정본/별칭) 제안서를 추가했다.
+- stdlib 명칭 정합(정본/별칭) 결정(DEC-20260125-STDLIB-NAMES-01)을 SSOT 변경 기록에 반영했다.
+- 씨앗 리터럴 `{x | ...}` 문법/정본화/런타임을 추가하고 차림 고차 함수(정렬/거르기/변환/합치기) 및 문자열 포함/시작/끝/숫자로 표준 시그니처를 SSOT v20.1.15 기준으로 정리했다.
+- 초심자 학습 자료를 docs/guides/에 추가했다(BEGINNER_GUIDE, examples/01~04.ddn, README, LEARNING_RESOURCES_INDEX).
+- AI 학습 데이터 구조를 docs/context/ai_learning/에 정리하고 Self-Documented 예제와 오류 코퍼스(errors.jsonl)를 추가했다.
+- AGENTS.md의 SSOT 버전 참조를 v20.1.15로 갱신하고 학습 자료 색인 링크를 추가했다.
+- teul-cli lint --suggest-patch로 레거시 용어 교정 ddn.patch.json 생성 경로를 추가했다.
+- teul-cli canon --emit fixits-json을 구현하고 pack/cli_fixits_json_basics + W90_G06 골든 테스트를 추가했다.
+- teul-cli patch propose 명령과 W90_G07 골든 테스트를 추가했다.
+- teul-cli ai prompt 명령을 추가하고 lean/runtime/full 프로파일 + zip/dir 번들 입력을 지원한다.
+- ai prompt W91 골든(구조 검증/스냅샷)을 추가했다.
+- 계약 위반 diag에 DR-069 표준 필드/문구와 fault_id를 적용하고 슬기 훅 기록 이벤트를 추가했다(W107 post 골든 포함).
+- AI 친화 Phase0 데이터( pack/stdlib_examples, errors.jsonl, index.json )를 정리했다.
+- 호출 문법을 `(인자) 이름`으로 고정하고 prefix `이름(인자)` 호출을 제거했다(예제/팩/골든 갱신).
+- 미로 트랙을 `docs/EXAMPLES/tracks/`, 데모를 `docs/EXAMPLES/demos/`, 관문0 기록을 `docs/steps/000/`으로 통합하고 리뷰/템플릿 폴더를 기존 폴더로 흡수했다.
+- docs/legacy(archive_root 포함)를 제거하고 관련 문서 참조를 정리했다.
+- 설계 문서를 `docs/context/design/`으로 이동하고 참조를 갱신했다.
+- SSOT 정본 내 `docs/ssot/ssot/SSOT_PENDING.md`를 제거하고 pending을 `docs/decisions/SSOT_PENDING.md`로 일원화했다.
+- 로드맵 문서를 `docs/context/roadmap/`으로 이동하고 참조를 갱신했다.
+- docs 구조를 통합 정리하고 보고서를 `docs/reports/(impl|audit)`로 이관, `docs/context/reports/`는 리다이렉트로 유지했다.
+- 논리 연산자 `&&`/`||`와 `그리고`/`또는`, 부정 `아님` 설탕을 lang/tool에 반영했다.
+- 계약에 `바탕으로(알림)`/`다짐하고(알림)` 모드를 추가하고, 위반 시 알림 기록 후 진행하도록 확장했다.
+- teul-cli 계약(바탕으로/다짐하고/맞으면) 파싱/정본화/실행과 계약 위반 diag/W107 골든 테스트를 추가했다.
+- 계약 위반 메시지/diag 표준과 `슬기.계약위반` 훅 결정을 SSOT 변경 기록에 반영했다.
+- teul-cli 런타임 타입 불일치 메시지에 기대/실제 타입 표시를 추가하고 type_runtime_typecheck D-PACK을 보강했다.
+- SSOT에 AGE1 런타임 타입검사 의미론(DR-067)을 반영했다.
+- ddn_runtime에 PinSpec 런타임 타입검사와 `E_RUNTIME_TYPE_MISMATCH` 메시지/단위 테스트를 추가했다.
+- 런타임 타입검사 D-PACK과 teul-cli W106 골든 테스트를 추가했다.
+- 차림 인덱싱 설탕(a[i]/a[i] <- v)과 차림.값/차림.바꾼값 런타임, W103 골든 테스트를 추가했다.
+- teul-cli에 차림 리터럴 `[]` 파싱/정본 출력과 W102 골든 테스트를 추가했다.
+- `아니고 (조건) 일때` else-if 설탕과 `+<-`/`-<-` 복합 갱신 설탕을 추가하고 W104 골든 테스트를 보강했다.
+- 중첩 차림 텐서 설탕(`[[...],[...]]` → 형상/자료/배치 묶음)을 추가하고 W105 골든 테스트를 추가했다.
+- `(임자) 대상차림 모두 { ... }.` 설탕과 텐서 표준 함수(형상/자료/배치/값/바꾼값), W108/W109 골든 테스트, 관련 D-PACK을 추가했다.
+- 차림 리터럴 `[]`/`[v1,...]` 파서/정본 전개 지원을 추가했다.
+- 컨테이너 자원 저장/조회용 pack/age1_container_resource 골든/테스트를 추가했다.
+- teul-cli ai prompt SSOT_VERSION을 v20.1.13로 갱신하고 골든을 재생성했다.
+- ddn 런타임 자원에 차림/모음/짝맞춤 저장과 결정적 상태 해시(ResourceValue 직렬화)를 추가했다.
+- ddn 런타임/teul-cli 순회 대상에 차림/모음/짝맞춤을 포함하고, 짝맞춤은 차림[열쇠, 값]으로 순회하도록 정리했다.
+- teul-cli 반복/동안/에 대해/멈추기 문장과 예제를 추가했다.
+- teul-cli 반복/순회 W97 골든 테스트를 추가했다.
+- lang/tool 반복/순회/멈추기 지원을 추가했다.
+- 컨테이너 타입 표기 `(T)차림` 형태를 파서/정본화에서 지원하도록 확장했다.
+- `미분하기`/`적분하기`를 ddn.math/ext 표기 변환으로 지원했다.
+- teul-cli 글무늬 맞추기(패턴 매칭)와 AGE1 템플릿 매칭 예제/팩을 추가했다.
+- ddn.math/ext 예약 호출(sum/prod/diff/int) 파싱 허용과 Gate0 풀기 FATAL 처리, 예제/팩을 추가했다.
+- 보개 관련 팩의 `?_??_?` 플레이스홀더를 `보개_그림판_가로/세로`로 정리했다.
+- 보개 관련 팩 입력을 `보개_바탕색`으로 통일하고 W35 리플레이 하네스 키 표기를 한국어 별칭으로 갱신했다.
+- teul-cli 샘 키보드 한국어 별칭과 보개 배경색 키(`보개_바탕색`)를 추가하고 테트리스 Slice0 키 표기를 한국어로 갱신했다.
+- teul-cli patch 파이프라인 골든 테스트(W90)와 patch 예제 팩을 추가하고, 보개 목록 drawlist + tetris_board_drawlist로 테트리스 Slice0 보드 렌더링을 간소화했다.
+- teul-cli patch preview/approve/apply/verify 파이프라인과 차림/모음/짝맞춤 컨테이너 연산(문자열 포함) 지원, AGE1 예제/팩을 반영했다.
+- W35 replay verify(geoul 재주입 검증)와 W36 trace tier(T-OFF~T-FULL) 기록 확장을 반영했다.
+- W34 geoul 블랙박스 로그(audit.ddni/idx/manifest) 기록과 teul-cli geoul seek/hash, D-PACK/골든을 반영했다.
+- W01~W33 teul-cli 골든과 W23~W33 tool state_hash 스모크를 재검증했다.
+- W33 teul-cli 골든 테스트 추가를 반영했다.
+- W32 teul-cli 골든 테스트 추가와 W33 통합 시장 state_hash 기대값을 반영했다.
+- W31 teul-cli 골든 테스트 추가와 W32 차분 뷰어 state_hash 기대값을 반영했다.
+- W30 teul-cli 골든 테스트 추가와 W31 협업 마당 state_hash 기대값을 반영했다.
+- W29 teul-cli 골든 테스트 추가와 W30 Q-Chain 승인 state_hash 기대값을 반영했다.
+- W28 teul-cli 골든 테스트 추가와 W29 리액티브 상한 state_hash 기대값을 반영했다.
+- W27 teul-cli 골든 테스트 추가와 W28 지표 스트림 state_hash 기대값을 반영했다.
+- W27 불변 훅(늘지켜보고) state_hash 계산 경로와 팩 기대값을 반영했다.
+- W26 경제 씨앗/거래 기록 state_hash 계산 경로와 팩 기대값을 반영했다.
+- W25 쿼리 배치 state_hash 계산 경로(core gogae3)와 기대값 갱신을 반영했다.
+- teul-cli W24/W25 state_hash를 core 계산 기준으로 동기화하고 골든 기대값을 갱신했다.
+- core ECS 아키타입/컬럼 저장 전환과 W24 state_hash 테스트 갱신을 반영했다.
+- W24/W25 입력샘 스키마/샘플과 sam 골든 테스트를 추가했다.
+- W24/W25 D-PACK state_hash 기대값과 골든 테스트를 추가했다.
+- W23 테스트 재검증을 완료하고 DoD 충족을 확인했다.
+- W24/W25 D-PACK 현황을 점검하고 미완료로 기록했다.
+- W22 골든 테스트 재검증을 완료하고 DoD 충족을 확인했다.
+- teul-cli --sam에 detjson 입력샘 파싱/정렬과 샘 자원 요약 기록을 추가했다.
+- CI에서 python3 설치/확인 단계를 보강했다.
+- SSOT_PENDING_20260118 제안 문서의 깨진 구간을 복구했다.
+- W23 입력샘 state_hash 기대값을 확정하고 정렬 기반 해시 테스트를 추가했다.
+- UTF-8 검사 유틸을 CI에 연결하고 잔여 BOM 문서를 정리했다.
+- UTF-8 검사 유틸을 추가하고 W23 입력샘 detjson 파서에 net_events 정렬을 적용했다.
+- 비UTF-8 문서를 UTF-8로 정리하고 SSOT_PENDING(노트/결정) 깨진 구간을 복구했다.
+- 저장소 내 UTF-8 BOM을 제거해 텍스트 파일 인코딩을 통일했다.
+- BDL2 Q24.8 소수부 허용과 AA 플래그 렌더링 정책(AA=true 소수 유지, AA=false 정수 스냅)을 적용하고 W22 서브픽셀 골든 테스트를 추가했다.
+- W22 BDL2 Circle/Arc/Curve 커맨드 인코더/디코더/뷰어 지원과 골든 테스트를 추가했다.
+- golden ??? DDN? docs/ssot/pack ?? ?? ???? ???? W19/W21 stdout ??? ????.
+- 보개 예제/팩 DDN을 생김새/결/보개_그림판_* 정본으로 갱신했다.
+- 보개 drawlist 키 용어를 생김새/결/보개_그림판_* 정본으로 추가하고 기존 모양/트레잇/bogae_canvas_* 별칭을 허용했다.
+- 보고서/예시/골든 정리: `golden/`과 `해보기/`를 정리하고 `docs/steps/000/artifacts/golden`, `docs/EXAMPLES/haebogi`로 이동했으며 `tools/ddonirang-vscode`는 `tools/vscode-ddn/legacy`로 옮겼다.
+- W23 입력샘 DetJson v1 net_events 파서와 replay log net_events 기록/복원 경로를 추가했다.
+- W23 착수: InputSnapshot net_events 필드/정렬 처리와 테스트를 추가했다.
+- W26~W33 D-PACK 스켈레톤(pack/gogae3_w26~w33)을 생성했다.
+- W23 입력샘(DetJson v1) 스키마/샘플과 W24/W25 D-PACK 스켈레톤을 추가했다.
+- W23 D-PACK 스켈레톤(pack/gogae3_w23_network_sam) 착수 기록을 추가했다.
+- W14/W15 골든 테스트 러너의 stdout 해시 라인 처리 규칙을 보정하고 재검증했다.
+- W22 BDL2 제안서에 승인 준비 체크리스트를 추가했다.
+- 관문0 기록 위치를 `docs/steps/000/`으로 통일했다.
+- Slice0 보개 캔버스 높이를 352로 늘려 하단 줄 표시 문제를 수정했다.
+- web/live 및 playback viewer에서 알파 0 스프라이트를 건너뛰어 빈 셀 덮임을 방지했다.
+- sam-live 콘솔에서 Ctrl+C/Esc 종료 처리와 스프라이트 문자 매핑(@ → 기호)을 반영한다.
+- 테트리스 Slice0 현재 조각 4블록 렌더링, 이동 DAS/ARR, 회전 킥, 게임오버 처리 반영을 기록한다.
+- 테트리스 Slice0 보드 렌더링(잠금 블록 스프라이트)과 라인 삭제 점수/연출 텍스트를 반영한다.
+- teul-cli `tetris_*` 보드 함수와 `}아닌것` 예제를 기록했다.
+- teul-cli canon 분기 지원과 Slice0 낙하/고정 추가를 기록했다.
+- teul-cli `고르기:` 분기 문장 및 Slice0 입력 갱신을 기록했다.
+- teul-cli `일때/아니면` 분기 문장 추가 및 예제 갱신을 기록했다.
+- 테트리스 Slice0 입력 스켈레톤(키 매핑/상태 모델) 갱신을 기록했다.
+- teul-cli `--sam-live` 실시간 입력(콘솔/웹)과 viewer input 전달을 기록했다.
+- BDL2 codec/CLI 플래그/뷰어 파서 추가를 기록했다.
+- W22 구현 단계 계획과 BDL2 pack 테스트 정의를 보강했다.
+- teul-cli `--bogae-live` 라이브 보개(콘솔/웹)과 viewer/live.html 폴링을 추가했다.
+- W18 replay diff 명령과 state_hash 포함 playback manifest/pack 반영.
+- W19 cmd_count cap/summary 정책 + diag 기록 + pack 반영.
+- W20 BDL1 packet wrap/unwrap + roundtrip pack 반영.
+- W21 overlay.detjson/뷰어 오버레이 + hash 불변 pack 반영.
+- W22 BDL2 detbin 스키마/커맨드 테이블 확정 및 pack 문서 정비.
+- W14~W17 재검증 로그를 반영했다.
+- `TokenKind::Hash` 미사용 경고를 제거하고 수식 태그 처리를 Atom 기반으로 정리했다.
+- W06 수식 주입 파싱 수정 및 골든 재검증 PASS 기록.
+- W13 웹 산출물 골든 테스트(stdout/hash 기준 정리) PASS 기록.
+- W14 헤드리스(stdout 1줄) 출력 포맷 및 골든 테스트 추가 기록.
+- W13 웹(Canvas) 보개 뷰어/CLI 옵션/골든 테스트 추가 기록.
+- W12 보개 drawlist(사각형/색상), 원자/묶음 리터럴, D-PACK 추가 기록.
+- W12 보개 drawlist/BDL1 해시 출력과 `보개로 그려.` 문법 추가 기록.
+- W01~W17 골든 재검증 기록 추가.
+- W07~W11 골든 재검증 기록 추가.
+- 로드맵은 설명용, 구현/검증은 WALK 스펙/골든 우선 원칙 반영.
+- W06 골든 재검증 기록 추가.
+- W05 골든 재검증 기록 추가.
+- W04 골든 재검증 기록 추가.
+- AGE 경로를 age0 기준으로 정정.
+- SSOT 구조 변경(walks/age) 경로를 AGENTS/steps/status 문서에 반영.
+- W03 골든 재검증 기록 추가.
+- gaji/pack 입력 호환(`=` 대입, `(묶음)인 식 풀기`, bare 경로 보정) 기록 추가.
+- step01 지시문 라인(`#...`) 무시 처리와 W01 골든 재검증 기록 추가.
+- 걸음별 데모(docs/EXAMPLES/demos/001~011) 추가 및 EXAMPLES 안내 갱신.
+- SSOT v20.0.3 기준으로 000 단계 문서 참조를 갱신(PLAN/RESULT/TESTS/HANDOFF).
+- SYNTAX_BRIDGE/AI 코드블록 규칙/해시 표기 통일을 반영한 도구줄 문서 갱신.
+- 99걸음(AGE0=1~33) 기획을 `docs/ssot/walks/gogae1/`와 `docs/ssot/age/age0/`에 유지하는 예외를 SSOT 변경 기록에 반영.
+- AGE01 WALK01용 `tools/teul-cli` 독립 프로젝트와 W01 골든 테스트 러너를 추가.
+- W03~W11 단계 문서와 INDEX 상태를 갱신.
+- W12 글무늬 렌더링 단계 문서/예제 추가.
+- W13~W14 단계 문서 추가(수식 거듭제곱, sin/cos 결정적 구현).
+
+## 다음 협업에 필요한 문서(권장)
+- AGENTS.md: 작업 규칙, 승인 필요 작업, 파일 위치 규칙.
+- docs/README.md: 프로젝트 개요, 목표, 폴더 구조.
+- docs/steps/INDEX.md: 단계별 진행 상태.
+- docs/ARCHITECTURE.md: core/lang/tool 책임 분리와 데이터 흐름.
+- docs/CLI_USAGE.md: 실행 명령 모음.
+- docs/decisions/: 합의된 결정 기록(SSOT 변경 포함).
+- docs/notes/: 합의 전 제안/질문 기록.
+- docs/context/design/UNITS_v0.md: 단위 시스템 설계(정적 타입/차원 검증 제안).
+- docs/context/design/RESOURCE_REGISTRY_v0.md: ResourceHandle/레지스트리 규격 초안.
+- docs/status/LANG_STATUS.md: 또니랑 문법/런타임 지원 범위(지원/미지원/계획).
+- docs/DECISIONS.md: 선택 이유(왜 그렇게 했는지) 기록.
+- docs/KNOWN_ISSUES.md: 조사 처리, @ 접착자, 루프/필드 접근 미지원 등 제약.
+
+## 레이어별 구조와 역할
+
+### core/
+- core/src/platform.rs
+  - 역할: 엔진 공통 타입(입력 스냅샷, 누리/보개/거울 인터페이스 등).
+  - 핵심: InputSnapshot에 last_key_name 추가(마지막 키 문자열).
+  - 변경: PatchOp::EmitSignal 추가(차원고장/산술고장 기록).
+  - 추가: Patch Origin 기록/Guard 위반 집행/diag 이벤트 생성.
+- core/src/units.rs
+  - 역할: UnitDim/UnitValue 및 단위 레지스트리.
+- core/src/resource.rs
+  - 역할: ResourceHandle 정의 및 핸들 산출 규칙.
+- core/src/input.rs
+  - 역할: 키 문자열을 엔진 입력 비트로 변환.
+  - 변경: i/j/k/l 키 매핑 추가.
+- core/src/signals.rs
+  - 역할: 산술고장/차원고장 신호 정의 및 sink.
+
+### lang/
+- lang/src/lexer.rs
+  - 역할: 소스 → 토큰화.
+  - 변경: 문자열 이스케이프 처리(\n, \t, \r, \", \\), Gate0 키워드 추가(해보고/고르기/바탕으로/다짐하고/전제하에/보장하고/해서).
+- lang/src/parser.rs
+  - 역할: 토큰 → AST 파싱.
+  - 변경: 일때/아니면(조건문), 비교/동등 연산, 셈씨 인식, <- 대입 파싱 안정화.
+  - 변경: 호출 꼬리 동치/해석(~기/하기, ~고/하고, ~면/하면) 및 X/X하 충돌 오류 추가.
+  - 변경: Thunk `{}` + 평가 표지, 파이프 `~기 해서` 호출식 제한/흐름값 주입, 해보고/고르기/계약 파싱 추가.
+  - 변경: v19.4.19 글무늬/수식 주입 표기(`(<키=값>) 글무늬{...}`, `(키=값)인 식 풀기`) 파싱 및 금지 패턴 차단.
+- lang/src/ast.rs
+  - 역할: AST 정의.
+  - 변경: Stmt::If/Try/Choose/Contract, ExprKind::Thunk/Eval/Pipe/FlowValue 추가.
+- lang/src/normalizer.rs
+  - 역할: 정본화 출력.
+  - 변경: 값함수 → 셈씨로 정규화, Thunk/파이프/계약 출력 추가.
+  - 변경: v19.4.19 주입 표기 정본화(`(<키=값>) 글무늬{...}`, `(키=값)인 식 풀기`).
+- lang/src/runtime.rs
+  - 역할: 런타임 값(Value)과 표준 함수 실행 지원.
+- lang/src/stdlib.rs
+  - 역할: 표준 라이브러리 시그니처 목록.
+  - 변경: 글바꾸기, RNG(무작위/무작위정수/무작위선택) 추가.
+- lang/src/lib.rs
+  - 역할: parse/normalize 편의 API와 통합 테스트.
+
+### tool/
+- tool/src/ddn_runtime.rs
+  - 역할: ddn 인터프리터(표현식 평가, 함수 호출, 자원 갱신).
+  - 핵심 함수:
+    - DdnProgram::from_source: 소스 파싱 + 오류 메시지 포맷.
+    - DdnRunner::run_update: 입력/월드 기반 ddn 업데이트 실행.
+    - EvalContext::eval_expr/eval_stmt/eval_call: 핵심 평가 루틴.
+    - value_to_index/value_to_string: 값 변환.
+  - 추가: Thunk 평가, 파이프 실행, 해보고/고르기/계약, RNG 시드 기반 함수 처리.
+- tool/src/preprocess.rs
+  - ??: `??()`/`??{}` ??? ? `!!{}` ?? ??/??.
+- tool/src/schema.rs
+  - 역할: `ddn.schema.json` 생성(씨앗/핀/타입/단위/쓸감 요약).
+- tool/src/gate0_registry.rs
+  - 역할: 쓸감/단위 곳간 로더 및 Gate0 Strict 검증(레거시 ddn.resource.json 경고 포함).
+- tool/src/main.rs
+  - 역할: CLI 진입점, 데모 실행, 렌더링.
+  - 핵심 함수:
+    - run_maze_ddn / run_maze_ddn_live: ddn 기반 미로 실행.
+    - DdnMazeIyagi::run_update: ddn 스크립트와 엔진 연결.
+    - map_text_from_data: 초기 맵 텍스트 생성(G/C 포함).
+    - read_text_from_path: UTF-8/UTF-16 자동 디코드.
+  - 추가: preprocess-ai/build-schema 명령.
+  - 추가: diag 이벤트를 `geoul.diag.jsonl`로 기록.
+  - 추가: `teul-cli test`(`golden/*.test.json`) 실행 및 repro 생성, `geoul query` 지원.
+- tools/vscode-ddn
+  - 역할: VS Code용 ddn 문법 하이라이팅(TextMate grammar).
+  - 구성: package.json, syntaxes/ddn.tmLanguage.json, language-configuration.json.
+
+## 함수 상세(관문0 범위)
+
+### core/src/platform.rs
+- NuriWorld::new: 빈 월드 생성.
+- NuriWorld::spawn: 엔티티 ID 발급.
+- NuriWorld::set_component_json/remove_component: 엔티티 컴포넌트 업데이트/삭제.
+- NuriWorld::get_component_json: 엔티티 컴포넌트 조회.
+- NuriWorld::set_resource_json/get_resource_json: 문자열 자원 설정/조회.
+- NuriWorld::set_resource_fixed64/get_resource_fixed64: 수치 자원 설정/조회.
+- NuriWorld::set_resource_handle/get_resource_handle: 자원핸들 저장/조회.
+- NuriWorld::state_hash: 월드 상태의 결정적 해시(BLAKE3).
+- Signal::kind_u32/stable_payload_hash/stable_sort_key: 신호 정렬/결정성 보장.
+- InputSnapshot::is_key_pressed: 키 비트로 눌림 여부 확인.
+- Sam/Iyagi/Nuri/Bogae/Geoul/Seulgi 트레이트 메서드: 엔진 루프의 역할 경계를 정의.
+- DetSam::new/begin_tick: 입력 스냅샷 생성(키 비트, last_key_name 포함).
+- DetNuri::new/world/apply_patch: 패치 적용과 월드 접근.
+- InMemoryGeoul::record/replay_next: 틱 프레임 기록/재생.
+
+### core/src/input.rs
+- key_bit_from_name: 키 이름 문자열 → 엔진 키 비트(방향키/wasd/ijkl/arrow).
+- is_key_pressed: 키 비트마스크에서 눌림 확인.
+- is_key_just_pressed: 직전 틱 대비 새 눌림 확인.
+
+### lang/src/lexer.rs
+- Lexer::tokenize: 전체 소스를 토큰 스트림으로 변환.
+- Lexer::next_token: 문자에 따라 토큰 분기.
+- Lexer::read_hangul/read_ascii: 식별자/키워드 인식, 단순 조사 분리.
+- Lexer::read_formula_block: `수식{...}` 특수블록 본문 추출.
+- Lexer::read_string: 문자열 리터럴(이스케이프 포함) 처리.
+- Lexer::read_number: 정수/실수 판별.
+- Lexer::read_atom/read_variable: #원자, ?변수 토큰 처리.
+- LexError: 렉서 오류 타입.
+
+### lang/src/parser.rs
+- Parser::parse_program: 소스 → CanonProgram.
+- Parser::parse_seed_def/parse_params/parse_seed_kind: 씨앗 정의/파라미터/종류 파싱.
+- Parser::parse_body/parse_stmt: 문장 블록과 문장 파싱(대입/반환/조건).
+- Parser::parse_expr + comparison chain: 연산자 우선순위 파싱.
+- Parser::parse_formula_block: `수식{...}` 특수블록 파싱 + 태그/비ASCII 검증.
+- Parser::parse_primary: 기본 표현식/후위 호출 파싱.
+- Parser::consume_arrow: '<-' 대입 처리(분리 토큰 대응 포함).
+- ParseError: 파서 오류 타입.
+
+### lang/src/ast.rs
+- Stmt::If: 조건/분기 구조를 표현.
+- SeedDef/Expr/ExprKind 등: 문법 트리의 기본 구성 요소(Formula 포함).
+
+### lang/src/normalizer.rs
+- Normalizer::normalize_program: 표준 표기 문자열로 출력.
+- 셈씨 표준화: 값함수/셈씨 용어 통일.
+
+### lang/src/runtime.rs
+- Value: 런타임 값 타입(수/단위값/글/참거짓/목록/없음/자원핸들).
+- InputState: 키 입력 스냅샷.
+- input_pressed/input_just_pressed: 키 입력 검사.
+- list_len/list_nth/list_add/list_remove: 목록 유틸리티.
+- string_len/string_concat/string_split/string_join: 문자열 유틸리티.
+- RuntimeError: 타입 오류 등 런타임 오류.
+
+### lang/src/stdlib.rs
+- string_function_sigs/list_function_sigs/input_function_sigs: 표준 함수 시그니처 정의.
+- minimal_stdlib_sigs: 사용 가능한 표준 함수 목록 합성.
+- resource_function_sigs: 자원 핸들 생성((글) 자원) 시그니처 추가.
+- transform_function_sigs: `채우기`/`풀기` 변환 함수 시그니처 포함.
+
+### lang/src/lib.rs
+- parse: 소스 → AST 파이프라인.
+- parse_and_normalize: 소스 → 정본화 문자열.
+
+### tool/src/ddn_runtime.rs
+- DdnProgram::from_source: ddn 소스 파싱 + 오류 위치 표시.
+- DdnRunner::run_update: 입력/월드/기본값을 넣고 ddn 업데이트 실행.
+- EvalContext::eval_seed/body/stmt/expr: 실행기 핵심.
+- EvalContext::eval_call: 표준 함수 호출 디스패치(글바꾸기 포함).
+- EvalContext::eval_call: `풀기` 수식 평가 + 엄격 주입 검증 + `#latex` FATAL 처리.
+- EvalContext::eval_pipe: 파이프 실행과 흐름값 주입 처리.
+- RNG: InputSnapshot 시드 기반 무작위/무작위정수/무작위선택 지원.
+- 차원 불일치: 대입 무효화 + 차원고장 신호(EmitSignal) 처리.
+- EvalContext::resource_exists/get_resource/set_resource: 자원 조회/갱신.
+- @단위/자원핸들 처리: UnitValue/ResourceHandle 생성과 단위 태그 자원 변환.
+- value_to_index/value_to_string: 타입 변환.
+- is_truthy: 조건식 평가.
+- format_parse_error: 라인/컬럼 표시 파싱 오류 포맷.
+
+### tool/src/main.rs
+- main: CLI 커맨드 분기(run-...).
+- parse_maze: 텍스트 맵 → 타일/시작점/목표/코인 파싱.
+- map_text_from_tiles/map_text_from_data: 타일/코인/목표를 포함한 맵 문자열 생성.
+- read_text_from_path/read_text_from_stdin: 파일/표준입력 텍스트 디코딩(UTF-8/UTF-16).
+- decode_stdin/decode_utf16_le/looks_like_utf16le: 인코딩 판별 유틸.
+- read_key_for_tick: 라이브 입력 폴링 및 키/종료 신호 추출.
+- move_to_key_bits/move_to_key_name: 이동 문자 → 키 비트/문자열.
+- DdnMazeIyagi::run_update: ddn 결과로 월드 패치 + 맵 렌더.
+- run_maze_ddn/run_maze_ddn_live: ddn 미로 실행(파일/라이브 입력).
+- run_maze_file/run_maze_replay/run_maze_record/run_maze_replay_file: 기존 미로 실행/리플레이.
+- ConsoleBogae/LiveBogae/LiveTerminalGuard: 화면 출력과 터미널 모드 전환.
+
+## 최근 작업 요약(핵심 변경)
+- `(임자) 대상차림 모두 { ... }.` 설탕과 텐서 표준 함수(형상/자료/배치/값/바꾼값), W108/W109 골든 테스트, 관련 D-PACK을 추가했다.
+- teul-cli에 `반복:`/`동안:`/`에 대해:` 문장과 `멈추기`를 추가하고 반복 예제를 보강했다.
+- teul-cli 반복/순회 W97 골든 테스트를 추가했다.
+- lang/tool에 반복/순회/멈추기 실행 경로를 추가했다.
+- Slice0 보개 캔버스 높이를 조정해 하단 줄이 잘리지 않도록 개선.
+- web/live 및 playback viewer에서 알파 0 스프라이트 렌더링을 건너뛰도록 수정.
+- sam-live 콘솔 입력에서 Ctrl+C/Esc로 중지할 수 있도록 stop 플래그를 연결하고, 콘솔 렌더러가 스프라이트 URI에서 문자(glyph)를 추출하도록 개선했다.
+- 테트리스 Slice0에 현재 조각 4블록 렌더링, 이동 DAS/ARR, 회전 킥, 게임오버 처리를 추가했다.
+- teul-cli `tetris_board_cell` 내장 함수 추가와 Slice0 보드 잠금 블록 스프라이트/라인 삭제 점수·연출을 반영한다.
+- teul-cli에 `tetris_*` 보드 헬퍼와 `묶음값`을 추가해 Slice0 충돌/라인삭제 스켈레톤을 구성.
+- `}아닌것` 조건 예제를 추가.
+- teul-cli canon에 `일때/고르기` 분기 정본화와 `{...}인것` 조건 처리를 추가.
+- Slice0 입력에 기본 낙하 카운트/잠금 흐름을 추가.
+- teul-cli에 `고르기:` 분기 파싱/실행을 추가하고 Slice0 입력을 `일때/고르기`로 갱신.
+- teul-cli에 `일때/아니면` 분기 파싱/실행과 조건 평가 규칙(차원 없는 수만 허용)을 추가.
+- pack/game_maker_tetris_slice0 입력 스켈레톤에 키 매핑/상태 모델/홀드/회전 로직을 추가.
+- `--sam-live console|web`로 실시간 입력을 연결하고 웹 뷰어 input= 쿼리 전달을 추가.
+- BDL2 detbin 코덱, `--bogae-codec` 플래그, viewer BDL2 파서 추가.
+- W22 구현 단계 계획과 BDL2 pack 테스트/진단 정의를 보강.
+- `--bogae-live`로 실행 중 프레임을 콘솔/웹에 실시간 표시하고 live.html 폴링 뷰어를 추가.
+- W18 replay diff 명령 + playback manifest state_hash 포함 + pack 추가.
+- W19 cmd_count cap/summary 정책 + diag 기록 + pack 추가.
+- W20 BDL1 packet wrap/unwrap + roundtrip pack 추가.
+- W21 overlay.detjson/뷰어 오버레이 + hash 불변 pack 추가.
+- W22 BDL2 detbin 스키마/커맨드 테이블 확정 및 pack 문서 정비.
+- `--no-open` 헤드리스 모드에서 stdout 1줄 포맷(`bogae_hash`, `cmd_count`, `codec=BDL1`)을 고정.
+- teul-cli에 웹(Canvas) 보개 뷰어(ddn view)와 `--bogae web/--bogae-out` 아티팩트 생성 경로를 추가.
+- 보개 drawlist를 상태(`모양.트레잇`/`모양.네모`/`모양.채움색`) 기반으로 생성하고, 원자(#...)·묶음((x=..., y=...)) 리터럴과 W12 D-PACK/골든을 추가.
+- W12 보개 drawlist/BDL1 해시 산출(`bogae_hash`)과 `--bogae-out` 출력 경로 추가.
+- gaji/pack 입력을 위한 `=` 대입, `(묶음)인 식 풀기`, bare 경로 `살림.` 보정 추가.
+- teul-cli lexer/canon에서 줄 시작 `#` 지시문 라인을 주석처럼 무시.
+- teul-cli 글무늬 템플릿 렌더링(자리표시자/포맷/단위 변환) 추가.
+- 수식(MathIR) 파서/평가 추가(#ascii/#ascii1) 및 math stdlib(abs/min/max/clamp/sqrt/powi) 연결.
+- Fixed64 sqrt 구현 추가.
+- 훅 실행 엔진 추가: (시작)할때, (매마디)마다 + --ticks/--madi 지원.
+- diag JSONL 옵션 별칭(--diag) 정리 및 상태 해시 영향 없음 확인.
+- repro 자동 기록 `--enable-repro` 추가, repro JSON에 ssot_version/repro_command 기록.
+- `teul-cli ai extract` 서브커맨드 추가(??() 구멍 추출).
+- canon `--out` 경로 반영 및 run_golden multi 파이프라인 지원.
+- W03~W11 골든 테스트 추가/통과.
+- SSOT 기준을 v19.4.19로 상향하고(꺾쇠 금지, `$` 뉘앙스, `글무늬` 템플릿, 계약 정본 `바탕으로/다짐하고`) 변경점을 문서에 반영.
+- v19.4.19 Gate0 규칙(`}해서`/`-서` FATAL, 뉘앙스 `$`, `글무늬` 템플릿, `늘지켜보고`, `핀=값`, 계약 정본 `바탕으로/다짐하고`) 구현 반영.
+- 기본 단위 목록(mm/us/min/h/g) 보강.
+- OneDrive 환경 대응: cargo `target-dir`을 `C:\dev\cargo-target\ddonilang`로 고정.
+- state_hash(BLAKE3)로 전환하고 world_hash 기반 로그/골든 포맷을 정합.
+- 단계별 기록을 `docs/steps/〈단계〉/` 구조로 전환하고 관문 0을 000 단계로 분리.
+- 문서/예시의 제네릭 꺾쇠 표기를 〈〉로 정리.
+- 관문 0 개발 참조 체크리스트(v19.4.19)를 단계 000 참고로 정리.
+- SSOT v18 기준 문서 참조를 정렬하고 LANG_STATUS에 미구현 항목을 명시.
+- 골든/리플레이 산출물을 `docs/steps/000/artifacts/`로 이동하고 도구 기본 경로를 맞춤.
+- 11단계 데모 트랙 문서를 `docs/EXAMPLES/tracks/11단계/`로 정리.
+- DetMath LUT 매니페스트/로더 추가 및 구동 전 해시 검증 연결.
+- DetMath 매니페스트 누락 항목 부정 테스트 추가.
+- DivAssignResourceFixed64: div0 시 대입 커밋 생략(미존재 자원 생성 방지).
+- 알림 16패스 제한/이월 루프 최소 구현 및 데모 로그 추가.
+- 한국어 활용/표면화 골든 테스트 추가.
+- 접미 체인 파싱/바인딩 골든 테스트 추가.
+- 선택 인자 기본값 5종 테스트 추가.
+- CLI run-once: 수/글/참거짓 선언 리터럴을 자원으로 저장.
+- ddn 인터프리터 도입: tool/src/ddn_runtime.rs 신규.
+- ddn 미로 실행 커맨드 추가: run-maze-ddn, run-maze-ddn-live.
+- 입력키 전달: InputSnapshot.last_key_name 및 ddn에서 입력키 리소스 제공.
+- 미로 렌더링 개선: DdnMazeIyagi가 맵원본 기반으로 맵을 그려 코인 제거가 반영됨.
+- 문자열 이스케이프 지원: \n 처리로 줄목록 분리 정확화.
+- 문법 확장: 조건문(일때/아니면), 비교 연산, 셈씨 표준화.
+- 글바꾸기 내장 추가: ddn만으로 맵 문자열의 특정 위치 치환 가능.
+- 조사 토큰/접착자(`@`/`:`/`~`) 정본화 경로 추가, 선택 인자 기본값/없음 주입, 조사 바인딩 우선 처리 및 `:핀` 고정, 문장 종결 어조(`?`/`!`) + 어미 접미 기반 어조 추정 반영.
+- `@단위`/`@"자원"` 접미를 표현식에서 파싱하도록 확장(단위 레지스트리 기반 검증 포함).
+- 단위 레지스트리 확장 + UnitDim/UnitValue 런타임 검증, 자원핸들(ResourceHandle) 저장/조회 경로 추가.
+- SSOT v19.4.19 세트 기준 문서 참조를 최신으로 동기화.
+- 정적 차원 불일치 검증 추가 및 단위 레지스트리 확장(평/inch/ft/kmh/mps/KRW/USD).
+- 쓸감/단위 곳간 로더 및 기본 레지스트리(ddn.asset.json/ddn.units.json) 추가.
+- `??()`/`??{}` ??? ? `!!{}` ?? ??(preprocess-ai) ??.
+- `수식{...}` 특수블록/`풀기` 평가 경로 추가(#ascii/#ascii1 평가, 엄격 주입 검증, `#latex` FATAL).
+- `ddn.schema.json` 생성기/`build-schema` 명령 추가.
+- Patch Origin 기록/Guard 위반 집행/diag 이벤트(`geoul.diag.jsonl`) 기록 추가.
+- `teul-cli test`/`golden/*.test.json` 테스트 러너 + repro 생성 + `geoul query` 추가.
+- VS Code 문법 하이라이팅: TextMate 기반 ddn 하이라이터 추가.
+- 하이라이터 확장: @ 접착자/단위/자원 리터럴 패턴 강화.
+- 호출 꼬리 동치/해석 규칙 추가 및 X/X하 씨앗 이름 충돌 오류 처리.
+- 레거시 ddn.resource.json 입력 별칭 경고 지원.
+- Gate0 Thunk/eval 표지, 파이프 call-only + 흐름값 주입, 해보고/고르기/계약 파싱 추가.
+- 결정적 RNG 함수(무작위/무작위정수/무작위선택) 및 검증 영역 RNG 금지 규칙 반영.
+- 차원 불일치 런타임 안전망(대입 무효화 + 차원고장 신호) 추가.
+- Gate0 골든 시나리오(G0-PIPE/UNIT/FAULT) 및 전용 스크립트 추가.
+- Fixed64 raw_i64 결정성 벡터 테스트 추가.
+- NAME-LINT-01/TERM-LINT-01: 파서 즉시 오류 + 정본화기 LEGACY 경고/추천(자동 치환 제거).
+- 산술 고장 diag에 source_span/expr.tag(arith:*) 기록 추가.
+- 계약 위반을 Signal::Diag로 기록(CONTRACT_PRE/POST + sub_reason/mode/contract_kind/message).
+- repro 보고서에 lint_version/term_map_version 기록 추가.
+
+## ddn 표준 라이브러리(현재 지원)
+- 문자열
+  - (글) 길이 -> 정수
+  - (글, 구분) 자르기 -> 목록〈글〉
+  - (글, 글) 합치기 -> 글
+  - (목록〈글〉, 구분) 붙이기 -> 글
+  - (값) 글로 -> 글
+  - (글, 인덱스, 새글) 글바꾸기 -> 글
+    - 인덱스는 0-based.
+    - 범위 밖이면 원본 글을 반환.
+- 목록
+  - (...요소) 목록 -> 목록
+  - (목록, 인덱스) 번째 -> 요소
+  - (차림, 인덱스) 차림.값 -> 값?
+  - (차림, 인덱스, 값) 차림.바꾼값 -> 차림
+  - (목록, 값) 추가 -> 목록
+  - (목록, 인덱스) 제거 -> 목록
+- 입력
+  - (키) 눌렸나 -> 참/거짓
+  - (키) 막눌렸나 -> 참/거짓
+- RNG
+  - () 무작위 -> 수
+  - (최소, 최대) 무작위정수 -> 정수
+  - (목록) 무작위선택 -> 요소
+- 자원
+  - (글) 자원 -> 자원핸들
+- 수식
+  - (수식값, 묶음) 풀기 -> 수
+
+## 언어/문법 요약(현재 지원)
+- 씨앗 정의: (파라미터들) 이름:셈씨 = { ... } 형태.
+- 문장 종료: `.`, `?`, `!`로 끝난다(어미 접미 기반 어조 추정 포함).
+- 대입: 변수 <- 값.
+- 차림 인덱싱 설탕: a[i]/a[i] <- v는 차림.값/차림.바꾼값 호출로 정본화.
+- 조건: (조건) 일때 { ... } 아니면 { ... }
+- 안은문장: `{ }` Thunk + `}한것/}인것/}아닌것/}하고` 평가 표지.
+- 파이프: `~기 해서` 체인(호출식만 허용, 흐름값 주입).
+- 상태 대조/분기: `해보고:` + `고르기:`(아니면 필수).
+- 계약: `{...}인것 바탕으로/다짐하고` + 아니면/맞으면 블록(별칭: 전제하에/보장하고).
+- 호출: (인자1, 인자2) 함수이름 (prefix `이름(인자)` 금지)
+- 비교: ==, !=, <, <=, >, >=
+
+## ddn 미로 스크립트 흐름(docs/EXAMPLES/tracks/11단계/artifacts/scripts/미로.ddn, docs/EXAMPLES/tracks/11단계/artifacts/scripts/maze_v0.ddn)
+- 입력키를 읽어 이동 방향 결정.
+- 벽인지로 충돌 검사 후 플레이어 좌표 갱신.
+- 코인(C) 처리:
+  - 너비 = 첫 줄 길이
+  - 인덱스 = 플레이어_y * (너비 + 1) + 플레이어_x
+  - 맵원본 <- (맵원본, 인덱스, ".") 글바꾸기
+  - 점수 +<- 1
+  - 줄바꿈을 포함한 문자열 인덱싱이라 +1 보정이 필요.
+
+## 예제 스크립트
+
+### 입력키를 메시지로 보여주기
+```ddn
+매틱:움직씨 = {
+    키 <- (입력키).
+    메시지 <- (키) 글로.
+}
+```
+
+### 코인 줍기(맵 문자열 갱신)
+```ddn
+(((맵원본, 플레이어_x, 플레이어_y) 칸) == "C") 일때 {
+    너비 <- (((맵원본) 줄목록, 0) 번째) 길이.
+    인덱스 <- (플레이어_y * (너비 + 1) + 플레이어_x).
+    맵원본 <- (맵원본, 인덱스, ".") 글바꾸기.
+    점수 <- 점수 + 1.
+}
+```
+
+### 글바꾸기 기본 예제
+```ddn
+문장 <- "hello".
+문장 <- (문장, 0, "H") 글바꾸기.
+메시지 <- 문장.
+```
+
+## 주요 결정/선택 이유
+- 입력키(last_key_name) 추가:
+  - 입력 시스템을 키 비트에 고정하지 않고, ddn에서 임의 키를 다루기 위해 필요.
+- 글바꾸기 도입:
+  - 목록 자원을 저장할 수 없는 제약 때문에 문자열 치환 방식이 가장 작고 안전.
+- 맵원본 기반 렌더링:
+  - ddn에서 맵을 변경하면 화면에도 즉시 반영되어야 함.
+- 문자열 이스케이프 지원:
+  - "\n"을 실제 줄바꿈으로 처리해야 줄목록/맵 파싱이 정상 동작.
+- 셈씨 표준화:
+  - 용어 일관성과 향후 문서 정합성을 위해 값함수 대신 셈씨로 통일.
+
+## 현재 제약/미지원
+- 조사 처리: 단순 접미 분리 + `:핀`/`~조사`만 지원, 오탐 가능.
+- 단위 레지스트리는 평/inch/ft/kmh/mps/KRW/USD까지 확장(경계 입력 런타임 안전망 구현).
+- ddn 런타임 순회는 차림/모음/짝맞춤을 지원(짝맞춤은 차림[열쇠, 값] 반환).
+- 필드 접근(a.b) 미지원.
+- 묶음/수식/글무늬 값 자원 저장 미지원.
+
+## 실행 방법
+- ddn 미로(라이브 키 입력)
+  - cargo run -p ddonirang-tool -- run-maze-ddn-live docs/EXAMPLES/tracks/11단계/artifacts/maps/maze.txt docs/EXAMPLES/tracks/11단계/artifacts/scripts/미로.ddn
+- ddn 미로(이동 문자열)
+  - cargo run -p ddonirang-tool -- run-maze-ddn docs/EXAMPLES/tracks/11단계/artifacts/maps/maze.txt docs/EXAMPLES/tracks/11단계/artifacts/scripts/미로.ddn ijkl
+
+- ai prompt(컨텍스트 출력)
+  - cargo run -p ddonirang-tool -- ai prompt --profile lean --out build/ai.prompt.txt
+  - cargo run -p ddonirang-tool -- ai prompt --profile lean --bundle SSOT_bundle_v19.4.19_codex.zip --out build/ai.prompt.txt
+## 다음 단계 후보(요약)
+- SSOT v19.4.19 보완 항목(`}해서`, `-서` FATAL, `$` 뉘앙스, `글무늬`, 정의/호출 분리, `핀=값` 정본, 계약 정본 `바탕으로/다짐하고`) 반영.
+- teul-cli test + `golden/*.test.json`(DetTest/TraceTest) ?? ?? ??.
+- 필드 접근 지원.
+- 묶음/수식/글무늬 자원 저장 범위 정리.
+
+## 추가로 넣으면 좋은 것
+- 필요 시 보완: 설계/결정 문서의 최신화 및 누락된 한계 사항 추가.
